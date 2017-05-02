@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"mQ4>vOCEsk=;`aZFC[dMOk`7?0>3@H=5pmESeObIVvZXab`^R3T2nj=AB1N\OK3wKO2bSqgiW]Z?Gbru;3eah_lMEQ5:YV6TljLMtNR_ME1Zw]11j;HFS]HfeRTH8vVqNXo<xb<;F7m[X1V?3M39=0^0Dk<JFlo^K`_zfV:z:<p=vjchqQt5HMr5[SuKFGpDWnjVdzRp"
+565,"r5E:rihX@7Ron9`TIqayayr]?DOdE];e5JFn=9qPkNc[x=DaJ^Of?]b5vQGDdb]Ga8j0pwiM4893nfq9NLt::5TMxx9W?9<IJ2exsmSBbyMR=<\BAToQk0W8hW4F9?kCOtRsV[cg1=0uQxR?y9@0WZD2<DNGGR7pE:g1JL?L\hjegx70WKVK2tHexbP>DGL=9qvPRvU>"
 559,1
 928,0
 593,
@@ -255,19 +255,19 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
            'pDebug', pDebug
           );
 
-          If( pDebug <= 1 );
+          If( pDebug >= 1 );
             AsciiOutput( sDebugFile, 'Consolidation: ' | sElement | ' has been added to the subset.' );
           EndIf;
       ELSE;
         SubsetElementInsert( pDimension, pSubset, sElement, nSubsetIndex );
-        If( pDebug <= 1 );
+        If( pDebug >= 1 );
           AsciiOutput( sDebugFile, 'Element: ' | sElement | ' has been added to the subset.' );
         EndIf;
       ENDIF;
     EndIf;
     nSubsetIndex = nSubsetIndex + 1;
   Else;
-    If( pDebug <= 1 );
+    If( pDebug >= 1 );
       AsciiOutput( sDebugFile, 'Element: ' | sElement | ' does not exist in dimension: ' | pDimension | ', skipping' );
     EndIf;
   EndIf;
@@ -329,6 +329,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,
