@@ -41,8 +41,8 @@ pSubsets,"}Bedrock*"
 pDelimiter,"&"
 pDebug,0
 637,4
-pDimensions,List of Dimensions Seperated by Delimiter (Blank = All Dimensions)
-pSubsets,List of Subsets Seperated by Delimiter. Wildcards Permitted on Subset Names.
+pDimensions,List of Dimensions Separated by Delimiter (Blank = All Dimensions)
+pSubsets,List of Subsets Separated by Delimiter. Wild-cards Permitted on Subset Names.
 pDelimiter,Delimiter Character
 pDebug,Debug Mode
 577,0

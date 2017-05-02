@@ -47,7 +47,7 @@ pDebug,0
 pDimension,"Dimension Name"
 pParent,"Parent Name"
 pElement,"Element Name"
-pWeight,"Component WeightDebug Mode"
+pWeight,"Component Weight"
 pDebug,"Debug Mode"
 577,0
 578,0

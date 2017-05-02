@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"fp5bosaYXh9SDkkEZCq:fF`L[F?=A@9d0esBhIXmxNn0z19jLcZbWzSf?t<LBU?>73V:HEe>:\;TcXshJ=4_3ux30o^JIx9o@7dhSwWX^eQ?Qa9nM=`ilVj=mW=@CQpUg^?RV0Ib_ub237fcT7=cOKwdj9tl7pm^nH=d[;fXjrX?nrQ>0q1rE?Rh<z6Ab?3k^y`g<EEs"
+565,"yC0zWWS\^k`cIWu\w\>dMHH0JaMDDSUOM7K<mDO7zo4224nkfB_0jaSEl_2Y0ntZoY6fRRsh9hxvhW536XuZ[GAY7Zt^=36_Y;2ytsg38]Pun>RNyVDIBSWMDHPj=eeoXC@5O@VXmlgCeB6hEGStoZzDAwtZgR]9m:1UHe0_8>2z4PFPHpH\un;J\q2B;>Aa^b\_RbCs"
 559,1
 928,0
 593,
@@ -41,10 +41,10 @@ pConsol,""
 pRecursive,0
 pDebug,0
 637,4
-pDimension,Target Dimension
-pConsol,Target Consolidation
-pRecursive,Boolean: 1 = True (break from node down not just direct children)
-pDebug,Debug Mode
+pDimension,"Target Dimension"
+pConsol,"Target Consolidation"
+pRecursive,"Boolean: 1 = True (break from node down not just direct children)"
+pDebug,"Debug Mode"
 577,1
 vElement
 578,1
@@ -57,7 +57,8 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,139
+603,0
+572,142
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -148,12 +149,15 @@ EndIf;
 
 ### Turn-off Logging in the Attribute cube
 sAttrCube = '}ElementAttributes_' | pDimension ;
-sOLogging = CELLGETS( '}CubeProperties', sAttrCube, 'Logging' );
-CELLPUTS( 'No', '}CubeProperties', sAttrCube, 'Logging' );
+IF(
+CubeExists( sAttrCube ) = 1 );
+  sOLogging = CELLGETS( '}CubeProperties', sAttrCube, 'Logging' );
+  CELLPUTS( 'No', '}CubeProperties', sAttrCube, 'Logging' );
+
+ENDIF;
 
 
 ### Set Descendent attribute value
-
 AttrDelete( pDimension, cHierAttr );
 AttrInsert( pDimension, '', cHierAttr, 'S' );
 
@@ -197,7 +201,7 @@ EndIf;
 
 
 ### End Prolog ###
-573,35
+573,40
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -220,8 +224,12 @@ If( ElLev( pDimension, vElement ) = 0 );
   ItemSkip;
 EndIf;
 
-If( AttrS( pDimension, vElement, cHierAttr ) @= cAttrVal & DType( pDimension, vElement ) @= 'C' & ElCompN( pDimension, vElement ) > 0 );
+If( 
+AttrS( pDimension, vElement, cHierAttr ) @= cAttrVal & 
+DType( pDimension, vElement ) @= 'C' & 
+ElCompN( pDimension, vElement ) > 0 );
   nChildren = ElCompN( pDimension, vElement );
+
   While( nChildren > 0 );
     sChild = ElComp( pDimension, vElement, nChildren );
     If( pDebug <= 1 );
@@ -229,6 +237,7 @@ If( AttrS( pDimension, vElement, cHierAttr ) @= cAttrVal & DType( pDimension, vE
     EndIf;
     nChildren = nChildren - 1;
   End;
+
 EndIf;
 
 
@@ -292,6 +301,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

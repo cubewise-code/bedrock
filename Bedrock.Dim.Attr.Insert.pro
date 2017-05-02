@@ -45,7 +45,7 @@ pAttributeType,""
 pDebug,0
 637,5
 pDimension,Dimension Name
-pPrevAttr,Prevoius Attribute
+pPrevAttr,Previous Attribute
 pAttribute,Attribute Name
 pAttributeType,Attribute Type
 pDebug,Debug Mode
