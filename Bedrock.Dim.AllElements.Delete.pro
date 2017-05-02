@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"bKa_@tn3vuu;L=2I@lo4HP_a:V@t0z44dlb]O4o`@1]i\pB9l[tOo7eT\]^CIpol]mP4<bQT>KTE5w=5ixPWpbJ5KeYHI`I9mhpSpYbwL@4TRYUj48T]u6S>\NX\RX4QM9_>vwfh6;_cjpY1Za_hxbyHOQ^d8I64wf1nem_NM6ZzGz[ShSoj[bVk2FP[4`dQkIefDXx5"
+565,"wG7yZk`_j9urS[\qwGW`lh3aaEcmOkRtkCtsNuTo1u_gHdBv3tlewK3<2EgreAZkrOjXY@gl^<7fBT4AJ6J;a`TnWKd5_kVN<I<`o2tUiX4Z2TkXRouGEtzgoI2cLS0XZ;ICfyOZuHgf;uN4QV\ATmRIrSyg0svOFhO]uw3sG:OgulFyjDATBj61@OKW_=9wjNG;2W^h"
 559,0
 928,0
 593,
@@ -42,13 +42,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,56
+572,57
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will delete all elements in the target dimension
@@ -56,9 +56,10 @@ pDebug,Debug Mode
 
 ### Constants ###
 
-cProcess = 'Bedrock.Dim.AllElements.Clear';
+cProcess = 'Bedrock.Dim.AllElements.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -99,21 +100,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"eJ93Mae1mF;6=1p@Jd?^4D]5vh]pWR@v]bOtBD><7mc@KJEuRWnU\8:z^tA=[5q;RTjk48Js\e\DrU;i9VeN6e1jWMaK_KgS5fxTb6qVQ7n2tBQtF4CGfhK`UORkPR`2KFhPy4YXBxT3xbtQWgTr_[jYhS[Figmhn0P`nVtkT>xux@EAUHF[ax7s83EsS:4L;ejZ:4M0"
+565,"sF]ifDtD:Ur[_FfUtDBa0B>\NsHHM5DJxzCsM:bb<4qSWUgt01w`1k?6VP>j2YZ05ilJbmutxjBzD^y@yxy@E2:=OCWAf1gQr\eak9[CX1^K4HCDVgMc70<pFbeMGTUVxVdtviDNqI1F5@@Z[T2F07=J3yg3jzw?AmCik4r`\BX3jrUhe:8nZOQZRHR2FZi@O:Mk\>bJ"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,91
+572,107
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process can be used by admins to reset a client password.
@@ -67,8 +67,10 @@ pDebug,Debug Mode
 ### Constants ###
 
 cProcess = 'Bedrock.Security.Client.Create';
+cTM1User = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -82,6 +84,7 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
 
   # Log parameters
+  AsciiOutput( sDebugFile, 'Preocess Execute: ' | cTM1User );
   AsciiOutput( sDebugFile, 'Parameters: pClients   : ' | pClients );
   AsciiOutput( sDebugFile, '            pPassword  : *** Not logged for security reasons ***' );
   AsciiOutput( sDebugFile, '            pDelimiter : ' | pDelimiter );
@@ -108,6 +111,19 @@ If( Trim( pClients ) @= '' );
   ItemReject( sMessage );
 EndIf;
 
+# Check if the person executing the process has admin rights
+
+IF(
+CELLGETS( '}ClientGroups', cTM1User, 'Admin' ) @<> 'ADMIN' &
+CELLGETS( '}ClientGroups', cTM1User, 'DataAdmin' ) @<> 'DataAdmin' &
+cTM1User @<> pClients );
+  nErrors = 1;
+  sMessage = 'No Admin access to change other clients password.';
+  If( pDebug >= 1 );
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+  ProcessQuit;
+ENDIF;
 
 ### Split pClients into individual clients and reset password ###
 
@@ -142,21 +158,23 @@ End;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

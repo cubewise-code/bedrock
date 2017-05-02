@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"tQ5BL43s67[^^vHQKltMaGnZzBe@z;k6t81fHUt_Gz=`REaKfb2eQ\h^RT9zG7Oq6=mC6xM>lia\Z7<vcsmpg]E5DZSSoNUEtZW^C85[qNfS_8\@qJyRGG^sj0nRFrV_ocUtU>K^Rr1[Ux=>iAM?ij@El8Sd_ZKyD2h\C=NEfV\z;2A3XD0N1@ac2Kn5H9GbTQHch[Md"
+565,"cBaaKQKfFrd4Rgo=m;ip1]i>BC_;rXToU6<qPTbeVRy1SGp4JTL4m5rt3[NdHP0GU\RZ=ni=^rc7wuY4fRfv0<:vo?kUoE>3nvAXhSyP1jvD?Uw`>Sy6@n`azW_C[MJsnLT;JDRfIky\[f7Lyrrx3==imd9F@0u5plzMvp>m7WE=phnJ?muvM0:fYqgeTHRNFFFZG2gg"
 559,1
 928,0
 593,
@@ -58,13 +58,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,148
+572,149
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process converts a private view to a public view for the named client.
@@ -79,7 +79,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.View.Publish';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -207,21 +208,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

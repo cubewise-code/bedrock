@@ -3,7 +3,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"zUyL>oF;e2sn?D<3a\u7RBDWTDaRpx`RbzX8;ORP;ibyiQ[mdi]nSW?uC^6woVAV;zOh5Q>VE5DmfJpo4j`@Y?U0gEsE<;=yNU72b7yF2W4y`U<P4mKqsdPii2QxU;6p0Z7?<F0[u]nSyhrigjXnNvr4fY0Kwu^uS;zj]mnxM5AO[0g656:I:J=sE>2nz6N5N5nYtl4G"
+565,"hyanCZURaMy[CXcCUk;6q;h=aP?3_u`d6ZNYX\sQ3=3LZE]`@umYKvYVEdRIMfS]aN>w3sbMs20zX1\WUZc0AVaz>F[mf3Wy`]Yb@Kg>LY<XS\?S`8@jkuRk_J?^s4c=3VGt[iO`>X5;EZsV=yxrBVN_SqaS5[tKquI4DH:qkDOuq`T2]ELvO[;j4`6;l_15D78ra_bl"
 559,1
 928,0
 593,
@@ -60,13 +60,13 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,123
+572,124
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Export all Dimension elements to a File.
@@ -76,7 +76,8 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.ExportToFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -184,17 +185,18 @@ DatasourceDimensionSubset = 'ALL';
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 574,66
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -261,7 +263,7 @@ AsciiOutput(
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

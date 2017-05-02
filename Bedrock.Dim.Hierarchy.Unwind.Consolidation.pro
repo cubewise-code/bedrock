@@ -1,9 +1,9 @@
 ﻿601,100
 562,"SUBSET"
-586,"zTestDim"
-585,"zTestDim"
+586,"}Cubes"
+585,"}Cubes"
 564,
-565,"bvasXBJF2eB4ZXo;lCt;p3bN1H:^j6[yFsmJ<PTLIc\=n>mHDfN1DTL8;tMxF\CzkFj4UVLvMNNYhV0liMm_3ooiEUkhC>dtv_rui<Qxt540^KqXB;svyl^k@tdV`LI\Uy\fahI`\7c2<hf=a<jrnmL9vxwk?EVCAqz29RHNKUn9ryuts3Q6XJ;ArFpm6eWAhQUS_V_v"
+565,"h=`exttta03ywmP1gG7Py0WW?rVO7i2vXPYe2oYEarJefVVQnoLpjyTTrio0n9V`zYkD8Ha]F2A?H>SybV@iUS4VZ:ZxRu`uHldP4c@\:?53jJnE>?j_LAXC6Uss]YSQ;j4_zK:IFC6T4dSdC[flro;<CT:saNeLDqQKk4:o3QzgS51qpk]HuK:BoN;QVITHaId4Wc1i"
 559,1
 928,0
 593,
@@ -56,13 +56,13 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,133
+572,134
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will remove all children from a specific target consolidation in the target dimension
@@ -77,7 +77,8 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Hierarchy.Unwind.Consolidation';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cHierAttr = 'Bedrock.Descendant';
 cAttrVal = 'Descendant';
 
@@ -196,7 +197,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -226,17 +227,18 @@ EndIf;
 
 
 ### End Metadata ###
-574,3
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,42
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

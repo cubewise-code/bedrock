@@ -3,7 +3,7 @@
 586,"C:\Temp\Dim_Account.csv"
 585,"C:\Temp\Dim_Account.csv"
 564,
-565,"mVUF1HZwgPxZ`aBIA=a@aG?QFvq5_j1lFy38eN3rBx=W3uA@=0IL^NSBW5Ak=`7@K2dIMtY[BLYnA<ggYefMJIbOgukX^I[Y3M=Ej7`I;UIqM=mKV5>VJHs5_LR4IDELbmkIwGBzqBp7NGIuRS5Tb8z5r@dL=USjohhKMoELu\c;PoqmopA3k2I:AlBtr=76q\600ws<"
+565,"i]jeo:dw=afxzhGXuBPab>8Bm<tRPdlx52AfXvdZTycD=U6g4e]ar76S_Eh7MLNp4v]xo483aU2CS[xK4HX3u6p9S]\@C;9]2ReD]00neWAUv4T9vYRnDs640]MK>EleE=S6tI5HzIJXPQ`cSDz[CkatHwfmnzLMxXplmMXwyTex]RXu4ZmqUVECM?Qe8fi1JtiaxR_k"
 559,1
 928,0
 593,
@@ -150,30 +150,34 @@ vWeight5
 0
 0
 582,16
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=33€ColType=827€
-VarType=32€ColType=827€
-VarType=33€ColType=827€
-VarType=32€ColType=827€
-VarType=33€ColType=827€
-VarType=32€ColType=827€
-VarType=33€ColType=827€
-VarType=32€ColType=827€
-VarType=33€ColType=827€
-572,152
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=33ColType=827
+VarType=32ColType=827
+VarType=33ColType=827
+VarType=32ColType=827
+VarType=33ColType=827
+VarType=32ColType=827
+VarType=33ColType=827
+VarType=32ColType=827
+VarType=33ColType=827
+572,157
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
 
 
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Create Dimensions from File.
@@ -183,7 +187,8 @@ VarType=33€ColType=827€
 
 cProcess = 'Bedrock.Dim.ImportFromFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -319,14 +324,18 @@ DatasourceASCIIQuoteCharacter = pQuote;
 
 
 ### End Prolog ###
-573,45
+573,49
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
 
 
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -365,28 +374,36 @@ EndIf;
 
 
 ### End Metadata ###
-574,13
+574,17
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
 
 
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 ### Load Alias ###
 If( pDebug <= 1 );
   ATTRPUTS( vAlias, pDimension, vElement, pAlias );
 ENDIF;
-575,36
+575,40
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
 
 
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -416,7 +433,7 @@ EndIf;
 
 
 ### End Epilog ###
-576,CubeAction=1511€DataAction=1503€CubeLogChanges=0€
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
 1217,1

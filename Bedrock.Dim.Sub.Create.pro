@@ -1,9 +1,9 @@
 ﻿601,100
 562,"SUBSET"
-586,"Month"
-585,"Month"
+586,"}Cubes"
+585,"}Cubes"
 564,
-565,"w;bW5=yYml4yi:6\fAmtK2Qas\jZ[>5NgDUZ1iUi7MNjIcyjWq8JuNx6hkZw?[29odgscODy89XNd9FCkmu?U`:8s1YXD0Lcf[VpF;UbcpY0D1w?H_Eh7fA[um]yjaZ_@\7JM>D8@I_0i=1Y2P^a?kwaXWKB[0qqrxNg0[CRaLqwKTMy@mj7r]Ps@B4KN4?pBm:x6]in"
+565,"t\a7t79RcwM[1[mZCjj6aHPIoI3[y<=3=jZAn514PcoQ_eT7nK\RQ56@9UO=ywGtH4WKXr_lDEZ4Y8uvDwu45lZyT7f_H71C;r?<sIiIh>oYA`^5\NmPU=r@facmqLfKGTWILuC1?TNT?uOT]prYp45M^AB6drmfAvQm\zKx0qmIXNJhF=KXlK]y2St1X>uaUgfNF3ss"
 559,1
 928,0
 593,
@@ -84,13 +84,13 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,197
+572,199
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will create a static subset
@@ -113,7 +113,9 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Sub.Create';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
+
 cAttributeDim = '}ElementAttributes_' | pDimension;
 
 
@@ -288,7 +290,7 @@ DataSourceDimensionSubset = 'All';
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -359,7 +361,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -412,7 +414,7 @@ EndIf;
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
-1217,0
+1217,1
 900,
 901,
 902,

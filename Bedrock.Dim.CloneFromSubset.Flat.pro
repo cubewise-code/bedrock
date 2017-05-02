@@ -3,7 +3,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"sAgkwg2W6UGKljVuHz=awWIKjm\yEMe=R<wfT>AJtZRgpZFI``dE:_vlBA=US3Y<oOTF2P9[q;ukQEvfrOxH4xvdp^0AyEvwaI;IWJii0y4eYraZ9wpSZDORCiJ<Jx[vJOa4491Ad?0r5Zn59JCWcfZ149uAz;R2;OkCyuTE]J2Dob>eP76zTfMUdBf5W9A6qPfKfI7O"
+565,"dkZIalu`T4<uczgqK<DDfsYCyjzYooSEll7C9TykK7u?tjx;`t\EzKl_zXGT<]v2R:I^MgcaHZ=IVJuUrtGPi1=;ze61v8HeVb\n6p9JrxG_lDuf_3@t5awD?aeXd@YOOnwa9dRXH:cZ`ydHH^hX>J<NCBMj5s^3I906iA[B1ccoa0zb=LOlIkXCllxGr3b_KN6w:x4i"
 559,1
 928,0
 593,
@@ -24,23 +24,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pSourceDim
+pSubset
 pTargetDim
 pAttr
 pDebug
-561,4
+561,5
+2
 2
 2
 1
 1
-590,4
+590,5
 pSourceDim,""
+pSubset,""
 pTargetDim,""
 pAttr,0.
 pDebug,0.
-637,4
+637,5
 pSourceDim,Source Dimension
+pSubset,Source Subset
 pTargetDim,Target Dimension
 pAttr,Include Attributes? (Boolean 1=True)
 pDebug,Debug Mode
@@ -56,7 +60,7 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,111
+572,121
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -71,12 +75,13 @@ VarType=32ColType=827
 
 ### Constants ###
 
-cProcess = 'Bedrock.Dim.Clone' ;
+cProcess = 'Bedrock.Dim.CloneFromSubset.Flat' ;
+cUser = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
-
-cSubset = '}' | cProcess;
+cUser = TM1User;
+cSubset = '}Bedrock_' | cUser ;
 
 
 ### Initialise Debug ###
@@ -88,12 +93,14 @@ If( pDebug >= 1 );
 
   # Log start time
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
-
+  AsciiOutput( sDebugFile, 'TM1 User:        ' | cUser );
+  AsciiOutput( sDebugFile, '' );
   # Log parameters
   AsciiOutput( sDebugFile, 'Parameters: pSourceDim : ' | pSourceDim );
+  AsciiOutput( sDebugFile, '            pSourceSub : ' | pSubset );
   AsciiOutput( sDebugFile, '            pTargetDim : ' | pTargetDim );
   AsciiOutput( sDebugFile, '            pAttr      : ' | NumberToString( pAttr ) );
-
+  AsciiOutput( sDebugFile, '' );
 EndIf;
 
 
@@ -102,15 +109,30 @@ EndIf;
 nErrors = 0;
 
 # Validate source dimension
-If( DimensionExists( pSourceDim ) = 0 );
+IF(
+DimensionExists( pSourceDim ) = 0 );
   nErrors = 1;
   sMessage = 'Invalid source dimension: ' | pSourceDim;
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  DataSourceType = 'NULL';
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
+
+## Validate Source Subset
+IF(
+SubsetExists( pSourceDim, pSubset) = 0 );
+  sMessage = 'Invalid source subset: ' | pSubset;
+  If( pDebug >= 1 );
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+  ProcessQuit;
+ELSE;
+  cSubset = pSubset;
+  nSubsetSize = SubsetGetSize( pSourceDim, pSubset );
+  AsciiOutput( sDebugFile, '            Subset Siz      : ' | NumberToString( nSubsetSize ) );
+ENDIF;
+
 
 # Validate target dimension
 If( pTargetDim @= '' % pTargetDim @= pSourceDim );
@@ -119,29 +141,19 @@ EndIf;
 
 
 ### Create target dimension ###
-
-If( pDebug <= 1 );
+IF(
+pDebug <= 1 );
   If( DimensionExists( pTargetDim ) = 0 );
     DimensionCreate( pTargetDim );
   Else;
-    DimensionDeleteAllElements( pTargetDim );
+    ExecuteProcess( 'Bedrock.Dim.Hierarchy.Unwind.All',
+      'pDimension', pTargetDim,
+      'pDebug', pDebug );
   EndIf;
-  DimensionSortOrder(pTargetDim, 'ByName', 'Ascending', 'ByHierarchy' , 'Ascending');
-EndIf;
-
-
-### Build Source Subset ###
-
-If( SubsetExists( pSourceDim, cSubset ) = 1 );
-  SubsetDeleteAllElements( pSourceDim, cSubset );
-Else;
-  SubsetCreate( pSourceDim, cSubset );
-EndIf;
-SubsetIsAllSet( pSourceDim, cSubset, 1 );
+ENDIF;
 
 
 ### Assign Data Source ###
-
 DatasourceNameForServer = pSourceDim;
 DatasourceNameForClient = pSourceDim;
 DataSourceType = 'SUBSET';
@@ -159,23 +171,25 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
   While( nCount <= nNumAttrs );
     sAttrName = DimNm( sAttrDim, nCount );
     sAttrType = SubSt(DType( sAttrDim, sAttrName ), 2, 1 );
+    If( sAttrName @<> 'Format' );
       If( pDebug <= 1 );
         AttrInsert( pTargetDim, '', sAttrName, sAttrType );
       EndIf;
+    EndIf;
     nCount = nCount + 1;
   End;
 EndIf;
 
 
 ### End Prolog ###
-573,41
+573,30
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
+######################################
+##~~  Copyright Cubewise P/L 2010 ~~##
+######################################
 
 
 ### Check for errors in prolog ###
@@ -188,24 +202,13 @@ EndIf;
 ### Add Elements to cloned dimension ###
 
 If( pDebug <= 1 );
+  # Set debug file name
+  sDebugFile = cDebugFile | 'Metadata.debug';
 
-  sElType = DType( pSourceDim, vElement );
-
-  DimensionElementInsert( pTargetDim, '', vElement, sElType );
-
-  IF( sElType @= 'C' & ElCompN( pSourceDim, vElement ) > 0 );
-    nChildren = ElCompN( pSourceDim, vElement );
-    nCount = 1;
-    While( nCount <= nChildren );
-      sChildElement = ElComp( pSourceDim, vElement, nCount );
-      sChildType = DType( pSourceDim, sChildElement );
-      sChildWeight = ElWeight( pSourceDim, vElement, sChildElement );
-      DimensionElementInsert( pTargetDim, '', sChildElement, sChildType );
-      DimensionElementComponentAdd( pTargetDim, vElement, sChildElement, sChildWeight );
-      nCount = nCount + 1;
-    End;
-  EndIf;
-
+  ## Add the element to the target dimension.
+  DimensionElementInsert( pTargetDim, '', vElement, 'N' );
+ELSE ;
+  ASCIIOUTPUT( sDebugFile, vElement );
 EndIf;
 
 
@@ -215,9 +218,9 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
+######################################
+##~~  Copyright Cubewise P/L 2010 ~~##
+######################################
 
 
 ### Check for errors in prolog ###
@@ -264,9 +267,9 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
+#####################################
+##~~ Copyright Cubewise P/L 2010 ~~##
+#####################################
 
 
 ### Initialise Debug ###

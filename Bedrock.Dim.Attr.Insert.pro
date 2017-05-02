@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"wFYaiy3>Pem:D<oZuDq0OMmaW4y5i>Ee2_Fs563XjTLzuvfXeD^xA<;sVD67`tJz1CcJKbZX1Pvin2`c^oSxq@k9sW3X;WeW7Nl=r`dsG^jaZHcTrAQs1paSAostVhEE<j2odUZ9nnsJg5BL^wsf>f6UJHEOl;excoN?k;ynI5@?6i:3q39u8pfnKm32k?@y?MCSMWfh"
+565,"sf`hdlER3a4f^7Iye5ua`ygxkj\mUHInplGY\Q_aG[IqaHEa[Ov;ZL8xtTSA?o4K2iqDiLvOH4Zygx4\LpoMqj\1<gb0LSB1AL35<rchuqO?S4fXLK9_zOon@=@TPXQ?[d7iDCB8l\6a^bE\2S^4cWu]wGNoCAPXmJ@kS82[bFv2QxE4OfF\92MSAvj5DkNMZP[WD3j;"
 559,0
 928,0
 593,
@@ -54,20 +54,21 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,85
+572,86
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 ### Constants ###
 
 cProcess = 'Bedrock.Dim.Attr.Insert';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -140,18 +141,21 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,3
+
+575,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0

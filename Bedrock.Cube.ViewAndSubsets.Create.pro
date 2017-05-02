@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"rZa1:VIQd;QCeVsOoqadaRw[o819_7[0oI3cEgR1Neizp0UIS1[c5v>0=3T;gFe8lMbo]_JQpudnx1U2r;mdxVYgjaDSnBtxf=1Y@YfXcT[nd;GWmNU=okC9SzcO6o;:oUfF;cZm@c?_XcgKkFVQIH0@TpTOebEGS@_M`T0xp0_iMI2@L\q:34[cNZi5vb@8zN]k?]\x"
+565,"lR9pgHp5`hIaaayHSC^_ZoO[Z?290J]d]VRGt1jvE<iNaoRWspoE]K0jn?Bjkz]oEiH;bVui3[>]NVsTHcDbO`zv5[85fbpf=<L6tUAs@Rkr^dNm;ao7:6B4=v\5Tq\I6Il^;n1zWk6<9ET^B=_aQzL:DBGeWx>J`W6Egp`7Pm7Kf4JlKdnnOoKAXdFl8bCLjoOjNDM="
 559,1
 928,0
 593,
@@ -70,13 +70,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,192
+572,194
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process creates a processing view for the cube and for specified dimensions of the cube
@@ -91,7 +91,9 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.ViewAndSubsets.Create' ;
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
+
 
 
 ### Initialise Debug ###
@@ -128,7 +130,7 @@ If( Trim( pCube ) @= '' );
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
 If( CubeExists( pCube ) = 0 );
   nErrors = 1;
@@ -136,7 +138,7 @@ If( CubeExists( pCube ) = 0 );
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
 
 # Validate suppression parameters
@@ -146,7 +148,7 @@ If( pSuppressZero <> 0 & pSuppressZero <> 1 );
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
 
 If( pSuppressConsol <> 0 & pSuppressConsol <> 1 );
@@ -155,7 +157,7 @@ If( pSuppressConsol <> 0 & pSuppressConsol <> 1 );
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
 
 If( pSuppressRules <> 0 & pSuppressRules <> 1 );
@@ -164,7 +166,7 @@ If( pSuppressRules <> 0 & pSuppressRules <> 1 );
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
 
 # Validate view and subsets
@@ -279,7 +281,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -312,7 +314,7 @@ EndIf;
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
-1217,0
+1217,1
 900,
 901,
 902,

@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"ets7Vau@_yfQ6]UR5RbW`k;1F=i6SY>k]PD4EXz4t9F9x<ZPY?k\EZJfG;8MpvIHEZ^1O]]0_CAqf4K30h1SvE;[5Yi`25y]_n;fHnKU6O:Vmo=JXb0^gu[VsGi[auC1n]fvtV:3K?U9l@ng]Y2sQ]GGmiZs6Rlus147am`Q[NCLUU6un5JZpQ>hyR1lAZ5CrE9Nr:gR"
+565,"lffz>7=>86Wea5dMq\;vLn89PfVKZaAeq26wFjHL`qHqLU6eLBg9GrU2eLrTre9Ju6NYJnMXmtBz[Ga@:83^AMTTvW^[Yt^p=WM>Ni^7MKSPi]coAxpdp2E8^r]t5:3tknAn_rEG:]>xvw>bYsdpwMbHpwcS<iI?mov@Haq\qbze\:SZIr5x_mrPgWs54xM38EtGWzmP"
 559,1
 928,0
 593,
@@ -46,14 +46,14 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,88
+572,89
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process deletes cubes.
@@ -63,7 +63,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -135,14 +136,16 @@ End;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,36
 
 #****Begin: Generated Statements***
@@ -150,7 +153,7 @@ End;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

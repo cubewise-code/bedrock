@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"sMa8Awu9@sFH?1k^QMGa?qfvsqdu4EKBiac[40WIRZWfPbuDy9gHSbr0Iv?GzGjC?9nC4_fj`]n=7YevzUFDc5G:ySs`xRHQ3YQ4ABfYb2RR8>lR=^<6m:e3]6M?sI1Q_ggj1Q7mhQm?SlvdM@eHdkZEv@?8?c0HmQ\?HNqI2WYBPrk_X2FSx7LJt5dB[_pXWkpYozcV"
+565,"pNj39hpS=kGUJY^FaBd[_x6z__mBeOP=EWv7GOjK\bzvJEXNUM`A]Dg8@UXLiM3\b9NYU;Z;9r4BMy=Z1oOoLjyrFtEmzOCVizGPrvYLOOV;qC6tyAZsTEqGK]Q=JN^cvol4Cl5?2XEE\`UB<Qm1jXLw2jr2t1;o17^y:uCV;?Jq][gYvz6LmV87_a^aQV0kS8G5d3@k"
 559,1
 928,0
 593,
@@ -58,13 +58,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,158
+572,159
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will create a static subset based on a list of supplied elements
@@ -74,7 +74,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Create.ByElement';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -233,7 +234,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -266,7 +267,7 @@ EndIf;
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
-1217,0
+1217,1
 900,
 901,
 902,

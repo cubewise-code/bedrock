@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"mGGI:tBGnvl@vanR]9g6`_3LW0_M6aZfp@LhRzk7A1XgpzW0Yb<Q5:6xNh:LR_OC]L@K=^:]4uZ?NJzwq8r_dN9RofR86mjOCN1S?EQu_R:2]=bgJCm:k4pX[JICO>Tblorg3YBsAd9sGG@5tYBY6@V_pE4oE^leuyk1S^xN4r_rdg=3zumJAnp[s>=Y^k4OvsulbrHS"
+565,"rMW6beb1Q]?2xm^:\zaVepFbjB23A6O>xq_2<7[n;]d8n2;IrQvI_[WQXL<VjNM_sxG:eaVkC^@dBFrsFiVrdp8NQMXzfgQ3ho[B@owU8h<DrVmx6\g2B?;`Wynwo5ykSQ4XCUs34KEk=ly^x\>0w3gJA7GF?8?ZvqK2:ztxE`V\[4bde<0]fLwGqF9?rYAsLMQPD;c3"
 559,1
 928,0
 593,
@@ -38,13 +38,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,38
+572,39
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process refreshes TM1 security
@@ -54,7 +54,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Security.Refresh';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -77,21 +78,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,23
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

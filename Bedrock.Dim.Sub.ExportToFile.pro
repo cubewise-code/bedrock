@@ -1,9 +1,9 @@
 ﻿601,100
 562,"SUBSET"
-586,"}Clients"
-585,"}Clients"
+586,"}Cubes"
+585,"}Cubes"
 564,
-565,"lqcj6JnmlI0sal]v1xQ7yBFJ9gcYUksaJSZOq]jW_><JkV8cI@Osj9Ic?`c=MhaFOFx]XtfgyELw:Qj2]mmXfx0=^mp2rmYkg\RNCz>7a2t5@=HRil7T]dBghQ4ILx7SOkQImPB]Y1LAoGvjz;dISt^2nFWvP27d=[agob19DP2yVx4qbD3AU;4o@D;p79TF4U>VpdBo"
+565,"w8sT_mWz:iN\@nFuUk99P?LacQibxYC^yo3O5VOwWBr?8weMYTeaJ=ZdMpf\09TCwoSMKYywXwz<>eKu=Wg9ys?Cef9_eF[Z>AfbveVd[LEgxj18WWfGxY>93P_PVhUq4AFOkB=A[7inxcQC4m4jxG<OqIDfAYoneUwmVssGKbD?pxA4Uyk9FAdbh<J242>Hm_OPedD8"
 559,1
 928,0
 593,
@@ -64,13 +64,13 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,142
+572,143
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Export a dimension subset to a file.
@@ -80,7 +80,8 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Sub.ExportToFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -218,7 +219,7 @@ DatasourceDimensionSubset = pSubset;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -325,7 +326,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

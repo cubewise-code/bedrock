@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Data.ViewExportToFile"
 562,"VIEW"
-586,"myCube"
-585,"myCube"
+586,"placeholder"
+585,"placeholder"
 564,
-565,"eMP?4ac9F^_[b?2<DoG809amaWc^ag6Pqxdw0LearjyULIXhI<gE7dP==O>8;jHqL:Y;Gg32KGtgi`5IV>Xww9dYfQ2ei[DBHNox[Us\NQ=VY5m\P@H\_=RLGITOdiptp=k35Ryx;8;pmrV[>FCeGw]ES6MzY0TSQwl@cb3fKF9F6yOK_:N:E`FS:lNL4TOIuF<J04TG"
+565,"f9EGsTa7ulB:rPNo1k=7?xI94R?61><^xZrZ3aO[`j@eMBzH9vb7:lLyOLy_hu3De=:4nIO;kb[ngiULg\kiUSycYhdXKoxP`CA1=hOl\V6^r65xb2t?CoDh8ceGTsl6E4<ZA7mWEkUqh2et5Xav0D=^8^9=S8dp`k?2`nb4zXJc[ymc3hDYNs3T\rX>Z<Fw^1^oul>H"
 559,1
 928,0
 593,
@@ -19,7 +20,7 @@
 588,"."
 589,
 568,""""
-570,z_TI_View
+570,placeholderView
 571,
 569,0
 592,0
@@ -49,11 +50,11 @@ pCube,""
 pExportPath,""
 pExportFile,""
 pView,""
-pSkipRuleValues,1.
-pSkipCalcValues,1.
-pSkipNullValues,1.
-pTitleRecord,1.
-pDebug,0.
+pSkipRuleValues,1
+pSkipCalcValues,1
+pSkipNullValues,1
+pTitleRecord,1
+pDebug,0
 637,9
 pCube,Source Cube
 pExportPath,Export File Path (Defaults to Logging Directory if Left Blank)
@@ -64,7 +65,7 @@ pSkipCalcValues,Skip Consol Values? (Boolean 1=skip)
 pSkipNullValues,Skip Zero Values? (Boolean 1=skip)
 pTitleRecord,Include Title Record in Export File? (Boolean 1=Yes)
 pDebug,Debug Mode
-577,25
+577,34
 v1
 v2
 v3
@@ -90,7 +91,16 @@ v22
 v23
 v24
 v25
-578,25
+v26
+v27
+v28
+v29
+v30
+Value
+NVALUE
+SVALUE
+VALUE_IS_STRING
+578,34
 2
 2
 2
@@ -116,7 +126,16 @@ v25
 2
 2
 2
-579,25
+2
+2
+2
+2
+2
+2
+1
+2
+1
+579,34
 1
 2
 3
@@ -142,7 +161,16 @@ v25
 23
 24
 25
-580,25
+26
+27
+28
+29
+30
+31
+0
+0
+0
+580,34
 0
 0
 0
@@ -168,7 +196,16 @@ v25
 0
 0
 0
-581,25
+0
+0
+0
+0
+0
+0
+0
+0
+0
+581,34
 0
 0
 0
@@ -194,38 +231,58 @@ v25
 0
 0
 0
-582,25
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-572,177
+0
+0
+0
+0
+0
+0
+0
+0
+0
+582,31
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+603,0
+572,182
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This cube exports data from the specified cube to an ASCII file.
@@ -240,7 +297,8 @@ VarType=32€ColType=827€
 
 cProcess = 'Bedrock.Cube.Data.ViewExportToFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -398,15 +456,23 @@ ViewExtractSkipZeroesSet( pCube, pView, pSkipNullValues );
 
 
 ### End Prolog ###
-573,2
+573,6
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
-574,164
+
+574,168
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -566,12 +632,16 @@ EndIf;
 
 
 ### End Data ###
-575,34
+575,38
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -601,7 +671,8 @@ EndIf;
 
 
 ### End Epilog ###
-576,CubeAction=1511€DataAction=1503€CubeLogChanges=0€
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

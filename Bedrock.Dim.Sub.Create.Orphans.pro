@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"stsa\A8K@]vgRh>USWLaDk1et`xRV7^bZBn8sfeV:`t3>1<ZnT?rnjd9kr=Va0HM6R<mdD:`zU^wD<<2F?udG`JAy=h82NAVd:3<3@PiE4x<6pJGkK4[Gz@<ghk_NhOCu>yRd[stZ8Hmek;Apk@8Wicl99;]74GxMj6ZYXlH68V7Gm_K=[kq^bL06bxU]F7hcxDuWHsH"
+565,"nA\Xj`AoAa?pE>a`wLQs^L7zIa:GE=coRHMK0NX;H49Hc<e\]LWHC1_?c=hly\R5vqMlO@4pt[uEFA5Cv[aPTIO?H8m\:CzzoKEIaVagNCVUkMaLr\svg^RvOFvS]A?RoJtUi@rz7]?uL>wL=HHjMDpY`luHW6o4uaHShci<YoHbOPFGF;MlkD4NQO35CCK_J\@H9^h@"
 559,1
 928,0
 593,
@@ -42,13 +42,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,125
+572,126
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Create a subsets for "orphan" elements
@@ -59,7 +59,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Create.Orphans';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cSubsetOrphanC = 'Orphan C Elements (no children)';
 cSubsetOrphanN = 'Orphan N Elements (no parents)';
 
@@ -168,21 +169,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

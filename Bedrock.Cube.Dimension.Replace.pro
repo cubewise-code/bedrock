@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"wtXhid55ZcL3ocD=c47:zrhaipcFU>c5GJW<YjsgQbmnhnTcV;osAizx5nNf4czq]7ac6Oz@c3GraFt`;I^@MAL3d?m2O:hYZ=JTTS3k=RoZCBD_:N?rnu:1Ph4TUjDIDQGr3^5Np5TJA?1zLTs3sn?1>=G[>oJ5vU:x^[sy]2au_1EWMK3@c:Yijm30E]x`Meps0ST6"
+565,"ugyjgK01qrSJs9sJkIAF=at2P6[2cQu@4UzNDOzLQr>@:TXLlGEctFbY\9Pxc;cBbCkl_=xODHXZ3vIrnXX38dVq4o@ys8jJwI0owEPQgCU6A;=So`ooW4PVLgEyxNWpaCoW3g]Vg3NGB>D[N35K7MZJTD9uW>w?RE]a?w6:GoEaSSy@zOX7xd1oEb6dUi[TXvP;hxA3"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,334
+572,454
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process selects the cube and replaces
@@ -72,7 +72,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.Dimension.Replace' ;
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -220,9 +221,9 @@ If( nTargetDimExists = 1 );
 EndIf;
 
 # Check if cube exceeds current max dimenions
-If( nDimensionCount > 15 );
+If( nDimensionCount > 27 );
   nErrors = 1;
-  sMessage = 'Process needs to be modified to handle cubes with more than 15 dimensions';
+  sMessage = 'Process needs to be modified to handle cubes with more than 27 dimensions';
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
@@ -338,6 +339,89 @@ If( nDimensionCount >= 15 );
   EndIf;
 EndIf;
 
+If( nDimensionCount >= 16 );
+  sDim16 = TabDim( pCube, 16 );
+  If( sDim16 @= pSourceDim );
+    sDim16 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 17 );
+  sDim17 = TabDim( pCube, 17 );
+  If( sDim17 @= pSourceDim );
+    sDim17 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 18 );
+  sDim18 = TabDim( pCube, 18 );
+  If( sDim18 @= pSourceDim );
+    sDim18 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 19 );
+  sDim19 = TabDim( pCube, 19 );
+  If( sDim19 @= pSourceDim );
+    sDim19 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 20 );
+  sDim20 = TabDim( pCube, 20 );
+  If( sDim20 @= pSourceDim );
+    sDim20 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 21 );
+  sDim21 = TabDim( pCube, 21 );
+  If( sDim21 @= pSourceDim );
+    sDim21 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 22 );
+  sDim22 = TabDim( pCube, 22 );
+  If( sDim22 @= pSourceDim );
+    sDim22 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 23 );
+  sDim23 = TabDim( pCube, 23 );
+  If( sDim23 @= pSourceDim );
+    sDim23 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 24 );
+  sDim24 = TabDim( pCube, 24 );
+  If( sDim24 @= pSourceDim );
+    sDim24 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 25 );
+  sDim25 = TabDim( pCube, 25 );
+  If( sDim25 @= pSourceDim );
+    sDim25 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 26 );
+  sDim26 = TabDim( pCube, 26 );
+  If( sDim26 @= pSourceDim );
+    sDim26 = pTargetDim;
+  EndIf;
+EndIf;
+
+If( nDimensionCount >= 27 );
+  sDim27 = TabDim( pCube, 27 );
+  If( sDim27 @= pSourceDim );
+    sDim27 = pTargetDim;
+  EndIf;
+EndIf;
 
 ### Replace dimension ###
 
@@ -375,6 +459,42 @@ If( pDebug <= 1 );
    CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14 );
   ElseIf( nDimensionCount = 15 );
    CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15 );
+  ElseIf( nDimensionCount = 16 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16 );
+  ElseIf( nDimensionCount = 17 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17 );
+  ElseIf( nDimensionCount = 18 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18 );
+  ElseIf( nDimensionCount = 19 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19 );
+  ElseIf( nDimensionCount = 20 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20 );
+  ElseIf( nDimensionCount = 21 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20, sDim21 );
+  ElseIf( nDimensionCount = 22 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20, sDim21, sDim22 );
+  ElseIf( nDimensionCount = 23 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23 );
+  ElseIf( nDimensionCount = 24 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24 );
+  ElseIf( nDimensionCount = 25 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24, sDim25 );
+  ElseIf( nDimensionCount = 26 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24, sDim25, sDim26 );
+  ElseIf( nDimensionCount = 27 );
+   CubeCreate( pCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15,
+    sDim16, sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24, sDim25, sDim26, sDim27 );
   EndIf;
 
 Else;
@@ -385,21 +505,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

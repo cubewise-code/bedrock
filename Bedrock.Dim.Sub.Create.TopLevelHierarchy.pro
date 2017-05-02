@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"uCQ[[HmFP[IP_ed@sZ=H0a5JgXeS;lQrue6FKZ>g2dFii4xl_f2J5[K5@n:?w61UXFd:YLEk5?\rF4SUjSzRza<Ydfie4V7zlal12T^0Dmb^`_Zpl<B>3JWVxy=aym]q6Iwkq`ifBn8S=yRCxx;MiYV:39:FNDcit53KzYWtHdnowV8]IT<QBr5Lff[^nMNZj@_7:@rT"
+565,"xkbqo76waf9c`RTRx6=NP;o:axK:9V08KZcI1FS25mUydY@0E`gG3;68z:B?uhIgs]aoX>gu0[DOaCOL@30ri7i4W]]^2betmm>zUpYH>MQItPZRpvcrDfKv9GPQnu`3fqdL]6YiSFqqZ[c7v7MCp<Ce8pDeH]SNTaw:VN>mbNRDxWt9<[D:vwZ3OAuzgZ]cj2b<Jt=@"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,127
+572,128
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Create a Top Level Hiearchy by N-Level Elements
@@ -66,7 +66,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Create.TopLevelHierarchy';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -178,21 +179,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

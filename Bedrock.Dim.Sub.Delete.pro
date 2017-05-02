@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"n]O0>_Sm6IjYg\ay;@1MzuRY=g;S1jzT3vSl77w@hIU:at`gJisKNy4k04jHOkeI3VJMM2>DS]Oonm<tdold:8fw83b=B]4XZ_<NRElh=6q;sOXpr6<TY]2z^z4iJyHI>8?BAdTV`Mt@HhTUeC?Gg^]x>eBV49ERM8[t2hcOaDOjjpV<OlI65KiZ>_Z=PIzRKlaWlF6p"
+565,"ml;>TIQSg[Tj^aB:@rG6efRP>SJBt<WmTYr:G3;i>]\rF@ZAfr3Pq[7P?:;6rsBDbAXEFWKIoGaSC>ZV;xyY_LDlie>BqP6HrbqCn97];qe\@K1LMYtzhv12`vCkied34JUWj<H25s8u`IkWcGlxhH3BM7Fk^0bf@I>?\umJRAQ<;4BT:ydJGQhtz>b5iXHWQQ?0:j]u"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,194
+572,195
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process deletes public subsets
@@ -97,7 +97,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cDimension = '}Dimensions';
 
 
@@ -245,21 +246,23 @@ End;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

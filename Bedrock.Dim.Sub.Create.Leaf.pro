@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"ecS24aBDeR07;8eq0dumqkib3AZa][fXpR5;B6w1bw6YtD3y>Qv`W\39]Q^X>ID3OMFQS\IGjXq`LhETUvUkw1[P[ykYgXnMKR_NIqVy7fr:]=iImG5E7xJWBhVsCg0:6O0bdk<XVP94nXjojH7fBFOfi@lcozHdx;Ho6G4zPWTeHEC^?<C8W=fmnNjHUd=lmsSdqMvP"
+565,"qt2:ACHIivPf:=p>Lagw2@9ZnSu_vR9kF=fQuWM`y`72OsFQ`Ql@bZA=RcDKuPbZGr@hJOfxioM@Fhx1fgC8VAe1W[Pw3q`^:qoUbKp1UMf0<tvKGbp5e@=`S^NRFwn[hHQ:QXGKNW8n:oM7O4=y=Y=p3hWGA9rGT?4wTEBH_[j<:eH]TyR?xoUKoGlMR8Q8i=LIEpV="
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -99,7 +99,7 @@ ExecuteProcess( 'Bedrock.Dim.Sub.Create',
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
-1217,0
+1217,1
 900,
 901,
 902,

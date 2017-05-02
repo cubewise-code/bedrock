@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"vI@HKZ6Z4c8aXnj0SLMHwea>JOGj9==g:v9fWi0dJyQaH[3=^:NOWBbGT_CczLW;3@L7z4VXt]EFxN`hNg[b;Shprb?UmhCTFL8LvBAt3?>hQ:\dkA?dCpQN0qsy<Gu1BGy88uUt\;n738wx@8>Qb0R\J[cvb>=XyDqZr^ZNByHkPHeyY3pBN2X=D\F:PrWKofPl9L=x"
+565,"pw`N4rLQ46KD2]lOaE0d>Vy<>aco>>bWim9KaJnPtpLFRLi2sqPMJM?47<0kJv1Hc:@ak<pRfbqn0wK[vA?vaqE@M06:e_XspH9b2c]Fh_J_oipb4ecy=AxO4mnH_^HD5WiC55_V4S9wg8:>7GWWt7[cEJ:D]nkHljDVbIwpZp[>EU[o78>8RNywxF[lc<7vIHhXon4;"
 559,1
 928,0
 593,
@@ -36,14 +36,14 @@ pDebug
 2
 2
 1
-1
+2
 1
 590,6
 pClients,""
 pGroups,""
 pPassword,""
 pMaxPorts,5.
-pDelimiter,0.
+pDelimiter,"&"
 pDebug,0.
 637,6
 pClients,List of Clients Seperated by Delimiter
@@ -58,13 +58,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,30
+572,32
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will create a client with full setup
@@ -76,12 +76,14 @@ ExecuteProcess( 'Bedrock.Security.Client.Create',
   'pClients', pClients,
   'pPassword', pPassword,
   'pMaxPorts', pMaxPorts,
+  'pDelimiter', pDelimiter,
   'pDebug', pDebug
 );
 
 ExecuteProcess( 'Bedrock.Security.Client.Group.Assign',
   'pAddOrRemove', 'Add',
   'pClients', pClients,
+  'pDelimiter', pDelimiter,
   'pGroups', pGroups,
   'pSecurityRefresh', 'No',
   'pDebug', pDebug
@@ -89,18 +91,28 @@ ExecuteProcess( 'Bedrock.Security.Client.Group.Assign',
 
 
 ### End Prolog ###
-573,3
+573,7
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,3
+574,7
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+575,5
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
+
+
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0

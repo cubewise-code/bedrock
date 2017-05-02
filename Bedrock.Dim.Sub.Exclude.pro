@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"fk_rchaHQZK_eB:2\;nh[u`HKPat:J[NQItm>c7WnUmPp[jeYdmCIZ8f=oWXV]WGS@g<NVtHJ<6KFiU00A4tl1Y4bA@eU=]ympZ^[T7x8mt>tz^DUdSok[sBkN_T\8luIVnDyV`6v8J^nHC9QB7`5YWWBfXN^cr3QNOu`WXVHVY6gRFbZxD2UVcRmZq=[z3qPx;OSocR"
+565,"o1i5ZZq;A_qAn`ma=zqGAu8vmNdsf?Dmmy><NJ9JI\ysOgX5M74yCvXUwGXO80IXT<zX:_[bhgf`2evYOj6S^AW@fqTNc=g36?WY;Fgu2\uE22`\IYK`^b8R\Pk7Gvgt\pgU4^rxZb5I\D=7IYoFv?_?1Zdx_7AFTV>ZFmv>=?FYFYLm`QI:?[jhssz_zT9d7sJ6gPej"
 559,1
 928,0
 593,
@@ -54,13 +54,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,140
+572,141
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will remove specified elements from a subset
@@ -72,7 +72,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Exclude';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -211,7 +212,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -244,7 +245,7 @@ EndIf;
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
-1217,0
+1217,1
 900,
 901,
 902,

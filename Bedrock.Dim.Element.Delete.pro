@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"f6ibIsac9LaE9;_0^IG=M<Y<\K92`x1M:^\S4YE1mr_ZMOZ^G_qzVnticF;84mF>9Nnos?yP:nqw<`d6n^jHjOAIt[NxLJhB1nblFzmoQpLXLSC@vhEbPHuJr_Inzq:DX1Z2O<L]_E`Ccpf=iQrNhh`b?ktGV95]5K35D0:2wk8LrO_@_wjCHihq4ykC8EI<Z8=3a=WT"
+565,"hEVM;jbdai82Q0Y1KzPuK`vHglN_VPQu<PzB`z9A;TNXBmSJOtRsBY:f2?q@>z_tv``Wq[L3CG2PTvPcejw:q29fE:LiI7yGms>J68xko2mYvDz5t>bm`a:dm_ijKkQRH2[f]ZL>D^_bU8X8\uYt]TXC68igAXkmNI:BaRVgvHdtQWftlJZA3c44kv1=T=vLOHvbocgo"
 559,1
 928,0
 593,
@@ -46,13 +46,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,84
+572,88
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Delete Elements in a Dimension
@@ -62,7 +62,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Element.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -122,30 +123,35 @@ If( DimIx( pDimension, pElement ) = 0 );
   ItemReject( sMessage );
 EndIf;
 
-
+sElement = DimensionElementPrincipalName( pDimension, pElement);
 ### Delete element from dimension and all associated attribute and cube data ###
-
 If( pDebug <= 1 );
-  DimensionElementDelete( pDimension, pElement );
+  DimensionElementDelete( pDimension, sElement );
 EndIf;
 
+If( pDebug >= 1 );
+sMessage = 'Element: ' | pElement | ' removed from: ' | pDimension;
+  AsciiOutput( sDebugFile, sMessage );
+EndIf;
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

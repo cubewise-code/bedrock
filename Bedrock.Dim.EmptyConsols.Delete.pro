@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"xI1TZ4cNbwI@mNK^NDN6yPboa7i^bsUDlUmljZaEswvSp0h0s9]u?TU5W`BrzBlL@5ZFK5708WHMGhLx`8uG^SZ[>;_iKLQxcxPG8:z]e9jJX=IIwW`olsD[oNzckRx^<qAQxl[BT4\?0jGzP?cfIyO^ef7P_II;mcwn]_MLHhaLipE7?rCXbvL_QBRB677:BkzTcBJT"
+565,"n\H8`>Ske<JTO?aI5:Mrlu>X]1iiE]vj:bs@Gl[8pxHlRO`dLj:IzRkSO[W0HsD=K>f05lK52@Cg]Gg2lg9QexKQelvEIDH>c9gB1h^]7JvzvPYV_l6Moly\H5Qvq9tKIC37;HIodFzeShs]u7zF0MzQIzV2Uom`GLxY`<qH]TZZhU`GmX<lj:8:ZYx@AC89^y`jox=A"
 559,1
 928,0
 593,
@@ -42,13 +42,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,87
+572,88
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will delete all consolidations with no children in the target dimension.
@@ -61,7 +61,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.EmptyConsols.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -136,17 +137,18 @@ End;
 #****End: Generated Statements****
 
 
-574,3
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

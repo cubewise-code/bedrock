@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Data.ExportToFile"
 562,"VIEW"
-586,"myCube"
-585,"myCube"
+586,"placeholder"
+585,"placeholder"
 564,
-565,"q4Bvx1CLLr4MVV`wGaDvq3d>n57kC5h^ktqe_uF<uc<o`BDwNAy[6^FGNosH;9YYYfSO@WKbh`J:vwt]vOk1AbyL`XJ_=fgv9r5KVt?gP]YHZymFy]Lbsu>wpx_uyXGJ;IhL9=v^OyvDi6_rs3fZBwtwpGRYYo6t3AyoLXnnSGpd[A7sjVLTYja4y[Y=0kD<fAIPQD\I"
+565,"kpFbkqy1JeMah_?v5ql?rhPoYc9zMtNtBWq=I8zTR6pfNOh`12KC?9TaG7nz_QW4:2BBv^BXH^hH_t9Ca3\2`;;k<L_;u:L;aqT2IU?m`l^<]yks6aO_RN`5By?WmmslM]d5p2R[yheS[QVvuJ]8:UEm[7W`<:]UB[iegP?u78yCCsTu?n`9L<C7cW<^`ifXJh8WcGL2"
 559,1
 928,0
 593,
@@ -19,7 +20,7 @@
 588,"."
 589,
 568,""""
-570,z_TI_View
+570,placeholderView
 571,
 569,0
 592,0
@@ -48,9 +49,9 @@ pDimension,""
 pElement,""
 pFilePath,""
 pFileName,""
-pSkipRules,1.
-pZeroSource,0.
-pDebug,0.
+pSkipRules,1
+pZeroSource,0
+pDebug,0
 637,8
 pCube,Cube
 pDimension,Dimension
@@ -60,7 +61,7 @@ pFileName,Export Filename (If Left Blank Defaults to cube_dim_ele_export.csv)
 pSkipRules,Skip Rule Values? (1=Skip)
 pZeroSource,Zero Out Element AFTER Copy? (Boolean 1=True)
 pDebug,Debug Mode
-577,25
+577,34
 v1
 v2
 v3
@@ -86,7 +87,16 @@ v22
 v23
 v24
 v25
-578,25
+v26
+v27
+v28
+v29
+v30
+Value
+NVALUE
+SVALUE
+VALUE_IS_STRING
+578,34
 2
 2
 2
@@ -112,7 +122,16 @@ v25
 2
 2
 2
-579,25
+2
+2
+2
+2
+2
+2
+1
+2
+1
+579,34
 1
 2
 3
@@ -138,7 +157,16 @@ v25
 23
 24
 25
-580,25
+26
+27
+28
+29
+30
+31
+0
+0
+0
+580,34
 0
 0
 0
@@ -164,7 +192,16 @@ v25
 0
 0
 0
-581,25
+0
+0
+0
+0
+0
+0
+0
+0
+0
+581,34
 0
 0
 0
@@ -190,38 +227,56 @@ v25
 0
 0
 0
-582,25
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-572,191
+0
+0
+0
+0
+0
+0
+0
+0
+0
+582,31
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+603,0
+572,193
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This TI is designed to copy all data in a given cube to a file for a given "element"
@@ -408,15 +463,19 @@ DatasourceCubeView = cTempViewFrom;
 
 
 ### End Prolog ###
-573,2
+573,4
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
-574,69
+574,77
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -477,16 +536,24 @@ ElseIf( nDimensionCount = 23 );
   AsciiOutput( cExportFile, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, sValue );
 ElseIf( nDimensionCount = 24 );
   AsciiOutput( cExportFile, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, sValue );
+ElseIf( nDimensionCount = 25 );
+  AsciiOutput( cExportFile, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, sValue );
+ElseIf( nDimensionCount = 26 );
+  AsciiOutput( cExportFile, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, sValue );
+ElseIf( nDimensionCount = 27 );
+  AsciiOutput( cExportFile, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, sValue );
 EndIf;
 
 
 ### End Data ###
-575,53
+575,52
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -504,10 +571,7 @@ EndIf;
 
 If( pDebug <= 1 & nErrors = 0 & pZeroSource = 1 );
 
-  nOldCubeLogChanges = CubeGetLogChanges( pCube );
-  CubeSetLogChanges( pCube, 0 );
   ViewZeroOut( pCube, cTempViewFrom );
-  CubeSetLogChanges( pCube, nOldCubeLogChanges );
 
 EndIf;
 
@@ -535,7 +599,8 @@ EndIf;
 
 
 ### End Epilog ###
-576,CubeAction=1511€DataAction=1503€CubeLogChanges=0€
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

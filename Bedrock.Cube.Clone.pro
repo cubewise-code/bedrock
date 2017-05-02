@@ -1,9 +1,9 @@
 ﻿601,100
 562,"VIEW"
-586,"placeholder"
-585,"placeholder"
+586,"Bedrock Test"
+585,"Bedrock Test"
 564,
-565,"zt;dO8Muf3_433[ODWOo5\43@va]kIHIkEsLsZ;e2TUxV@_=cE18Z]aR3l9g1>146Wv;H4mi7v8gdyMbbnM=cQ1P7d6kp^o;v6k_0SYQzq_jd=SVq^0iVJ[6fUax=H8[WsuKv?o^OUvn=fJaC@ar7w:BG7Rxq5^c^3LrD<uSMeSW4[w`4EBF3ggzUsua08PQ61@6x<cC"
+565,"zj]uoGlENSS1Xlu[9alIrIuYL8atY:DBNL3tl1?l2oBqseXs<]k\L?`=Haw4YhSr@?Y:Q2qa>rdG4EXJFA]l3rBu=SmbR=DsZUDhfrMY>b2_@prHv^<IJjDephYvP2aS]I5=_8tJZgXdfM[y;B9m5g`wquyU239:fkuqoDyt2CM_dMxfT2C@h0nLZbFd]wlr:<moBxdf"
 559,1
 928,0
 593,
@@ -19,7 +19,7 @@
 588,"."
 589,
 568,""""
-570,placeholderView
+570,Temp
 571,
 569,0
 592,0
@@ -56,7 +56,7 @@ pIncludeData,Include cube data? (Boolean Yes = 1)
 pSourceView,Source View (blank = whole cube If pIncludeData=1)
 pRuleValues,Skip rule values? (1=skip)
 pDebug,Debug Mode
-577,25
+577,28
 v1
 v2
 v3
@@ -82,7 +82,10 @@ v22
 v23
 v24
 v25
-578,25
+V26
+V27
+V28
+578,28
 2
 2
 2
@@ -108,7 +111,10 @@ v25
 2
 2
 2
-579,25
+2
+2
+2
+579,28
 1
 2
 3
@@ -134,7 +140,10 @@ v25
 23
 24
 25
-580,25
+26
+27
+28
+580,28
 0
 0
 0
@@ -160,7 +169,10 @@ v25
 0
 0
 0
-581,25
+0
+0
+0
+581,28
 0
 0
 0
@@ -186,38 +198,46 @@ v25
 0
 0
 0
-582,25
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-572,234
+0
+0
+0
+582,28
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+572,248
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process replicates an existing cube.
@@ -236,7 +256,8 @@ VarType=32€ColType=827€
 
 cProcess = 'Bedrock.Cube.Clone';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -306,9 +327,9 @@ While( TabDim( pSourceCube, nDimensionCount + 1 ) @<> '' );
   nDimensionCount = nDimensionCount + 1;
 End;
 
-If( nDimensionCount > 24 );
+If( nDimensionCount > 27 );
   nErrors = 1;
-  sMessage = 'Cube has too many dimensions: ' | pSourceCube | ' max 24 dims catered for, TI must be altered to accomodate.';
+  sMessage = 'Cube has too many dimensions: ' | pSourceCube | ' max 27 dims catered for, TI must be altered to accomodate.';
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
@@ -352,7 +373,9 @@ sDim21 = TabDim( pSourceCube, 21 );
 sDim22 = TabDim( pSourceCube, 22 );
 sDim23 = TabDim( pSourceCube, 23 );
 sDim24 = TabDim( pSourceCube, 24 );
-
+sDim25 = TabDim( pSourceCube, 25 );
+sDim26 = TabDim( pSourceCube, 26 );
+sDim27 = TabDim( pSourceCube, 27 );
 
 ### Create target cube ###
 
@@ -412,6 +435,15 @@ If( pDebug <= 1 );
   ElseIf( nDimensionCount = 24 );
     CubeCreate( pTargetCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15, sDim16,
                 sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24 );
+  ElseIf( nDimensionCount = 25 );
+    CubeCreate( pTargetCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15, sDim16,
+                sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24, sDim25 );
+  ElseIf( nDimensionCount = 26 );
+    CubeCreate( pTargetCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15, sDim16,
+                sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24, sDim25, sDim26 );
+  ElseIf( nDimensionCount = 27 );
+    CubeCreate( pTargetCube, sDim1, sDim2, sDim3, sDim4, sDim5, sDim6, sDim7, sDim8, sDim9, sDim10, sDim11, sDim12, sDim13, sDim14, sDim15, sDim16,
+                sDim17, sDim18, sDim19, sDim20, sDim21, sDim22, sDim23, sDim24, sDim25, sDim26, sDim27 );
   EndIf;
 
 EndIf;
@@ -447,15 +479,19 @@ EndIf;
 
 
 ### End Prolog ###
-573,2
+573,4
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
-574,199
+574,228
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -644,18 +680,47 @@ If( pDebug <= 1 );
     Else;
       CellPutS( v25, pTargetCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
     EndIf;
-  EndIf;
+  ElseIf( nDimensionCount = 25 );
+     sElType = DType( sDim25, v26 );
+    If( sElType @<> 'S' );
+      CellPutN( Numbr( v26 ), pTargetCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22,
+      v23, v24, v25 );
+    Else;
+      CellPutS( v26, pTargetCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24,
+            v25 );
+    EndIf;
+  ElseIf( nDimensionCount = 26 );
+     sElType = DType( sDim26, v27 );
+    If( sElType @<> 'S' );
+      CellPutN( Numbr( v27 ), pTargetCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22,
+      v23, v24, v25, v26 );
+    Else;
+      CellPutS( v27, pTargetCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24,
+      v25, v26 );
+    EndIf;
+  ElseIf( nDimensionCount = 27 );
+     sElType = DType( sDim27, v28 );
+    If( sElType @<> 'S' );
+      CellPutN( Numbr( v28 ), pTargetCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22,
+      v23, v24, v25, v26, v27 );
+    Else;
+      CellPutS( v28, pTargetCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24,
+      v25, v26 );
+    EndIf;
 
+  EndIf;
 EndIf;
 
 
 ### End Data ###
-575,60
+575,62
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -711,7 +776,7 @@ EndIf;
 
 
 ### End Epilog ###
-576,CubeAction=1511€DataAction=1503€CubeLogChanges=0€
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
 1217,1

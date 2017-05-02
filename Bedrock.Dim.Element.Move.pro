@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"e^mPHaqqz4GPUoZm<@LeT[pUUg2V7o<cuV]vxlD0hi3SR?pj=L_2f>L56uurcTTu3kBB2y]uxG1BB[ip8kmzb7lr5s\g8XkB^O>a0ZHs_nt;CRUQk3\gGQ0uYHf^_hhgb15tM;A`;C=wetiJ;8:rARl^=CIQ^Ut;IGS@8@YJDfliKH?sy0hS>pK0<_`s=3cbidlHB2W?"
+565,"x2u50WA=p9SvpEcSIEWm>\Q0aH7\GjfFUg3tZHW]?0xGcFnSImNhz4RT5moZ`jj:NXUT=yJTlm]qRhM]9CwYcnnDD71Wd7Ik@k]6wLW>y9^@cnFTQdAJUEt0:k5hV55C^i=gl]uxsqXJ0nE38HxeoOhVF;FwpT<8vOZE34XP5dlD^rVSzv>NW]5_tvPL[svtX=6OlnGB"
 559,1
 928,0
 593,
@@ -58,13 +58,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,146
+572,147
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Add or Remove Elements from a Consolidation
@@ -74,7 +74,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Element.Move';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -205,21 +206,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

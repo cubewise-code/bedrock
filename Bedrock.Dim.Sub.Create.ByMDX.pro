@@ -1,9 +1,9 @@
 ﻿601,100
 562,"CHARACTERDELIMITED"
-586,"C:\TM1\MDXSubset.csv"
-585,"C:\TM1\MDXSubset.csv"
+586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
+585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"kp;Xza@wgP?auR`3hpC`qn;zp2384hhqDJ2_Tzp=YL5e^`k2iBm:E`VDYaRGJOfc@6OrLViEOW3\Vh23pSB`iM6f4uTeWC=VINfAnVVuqvSqGtXsgvo>[8IPCpXg30NL36GYTAnRK2tK9SqYA1dM5=p8zfw>>k2DB_]qM6?tvz]<1zYC7guj5LW`HXZLxo:;Qf_jz2N;"
+565,"xrMw?OMbXAO[OnXGK2`xrrb9a[dj^[S1bD0pES7OcKl0X8Hp<\<UgXMNC0G0Lfu2EX^vW;y:jRiF5lU_CIyJFG]uADSH4?g@^AEp>W?b^1\1b7yPzhY]tlJk3YPXD=Wo`q]5>OgZRS3obwrm31i1o;QQ\kTWT2WZ=Y6ruqQ[b<bT^;HuRdI=AJLFSY\FBN\yz:5ZpD@="
 559,1
 928,0
 593,
@@ -48,26 +48,34 @@ pSubset,Subset
 pMDXExpr,Valid MDX Expression for Specified Dimension
 pConvertToStatic,Bolean: 1 = True (convert to static subset)
 pDebug,Debug Mode
-577,1
+577,2
 vElement
-578,1
+V2
+578,2
 2
-579,1
 1
-580,1
+579,2
+1
+2
+580,2
 0
-581,1
 0
-582,1
-VarType=32€ColType=827€
-572,144
+581,2
+0
+0
+582,2
+VarType=32ColType=827
+VarType=33ColType=827
+572,147
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Create a dynamic subset from an MDX expression
@@ -80,7 +88,8 @@ VarType=32€ColType=827€
 
 cProcess = 'Bedrock.Dim.Sub.Create.ByMDX';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cTempSubset = '}' | cProcess | '.' | NumberToString( Int( Rand() * 100000 ) );
 cTempFile = GetProcessErrorFileDirectory | cTempSubset | '.csv';
 
@@ -205,14 +214,16 @@ EndIf;
 
 
 ### End Prolog ###
-573,19
+573,21
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -225,16 +236,21 @@ EndIf;
 
 
 ### End Metadata ###
-574,1
+574,4
 
-575,50
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
+575,52
+
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 
 
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -278,7 +294,7 @@ EndIf;
 
 
 ### End Epilog ###
-576,CubeAction=1511€DataAction=1503€CubeLogChanges=0€
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
 1217,1

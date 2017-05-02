@@ -1,9 +1,9 @@
 ﻿601,100
 562,"CHARACTERDELIMITED"
-586,"C:\Placeholder\Attributes.csv"
-585,"C:\Placeholder\Attributes.csv"
+586,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
+585,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
 564,
-565,"rFv?3<f;yCirFO0XRtaFTNYmXD4wh>6VsJ4oX^P7Ez<4ANGvbeQ9fe0<RDVo?Ds\fTun8bIkqZ@1Y=RbkpFBCf=iRHT@UyXHxlbDJ86bd=9RrU69XX^AKaHO:GvueJ0?=s5@82cfgYiIjGVJPHn`8GrS<JKuvz7T_UDc2SWF7rt3;5Xf0G3<H_js;kH89lvL95OmWn6r"
+565,"ySOZoo7u4G=AVZ4;s5cJk<\hza\:Tf9C<RKth;8nO?T24NeBtjDXU6gFI]Ux5Z3MwUTi7ib`Mi_tMYYo3p<[\SR_J>qnvh[bJ=YXHyrmQ;q^cV]ibA`zm1oCXMWw;l;x8Zrk=CDcgTK@uK?plyj4AaQeg\^k[Qqr4k5DMDXJ29002d`z7jAq><OE^x\x3WoU9ewQNd9Q"
 559,1
 928,0
 593,
@@ -56,31 +56,37 @@ pTitleRows,Number of Title Rows to Skip
 pDelimiter,Delimiter Character (default=Comma)
 pQuote,Quote Character (default=Double Quote)
 pDebug,Debug Mode
-577,2
+577,3
 vAttribute
 vAttrType
-578,2
+V3
+578,3
 2
 2
-579,2
+2
+579,3
 1
 2
-580,2
+3
+580,3
 0
 0
-581,2
+0
+581,3
 0
 0
-582,2
-VarType=32€ColType=827€
-VarType=32€ColType=827€
-572,121
+0
+582,3
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+572,123
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will create Attributes to the dimension from a file.
@@ -91,7 +97,9 @@ VarType=32€ColType=827€
 
 cProcess = 'Bedrock.Dim.Attr.ImportFromFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
+
 nMetaDataCount = 0;
 
 ### Initialise Debug ###
@@ -202,7 +210,7 @@ DatasourceASCIIQuoteCharacter = pQuote;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -241,17 +249,18 @@ EndIf;
 
 
 ### End Metadata ###
-574,3
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -281,10 +290,10 @@ EndIf;
 
 
 ### End Epilog ###
-576,CubeAction=1511€DataAction=1503€CubeLogChanges=0€
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0
-1217,65535
+1217,1
 900,
 901,
 902,

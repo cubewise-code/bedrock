@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"bNaSByvtk?sa5nkSyKj>cjtK:z:qJqmmFIeAcJN3weB3[3KNFaE2y]qtlO]>NFo;z6iYSgupcTIBhZn=psvL3k=>WImFGh9vamh:En3Iy9?OAeS@01G[ixB3o<6O8fJp:t;2[nx6cwoZFnwZ[;6ukgSy\H>aZMKyl^9b[YC;U1uyqP>515tqJAs84pNgrcGUSStBdvwZ"
+565,"rjKWp>n1S[GG?2]HZ@aQZMl2@O^ua@lhbQv:2an9o9hEQdt=B<U50GC<0RF3PoWb`ikQ@OWEfAJne[sj1:YvUkS0QvaN72D:RlcjM63]W^q25bp:m`[`Eq_yxND^tyUzIFG<C_T@C6jMRU087XFbC]8DFQox2L\vr2zm`YcUGXjXsj[v<M7D1qxsjejuBqr_glGPG8DP"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,96
+572,97
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will create new element in a dimension
@@ -66,7 +66,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Element.Create';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -147,21 +148,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"kTtW7YAvHzta[=1`1a<eFGUN_;vLsDKldSY_tq3kcB7Bjk[NfER7BR8=Iqp6dxp9BEm>2@wsp=wntPKA0yeL7ixv9r]Fh<2Vbw1h0FDh<w=q]ld<fO\fwBIWW;FLL7FeLpEe0]>WSZb\l2[oAyV]O:V0drPH2QACejc45ifUU_B]yDkCX>\i0Vkc<Fo`=b12;S8MdDkR"
+565,"phuEuqx;8zM<3vd@ab8?JV[Xn_2Ewh;t306=sX?5kk^lBDlpW`CCn_0K_H=ht7XTOsAEol`tiHdmC@4m4CWgLZ^R]I<:LkIWII>dz^mm`EV3Sr6H[EMpg@E3tNBXAjagar]p_eVPIMPuS]b?52QNJ6a\@wcsB_TLaYlQ_^r[`qgvuqNXjzn1mYf^HU_iR1[KO;>xT0MZ"
 559,0
 928,0
 593,
@@ -54,13 +54,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,170
+572,172
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process automatically creates a view and zeros it out.
@@ -78,7 +78,9 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.Data.ZeroOut';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
+
 cView = '}' | cProcess | '.' | NumberToString( ROUND( RAND( ) *100000 ) );
 cSubset = cView;
 
@@ -225,21 +227,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,35
+
+575,45
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 
@@ -259,6 +263,16 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Process Finished: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
 
 EndIf;
+
+### Destroy temporary views and susbsets ###
+If( pDebug <= 0 );
+  ExecuteProcess('Bedrock.Cube.ViewAndSubsets.Delete',
+    'pCube', pCube,
+    'pView', cView,
+    'pMode', 1,
+    'pDebug', pDebug);
+ENDIF;
+
 
 
 ### If errors occurred terminate process with a major error status ###

@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"nPeq5L`9>D`o88ajL3Z;7lY]3T_>x;Bc40_v35FieawzqKP4FWQVAhI@XOSj[e8R8>0>zEnysFfIDacY9nxKjH^APnqz?Hy3dG5kfta8XwTjp?YuXaZ4U<MGJGuEfpjbfcWTi`PmM\;?SrXSLl^I]EDBQGNDnJ>OnMDU`4Iv5B5[nGvKAgUM5;594wfZ:fGy7p<qruKg"
+565,"qXjHS8tj>[p4\P>>DaOG6hthgBiHQngsd9srgOLE[7@wuHeRXniE_jvxQ:ZkX546_P8L7UkI04nQW7Gm?Jc[KB>k71dOVwT>b[6\31DXld:AMqmW:Un3<y@[v6A`=;Wki:=J0HoUn`D987u]Q]<_NzfLt5y99X;LSUxtv?`uJ3LnF`zHBktR1:EdeMOKq2:W\iVsSV1x"
 559,1
 928,0
 593,
@@ -42,17 +42,18 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,58
+572,59
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 cProcess = 'Bedrock.Dim.Create';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -101,21 +102,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

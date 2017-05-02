@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"taW4omF<PxSAF:I^\]tbaFbHzB2R2NRw=\xokc2<sWQgEFo\fPE=KwZWO5=@zJeROzgqmxgKFEbMZGV_X?\yEyZtCcHuZgurn2N3y>c2jX2VEf;>cjjIYODK:3^tbwhkUQXXn[=0DlI?[fG`=v5[NAeqa=OYSfsuG1W;PXK_2hCNJkZYtF0qagJVwAl5=yftx59=G9EY"
+565,"vj0g=FpnKJv5u8NHQZX0hpab3kr]RxBNL?_8s<9_1i^RDWrp:Wd2ebOwe`wCo:9YLLPLRmAb6xE@TOauZHC8OX\cE26lIm22s93:jcR69^eek03fEFNQF@2PGlxSX2IwSEOq8lP8h41X@4O6:q\^SEXFdz[PyG12Snpm:GZzTi?dCA2<_eSrzkWVBWGoE>]Ccreqbf1d"
 559,1
 928,0
 593,
@@ -46,13 +46,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,95
+572,96
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will create client groups
@@ -66,7 +66,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Security.Group.Create';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -142,21 +143,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 

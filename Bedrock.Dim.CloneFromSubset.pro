@@ -3,7 +3,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"sAgkwg2W6UGKljVuHz=awWIKjm\yEMe=R<wfT>AJtZRgpZFI``dE:_vlBA=US3Y<oOTF2P9[q;ukQEvfrOxH4xvdp^0AyEvwaI;IWJii0y4eYraZ9wpSZDORCiJ<Jx[vJOa4491Ad?0r5Zn59JCWcfZ149uAz;R2;OkCyuTE]J2Dob>eP76zTfMUdBf5W9A6qPfKfI7O"
+565,"ctfaYSG\U>V;8m8u0@IW=f^9Um5\w97W772C4IhL7Wzm@x^4?L@TLT[lAOxYt`:@E:XuJslZYFvng@:Zdk8quuNA5le2ixjXJuE1BQUpTQESHP3P2Zn=ji`1Y>5I_C9SixK5SlT1xi[P<icYGc7YwztdI>:ZQD>A2T]w^lOw5>UpmQB>0^@dP6fZR<lgj5Fc<8ockaZW"
 559,1
 928,0
 593,
@@ -24,23 +24,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pSourceDim
+pSubset
 pTargetDim
 pAttr
 pDebug
-561,4
+561,5
+2
 2
 2
 1
 1
-590,4
+590,5
 pSourceDim,""
+pSubset,""
 pTargetDim,""
-pAttr,0.
-pDebug,0.
-637,4
+pAttr,1.
+pDebug,1.
+637,5
 pSourceDim,Source Dimension
+pSubset,Source Subset
 pTargetDim,Target Dimension
 pAttr,Include Attributes? (Boolean 1=True)
 pDebug,Debug Mode
@@ -56,7 +60,7 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,111
+572,157
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -71,13 +75,16 @@ VarType=32ColType=827
 
 ### Constants ###
 
-cProcess = 'Bedrock.Dim.Clone' ;
+cProcess = 'Bedrock.Dim.CloneFromSubset' ;
+cUser = TM1User();
+
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 cSubset = '}' | cProcess;
-
+cHierAttr = 'Bedrock.Descendant';
+cAttrVal = 'Descendant';
 
 ### Initialise Debug ###
 
@@ -88,12 +95,14 @@ If( pDebug >= 1 );
 
   # Log start time
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
-
+  AsciiOutput( sDebugFile, 'TM1 User:        ' | cUser );
+  AsciiOutput( sDebugFile, '' );
   # Log parameters
   AsciiOutput( sDebugFile, 'Parameters: pSourceDim : ' | pSourceDim );
+  AsciiOutput( sDebugFile, '            pSourceDim : ' | pSubset );
   AsciiOutput( sDebugFile, '            pTargetDim : ' | pTargetDim );
   AsciiOutput( sDebugFile, '            pAttr      : ' | NumberToString( pAttr ) );
-
+  AsciiOutput( sDebugFile, '' );
 EndIf;
 
 
@@ -102,81 +111,117 @@ EndIf;
 nErrors = 0;
 
 # Validate source dimension
-If( DimensionExists( pSourceDim ) = 0 );
+IF(
+DimensionExists( pSourceDim ) = 0 );
   nErrors = 1;
   sMessage = 'Invalid source dimension: ' | pSourceDim;
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  DataSourceType = 'NULL';
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
+
+## Validate Source Subset
+IF(
+SubsetExists( pSourceDim, pSubset) = 0 );
+  sMessage = 'Invalid source subset: ' | pSubset;
+  If( pDebug >= 1 );
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+  ProcessQuit;
+ELSE;
+  cSubset = pSubset;
+  nSubsetSize = SubsetGetSize( pSourceDim, pSubset );
+  AsciiOutput( sDebugFile, '            Subset Siz      : ' | NumberToString( nSubsetSize ) );
+ENDIF;
 
 # Validate target dimension
 If( pTargetDim @= '' % pTargetDim @= pSourceDim );
   pTargetDim = pSourceDim | '_Clone';
 EndIf;
 
-
 ### Create target dimension ###
-
-If( pDebug <= 1 );
+IF(
+pDebug <= 1 );
   If( DimensionExists( pTargetDim ) = 0 );
     DimensionCreate( pTargetDim );
   Else;
-    DimensionDeleteAllElements( pTargetDim );
-  EndIf;
-  DimensionSortOrder(pTargetDim, 'ByName', 'Ascending', 'ByHierarchy' , 'Ascending');
-EndIf;
-
-
-### Build Source Subset ###
-
-If( SubsetExists( pSourceDim, cSubset ) = 1 );
-  SubsetDeleteAllElements( pSourceDim, cSubset );
-Else;
-  SubsetCreate( pSourceDim, cSubset );
-EndIf;
-SubsetIsAllSet( pSourceDim, cSubset, 1 );
+    ExecuteProcess( 'Bedrock.Dim.Hierarchy.Unwind.All',
+      'pDimension', pTargetDim,
+      'pDebug', pDebug );
+  ENDIF;
+ENDIF;
 
 
 ### Assign Data Source ###
-
 DatasourceNameForServer = pSourceDim;
 DatasourceNameForClient = pSourceDim;
 DataSourceType = 'SUBSET';
 DatasourceDimensionSubset = cSubset;
 
+### Set Descendent attribute value
+AttrDelete( pSourceDim, cHierAttr );
+AttrInsert( pSourceDim, '', cHierAttr, 'S' );
+
+If( pDebug >= 1 );
+  AsciiOutput( sDebugFile, 'Add elements to the dimension.' );
+EndIf;
+
+nIndex = 1;
+nLimit = SubsetGetSize( pSourceDim, pSubset );
+WHILE( nIndex <= nLimit);
+  sElName = SubsetGetElementName( pSourceDim, pSubset, nIndex );
+  AttrPuts( cAttrVal, pSourceDim, sElName, cHierAttr );
+  sElType = DTYPE( pSourceDim, sElName );
+  IF(
+  sElType @<> 'S');
+    sElType = 'N';
+  ENDIF;
+  If( pDebug <= 1 );
+    DimensionElementInsert( pTargetDim, '', sElName, sELType);
+  ENDIF;
+  If( pDebug >= 1 );
+    AsciiOutput( sDebugFile, sElName );
+  EndIf;
+
+  nIndex = nIndex + 1;
+END;
+
 
 ### Replicate Attributes ###
-
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 
 sAttrDim = '}ElementAttributes_' | pSourceDim;
+sLastAttr = '';
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
   nNumAttrs = DimSiz( sAttrDim );
   nCount = 1;
   While( nCount <= nNumAttrs );
     sAttrName = DimNm( sAttrDim, nCount );
     sAttrType = SubSt(DType( sAttrDim, sAttrName ), 2, 1 );
-      If( pDebug <= 1 );
-        AttrInsert( pTargetDim, '', sAttrName, sAttrType );
-      EndIf;
+    If( pDebug <= 1 );
+      AttrInsert( pTargetDim, sLastAttr, sAttrName, sAttrType );
+      sLastAttr = sAttrName;
+    EndIf;
     nCount = nCount + 1;
   End;
 EndIf;
 
+### Initialise Debug ###
+
+If( pDebug >= 1 );
+
+  # Set debug file name
+  sDebugFile = cDebugFile | 'Metadata.debug';
+
+EndIf;
+
 
 ### End Prolog ###
-573,41
+573,30
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
-
 
 ### Check for errors in prolog ###
 
@@ -184,40 +229,30 @@ If( nErrors <> 0 );
   ProcessBreak;
 EndIf;
 
-
-### Add Elements to cloned dimension ###
-
-If( pDebug <= 1 );
-
-  sElType = DType( pSourceDim, vElement );
-
-  DimensionElementInsert( pTargetDim, '', vElement, sElType );
-
-  IF( sElType @= 'C' & ElCompN( pSourceDim, vElement ) > 0 );
-    nChildren = ElCompN( pSourceDim, vElement );
-    nCount = 1;
-    While( nCount <= nChildren );
-      sChildElement = ElComp( pSourceDim, vElement, nCount );
-      sChildType = DType( pSourceDim, sChildElement );
-      sChildWeight = ElWeight( pSourceDim, vElement, sChildElement );
-      DimensionElementInsert( pTargetDim, '', sChildElement, sChildType );
-      DimensionElementComponentAdd( pTargetDim, vElement, sChildElement, sChildWeight );
-      nCount = nCount + 1;
-    End;
-  EndIf;
-
-EndIf;
+nIndex = 1;
+nLimit = ELCOMPN( pSourceDim, vElement );
+WHILE( nIndex <= nLimit );
+  sElName = ELCOMP( pSourceDim, vElement, nIndex );
+  sDecendant = ATTRS( pSourceDim, sElName, cHierAttr);
+  IF(
+  sDecendant @= cAttrVal);
+    nElWeight = ELWEIGHT( pSourceDim, vElement, sElName );
+    If( pDebug <= 1 );
+      DimensionElementComponentAdd( pTargetDim, vElement, sElName, nElWeight );
+    ENDIF;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, vElement, sElName );
+    EndIf;
+  ENDIF;
+  nIndex = nIndex + 1;
+END;
 
 
 ### End MetaData ###
-574,48
+574,40
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
 
 
 ### Check for errors in prolog ###
@@ -231,9 +266,7 @@ EndIf;
 
 # Note: DTYPE on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 
-If( pDebug <= 1 );
-
-  If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
+If( pDebug <= 1 & pAttr = 1 );
 
     nCount = 1;
     While( nCount <= nNumAttrs );
@@ -255,19 +288,19 @@ If( pDebug <= 1 );
 
   EndIf;
 
-EndIf;
-
 
 ### End Data ###
-575,35
+575,37
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
 
+### Set Descendent attribute value
+AttrDelete( pSourceDim, cHierAttr );
+If( pAttr = 1 );
+  AttrDelete( pTargetDim, cHierAttr );
+ENDIF;
 
 ### Initialise Debug ###
 

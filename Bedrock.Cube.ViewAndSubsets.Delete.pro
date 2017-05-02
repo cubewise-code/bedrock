@@ -1,9 +1,9 @@
 ﻿601,100
 562,"NULL"
-586,"Bedrock.Temp"
-585,"Bedrock.Temp"
+586,
+585,
 564,
-565,"z:;X9erx`5r9>m4Eiro;22;H8SaVmnqL5`<95=upLPebL3h8OvF9KAcT=fem`8fteWiVyRN]NxeCUY0l9qp^CCx_Z@jk3FRbHA:k4f\GO@[ygm7^bawI@Fy^=9NkJYup\R6]8uA0]GYt:Lik<HwxodXkl>Yhe;Re7ghZn`W1gg:rtdjMNUTvZkz8LC8C:jSu=yK[Cm?f"
+565,"hBybDiUDaoKS<U8CQ<C`4LhPAH`ya76g8p>k7\VQaX;my5=C`or9FNcASwK6BW2Z>@SGpfAgzA`6Z8;On59lQDZYKYS7SN\pYA<zQ<[Nl^MgK]9VTt]`^JdQJbZi@6>5IPaKt0N3xW@U5KxHzKFym@MYb:3PGzzspLm_Sr]rLvjl75SN\44p5DvsgdD\Y5f_Xrf3Ner;"
 559,1
 928,0
 593,
@@ -20,33 +20,41 @@
 589,
 568,""""
 570,
-571,All
+571,
 569,0
 592,0
 599,1000
-560,3
-pDimension
-pAlias
+560,5
+pCube
+pView
+pSubset
+pMode
 pDebug
-561,3
+561,5
+2
 2
 2
 1
-590,3
-pDimension,""
-pAlias,""
+1
+590,5
+pCube,""
+pView,""
+pSubset,""
+pMode,0.
 pDebug,0.
-637,3
-pDimension,Dimension
-pAlias,Alias
-pDebug,Debug Mode
+637,5
+pCube,Cube Name
+pView,View Name
+pSubset,Subset Name
+pMode,Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )
+pDebug,Debug
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,92
+572,104
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -55,16 +63,13 @@ pDebug,Debug Mode
 ##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
-### Constants ###
+# This process deletes a view and all subsets that have the same name
 
-cProcess = 'Bedrock.Dim.Attr.SwapAlias';
+cProcess = 'Bedrock.Cube.ViewAndSubsets.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
-cCubeAttr = '}ElementAttributes_' | pDimension;
-
-
-### Initialise Debug ###
+nErrors = 0;
 
 If( pDebug >= 1 );
 
@@ -75,86 +80,100 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
 
   # Log parameters
-  AsciiOutput( sDebugFile, 'Parameters: pDimension : ' | pDimension );
-  AsciiOutput( sDebugFile, '            pAlias     : ' | pAlias );
+  AsciiOutput( sDebugFile, 'Parameters: pCube  : ' | pCube );
+  AsciiOutput( sDebugFile, '            pView  : ' | pView );
+  AsciiOutput( sDebugFile, '            pSubset: ' | pSubset );
+  AsciiOutput( sDebugFile, '            pMode  : ' | NumberToString( pMode) );
 
 EndIf;
 
-
-### Validate Parameters ###
-
-nErrors = 0;
-
-# Validate dimension
-If( Trim( pDimension ) @= '' );
-  nErrors = 1;
-  sMessage = 'No dimension specified';
+### Validate Paramters ##
+IF(
+pMode = 0);
   If( pDebug >= 1 );
+    sMessage = 'Mode 0: Do not destroy views and subsets.';
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
-EndIf;
-If( DimensionExists( pDimension ) = 0 );
-  nErrors = 1;
-  sMessage = 'Dimension: ' | pDimension | ' does not exist';
- If( pDebug >= 1 );
-    AsciiOutput( sDebugFile, sMessage );
-  EndIf;
-  ItemReject( sMessage );
-EndIf;
+  ProcessBreak;
+ENDIF;
 
-# Validate alias
-If( Trim( pAlias ) @= '' );
-  nErrors = 1;
-  sMessage = 'No alias specified';
+If( Trim( pCube ) @= '' );
   If( pDebug >= 1 );
+    sMessage = 'No cube specified';
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
+  ProcessQuit;
 EndIf;
-If( DimIx( cCubeAttr, pAlias ) = 0 );
-  nErrors = 1;
-  sMessage = 'Alias: ' | pAlias | ' does not exist in dimension: ' | pDimension;
+
+
+If( pView @= '' & pSubset @= '' );
   If( pDebug >= 1 );
+    sMessage = 'No view or subset name has been provided.';
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
-  ItemReject( sMessage );
+  ProcessQuit;
+ElseIf( pView @<> '' & pSubset @= '' );
+  ## Use the nominated view name for the subset name.
+  cView = pView;
+  cSubset = pView;
+ElseIf( pView @= '' & pSubset @<> '' );
+  ## Use the nominated subset name for the view name.
+  cView = pSubset;
+  cSubset = pSubset;
+Else;
+  cView = pView;
+  cSubset = pSubset;
 EndIf;
-sElementType = DType( cCubeAttr, pAlias );
-If( sElementType @<> 'AA' );
-  nErrors = 1;
-  sMessage = 'Attribute: ' | pAlias | ' is not a valid alias';
-  If( pDebug >= 1 );
-    AsciiOutput( sDebugFile, sMessage );
-  EndIf;
-  ItemReject( sMessage );
+
+
+## Clean up view
+If( pDebug >= 1 );
+    AsciiOutput( sDebugFile, 'Destroying view ' | cView | ' on cube ' | pCube );
 EndIf;
-
-
-### Swap Dimension ###
-
 If( pDebug <= 1 );
-  SwapAliasWithPrincipalName( pDimension, pAlias, 0);
+    ViewDestroy(pCube, cView);
 EndIf;
 
 
-### End Prolog ###
+## Clean up subsets
+IF(
+pMode = 1);
+  If( pDebug >= 1 );
+    sMessage = 'Destroying subset ' | cSubset | ' for the ' | cView | ' view.' ;
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+
+  nDimCount = 0;
+  i = 1;
+  sDimName = TabDim( pCube, i );
+  While( sDimName @<> '' );
+    If( SubsetExists (sDimName, cSubset) = 1 );
+      If( pDebug >= 1 );
+          AsciiOutput( sDebugFile, 'Destroying subset ' | cSubset | ' on dimension ' | sDimName );
+      EndIf;
+      If( pDebug <= 1 );
+          SubsetDestroy( sDimName, cSubset );
+      EndIf;
+    EndIf;
+    sDimName = TabDim( pCube, i );
+    i = i + 1;
+  End;
+ENDIF;
 573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,6
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-
-
-575,35
+575,41
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 
 #####################################################################################
 ##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
@@ -187,6 +206,11 @@ EndIf;
 
 
 ### End Epilog ###
+
+
+
+
+
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 638,1
 804,0

@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"vqU>kN[nCj@F^Z;?WVn5Wnas9]5W?>G1tQBt0NctVK5cQ_=_S8wlo>l4nSuGMT[ePmp8jyxk1KFogbZt\`lj41clx@XH9Wr68f_HiTgmbBMTTm<X<Q0ZA<psr4uhofkb@bEsC<LTDE4C\j2z\OGHXP4;OMRyFPwJbXNYpa@fwW3z7zfM0;N11D_];H]C3Zzw10a4MgEA"
+565,"j^FjSJzkw`aPxo8Pgf[ya@iEfe3sb@pdeuw0<[ZYO^yAcB?MZvB0:V`t4cU[iSGPNjm]5pvqiz1XiEuYyeQ2z:<UCd?>I<[y9niv5C=XlJcUShVNZhxrqo7ziW8h<peRO5lvt\de_aX6?xaeFDvS_oZNB?SwAqab?]nxf:QeWhfet@UMom]<Mf`iJtZ@Sb6`]YJIVdYI"
 559,1
 928,0
 593,
@@ -38,13 +38,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,39
+572,40
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 # This process will Save All Data
@@ -54,7 +54,8 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Server.SaveDataAll';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -78,21 +79,23 @@ EndIf;
 
 
 ### End Prolog ###
-573,3
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,3
+
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
 575,22
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
 #####################################################################################
 
 ### Initialise Debug ###
