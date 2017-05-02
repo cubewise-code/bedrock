@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.Create.All"
 562,"NULL"
 586,
 585,
 564,
-565,"wNNpM]WlXXM=GtFSqtaPFI=a\sjG5zGnq7gL<DrhhndEDO@Hz2h;b3SkLDF0[w;f<hi@kp0cLn\tMg_Vyq0XdY3j40bbSxR=kx]RCW1Te_QhU_>GLlEdBwGSDqeC;3^]in\IT;WbVA11MH3J?NG14_cIT9`;i?IP1W2xeB?KyynUj@\nKGOUBlHV:Z9P0op^T3EOMMM?"
+565,"aa<sYOT4lC^Tl]RvYQDKqpm<\HZho;SlN_h?L62vf3z@oj1RA08yMw?RDrArbHed43vO5G7>UDVax<@i?5PnF:8MrJhXC2A90GULgwXMzttJCdczEn<Dpu2MNLQjthd>lNoxR11M7GrdRIqxaSq\NeysFEaUfx_l3BORlQzjqz4tDpg2B_5Wh8hUu6PPj=1wIsi<`oIt"
 559,1
 928,0
 593,
@@ -24,33 +25,37 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pDimension
 pSubset
 pAddToSubset
 pExclusions
 pDelimiter
+pAlias
 pDebug
-561,6
+561,7
 2
 2
 1
 2
 2
+2
 1
-590,6
+590,7
 pDimension,""
 pSubset,""
-pAddToSubset,0.
+pAddToSubset,0
 pExclusions,""
 pDelimiter,"&"
-pDebug,0.
-637,6
+pAlias,""
+pDebug,0
+637,7
 pDimension,Dimension
 pSubset,Subset
 pAddToSubset,Add to an existing Subset (Boolean: 1=True)
 pExclusions,Excluded Elements
 pDelimiter,Delimiter
+pAlias,Assign an alias to a subset.
 pDebug,Debug Mode
 577,0
 578,0
@@ -58,13 +63,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,20
+572,21
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -74,6 +79,7 @@ ExecuteProcess('Bedrock.Dim.Sub.Create',
   'pExclusions', pExclusions,
   'pDelimiter', pDelimiter,
   'pAddToSubset', pAddToSubset,
+  'pAlias', pAlias,
   'pDebug', pDebug
 );
 
@@ -95,6 +101,7 @@ ExecuteProcess('Bedrock.Dim.Sub.Create',
 #****End: Generated Statements****
 
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

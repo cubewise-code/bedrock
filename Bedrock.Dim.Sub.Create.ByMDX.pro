@@ -1,9 +1,10 @@
 ﻿601,100
-562,"CHARACTERDELIMITED"
+602,"Bedrock.Dim.Sub.Create.ByMDX"
+562,"NULL"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"xrMw?OMbXAO[OnXGK2`xrrb9a[dj^[S1bD0pES7OcKl0X8Hp<\<UgXMNC0G0Lfu2EX^vW;y:jRiF5lU_CIyJFG]uADSH4?g@^AEp>W?b^1\1b7yPzhY]tlJk3YPXD=Wo`q]5>OgZRS3obwrm31i1o;QQ\kTWT2WZ=Y6ruqQ[b<bT^;HuRdI=AJLFSY\FBN\yz:5ZpD@="
+565,"g`\8[mKaLC\W1^rg@guUbXnyI9v^>kTZp^zuiu\29cL@fjws9;Vh\G5RpCKYi^on84kIULFscVG2EPaOJ[;RWEXDL496?YQCktUHu^nMaWDLvvrQTdr3[_ZTFf[K\ovvO5OJ?MkOMN54Rffy4jKECmFYN[yj9>F\CKGlOm\YLZF4NJ;xv;6Y1b4i^:Encde@T^SPYhFb"
 559,1
 928,0
 593,
@@ -40,42 +41,28 @@ pDebug
 pDimension,""
 pSubset,""
 pMDXExpr,""
-pConvertToStatic,1.
-pDebug,0.
+pConvertToStatic,1
+pDebug,0
 637,5
-pDimension,Dimension
-pSubset,Subset
-pMDXExpr,Valid MDX Expression for Specified Dimension
-pConvertToStatic,Bolean: 1 = True (convert to static subset)
-pDebug,Debug Mode
-577,2
-vElement
-V2
-578,2
-2
-1
-579,2
-1
-2
-580,2
-0
-0
-581,2
-0
-0
-582,2
-VarType=32ColType=827
-VarType=33ColType=827
-572,147
+pDimension,"Dimension"
+pSubset,"Subset"
+pMDXExpr,"Valid MDX Expression for Specified Dimension"
+pConvertToStatic,"Bolean: 1 = True (convert to static subset)"
+pDebug,"Debug Mode"
+577,0
+578,0
+579,0
+580,0
+581,0
+582,0
+603,0
+572,136
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-
-
-
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will Create a dynamic subset from an MDX expression
@@ -83,16 +70,16 @@ VarType=33ColType=827
 # If the MDX does not compile or produces an empty set the process will error.
 # If convert to static is true then the MDX subset will be replaced by a static subset.
 
-
 ### Constants ###
 
 cProcess = 'Bedrock.Dim.Sub.Create.ByMDX';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
-cTempSubset = '}' | cProcess | '.' | NumberToString( Int( Rand() * 100000 ) );
+cTempSubset = cProcess | '.' | sRandomInt;
 cTempFile = GetProcessErrorFileDirectory | cTempSubset | '.csv';
 
+sMDXExpr = pMDXExpr;
 
 ### Initialise Debug ###
 
@@ -111,7 +98,6 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, '            pConvertToStatic : ' | NumberToString( pConvertToStatic ) );
 
 EndIf;
-
 
 ### Validate Parameters ###
 
@@ -149,7 +135,7 @@ If( Trim( pSubset ) @= '' );
 EndIf;
 
 # Validate MDX
-If( Trim( pMDXExpr ) @= '' );
+If( Trim( sMDXExpr ) @= '' );
   nErrors = 1;
   sMessage = 'No MDX expression specified';
   If( pDebug >= 1 );
@@ -158,7 +144,7 @@ If( Trim( pMDXExpr ) @= '' );
   DataSourceType = 'NULL';
   ItemReject( sMessage );
 EndIf;
-If( Scan( pDimension, pMDXExpr ) = 0 );
+If( Scan( pDimension, sMDXExpr ) = 0 );
   nErrors = 1;
   sMessage = 'Dimension name is not in MDX expression';
   If( pDebug >= 1 );
@@ -167,7 +153,6 @@ If( Scan( pDimension, pMDXExpr ) = 0 );
   DataSourceType = 'NULL';
   ItemReject( sMessage );
 EndIf;
-
 
 ### Create Subset ###
 
@@ -178,16 +163,13 @@ If( pDebug <= 1 );
     If( SubsetExists( pDimension, pSubset ) = 1 );
       SubsetDestroy( pDimension, pSubset );
     EndIf;
-    SubsetCreateByMDX( pSubset, pMDXExpr );
-    DataSourceType = 'NULL';
+    SubsetCreateByMDX( pSubset, sMDXExpr );
 
   # If subset if to be converted to static then create temp MDX subset for processing
   Else;
-    If( SubsetExists( pDimension, pSubset ) = 1 );
-      SubsetDeleteAllElements( pDimension, pSubset );
-    Else;
-      SubsetCreate( pDimension, pSubset );
-    EndIf;
+
+    #Modify MDX to exclude empty MDX error
+    sMDXExpr = '{{[' | pDimension | '].MEMBERS.ITEM(0)},' | sMDXExpr | '}';
 
     # Note: it is unlikley that the temp subset would already exist as it has a random number
     #       in it's name. However, the check is included in case the random number generator comes
@@ -195,64 +177,41 @@ If( pDebug <= 1 );
     If( SubsetExists( pDimension, cTempSubset ) = 1 );
       SubsetDestroy( pDimension, cTempSubset );
     EndIf;
-    SubsetCreateByMDX( cTempSubset, pMDXExpr );
+    SubsetCreateByMDX( cTempSubset, sMDXExpr );
 
-    nSubsetSize = SubsetGetSize( pDimension, cTempSubset );
-    nSubsetIndex = 1;
-    While( nSubsetIndex <= nSubsetSize );
-      sElement = SubsetGetElementName( pDimension, cTempSubset, nSubsetIndex );
-      AsciiOutput( cTempFile, sElement );
-      nSubsetIndex = nSubsetIndex + 1;
-    End;
-    nSubsetIndex = 0;
-    DataSourceType = 'CHARACTERDELIMITED';
-    DataSourceNameForServer = cTempFile;
+    SubsetElementDelete( pDimension , cTempSubset , 1 );
+
+    ExecuteProcess( 'Bedrock.Dim.Sub.Clone'
+      , 'pDimension' , pDimension
+      , 'pSourceSub' , cTempSubset
+      , 'pTargetSub' , pSubset
+      , 'pDebug' , pDebug
+    );
 
   EndIf;
 
 EndIf;
 
-
 ### End Prolog ###
-573,21
+573,5
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 
-
-
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
-
-
-### Insert elements into static subset from dynamic subset ###
-
-nSubsetIndex = nSubsetIndex + 1;
-If( pDebug <= 1 );
-  SubsetElementInsert( pDimension, pSubset, vElement, nSubsetIndex );
-EndIf;
-
-
-### End Metadata ###
 574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,52
+575,48
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-
-
-
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
-
 
 ### Initialise Debug ###
 
@@ -263,13 +222,15 @@ If( pDebug >= 1 );
 
 EndIf;
 
+### Destroy Temporary Subset ###
 
-### Delete temp file if it exists ###
+If( pConvertToStatic = 1 );
 
-If( FileExists( cTempFile ) = 1 );
-  AsciiDelete( cTempFile );
+  If( SubsetExists( pDimension, cTempSubset ) = 1 );
+    SubsetDestroy( pDimension, cTempSubset );
+  EndIf;
+
 EndIf;
-
 
 ### Finalise Debug ###
 
@@ -285,16 +246,15 @@ If( pDebug >= 1 );
 
 EndIf;
 
-
 ### If errors occurred terminate process with a major error status ###
 
 If( nErrors <> 0 );
   ProcessQuit;
 EndIf;
 
-
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

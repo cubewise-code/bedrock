@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Element.Create"
 562,"NULL"
 586,
 585,
 564,
-565,"rjKWp>n1S[GG?2]HZ@aQZMl2@O^ua@lhbQv:2an9o9hEQdt=B<U50GC<0RF3PoWb`ikQ@OWEfAJne[sj1:YvUkS0QvaN72D:RlcjM63]W^q25bp:m`[`Eq_yxND^tyUzIFG<C_T@C6jMRU087XFbC]8DFQox2L\vr2zm`YcUGXjXsj[v<M7D1qxsjejuBqr_glGPG8DP"
+565,"r4AtMVQ7Sm0YmhNpbsac>NHnj]ry=YE`1BAoHGHM8RtY9O_3UMrFf@iwlO3>K6_??D^r7LAal3BwhzYpRP]p2tj`[Z@?FxH=1gjrMdSnAnLPjl>Av=TC`X<vqWA\sSK[[1YPpc[sme;<FDT_0sd8L^zB0Ea9vnUkPcmfOUwPiiflwIV1[_s]@SQuHBpNAxWm9NA>r]x`"
 559,1
 928,0
 593,
@@ -38,7 +39,7 @@ pDebug
 pDimension,""
 pElement,""
 pElementType,""
-pDebug,0.
+pDebug,0
 637,4
 pDimension,Dimension Name
 pElement,Element Name
@@ -56,7 +57,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will create new element in a dimension
@@ -66,7 +67,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Element.Create';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -164,7 +165,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -195,6 +196,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Attr.Insert"
 562,"NULL"
 586,
 585,
 564,
-565,"sf`hdlER3a4f^7Iye5ua`ygxkj\mUHInplGY\Q_aG[IqaHEa[Ov;ZL8xtTSA?o4K2iqDiLvOH4Zygx4\LpoMqj\1<gb0LSB1AL35<rchuqO?S4fXLK9_zOon@=@TPXQ?[d7iDCB8l\6a^bE\2S^4cWu]wGNoCAPXmJ@kS82[bFv2QxE4OfF\92MSAvj5DkNMZP[WD3j;"
+565,"sAtT6`wcBy4=TNqJ]M\as@ki4LkH<UaYnG?qYSOilKN2W6RZ9rkaei;>5@TY>gQVZM6s5Vh<V<Ntqk7hK3TSbo7H9;5SqevTws?5x:GOH\xB667xXPDEc<qrlv7oPy`q6CL6?k;L8^PHX4sOMsORV3t:2Rs6j`2p<g\cEsI[:YK0PxVjQ=n2HJ6[ggm;@8F3:mcdLnh="
 559,0
 928,0
 593,
@@ -41,7 +42,7 @@ pDimension,""
 pPrevAttr,""
 pAttribute,""
 pAttributeType,""
-pDebug,0.
+pDebug,0
 637,5
 pDimension,Dimension Name
 pPrevAttr,Prevoius Attribute
@@ -60,14 +61,14 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 ### Constants ###
 
 cProcess = 'Bedrock.Dim.Attr.Insert';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -157,6 +158,7 @@ EndIf;
 #****End: Generated Statements****
 
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Hierarchy.Unwind.All"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"dWdhaJMFcl4aVN=fOYn\NnHx0@ulrIfo8rl_E@7j<4W5S1M=K_wnnhOh8Dozdp5[OXQ;]4N>PrK`D0@prS?A[8CFw5N<VHa5sR]Bn@L0sU3kC`ikQeP3aT;hkYYhLK9FNbbr7]xAa?HtSR1h;okj>zFOqZRsaOlXSmvN1GO3:7kYittPu8@d^GNl2QNE@LNJ\\z^1ye4"
+565,"pW7c]L7w4S_jL<^MaW0M\3rzwhqJCiO9[LvZ5J\:<Mj4gIjhE^A\EB43?H=`KJ]<[3^GL<JBgsDg4?;_qf366U4XrZuHJUc]j\0h_`HlBt<EiSV`A_IhCe5V3`<yY_7a;YWEN8?vkTTg6?BW[h0p6i2AR;7\pH;aPp7vnjh3GS?k<4Uli2PrF^mBn=:rhzpukQIyis8w"
 559,1
 928,0
 593,
@@ -32,7 +33,7 @@ pDebug
 1
 590,2
 pDimension,""
-pDebug,0.
+pDebug,0
 637,2
 pDimension,Dimension
 pDebug,Debug Mode
@@ -54,7 +55,7 @@ VarType=32ColType=827
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will remove all children from all consolidations in the target dimension
@@ -64,7 +65,7 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Hierarchy.Unwind.All';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -124,7 +125,7 @@ DatasourceDimensionSubset = 'ALL';
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -163,7 +164,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -194,6 +195,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

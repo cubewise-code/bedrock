@@ -1,10 +1,10 @@
 ﻿601,100
-602,"Bedrock.Security.Refresh"
+602,"Bedrock.Server.Wait"
 562,"NULL"
 586,
 585,
 564,
-565,"hcQa@q<PaSM>\IzdSM6V@aNPhQ6JO_<h_i1z>90VSxshNQ46N8^r:^Rb8<_ctKOXKMNDy44p;APSy=hU<Z_o8w19<PTiKER2tQ^[G38Kj1OtRSi^_4T<7?sPFoOl8h1U32UMaSU01K]xdn_>SKhyqaLK_8sy3rLQnmZvsbvQu=LPo=ioM3m50gSTTs_Yl^VFio_7=_ho"
+565,"d:K1aS4qRkMM3FKsVeQVel47AJ\FycLzF0]Y\[VF5kki:as;LJL<dnRWdw3EcUvQM`u7mBHO>MO7Ijq;wK84a^8Ra0FqNg8RqOL\=H<G^;5KFi:rtn1sg@G1<7=WIdxJK<\qabLAk]WLHUSkG^fCs5?PNcWyTYlGnUvYAK>m7jB@K=9WpimJqwmVQGwiWI]<ThmYJbD>"
 559,1
 928,0
 593,
@@ -25,39 +25,41 @@
 569,0
 592,0
 599,1000
-560,1
+560,2
+pWaitSec
 pDebug
-561,1
+561,2
+2
 1
-590,1
+590,2
+pWaitSec,""
 pDebug,0
-637,1
-pDebug,Debug Mode
+637,2
+pWaitSec,Seconds
+pDebug,
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,39
+572,43
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
-#####################################################################################
 
-# This process refreshes TM1 security
+#####################################################################################
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
+#####################################################################################
 
 
 ### Constants ###
 
-cProcess = 'Bedrock.Security.Refresh';
+cProcess = 'Bedrock.Server.Wait';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
-
 
 ### Initialise Debug ###
 
@@ -68,34 +70,38 @@ If( pDebug >= 1 );
 
   # Log start time
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
+  AsciiOutput( sDebugFile, '' );
+  # Log parameters
+  AsciiOutput( sDebugFile, 'Parameters: pWaitSec:      ' | pWaitSec );
 
 EndIf;
 
-
-### Refresh Security ###
-If( pDebug <= 1 );
-  SecurityRefresh;
-EndIf;
+### LOOP TIME ##
+nStartNow = NOW();
+nWaitTime = nStartNow + ( StringToNumber( pWaitSec ) / 86400 );
 
 
-### End Prolog ###
-573,4
+nTime = NOW();
+WHILE( nTime <= nWaitTime );
+  nTime = NOW();
+END;
 
-#****Begin: Generated Statements***
-#****End: Generated Statements****
 
-574,4
+573,3
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+574,3
 
+#****Begin: Generated Statements***
+#****End: Generated Statements****
 575,23
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
 #####################################################################################
 
 
@@ -112,12 +118,12 @@ If( pDebug >= 1 );
 EndIf;
 
 
-### End Epilog ###
+### End Prolog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 930,0
 638,1
 804,0
-1217,1
+1217,0
 900,
 901,
 902,
@@ -135,7 +141,7 @@ EndIf;
 914,
 915,
 916,
-917,1
+917,0
 918,1
 919,0
 920,50000

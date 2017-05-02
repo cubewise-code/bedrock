@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.View.Publish"
 562,"NULL"
 586,
 585,
 564,
-565,"cBaaKQKfFrd4Rgo=m;ip1]i>BC_;rXToU6<qPTbeVRy1SGp4JTL4m5rt3[NdHP0GU\RZ=ni=^rc7wuY4fRfv0<:vo?kUoE>3nvAXhSyP1jvD?Uw`>Sy6@n`azW_C[MJsnLT;JDRfIky\[f7Lyrrx3==imd9F@0u5plzMvp>m7WE=phnJ?muvM0:fYqgeTHRNFFFZG2gg"
+565,"b3aIpl<bWfahX4:@4yidXg8mz@iRfU:t\cj>GYYDWH[QB1AgM`]\JDKel^vVk4jxX]uFbjaivyPAnpKOCTwId\n<BgWlOntCRufS]EyqO[dKWikid\sZq8IQ3F?kh4`9mIk?D`K8[PUDzenLVVbR5gE_`3YKCVIQNXjQINTib0`K]ZOVXTE00j2EvQP>8IpR7\AGeESH"
 559,1
 928,0
 593,
@@ -42,9 +43,9 @@ pDebug
 pClient,""
 pCube,""
 pView,""
-pSubPublish,1.
-pOverwrite,0.
-pDebug,0.
+pSubPublish,1
+pOverwrite,0
+pDebug,0
 637,6
 pClient,Client Name
 pCube,Cube Name
@@ -64,7 +65,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process converts a private view to a public view for the named client.
@@ -79,7 +80,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.View.Publish';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -224,7 +225,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -255,6 +256,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

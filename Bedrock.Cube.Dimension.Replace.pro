@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Dimension.Replace"
 562,"NULL"
 586,
 585,
 564,
-565,"ugyjgK01qrSJs9sJkIAF=at2P6[2cQu@4UzNDOzLQr>@:TXLlGEctFbY\9Pxc;cBbCkl_=xODHXZ3vIrnXX38dVq4o@ys8jJwI0owEPQgCU6A;=So`ooW4PVLgEyxNWpaCoW3g]Vg3NGB>D[N35K7MZJTD9uW>w?RE]a?w6:GoEaSSy@zOX7xd1oEb6dUi[TXvP;hxA3"
+565,"nz=@>W9saW@Hzfa7[0@`i;7QK42N5ylY3Gsvcar6w10aA>vGw?gP2EAGlMjtCy2f`3>6=VZRl]^4b5X?WE4e456UTqg7iOPbn]:9nNIz?\H;QUfcAWh3si[WJd0<o_[HYfn[Omyzvd_firbBo_@Ts@>tDbHPodSB^W?0:9GskGYoQGpFz^egEY^@><Q89y=o48zxA=KB"
 559,1
 928,0
 593,
@@ -38,7 +39,7 @@ pDebug
 pCube,""
 pSourceDim,""
 pTargetDim,""
-pDebug,0.
+pDebug,0
 637,4
 pCube,Cube
 pSourceDim,Dimension to be replaced
@@ -56,7 +57,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process selects the cube and replaces
@@ -72,7 +73,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.Dimension.Replace' ;
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -521,7 +522,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -552,6 +553,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

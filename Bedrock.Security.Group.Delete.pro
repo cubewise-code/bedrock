@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Security.Group.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"z<fggmGudJ;VL7yk\kxxzTDaZdabtWgXfIpYQf:2Aq6MIPFF3M_;\INf0?ZtKylUqr`TjbkL=b^Wf2:]e^tBiMZ0@sfUDzU6_1d80^TrXq\n5?4seVf]:ORcX4?Abq7uiw1xv]Oe0YXxldaDAFT6pPZ9V4aYdqWaS:zXsudoP6Nenk65yWrGu8oZevUVfuDnAtn[T;W5"
+565,"f3l>m>aYTI=l?Odl;uuBey?c;f^8VdA^MeZ?N<:fFA7E7`cWwAt4X>a_SiFcy:AsLbV75hDYbqg7NtdWrsyJ:YkzB3HsDbV@rnw3>HhD7W<3a^4ag3?]FHOhZDLTUs`9yzDDwF1PgZO4OX1Qdkucu04=mB@kpO2@t8t>]Bcqg<?7GTR844ye]vuMwZn``5=PJC300Ewy"
 559,1
 928,0
 593,
@@ -35,7 +36,7 @@ pDebug
 590,3
 pGroups,""
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,3
 pGroups,Groups seperated by delimiter
 pDelimiter,Delimiter character
@@ -52,7 +53,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will delete client groups
@@ -67,7 +68,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Security.Group.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -158,7 +159,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -189,6 +190,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

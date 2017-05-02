@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Server.SaveDataAll"
 562,"NULL"
 586,
 585,
 564,
-565,"j^FjSJzkw`aPxo8Pgf[ya@iEfe3sb@pdeuw0<[ZYO^yAcB?MZvB0:V`t4cU[iSGPNjm]5pvqiz1XiEuYyeQ2z:<UCd?>I<[y9niv5C=XlJcUShVNZhxrqo7ziW8h<peRO5lvt\de_aX6?xaeFDvS_oZNB?SwAqab?]nxf:QeWhfet@UMom]<Mf`iJtZ@Sb6`]YJIVdYI"
+565,"ssKLdAUI`vgWtwzdi>oaN0JccS\Q^<;q@PQbmZ2RZaqlTdcEzaViE3cI<W_7w<FFkT9\BS@HN5v>9VV79I0]t5Xh8]U0qPXU9j>lBhKPq]tEM<TsA\nUG\V5cRyfDb`\s9Iq7==qvI\i__y13uCu?ZXLrc[t;^:0o_AiTnxM?wy]cBefjs>0H7EQj7<wnSzQnTe2Nx`q"
 559,1
 928,0
 593,
@@ -29,7 +30,7 @@ pDebug
 561,1
 1
 590,1
-pDebug,0.
+pDebug,0
 637,1
 pDebug,Debug Mode
 577,0
@@ -44,7 +45,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will Save All Data
@@ -54,7 +55,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Server.SaveDataAll';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -95,7 +96,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 ### Initialise Debug ###
@@ -113,6 +114,7 @@ EndIf;
 
 ### End Prolog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Clone"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"sAgkwg2W6UGKljVuHz=awWIKjm\yEMe=R<wfT>AJtZRgpZFI``dE:_vlBA=US3Y<oOTF2P9[q;ukQEvfrOxH4xvdp^0AyEvwaI;IWJii0y4eYraZ9wpSZDORCiJ<Jx[vJOa4491Ad?0r5Zn59JCWcfZ149uAz;R2;OkCyuTE]J2Dob>eP76zTfMUdBf5W9A6qPfKfI7O"
+565,"tE5j94gh37`ZL<skmta7al60G>jhn\Dje^_@=QIWcD\VvMiBj0l9ofyxwf>Ryj027S0J\VI@:]`Ou[tZ:p^ZuXD0U0z]UcW=N@GD3a69z5MMM4L?eX>XN\ou6kzrcOqVp9XYO_4?HnESg7bOiSIJ9@GbU]8dX[Sz2?MkkPhZ\OvfPjBQIFlxJcfK?[:h9w<Ee\Jc^:l5"
 559,1
 928,0
 593,
@@ -24,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pSourceDim
 pTargetDim
 pAttr
+pUnwind
 pDebug
-561,4
+561,5
 2
 2
 1
 1
-590,4
+1
+590,5
 pSourceDim,""
 pTargetDim,""
-pAttr,0.
-pDebug,0.
-637,4
-pSourceDim,Source Dimension
-pTargetDim,Target Dimension
-pAttr,Include Attributes? (Boolean 1=True)
-pDebug,Debug Mode
+pAttr,0
+pUnwind,0
+pDebug,0
+637,5
+pSourceDim,"Source Dimension"
+pTargetDim,"Target Dimension"
+pAttr,"Include Attributes? (Boolean 1=True)"
+pUnwind,"0 = Delete all Elements, 1 = Unwind Existing Elements"
+pDebug,"Debug Mode"
 577,1
 vElement
 578,1
@@ -56,13 +61,14 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,111
+603,0
+572,158
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
 #####################################################################################
 
 # This process will clone the source dimension
@@ -73,10 +79,8 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Clone' ;
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
-
-cSubset = '}' | cProcess;
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
+cSubset = cProcess;
 
 
 ### Initialise Debug ###
@@ -92,6 +96,7 @@ If( pDebug >= 1 );
   # Log parameters
   AsciiOutput( sDebugFile, 'Parameters: pSourceDim : ' | pSourceDim );
   AsciiOutput( sDebugFile, '            pTargetDim : ' | pTargetDim );
+  AsciiOutput( sDebugFile, '            pUnwind    : ' | NumberToString( pUnwind ) );
   AsciiOutput( sDebugFile, '            pAttr      : ' | NumberToString( pAttr ) );
 
 EndIf;
@@ -102,7 +107,7 @@ EndIf;
 nErrors = 0;
 
 # Validate source dimension
-If( DimensionExists( pSourceDim ) = 0 );
+If ( DimensionExists( pSourceDim ) = 0 );
   nErrors = 1;
   sMessage = 'Invalid source dimension: ' | pSourceDim;
   If( pDebug >= 1 );
@@ -113,25 +118,61 @@ If( DimensionExists( pSourceDim ) = 0 );
 EndIf;
 
 # Validate target dimension
-If( pTargetDim @= '' % pTargetDim @= pSourceDim );
+If( 
+pTargetDim @= '' % pTargetDim @= pSourceDim );
   pTargetDim = pSourceDim | '_Clone';
 EndIf;
 
 
-### Create target dimension ###
 
+### Create target dimension ###
 If( pDebug <= 1 );
-  If( DimensionExists( pTargetDim ) = 0 );
+  If( 
+  DimensionExists( pTargetDim ) = 0 );
     DimensionCreate( pTargetDim );
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, 'Target dimension created: ' | pTargetDim  );
+    EndIf;
+
   Else;
-    DimensionDeleteAllElements( pTargetDim );
+    IF(
+    pUnwind = 1 );
+      ExecuteProcess( 'Bedrock.Dim.Hierarchy.Unwind.All',
+        'pDimension', pTargetDim,
+        'pDebug', pDebug
+        );
+       If( pDebug >= 1 );
+         AsciiOutput( sDebugFile, 'Target dimension unwound: ' | pTargetDim  );
+       EndIf;
+
+    ELSE;
+      DimensionDeleteAllElements( pTargetDim );
+      If( pDebug >= 1 );
+        AsciiOutput( sDebugFile, 'All element deleted from Target element: ' | pTargetDim  );
+      EndIf;
+
+    EndIf;
   EndIf;
-  DimensionSortOrder(pTargetDim, 'ByName', 'Ascending', 'ByHierarchy' , 'Ascending');
 EndIf;
 
+### Set the target Sort Order ###
+sSortElementsType = CELLGETS( '}DimensionProperties', pSourceDim, 'SORTELEMENTSTYPE');
+sSortElementsSense  = CELLGETS( '}DimensionProperties', pSourceDim, 'SORTELEMENTSSENSE');
+sSortComponentsType = CELLGETS( '}DimensionProperties', pSourceDim, 'SORTCOMPONENTSTYPE');
+sSortComponentsSense = CELLGETS( '}DimensionProperties', pSourceDim, 'SORTCOMPONENTSSENSE');
+
+If( pDebug <= 1 );
+  DimensionSortOrder( pTargetDim, sSortComponentsType, sSortComponentsSense, sSortElementsType , sSortElementsSense);
+EndIf;
+
+If( pDebug >= 1 );
+  AsciiOutput( sDebugFile, 'Dimension Sort: Sort Components Type : ' | sSortComponentsType );
+  AsciiOutput( sDebugFile, '                Sort Components Sense: ' | sSortComponentsSense );
+  AsciiOutput( sDebugFile, '                Sort Elements Type   : ' | sSortElementsType );
+  AsciiOutput( sDebugFile, '                Sort Elements Sense  : ' | sSortElementsSense );
+EndIf;
 
 ### Build Source Subset ###
-
 If( SubsetExists( pSourceDim, cSubset ) = 1 );
   SubsetDeleteAllElements( pSourceDim, cSubset );
 Else;
@@ -139,6 +180,18 @@ Else;
 EndIf;
 SubsetIsAllSet( pSourceDim, cSubset, 1 );
 
+
+nSourceDimSize = DIMSIZ( pSourceDim );
+nIndex = 1;
+WHILE( nIndex <= nSourceDimSize );
+  sElName = DIMNM( pSourceDim, nIndex);
+  sElType = DTYPE( pSourceDim, sElName);
+  
+  If( pDebug <= 1 );
+    DimensionElementInsert( pTargetDim, '', sElName, sElType );
+  ENDIF;
+  nIndex = nIndex + 1;
+END;
 
 ### Assign Data Source ###
 
@@ -168,13 +221,13 @@ EndIf;
 
 
 ### End Prolog ###
-573,41
+573,40
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
 #####################################################################################
 
 
@@ -185,22 +238,21 @@ If( nErrors <> 0 );
 EndIf;
 
 
-### Add Elements to cloned dimension ###
+
+### Add Elements to target dimension ###
 
 If( pDebug <= 1 );
 
   sElType = DType( pSourceDim, vElement );
 
-  DimensionElementInsert( pTargetDim, '', vElement, sElType );
-
-  IF( sElType @= 'C' & ElCompN( pSourceDim, vElement ) > 0 );
+  IF( 
+  sElType @= 'C' & 
+  ElCompN( pSourceDim, vElement ) > 0 );
     nChildren = ElCompN( pSourceDim, vElement );
     nCount = 1;
     While( nCount <= nChildren );
       sChildElement = ElComp( pSourceDim, vElement, nCount );
-      sChildType = DType( pSourceDim, sChildElement );
       sChildWeight = ElWeight( pSourceDim, vElement, sChildElement );
-      DimensionElementInsert( pTargetDim, '', sChildElement, sChildType );
       DimensionElementComponentAdd( pTargetDim, vElement, sChildElement, sChildWeight );
       nCount = nCount + 1;
     End;
@@ -216,7 +268,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
 #####################################################################################
 
 
@@ -259,13 +311,13 @@ EndIf;
 
 
 ### End Data ###
-575,35
+575,50
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
 #####################################################################################
 
 
@@ -286,6 +338,13 @@ If( pDebug >= 1 );
 
 EndIf;
 
+### Destroy Source Subset ###
+If( pDebug <= 1 );
+  If(
+  SubsetExists( pSourceDim, cSubset ) = 1 );
+    SubsetDestroy( pSourceDim, cSubset );
+  EndIf;
+ENDIF;
 
 ### If errors occurred terminate process with a major error status ###
 
@@ -293,9 +352,18 @@ If( nErrors <> 0 );
   ProcessQuit;
 EndIf;
 
+### Set the target Sort Order ###
+If( pDebug >= 1 );
+  CELLPUTS( sSortElementsType, '}DimensionProperties', pTargetDim, 'SORTELEMENTSTYPE');
+  CELLPUTS( sSortElementsSense, '}DimensionProperties', pTargetDim, 'SORTELEMENTSSENSE');
+  CELLPUTS( sSortComponentsType, '}DimensionProperties', pTargetDim, 'SORTCOMPONENTSTYPE');
+  CELLPUTS( sSortComponentsSense, '}DimensionProperties', pTargetDim, 'SORTCOMPONENTSSENSE');
+ENDIF;
+
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

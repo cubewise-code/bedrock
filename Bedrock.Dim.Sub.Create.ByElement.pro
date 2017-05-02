@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.Create.ByElement"
 562,"NULL"
 586,
 585,
 564,
-565,"pNj39hpS=kGUJY^FaBd[_x6z__mBeOP=EWv7GOjK\bzvJEXNUM`A]Dg8@UXLiM3\b9NYU;Z;9r4BMy=Z1oOoLjyrFtEmzOCVizGPrvYLOOV;qC6tyAZsTEqGK]Q=JN^cvol4Cl5?2XEE\`UB<Qm1jXLw2jr2t1;o17^y:uCV;?Jq][gYvz6LmV87_a^aQV0kS8G5d3@k"
+565,"mQ4>vOCEsk=;`aZFC[dMOk`7?0>3@H=5pmESeObIVvZXab`^R3T2nj=AB1N\OK3wKO2bSqgiW]Z?Gbru;3eah_lMEQ5:YV6TljLMtNR_ME1Zw]11j;HFS]HfeRTH8vVqNXo<xb<;F7m[X1V?3M39=0^0Dk<JFlo^K`_zfV:z:<p=vjchqQt5HMr5[SuKFGpDWnjVdzRp"
 559,1
 928,0
 593,
@@ -24,47 +25,52 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pDimension
 pSubset
 pElements
 pDelimiter
 pAddToSubset
+pAlias
 pDebug
-561,6
+561,7
 2
 2
 2
 2
 1
+2
 1
-590,6
+590,7
 pDimension,""
 pSubset,""
 pElements,""
-pDelimiter,"&"
-pAddToSubset,0.
-pDebug,0.
-637,6
-pDimension,Dimension
-pSubset,Subset
-pElements,Elements Separated by Delimiter
-pDelimiter,Delimiter
-pAddToSubset,Add to an existing Subset (Boolean: 1=True)
-pDebug,Debug Mode
+pDelimiter,""
+pAddToSubset,0
+pAlias,""
+pDebug,0
+637,7
+pDimension,"Dimension"
+pSubset,"Subset"
+pElements,"Elements Separated by Delimiter"
+pDelimiter,"Delimiter"
+pAddToSubset,"Add to an existing Subset (Boolean: 1=True)"
+pAlias,"Assign an alias to the subset"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,159
+603,0
+572,210
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will create a static subset based on a list of supplied elements
@@ -74,21 +80,20 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Create.ByElement';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
 ### Initialise Debug ###
+## Set debug file name
+ sDebugFile = cDebugFile | 'Prolog.debug';
 
 If( pDebug >= 1 );
 
-  # Set debug file name
-  sDebugFile = cDebugFile | 'Prolog.debug';
-
-  # Log start time
+  ## Log start time
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
 
-  # Log parameters
+  ## Log parameters
   AsciiOutput( sDebugFile, 'Parameters: pDimension   : ' | pDimension );
   AsciiOutput( sDebugFile, '            pSubset      : ' | pSubset );
   AsciiOutput( sDebugFile, '            pElements    : ' | pElements );
@@ -154,6 +159,38 @@ If( pAddToSubset <> 0 & pAddToSubset <> 1 );
   ItemReject( sMessage );
 EndIf;
 
+## Validate Alias
+sDimAttr = '}ElementAttributes_' | pDimension;
+IF(
+pAlias @<> '' );
+  IF(
+  DimensionExists( sDimAttr ) = 0 );
+    sMessage = 'No attributes exist for the dimension: ' | pDimension;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+
+  IF(
+  DIMIX( sDimAttr, pAlias ) = 0 );
+    sMessage = 'The Alias: ' | pAlias | ' does not exist in the dimension: ' | pDimension;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+
+  IF(
+  DTYPE( sDimAttr, pAlias ) @<> 'AA' );
+    sMessage = 'The Alias: ' | pAlias | ' is not an Alias in the dimension: ' | sDimAttr;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+ENDIF;
+
 
 ### Prepare subset ###
 
@@ -173,6 +210,18 @@ Else;
   nSubsetSize = 0;
 EndIf;
 
+### Assign Alias to subset
+IF(
+pAlias @<> '' );
+  If( pDebug <= 1 );
+    SubsetAliasSet( pDimension, pSubset, pAlias );
+  EndIf;
+
+  If( pDebug >= 1 );
+    sMessage = 'The Alias: ' | pAlias | ' has been set.';
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+ENDIF;
 
 ### Insert elements ###
 
@@ -192,27 +241,35 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
   EndIf;
 
   If( DimIx( pDimension, sElement ) <> 0 );
-    If( pDebug >= 1 );
-      AsciiOutput( sDebugFile, 'Element: ' | sElement | ' to be added to subset.' );
-    EndIf;
     If( pDebug <= 1 );
        IF(
        ELLEV( pDimension, sElement) > 0);
-       ExecuteProcess( 'Bedrock.Dim.Sub.Create.Consolidation.All',
-         'pDimension', pDimension,
-         'pSubset', pSubset,
-         'pConsol', sElement,
-         'pAddToSubset', 1,
-         'pExclusions', '',
-         'pDelimiter', pDelimiter ,
-         'pDebug', pDebug );
+         ExecuteProcess('Bedrock.Dim.Sub.Create',
+           'pDimension', pDimension,
+           'pSubset', pSubset,
+           'pConsol', sElement,
+           'pExclusions', '',
+           'pDelimiter', pDelimiter,
+           'pAddToSubset', 1,
+           'pAlias', '',
+           'pDebug', pDebug
+          );
+
+          If( pDebug <= 1 );
+            AsciiOutput( sDebugFile, 'Consolidation: ' | sElement | ' has been added to the subset.' );
+          EndIf;
       ELSE;
         SubsetElementInsert( pDimension, pSubset, sElement, nSubsetIndex );
+        If( pDebug <= 1 );
+          AsciiOutput( sDebugFile, 'Element: ' | sElement | ' has been added to the subset.' );
+        EndIf;
       ENDIF;
     EndIf;
     nSubsetIndex = nSubsetIndex + 1;
   Else;
-    AsciiOutput( sDebugFile, 'Element: ' | sElement | ' does not exist in dimension: ' | pDimension | ', skipping' );
+    If( pDebug <= 1 );
+      AsciiOutput( sDebugFile, 'Element: ' | sElement | ' does not exist in dimension: ' | pDimension | ', skipping' );
+    EndIf;
   EndIf;
 End;
 
@@ -234,7 +291,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -265,6 +322,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

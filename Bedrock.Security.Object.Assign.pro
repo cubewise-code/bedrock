@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Security.Object.Assign"
 562,"NULL"
 586,
 585,
 564,
-565,"cHTaXeh;v:GeOA52wGExK>2WGOD]DHI7kDjPDPezdAyN_e@4H3Q\kwG:zEFTARitm19r1jxYd7rrSqOxLmJ6=<wihNbv]k=DgY2<q:RnLfqlhk;iDKu:rIu@V[gk\2fKN=OxlRJvHgwixbeGsn=vmv?ZBprn0p>Yip7ty>tU[?oLqocNxJ0R23b<szjm4l;k>sLExr8x"
+565,"h>w^ymf`ay15[<=Maxih=4RO80ynP1SR]tFVAi1TtbVQREM83sYH@jn0>tWsrh\MKyuSK?z^\:TE_[61UW1mnnVh\ql@x=e:yC]\AW\lAAWd`JX1`qN0I=4B7D[U9rAL5CiiE?C5hq:gC6?nLewEKbcv5dnU7AcZ9ULRG:2x_4:a`pC4Xf`Y5NrTaehfGnEX2?GRXMZ>"
 559,1
 928,0
 593,
@@ -47,7 +48,7 @@ pObjects,""
 pSecurityLevel,""
 pSecurityRefresh,"No"
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,7
 pGroups,List of Groups Seperated by Delimiter
 pObjectType,Type of Object to Assign Security To (Application/Cube/Dimension/Process/Chore)
@@ -68,7 +69,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will assign security to specified object
@@ -88,7 +89,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Security.Object.Assign';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cSecurityCube = '}' | pObjectType | 'Security';
 
@@ -316,7 +317,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -347,6 +348,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

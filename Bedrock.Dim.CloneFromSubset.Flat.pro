@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.CloneFromSubset.Flat"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"dkZIalu`T4<uczgqK<DDfsYCyjzYooSEll7C9TykK7u?tjx;`t\EzKl_zXGT<]v2R:I^MgcaHZ=IVJuUrtGPi1=;ze61v8HeVb\n6p9JrxG_lDuf_3@t5awD?aeXd@YOOnwa9dRXH:cZ`ydHH^hX>J<NCBMj5s^3I906iA[B1ccoa0zb=LOlIkXCllxGr3b_KN6w:x4i"
+565,"oHPz;J>wo?yL`]OaWQ2b_q]9k`frVvG1xW0Ky3N;XCPUKHRc4De7:73RDGih<\]ftERFkXRH7Xm@qCmzMx\JEY5L<;2Ir0rHdh\L6B8s9F:YqT3z:t1w<Qjib@5WYVzp88qZ[v=E3uHQPJHt5B`m>P2[5sdzRGHigJr`y0a`M6Te4ie?mVC34S4[YSjV1:iI:`zArl[3"
 559,1
 928,0
 593,
@@ -40,14 +41,14 @@ pDebug
 pSourceDim,""
 pSubset,""
 pTargetDim,""
-pAttr,0.
-pDebug,0.
+pAttr,0
+pDebug,0
 637,5
-pSourceDim,Source Dimension
-pSubset,Source Subset
-pTargetDim,Target Dimension
-pAttr,Include Attributes? (Boolean 1=True)
-pDebug,Debug Mode
+pSourceDim,"Source Dimension"
+pSubset,"Source Subset"
+pTargetDim,"Target Dimension"
+pAttr,"Include Attributes? (Boolean 1=True)"
+pDebug,"Debug Mode"
 577,1
 vElement
 578,1
@@ -60,34 +61,33 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,121
+603,0
+572,140
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-#####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
-#####################################################################################
+################################################################
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
+################################################################
 
 # This process will clone the source dimension
 # If the target dimension already exists then it will be overwritten
 
 
 ### Constants ###
-
 cProcess = 'Bedrock.Dim.CloneFromSubset.Flat' ;
 cUser = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
-cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
+cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.';
 cUser = TM1User;
-cSubset = '}Bedrock_' | cUser ;
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
+cSubset =  '}Bedrock_' | sRandomInt;
 
 
 ### Initialise Debug ###
 
 If( pDebug >= 1 );
-
   # Set debug file name
   sDebugFile = cDebugFile | 'Prolog.debug';
 
@@ -101,6 +101,7 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, '            pTargetDim : ' | pTargetDim );
   AsciiOutput( sDebugFile, '            pAttr      : ' | NumberToString( pAttr ) );
   AsciiOutput( sDebugFile, '' );
+
 EndIf;
 
 
@@ -121,16 +122,35 @@ EndIf;
 
 ## Validate Source Subset
 IF(
-SubsetExists( pSourceDim, pSubset) = 0 );
-  sMessage = 'Invalid source subset: ' | pSubset;
+pSubset @= '' );
   If( pDebug >= 1 );
+    sMessage = 'Using the All subset as the data source.';
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+  If(
+  SubsetExists( pSourceDim , cSubset ) = 1 );
+    SubsetDeleteAllElements( pSourceDim , cSubset );
+  Else;
+    SubsetCreate( pSourceDim , cSubset );
+  EndIf;
+  SubsetIsAllSet( pSourceDim , cSubset, 1 );
+  sSubset = cSubset;
+
+ElseIf(
+SubsetExists( pSourceDim, pSubset) = 0 );
+  If( pDebug >= 1 );
+    sMessage = 'Invalid source subset: ' | pSubset;
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
   ProcessQuit;
+
 ELSE;
-  cSubset = pSubset;
+  sSubset = pSubset;
   nSubsetSize = SubsetGetSize( pSourceDim, pSubset );
-  AsciiOutput( sDebugFile, '            Subset Siz      : ' | NumberToString( nSubsetSize ) );
+  If( pDebug >= 1 );
+    AsciiOutput( sDebugFile, '            Subset Siz      : ' | NumberToString( nSubsetSize ) );
+  EndIf;
+
 ENDIF;
 
 
@@ -150,6 +170,7 @@ pDebug <= 1 );
       'pDimension', pTargetDim,
       'pDebug', pDebug );
   EndIf;
+#  DimensionSortOrder(pTargetDim, 'ByName', 'Ascending', 'ByHierarchy' , 'Ascending');
 ENDIF;
 
 
@@ -157,7 +178,7 @@ ENDIF;
 DatasourceNameForServer = pSourceDim;
 DatasourceNameForClient = pSourceDim;
 DataSourceType = 'SUBSET';
-DatasourceDimensionSubset = cSubset;
+DatasourceDimensionSubset = sSubset;
 
 
 ### Replicate Attributes ###
@@ -182,14 +203,14 @@ EndIf;
 
 
 ### End Prolog ###
-573,30
+573,41
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-######################################
-##~~  Copyright Cubewise P/L 2010 ~~##
-######################################
+################################################################
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
+################################################################
 
 
 ### Check for errors in prolog ###
@@ -199,20 +220,31 @@ If( nErrors <> 0 );
 EndIf;
 
 
-### Add Elements to cloned dimension ###
+## Get source element type
+sElType = DType( pSourceDim, vElement );
 
+
+
+### Add Elements to target cloned dimension ###
 If( pDebug <= 1 );
   # Set debug file name
   sDebugFile = cDebugFile | 'Metadata.debug';
 
   ## Add the element to the target dimension.
-  DimensionElementInsert( pTargetDim, '', vElement, 'N' );
-ELSE ;
-  ASCIIOUTPUT( sDebugFile, vElement );
+  IF(
+  sElType @= 'C' );
+    DimensionElementInsert( pTargetDim, '', vElement, 'N' );
+  Else;
+    DimensionElementInsert( pTargetDim, '', vElement, sElType );
+  EndIf;
+EndIf;
+
+If( pDebug >= 1 );
+  ASCIIOUTPUT( sDebugFile, 'Processed: ' | vElement );
 EndIf;
 
 
-### End MetaData ###
+### End MetaData ##
 574,48
 
 #****Begin: Generated Statements***
@@ -262,7 +294,7 @@ EndIf;
 
 
 ### End Data ###
-575,35
+575,42
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -270,6 +302,13 @@ EndIf;
 #####################################
 ##~~ Copyright Cubewise P/L 2010 ~~##
 #####################################
+
+
+### Clean up temporary subsets
+IF(
+sSubset @= cSubset );
+  SubsetDestroy( pSourceDim , cSubset );
+EndIf;
 
 
 ### Initialise Debug ###
@@ -299,6 +338,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

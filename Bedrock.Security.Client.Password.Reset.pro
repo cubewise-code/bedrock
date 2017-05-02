@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Security.Client.Password.Reset"
 562,"NULL"
 586,
 585,
 564,
-565,"sF]ifDtD:Ur[_FfUtDBa0B>\NsHHM5DJxzCsM:bb<4qSWUgt01w`1k?6VP>j2YZ05ilJbmutxjBzD^y@yxy@E2:=OCWAf1gQr\eak9[CX1^K4HCDVgMc70<pFbeMGTUVxVdtviDNqI1F5@@Z[T2F07=J3yg3jzw?AmCik4r`\BX3jrUhe:8nZOQZRHR2FZi@O:Mk\>bJ"
+565,"aam_Vq3^ME\6yAbBcNSks86K`lXv@truHFUEH[;oY@LqQF2NV^5HpdtJ@U8bef87VSN\fHQ8Eg89t>P5J@tG?cAT31BoBtTol9>M?\AGn_LaFn7uSy;lE>3cO=hz?:17ZNEgz3dW@4@scysDgx7WCdv1lq\26PqY07iVVkHTQvX@fT[=CI<E>kwV45Bn=a8=5]IibFtv"
 559,1
 928,0
 593,
@@ -38,7 +39,7 @@ pDebug
 pClients,""
 pPassword,""
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,4
 pClients,Client Names Seperated by Delimiter
 pPassword,New Password
@@ -56,7 +57,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process can be used by admins to reset a client password.
@@ -69,7 +70,7 @@ pDebug,Debug Mode
 cProcess = 'Bedrock.Security.Client.Create';
 cTM1User = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -174,7 +175,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -205,6 +206,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

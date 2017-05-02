@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.AllElements.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"wG7yZk`_j9urS[\qwGW`lh3aaEcmOkRtkCtsNuTo1u_gHdBv3tlewK3<2EgreAZkrOjXY@gl^<7fBT4AJ6J;a`TnWKd5_kVN<I<`o2tUiX4Z2TkXRouGEtzgoI2cLS0XZ;ICfyOZuHgf;uN4QV\ATmRIrSyg0svOFhO]uw3sG:OgulFyjDATBj61@OKW_=9wjNG;2W^h"
+565,"lQ<=Ycz9v3MdaE7S7gbYwY92phji2XzuoIhQXioa;^Fg[uAXoK:oxG6ZkDLD2OMFG_QE_qF?oyBB7olo?S@m;M2R629IXNvIitx4yaq0BXYx81bPjhIPIkZBd`:<\ZUmQznN:UkB4n9[YrQti>TOzh>JUR67LYP=jwVCV=;OpsWuPqx:nZOqH]g26n=c1JCO>1MyC8T0"
 559,0
 928,0
 593,
@@ -32,7 +33,7 @@ pDebug
 1
 590,2
 pDimension,""
-pDebug,0.
+pDebug,0
 637,2
 pDimension,Dimension to delete all elements
 pDebug,Debug Mode
@@ -48,7 +49,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will delete all elements in the target dimension
@@ -58,7 +59,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.AllElements.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -116,7 +117,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -147,6 +148,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

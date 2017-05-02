@@ -3,7 +3,7 @@
 586,
 585,
 564,
-565,"qt2:ACHIivPf:=p>Lagw2@9ZnSu_vR9kF=fQuWM`y`72OsFQ`Ql@bZA=RcDKuPbZGr@hJOfxioM@Fhx1fgC8VAe1W[Pw3q`^:qoUbKp1UMf0<tvKGbp5e@=`S^NRFwn[hHQ:QXGKNW8n:oM7O4=y=Y=p3hWGA9rGT?4wTEBH_[j<:eH]TyR?xoUKoGlMR8Q8i=LIEpV="
+565,"fBGh1taM`1FHSz5e4F=IfAW5Ldr@:?lDlPG3[nqA;oKgZqWTK^SUD0QG8bX\jXngfM2o>DiHw7BFaThnq3FGKzxU1<[CMKB0x?G>[N2Q[LFCZ@W1A]`wPTW]jTrKIX]mJKFna<@X_ceE?ym6^72SW2st5nQAiS5`tpSdP6LI\2WD0@5;@I7eHFVdI\nlyQtbfJI893g7"
 559,1
 928,0
 593,
@@ -24,37 +24,41 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pDimension
 pSubset
 pConsol
 pAddToSubset
 pExclusions
 pDelimiter
+pAlias
 pDebug
-561,7
+561,8
 2
 2
 2
 1
 2
 2
+2
 1
-590,7
+590,8
 pDimension,""
 pSubset,""
 pConsol,""
 pAddToSubset,0.
 pExclusions,""
 pDelimiter,"&"
+pAlias,""
 pDebug,0.
-637,7
+637,8
 pDimension,Dimension
 pSubset,Subset Name
 pConsol,Consolidated Element
 pAddToSubset,Add to an existing Subset (Boolean: 1=True)
 pExclusions,Excluded Elements
 pDelimiter,Delimiter
+pAlias,Assign an Alias to the Subset
 pDebug,Debug Mode
 577,0
 578,0
@@ -62,13 +66,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,23
+572,24
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -81,6 +85,7 @@ ExecuteProcess('Bedrock.Dim.Sub.Create',
   'pExclusions', pExclusions,
   'pDelimiter', pDelimiter,
   'pAddToSubset', pAddToSubset,
+  'pAlias', pAlias,
   'pDebug', pDebug
 );
 

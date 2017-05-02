@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Destroy"
 562,"NULL"
 586,
 585,
 564,
-565,"tUQ1Ac5VIeDpUMpu:H1NaQzJ3o@Ty99t\BZTI5zw`pEV3[h`Vpy:;a;nnx_skUcFY=EgiN7I;xPLWPC1fz?l;TM\oeGM@G>5N\q[EyKs:i00X6u7lt;w0BAjX\3voOdEtpoBlNYj_V6jVPDgm2wAzXC5yTj5M<z`eAIvva:JLCV3g;\6_IC\`teeohi1Ef0mb=>^U0p9"
+565,"diUIaBpu_Evge03KwGx^:2Rq`@EqLpFKKR1CXC0670TD[]asmIYI17AGcKh>RsbAQjqdzhnWYtjYIH170:9HbyH9lzE7ou4m=Vut:DXEICXG?IAiZ?CGtrvARfG0tyu0X:HfxOt:GA6OBM^?R7TX^ki=fGINT28eJc>OQjOdw[EPdW_0YB6V]Bf\PwZmCmg]I4GyO`LN"
 559,1
 928,0
 593,
@@ -32,7 +33,7 @@ pDebug
 1
 590,2
 pDimension,""
-pDebug,0.
+pDebug,0
 637,2
 pDimension,Dimension
 pDebug,Debug Mode
@@ -48,11 +49,11 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 cProcess = 'Bedrock.Dim.Destroy';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -135,7 +136,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -166,6 +167,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

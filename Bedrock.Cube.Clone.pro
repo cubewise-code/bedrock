@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Clone"
 562,"VIEW"
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"zj]uoGlENSS1Xlu[9alIrIuYL8atY:DBNL3tl1?l2oBqseXs<]k\L?`=Haw4YhSr@?Y:Q2qa>rdG4EXJFA]l3rBu=SmbR=DsZUDhfrMY>b2_@prHv^<IJjDephYvP2aS]I5=_8tJZgXdfM[y;B9m5g`wquyU239:fkuqoDyt2CM_dMxfT2C@h0nLZbFd]wlr:<moBxdf"
+565,"h8>PNSUFa?Ul[=vCxLCixi1LbgN8;GsABbs:62<u;UOPyfWIm@Du:rM:=?\sQKX^\rnsUlJ7KNWUeYK?Mt4UhD^:0B1`gM_Wsp7VuTfzC1ryk3m>sjnu^XBE=9VXv0IS2r8\xrc:r3KKeVVRdg[msgsYda9TqGynYIhPYB6Cb?BEcZ1ikjHLt@gC4k>AJE<9^Ib9RqZ3"
 559,1
 928,0
 593,
@@ -43,20 +44,20 @@ pDebug
 590,7
 pSourceCube,""
 pTargetCube,""
-pIncludeRules,1.
-pIncludeData,0.
+pIncludeRules,1
+pIncludeData,0
 pSourceView,""
-pRuleValues,1.
-pDebug,0.
+pRuleValues,1
+pDebug,0
 637,7
-pSourceCube,Source Cube
-pTargetCube,Target Cube to create/re-create
-pIncludeRules,Include cube rules? (Boolean Yes = 1)
-pIncludeData,Include cube data? (Boolean Yes = 1)
-pSourceView,Source View (blank = whole cube If pIncludeData=1)
-pRuleValues,Skip rule values? (1=skip)
-pDebug,Debug Mode
-577,28
+pSourceCube,"Source Cube"
+pTargetCube,"Target Cube to create/re-create"
+pIncludeRules,"Include cube rules? (Boolean Yes = 1)"
+pIncludeData,"Include cube data? (Boolean Yes = 1)"
+pSourceView,"Source View (blank = whole cube If pIncludeData=1)"
+pRuleValues,"Skip rule values? (1=skip)"
+pDebug,"Debug Mode"
+577,31
 v1
 v2
 v3
@@ -85,7 +86,10 @@ v25
 V26
 V27
 V28
-578,28
+NVALUE
+SVALUE
+VALUE_IS_STRING
+578,31
 2
 2
 2
@@ -114,7 +118,10 @@ V28
 2
 2
 2
-579,28
+1
+2
+1
+579,31
 1
 2
 3
@@ -143,7 +150,10 @@ V28
 26
 27
 28
-580,28
+0
+0
+0
+580,31
 0
 0
 0
@@ -172,7 +182,13 @@ V28
 0
 0
 0
-581,28
+0
+0
+0
+581,31
+0
+0
+0
 0
 0
 0
@@ -230,6 +246,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
+603,0
 572,248
 
 #****Begin: Generated Statements***
@@ -237,7 +254,7 @@ VarType=32ColType=827
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process replicates an existing cube.
@@ -491,7 +508,7 @@ EndIf;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -720,7 +737,7 @@ EndIf;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -777,6 +794,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.CloneFromSubset"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"ctfaYSG\U>V;8m8u0@IW=f^9Um5\w97W772C4IhL7Wzm@x^4?L@TLT[lAOxYt`:@E:XuJslZYFvng@:Zdk8quuNA5le2ixjXJuE1BQUpTQESHP3P2Zn=ji`1Y>5I_C9SixK5SlT1xi[P<icYGc7YwztdI>:ZQD>A2T]w^lOw5>UpmQB>0^@dP6fZR<lgj5Fc<8ockaZW"
+565,"w<Zs5;NNH7gy57F:q<ft\`sa@aXrPBmU<rMRbX2bOT3eycM0vDjn\7cU@fi[;9QYWLNm0fZ7XKo[_s5`uOvd3eusvuEJ>DGSep[f?YKa;DM`k\[Gtf@;_DIxR<ST[pyeUF=:PPJ8oSNHQA\D::qtZYI@W<h1\ny]hXNi_bS[QvE:gSm]:cU2]nnVM<d1;Zz>syu2D2n9"
 559,1
 928,0
 593,
@@ -24,30 +25,34 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pSourceDim
 pSubset
 pTargetDim
 pAttr
+pUnwind
 pDebug
-561,5
+561,6
 2
 2
 2
 1
 1
-590,5
+1
+590,6
 pSourceDim,""
 pSubset,""
 pTargetDim,""
-pAttr,1.
-pDebug,1.
-637,5
-pSourceDim,Source Dimension
-pSubset,Source Subset
-pTargetDim,Target Dimension
-pAttr,Include Attributes? (Boolean 1=True)
-pDebug,Debug Mode
+pAttr,1
+pUnwind,0
+pDebug,0
+637,6
+pSourceDim,"Source Dimension"
+pSubset,"Source Subset"
+pTargetDim,"Target Dimension"
+pAttr,"Include Attributes? (Boolean 1=True)"
+pUnwind,"0 = Delete all Elements, 1 = Unwind Existing Elements"
+pDebug,"Debug Mode"
 577,1
 vElement
 578,1
@@ -60,13 +65,14 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,157
+603,0
+572,174
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will clone the source dimension
@@ -79,19 +85,18 @@ cProcess = 'Bedrock.Dim.CloneFromSubset' ;
 cUser = TM1User();
 
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ) );
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
-cSubset = '}' | cProcess;
 cHierAttr = 'Bedrock.Descendant';
 cAttrVal = 'Descendant';
 
 ### Initialise Debug ###
 
-If( pDebug >= 1 );
+# Set debug file name
+sDebugFile = cDebugFile | 'Prolog.debug';
 
-  # Set debug file name
-  sDebugFile = cDebugFile | 'Prolog.debug';
+If( pDebug >= 1 );
 
   # Log start time
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
@@ -135,22 +140,40 @@ ELSE;
   AsciiOutput( sDebugFile, '            Subset Siz      : ' | NumberToString( nSubsetSize ) );
 ENDIF;
 
-# Validate target dimension
+## Validate target dimension
 If( pTargetDim @= '' % pTargetDim @= pSourceDim );
   pTargetDim = pSourceDim | '_Clone';
 EndIf;
 
 ### Create target dimension ###
-IF(
-pDebug <= 1 );
-  If( DimensionExists( pTargetDim ) = 0 );
+If( pDebug <= 1 );
+  If( 
+  DimensionExists( pTargetDim ) = 0 );
     DimensionCreate( pTargetDim );
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, 'Target dimension created: ' | pTargetDim  );
+    EndIf;
+
   Else;
-    ExecuteProcess( 'Bedrock.Dim.Hierarchy.Unwind.All',
-      'pDimension', pTargetDim,
-      'pDebug', pDebug );
-  ENDIF;
-ENDIF;
+    IF(
+    pUnwind = 1 );
+      ExecuteProcess( 'Bedrock.Dim.Hierarchy.Unwind.All',
+        'pDimension', pTargetDim,
+        'pDebug', pDebug
+        );
+       If( pDebug >= 1 );
+         AsciiOutput( sDebugFile, 'Target dimension unwound: ' | pTargetDim  );
+       EndIf;
+
+    ELSE;
+      DimensionDeleteAllElements( pTargetDim );
+      If( pDebug >= 1 );
+        AsciiOutput( sDebugFile, 'All element deleted from Target element: ' | pTargetDim  );
+      EndIf;
+
+    EndIf;
+  EndIf;
+EndIf;
 
 
 ### Assign Data Source ###
@@ -290,10 +313,53 @@ If( pDebug <= 1 & pAttr = 1 );
 
 
 ### End Data ###
-575,37
+575,77
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
+
+If( pDebug >= 1 );
+
+  # Set debug file name
+  sDebugFile = cDebugFile | 'Epilog.debug';
+
+EndIf;
+
+### Set Target dimension sort order ###
+
+sCube = '}DimensionProperties';
+IF(
+CubeExists ( sCube ) = 1 );
+
+  ExecuteProcess('Bedrock.Cube.Data.Copy'
+    , 'pCube', sCube
+    , 'pDimension', '}Dimensions'
+    , 'pSourceElement', pSourceDim
+    , 'pTargetElement', pTargetDim
+    , 'pSkipRules', 0
+    , 'pZeroTarget', 1
+    , 'pZeroSource', 0
+   , 'pDestroyTempObj', 1
+   , 'pDebug', pDebug
+  );
+ENDIF;
+
+sCube = '}HierarchyProperties';
+IF(
+CubeExists ( sCube ) = 1 );
+
+  ExecuteProcess('Bedrock.Cube.Data.Copy'
+    , 'pCube', sCube
+    , 'pDimension', '}Dimensions'
+    , 'pSourceElement', pSourceDim
+    , 'pTargetElement', pTargetDim
+    , 'pSkipRules', 0
+    , 'pZeroTarget', 1
+    , 'pZeroSource', 0
+   , 'pDestroyTempObj', 1
+   , 'pDebug', pDebug
+  );
+ENDIF;
 
 
 ### Set Descendent attribute value
@@ -305,9 +371,6 @@ ENDIF;
 ### Initialise Debug ###
 
 If( pDebug >= 1 );
-
-  # Set debug file name
-  sDebugFile = cDebugFile | 'Epilog.debug';
 
   # Log errors
   If( nErrors <> 0 );
@@ -329,6 +392,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

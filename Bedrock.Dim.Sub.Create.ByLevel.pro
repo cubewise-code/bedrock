@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.Create.ByLevel"
 562,"NULL"
 586,
 585,
 564,
-565,"aaFNZ9IzmlMzHdvOU]Gh0I[5rJ_bPo\h0UQv[jvPUgVmN^5=GO^eyd9nQTM>QKhkP=obxj@icJovMvOo6kCc=pL8s^Y5Ju8JV6jURlqQ<psDbXYXz`Aukg\5U8>AxENkdOkmV3h22QadQb_C[RlSYiFQo[5cke689ikZjY_M`=GwW?xhL^z\gz;Xk=in9O1^x^V1THdz"
+565,"yz38taz5?ozp;ke@RAsVN>tSAaAASyNRs:STi^A7z\m@YJ9]=<y\Ol1F6E<NBDCEVS]@V=`KIp08flQDk?6`dJOauiCi=bW;LGhAHSTOz90k7ZM8X8?1pnHMo7K>EK9wxhataELbKHvLvbM?SXrAPebEg=3vz5SBLW?K77lz\\d9RY@C:swpwy[;HMe9N@2\ix9>1;QG"
 559,1
 928,0
 593,
@@ -24,25 +25,29 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pDimension
 pSort
 pConvertStatic
+pAlias
 pDebug
-561,4
+561,5
 2
 1
 1
+2
 1
-590,4
+590,5
 pDimension,""
-pSort,0.
-pConvertStatic,1.
-pDebug,0.
-637,4
+pSort,0
+pConvertStatic,1
+pAlias,""
+pDebug,0
+637,5
 pDimension,Dimension Name
 pSort,Sort the Subset (1)
 pConvertStatic,Convert the Subset to Static (1)
+pAlias,Assign an alias to the subset
 pDebug,Debug Mode
 577,0
 578,0
@@ -50,13 +55,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,106
+572,156
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process creates static subsets named "All level <nn>" for the specified
@@ -67,7 +72,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Create.ByLevel';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -85,7 +90,7 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Parameters: pDimension     : ' | pDimension );
   AsciiOutput( sDebugFile, '            pSort          : ' | NumberToString( pSort ) );
   AsciiOutput( sDebugFile, '            pConvertStatic : ' | NumberToString( pConvertStatic ) );
-
+  AsciiOutput( sDebugFile, '            pAlias : ' | pAlias );
 EndIf;
 
 
@@ -110,6 +115,40 @@ If( DimensionExists( pDimension ) = 0 );
   EndIf;
   ItemReject( sMessage );
 EndIf;
+
+## Validate Alias
+
+IF(
+pAlias @<> '' );
+
+  sDimAttr = '}ElementAttributes_' | pDimension;
+  IF(
+  DimensionExists( sDimAttr ) = 0 );
+    sMessage = 'No attributes exist for the dimension: ' | pDimension;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+
+  IF(
+  DIMIX( sDimAttr, pAlias ) = 0 );
+    sMessage = 'The Alias: ' | pAlias | ' does not exist in the dimension: ' | pDimension;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+
+  IF(
+  DTYPE( sDimAttr, pAlias ) @<> 'AA' );
+    sMessage = 'The Alias: ' | pAlias | ' is not an Alias in the dimension: ' | sDimAttr;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+ENDIF;
 
 
 ### Build Subset ###
@@ -151,9 +190,25 @@ If( pDebug <= 1 );
     Else;
       SubsetCreatebyMDX( sSubset, sMDX );
     EndIf;
+
+    ### Assign Alias to subset
+    IF(
+    pAlias @<> '' );
+      If( pDebug <= 1 );
+        SubsetAliasSet( pDimension, sSubset, pAlias );
+      EndIf;
+
+      If( pDebug >= 1 );
+        sMessage = 'The Alias: ' | pAlias | ' has been set.';
+        AsciiOutput( sDebugFile, sMessage );
+      EndIf;
+    ENDIF;
+
     nLevel = nLevel + 1;
   End;
 EndIf;
+
+
 
 
 ### End Prolog ###
@@ -173,7 +228,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -204,6 +259,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

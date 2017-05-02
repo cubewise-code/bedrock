@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Attr.ImportFromFile"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
 564,
-565,"ySOZoo7u4G=AVZ4;s5cJk<\hza\:Tf9C<RKth;8nO?T24NeBtjDXU6gFI]Ux5Z3MwUTi7ib`Mi_tMYYo3p<[\SR_J>qnvh[bJ=YXHyrmQ;q^cV]ibA`zm1oCXMWw;l;x8Zrk=CDcgTK@uK?plyj4AaQeg\^k[Qqr4k5DMDXJ29002d`z7jAq><OE^x\x3WoU9ewQNd9Q"
+565,"gsoQLmxatZ@8JIC`TWRbfE<smYN?\jAk?LhQO2iR8:5<qOeQY=KUY`SQ4zX3QUqlRyeVy_ov\?5K>5n9GFev4?H[M;Z>JxK^h98LYg`Jie[oz^XUqL0f@9[Ww`VP9;E5Ldvw9ea7wjHhZ12\HZTn5aI0\cXhM>J:G@p5\X\rfXMvDrPx3VybUR?4Go?z3MNW078rl;gE"
 559,1
 928,0
 593,
@@ -44,10 +45,10 @@ pDebug
 pDimension,""
 pSourceDir,""
 pSourceFile,""
-pTitleRows,1.
+pTitleRows,1
 pDelimiter,","
 pQuote,"""
-pDebug,0.
+pDebug,0
 637,7
 pDimension,Target Dimension
 pSourceDir,File Directory
@@ -86,7 +87,7 @@ VarType=32ColType=827
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will create Attributes to the dimension from a file.
@@ -97,7 +98,7 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Attr.ImportFromFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 nMetaDataCount = 0;
@@ -210,7 +211,7 @@ DatasourceASCIIQuoteCharacter = pQuote;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -260,7 +261,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -291,6 +292,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

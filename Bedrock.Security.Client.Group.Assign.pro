@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Security.Client.Group.Assign"
 562,"NULL"
 586,
 585,
 564,
-565,"aa<XXQ5@J65t5AP:1ZVQwIT2_hXSh=TG[IM1[6sV]>kGkZG5kU`CuuQEUR6ia3Y^cgeGwQ6c<a_rwWbd[139JBE5PufY]HS_WwXXtyHfxd_oDSf1r7@;47i4]`K[A_at`NwSU`wb;xQ^1eSh0QoK7]]<\1Ova[k47^2?TGwUcUHV44xJwa>ZBM=BCcn`QDzxmo@X4_Nm"
+565,"ta<jRYTAn[`uG9sPMUr3aaXh5w><GVG<]g5K_7lu6b4fURE]rt;KvueyW:MJg]ORWKln<V4;P;dVA`m[AXAmruxR^``o1g\jrDf=r>jm=eCQq4QosIO>IF?CEu[UTsHB90Q5=u16Fs1s?1p`i@[h0qv[Yq8@6e:]3rJsMHkZy3cZGktHqISkY]Cl:3sYAdrAzAJSgdN_"
 559,1
 928,0
 593,
@@ -44,7 +45,7 @@ pGroups,""
 pDelimiter,"&"
 pAddOrRemove,"Add"
 pSecurityRefresh,"Yes"
-pDebug,0.
+pDebug,0
 637,6
 pClients,Client Names Seperated by Delimiter
 pGroups,Group Names Seperated by Delimiter
@@ -64,7 +65,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will assign Client and Group Security
@@ -85,7 +86,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Security.Client.Group.Assign';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -255,7 +256,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -286,6 +287,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

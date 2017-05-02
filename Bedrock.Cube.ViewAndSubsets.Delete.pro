@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.ViewAndSubsets.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"hBybDiUDaoKS<U8CQ<C`4LhPAH`ya76g8p>k7\VQaX;my5=C`or9FNcASwK6BW2Z>@SGpfAgzA`6Z8;On59lQDZYKYS7SN\pYA<zQ<[Nl^MgK]9VTt]`^JdQJbZi@6>5IPaKt0N3xW@U5KxHzKFym@MYb:3PGzzspLm_Sr]rLvjl75SN\44p5DvsgdD\Y5f_Xrf3Ner;"
+565,"uQzscMbCdpNoXsyrLGEL?aCeIP=\17m3A_tR=TiTVtGBb8^MXp93r[pHkYjMdXD0w;7b_Bf4>F84z6WgJWkh]6_5g8?C]6tNa71khSGEW\hrW7EkncJ4p2R<]wDF0DgBU2DT07H^5ZDWr:LRLr_Fefr;Ikl`_hAX0d^[:FM4Y^T@P7];gk_yEK3DnRKXpq=ure\o3LQb"
 559,1
 928,0
 593,
@@ -40,34 +41,35 @@ pDebug
 pCube,""
 pView,""
 pSubset,""
-pMode,0.
-pDebug,0.
+pMode,1
+pDebug,0
 637,5
-pCube,Cube Name
-pView,View Name
-pSubset,Subset Name
-pMode,Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )
-pDebug,Debug
+pCube,"Cube Name"
+pView,"View Name"
+pSubset,"Subset Name"
+pMode,"Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
+pDebug,"Debug"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
+603,0
 572,104
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process deletes a view and all subsets that have the same name
 
 cProcess = 'Bedrock.Cube.ViewAndSubsets.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 nErrors = 0;
 
@@ -176,7 +178,7 @@ ENDIF;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -212,6 +214,7 @@ EndIf;
 
 
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Export"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"hyanCZURaMy[CXcCUk;6q;h=aP?3_u`d6ZNYX\sQ3=3LZE]`@umYKvYVEdRIMfS]aN>w3sbMs20zX1\WUZc0AVaz>F[mf3Wy`]Yb@Kg>LY<XS\?S`8@jkuRk_J?^s4c=3VGt[iO`>X5;EZsV=yxrBVN_SqaS5[tKquI4DH:qkDOuq`T2]ELvO[;j4`6;l_15D78ra_bl"
+565,"d=S2aR4EBG^a5mTz;ZFw<H5WzoxY5EKS\q1PWmBq[o2_8cCQEeq<]A`TFCC9fD;To][FTTBRcnGNkZW_q4U=TwsSNP8`mMSU64Rjtu7RQqecU8TuhBB14D5\XY:\naVMuSZxeI8Sf81zwA_ut@_tf^jiz<Mq:N06DRt:iVuaDUDJsfv>JRO_NkSTGO>:2h3aKZ2:FWyC"
 559,1
 928,0
 593,
@@ -37,11 +38,11 @@ pDebug
 1
 1
 590,5
-pDimension,""
-pExportPath,""
+pDimension,"Column"
+pExportPath,"C:\Users\adavis\Documents\Bedrock 3.0\Export"
 pExportFile,""
-pTitleRecord,1.
-pDebug,0.
+pTitleRecord,1
+pDebug,0
 637,5
 pDimension,Dimension
 pExportPath,Export file path
@@ -60,13 +61,13 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,124
+572,108
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
 #####################################################################################
 
 # This process will Export all Dimension elements to a File.
@@ -74,10 +75,11 @@ VarType=32ColType=827
 
 ### Constants ###
 
-cProcess = 'Bedrock.Dim.ExportToFile';
+cProcess = 'Bedrock.Dim.Export';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
+
 
 
 ### Initialise Debug ###
@@ -156,25 +158,8 @@ EndIf;
 # Construct full export filename including path
 sFilename = pExportPath | pExportFile;
 
-
-### Determine if alias exists. If multiple aliases exist just pick the first one ###
-
-sAttributeDim = '}ElementAttributes_' | pDimension;
-sAlias = '( no alias )';
-
-If( DimensionExists( sAttributeDim ) = 1 );
-  nElementCount = DimSiz( sAttributeDim );
-  nElementIndex = 1;
-  While( nElementIndex <= nElementCount );
-    sAttribute = DimNm( sAttributeDim, nElementIndex );
-    If( SubSt( DType( sAttributeDim, sAttribute ), 2, 1 ) @= 'A' );
-      sAlias = sAttribute;
-      nElementIndex = nElementCount;
-    EndIf;
-    nElementIndex = nElementIndex + 1;
-  End;
-EndIf;
-
+### Constants
+cCubeS1 = '}DimensionProperties';
 
 ### Assign Data Source ###
 
@@ -190,13 +175,13 @@ DatasourceDimensionSubset = 'ALL';
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,66
+574,108
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -207,63 +192,105 @@ If( nErrors > 0 );
 EndIf;
 
 
-### Check whether to write title records ###
+### Record Count
 
 nRecordCount = nRecordCount + 1;
 
-If( nRecordCount = 1 & pTitleRecord = 1 );
-  AsciiOutput(
-    sFilename,
+### Export Header Information
+
+## Line 1: File Metadata information
+If( 
+nRecordCount = 1 & pTitleRecord = 1 );
+  AsciiOutput( sFilename,
     'Export from dimension: ' | pDimension | ', all elements in index order. Total elements=' |
-      NumberToString( DimSiz( pDimension ) ) | '. On ' | Date( Now, 1 ) | ' at ' | Time
-  );
-  AsciiOutput(
-    sFilename,
-    'Index', 'Element', 'Alias: ' | sAlias, 'El Type', 'Level', 'Num Children', 'Parent 1', 'Weight 1', 'Parent 2', 'Weight 2',
-      'Parent 3', 'Weight 3', 'Parent 4', 'Weight 4', 'Parent 5', 'Weight 5'
-  );
-EndIf;
+      NumberToString( DimSiz( pDimension ) ) | '. On ' | Date( Now, 1 ) | ' at ' | Time );
+
+## Line 2: Source Dimension
+AsciiOutput( sFilename,
+    pDimension  );
+
+## Line 2: Sort Order Information
+sSortElementType = CELLGETS( cCubeS1, pDimension, 'SORTELEMENTSTYPE' );
+sSortComponentType = CELLGETS( cCubeS1, pDimension, 'SORTCOMPONENTSTYPE' );
+sSortElementSense =  CELLGETS( cCubeS1, pDimension, 'SORTELEMENTSSENSE' );
+sSortComponentSense =  CELLGETS( cCubeS1, pDimension, 'SORTCOMPONENTSSENSE' );
+AsciiOutput( sFilename,
+    sSortElementType , sSortComponentType , sSortElementSense , sSortComponentSense  );
+
+## Line 3: Header Information
+  AsciiOutput( sFilename, 'Reserved' );
+
+## Line 4: Header Information
+  AsciiOutput( sFilename, 'Reserved' );
+
+## Line 6: Header Information
+  AsciiOutput( sFilename,
+    'Line_Type', 'Element', 'Value_1', 'Value_2', 'Value_3' );
+
+### Attribute Information 
+  sAttrDimName = '}ElementAttributes_' | pDimension;
+  IF(
+  DimensionExists( sAttrDimName ) = 1 );
+    nIndex = 1;
+    nLimit = DIMSIZ ( sAttrDimName );
+    WHILE( nIndex <= nLimit );
+      sElName = DIMNM( sAttrDimName, nIndex );
+      sElType = DTYPE( sAttrDimName, sElName );
+      AsciiOutput( sFilename, 'A', sElName, sElType );
+      nIndex = nIndex + 1;
+    END; 
+  ENDIF;
+
+ENDIF;
 
 
-### Write dimension info to flat file ###
+### Element Information
+nElIndex = DIMIX ( pDimension, vElement );
+sElType = DTYPE( pDimension, vElement );
+AsciiOutput( sFilename,
+  'E', vElement, sElType, NumberToString( nElIndex ) );
 
-sIndex = NumberToString( DimIx( pDimension, vElement ) );
-sType  = DType( pDimension, vElement );
-sLevel = NumberToString( ElLev( pDimension, vElement ) );
-sChild = NumberToString( ElCompN( pDimension, vElement ) );
+### Element Parents
+nElPar =ELPARN( pDimension, vElement );
+IF(
+nElPar > 0 );
+  nIndex = 1;
+  nLimit = nElPar;
+  WHILE( nIndex <= nLimit );
+    sElPar = ELPAR( pDimension, vElement, nIndex );
+    sElType = DTYPE( pDimension, sElPar );
+    nElWgt  = ElWeight( pDimension, sElPar, vElement );
+    AsciiOutput( sFilename, 'P', vElement, sElPar, sElType, NumberToString( nElWgt ) );
+    nIndex = nIndex + 1;
+  END;
+ENDIF;
 
-sParent1 = ElPar( pDimension, vElement, 1 );
-sParent2 = ElPar( pDimension, vElement, 2 );
-sParent3 = ElPar( pDimension, vElement, 3 );
-sParent4 = ElPar( pDimension, vElement, 4 );
-sParent5 = ElPar( pDimension, vElement, 5 );
+### Attribute Value 
+IF(
+DimensionExists( sAttrDimName ) = 1 );
+  nIndex = 1;
+  nLimit = DIMSIZ ( sAttrDimName );
+  WHILE( nIndex <= nLimit );
+    sElName = DIMNM( sAttrDimName, nIndex );
+    sElType = DTYPE( sAttrDimName, sElName );
+    IF(
+    sElType @= 'AN' );
+      sAttrValue = NumberToString( ATTRN( pDimension, vElement, sElName ) );
+    ELSE;
+      sAttrValue = ATTRS( pDimension, vElement, sElName );
+    ENDIF;
+    AsciiOutput( sFilename, 'V', vElement, sElName, sAttrValue );
+    nIndex = nIndex + 1;
+  END;
+ENDIF;
 
-sWeight1 = NumberToString( ElWeight( pDimension, sParent1, vElement ) );
-sWeight2 = NumberToString( ElWeight( pDimension, sParent2, vElement ) );
-sWeight3 = NumberToString( ElWeight( pDimension, sParent3, vElement ) );
-sWeight4 = NumberToString( ElWeight( pDimension, sParent4, vElement ) );
-sWeight5 = NumberToString( ElWeight( pDimension, sParent5, vElement ) );
-
-If( sAlias @<> '( no alias )' );
-   sDescription = AttrS( pDimension, vElement, sAlias );
-Else;
-   sDescription = '';
-EndIf;
-
-AsciiOutput(
-  sFilename, sIndex, vElement, sDescription, sType, sLevel, sChild, sParent1, sWeight1, sParent2, sWeight2,
-    sParent3, sWeight3, sParent4, sWeight4, sParent5, sWeight5
-);
-
-
-### End Data ###
 575,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -294,6 +321,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

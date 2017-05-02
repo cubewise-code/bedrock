@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Hierarchy.Unwind.Consolidation"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"h=`exttta03ywmP1gG7Py0WW?rVO7i2vXPYe2oYEarJefVVQnoLpjyTTrio0n9V`zYkD8Ha]F2A?H>SybV@iUS4VZ:ZxRu`uHldP4c@\:?53jJnE>?j_LAXC6Uss]YSQ;j4_zK:IFC6T4dSdC[flro;<CT:saNeLDqQKk4:o3QzgS51qpk]HuK:BoN;QVITHaId4Wc1i"
+565,"fp5bosaYXh9SDkkEZCq:fF`L[F?=A@9d0esBhIXmxNn0z19jLcZbWzSf?t<LBU?>73V:HEe>:\;TcXshJ=4_3ux30o^JIx9o@7dhSwWX^eQ?Qa9nM=`ilVj=mW=@CQpUg^?RV0Ib_ub237fcT7=cOKwdj9tl7pm^nH=d[;fXjrX?nrQ>0q1rE?Rh<z6Ab?3k^y`g<EEs"
 559,1
 928,0
 593,
@@ -37,8 +38,8 @@ pDebug
 590,4
 pDimension,""
 pConsol,""
-pRecursive,0.
-pDebug,0.
+pRecursive,0
+pDebug,0
 637,4
 pDimension,Target Dimension
 pConsol,Target Consolidation
@@ -56,13 +57,13 @@ vElement
 0
 582,1
 VarType=32ColType=827
-572,134
+572,139
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will remove all children from a specific target consolidation in the target dimension
@@ -77,7 +78,7 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Hierarchy.Unwind.Consolidation';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cHierAttr = 'Bedrock.Descendant';
 cAttrVal = 'Descendant';
@@ -145,6 +146,11 @@ If( DimIx( pDimension, pConsol ) = 0 % DType( pDimension, pConsol ) @<> 'C' % El
   ItemReject( sMessage );
 EndIf;
 
+### Turn-off Logging in the Attribute cube
+sAttrCube = '}ElementAttributes_' | pDimension ;
+sOLogging = CELLGETS( '}CubeProperties', sAttrCube, 'Logging' );
+CELLPUTS( 'No', '}CubeProperties', sAttrCube, 'Logging' );
+
 
 ### Set Descendent attribute value
 
@@ -197,7 +203,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -232,15 +238,18 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,42
+575,45
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
+
+### Reset Logging in the Attribute cube
+CELLPUTS( sOLogging, '}CubeProperties', sAttrCube, 'Logging' );
 
 ### Remove Descendent attribute
 
@@ -276,6 +285,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

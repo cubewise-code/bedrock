@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Security.Client.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"hf_rjbKgacWRK]B<e_JJ68Jo8EBd?_@_<FYfvDBk8NgiIYwuu28XB58jUsdZLH9?Ou7Q`5>atsF>MjQ[4pj4GwYix4XcVNnJ:Pxt9<ZXF;L8<rNBWgC6JG@t13?t0AYP7v\m]bD5>C6om5ob]qQ\Gj^?k0C;YyiM\F6z7<1b4]OgowDO[5=ft5h81IY9AcgfI_jB@^_D"
+565,"o3j>hga@f=t<:pYaxf77VCyq]L[cI8v_Yy[zyU`PVBSZzB=\psKMJ]:0TK5ea]X5[4ckL99V[vBgp0SeGlX=O47nJeeSZ[4[jFstn\76hN6IUQH>eqZW6<Rj794HYWbSXmcaaIimc5Tt7=xGQI_=\w@lXN0z=4U:P\nrY;=n:`16PPYH0iGfwGc1wfm_p:S`U6zLY\78"
 559,1
 928,0
 593,
@@ -35,7 +36,7 @@ pDebug
 590,3
 pClients,""
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,3
 pClients,Clients seperated by delimiter (e.g. Client1&Client2)
 pDelimiter,Delimiter
@@ -52,7 +53,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will delete clients
@@ -67,7 +68,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Security.Client.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -160,7 +161,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -191,6 +192,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

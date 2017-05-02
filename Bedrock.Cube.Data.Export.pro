@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Data.Export"
 562,"VIEW"
-586,"placeholder"
-585,"placeholder"
+586,"Bedrock Test"
+585,"Bedrock Test"
 564,
-565,"eEPdfa0Nm7<Ag<^0>T>=z1\Zse@j[Tk4KxTQxqokh<dL85]VIjXOz<Suf]4D34Nc18zCu<@J`YkOea1Sb=ng[mk@0`WU_txbd=:\jTiMP2?9f`2zrA_R=\g>vLQz6I1]Nt^z\m<NdM2KTh?6?G\Vvy<Vo@kE=x87lVcFX>dO5iLCJnX:xr\Zgaq[]oLW8D[r]LK>xxRP"
+565,"fFNugDan[8Rt7?uLzE8_TyqfjasfmMAGLXnRoreb=VyLI`r3nju>S\nZZa8_F99IFErO[2ZKQMnp98R8E>I_;^n]\nWUu=<l5T<ky5iP5?p@XR0e@orWJ9AQyt5=t6M\1hnkR_=xoFe@wyL]q3MHK\VDoAMU2bnmt]Qo_q^:y^BlxK3a;uWtc@UacW7Oyf9^XIffj4Ds"
 559,1
 928,0
 593,
@@ -19,7 +20,7 @@
 588,"."
 589,
 568,""""
-570,placeholderView
+570,Temp
 571,
 569,0
 592,0
@@ -59,28 +60,28 @@ pFilter,""
 pDimensionDelim,"&"
 pElementStartDelim,":"
 pElementDelim,"+"
-pSkipRules,1.
-pSkipCons,1.
-pZeroSource,0.
-pDestroyTempObj,1.
+pSkipRules,1
+pSkipCons,1
+pZeroSource,0
+pDestroyTempObj,1
 pFilePath,""
 pFileName,""
-pDebug,0.
+pDebug,0
 637,13
-pCube,Cube
-pView,Temporary view name
-pFilter,Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations
-pDimensionDelim,Delimiter between dimensions
-pElementStartDelim,Delimiter for start of element list
-pElementDelim,Delimiter between elements
-pSkipRules,Skip Rule Values? (1=Skip)
-pSkipCons,Skip Consolidted Values? (1=Skip)
-pZeroSource,Zero Out view AFTER Copy? (Boolean 1=True)
-pDestroyTempObj,Retain temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )
-pFilePath,Export Directory
-pFileName,Export Filename (If Left Blank Defaults to cube_dim_ele_export.csv)
-pDebug,Debug Mode
-577,31
+pCube,"Cube"
+pView,"Temporary view name"
+pFilter,"Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations"
+pDimensionDelim,"Delimiter between dimensions"
+pElementStartDelim,"Delimiter for start of element list"
+pElementDelim,"Delimiter between elements"
+pSkipRules,"Skip Rule Values? (1=Skip)"
+pSkipCons,"Skip Consolidted Values? (1=Skip)"
+pZeroSource,"Zero Out view AFTER Copy? (Boolean 1=True)"
+pDestroyTempObj,"Retain temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
+pFilePath,"Export Directory"
+pFileName,"Export Filename (If Left Blank Defaults to cube_dim_ele_export.csv)"
+pDebug,"Debug Mode"
+577,34
 V1
 V2
 V3
@@ -112,7 +113,10 @@ V28
 V29
 V30
 Value
-578,31
+NVALUE
+SVALUE
+VALUE_IS_STRING
+578,34
 2
 2
 2
@@ -144,7 +148,10 @@ Value
 2
 2
 2
-579,31
+1
+2
+1
+579,34
 1
 2
 3
@@ -176,7 +183,10 @@ Value
 29
 30
 31
-580,31
+0
+0
+0
+580,34
 0
 0
 0
@@ -208,7 +218,13 @@ Value
 0
 0
 0
-581,31
+0
+0
+0
+581,34
+0
+0
+0
 0
 0
 0
@@ -272,13 +288,14 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
+603,0
 572,202
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This TI is designed to copy all data in a given cube to a file for a given "element"
@@ -297,7 +314,7 @@ cUser = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
-cDefaultView = '}Bedrock_' | cTimeStamp | '_' | sRandomInt ;
+cDefaultView = 'Bedrock_' | sRandomInt ;
 nDataCount = 0;
 
 ### Initialise Debug ###
@@ -480,14 +497,14 @@ ENDIF;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,139
+574,159
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 ### Data Count ###
@@ -559,6 +576,26 @@ ENDIF;
 ### Export data from source version to file ###
 # Selects the correct AsciiOutput formula depending upon the number of dimensions in the cube
 
+IF(
+SCAN( CHAR( 10 ), sValue ) > 0 );
+  sValueCleaned = '';
+  nNoChar = 1;
+  nLimit = LONG( sValue);
+  WHILE( nNoChar <= nLimit ) ;
+    sChar = SUBST(  sValue, nNoChar, 1);
+    IF(
+    CODE( sChar, 1 ) <> 10 );
+      sValueCleaned = sValueCleaned | sChar ;
+    ELSE;
+      sValueCleaned = sValueCleaned | ' ';
+    ENDIF;
+    nNoChar = nNoChar + 1;
+  END;
+  sValue = sValueCleaned;
+ENDIF;
+
+
+
 If( nDimensionCount = 2 );
   AsciiOutput( cExportFile, pCube, v1, v2, sValue );
 ElseIf( nDimensionCount = 3 );
@@ -627,7 +664,7 @@ EndIf;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -681,6 +718,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

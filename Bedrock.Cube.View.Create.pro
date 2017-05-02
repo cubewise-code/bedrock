@@ -4,7 +4,7 @@
 586,"Variables"
 585,"Variables"
 564,
-565,"aaTM\e]QWA@j]l`cEJdNnKuMqd[xsuy?UJhIX1m:[ki_XQ\goUWBc>^PgDO\RT_[2v:q>Zf7QWbRToZuuu0=DCt@DV:ZILkKwX]xBgUdAZV`89P_rz<9=LZ5CX2^SyQPc9jJrZw^DfZ]oy>pF6kBJ:o]HFmpU_J=ghAb_\[JW\Eoe;p03eJHfmV6RtHO2^7ynJGr\uQn"
+565,"o107s_0x?UNE^@5agv_4z1@f3wY;abMh41uxkn]5`>P<WUliPngCwIdQ_dAqLYXCOYC@?ae21jRbc0BcD>BOPY2:kW1prPGzy>_;QSd00nvqRkRoc^7ENwQ4Nz9rCA3R3VrB[q2yBD>\<KhgLuWmdc8g\ctyh@:JOrm:DRxEKItueNXCuf?oyYc`D8^zBfZ]quZSuH_S"
 559,1
 928,0
 593,
@@ -75,14 +75,13 @@ pDebug,Debug: 0
 580,0
 581,0
 582,0
-603,0
 572,402
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process automatically creates a view that can be used for exporting, copying and zeroing out numbers.
@@ -101,7 +100,7 @@ pDebug,Debug: 0
 
 cProcess = 'Bedrock.Cube.View.Create';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 sSubset = pView;
 sDelimDim = TRIM(pDimensionDelim);
@@ -495,7 +494,7 @@ END;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 

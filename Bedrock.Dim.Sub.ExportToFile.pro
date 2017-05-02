@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.ExportToFile"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"w8sT_mWz:iN\@nFuUk99P?LacQibxYC^yo3O5VOwWBr?8weMYTeaJ=ZdMpf\09TCwoSMKYywXwz<>eKu=Wg9ys?Cef9_eF[Z>AfbveVd[LEgxj18WWfGxY>93P_PVhUq4AFOkB=A[7inxcQC4m4jxG<OqIDfAYoneUwmVssGKbD?pxA4Uyk9FAdbh<J242>Hm_OPedD8"
+565,"mz`GNSD6fI=5ZaOaGB4m47DZJMSN]`HLLyqh?;:1aYzBzmS\qt:l:BIW1@52wN]4OoAr5VY<Vlsf<Fp>1U3c;lat3>y4Rr5f2FuezT\_6x:gSeYM^cc0wE;BORk\nyY4IX_Dv:B>bnef[n]o@m?P@1J8V:bz\MGvvG`uiqTAi@ipJ1xjPX;^3cY]sGRj\EyqRttF4sI9"
 559,1
 928,0
 593,
@@ -43,8 +44,8 @@ pDimension,""
 pSubset,""
 pExportPath,""
 pExportFile,""
-pTitleRecord,1.
-pDebug,0.
+pTitleRecord,1
+pDebug,0
 637,6
 pDimension,Dimension
 pSubset,Subset
@@ -70,7 +71,7 @@ VarType=32ColType=827
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will Export a dimension subset to a file.
@@ -80,7 +81,7 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Dim.Sub.ExportToFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -219,7 +220,7 @@ DatasourceDimensionSubset = pSubset;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -326,7 +327,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -357,6 +358,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

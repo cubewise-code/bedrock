@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.EmptyConsols.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"n\H8`>Ske<JTO?aI5:Mrlu>X]1iiE]vj:bs@Gl[8pxHlRO`dLj:IzRkSO[W0HsD=K>f05lK52@Cg]Gg2lg9QexKQelvEIDH>c9gB1h^]7JvzvPYV_l6Moly\H5Qvq9tKIC37;HIodFzeShs]u7zF0MzQIzV2Uom`GLxY`<qH]TZZhU`GmX<lj:8:ZYx@AC89^y`jox=A"
+565,"gwixgd0a3st2>bz[`YJioLmqP25TGkt:Cu>:YIeO]paJpA:\e\052ufHZ?F[Ymr_LCSOw^`f5I[@?1NT>OHzvtbKQc0khJPViJGa:v86eFPUiPQwMqQ3e8lA64g1\:nCBfR08<HpSW1[YSzVq6Q5sc\FpPW@>UM:GjTOpt>eIog:SjRHKDCDUQ<4i[agEm_p>^wLwkH<"
 559,1
 928,0
 593,
@@ -32,7 +33,7 @@ pDebug
 1
 590,2
 pDimension,""
-pDebug,0.
+pDebug,0
 637,2
 pDimension,Target Dimension
 pDebug,Debug Mode
@@ -42,13 +43,13 @@ pDebug,Debug Mode
 580,0
 581,0
 582,0
-572,88
+572,94
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will delete all consolidations with no children in the target dimension.
@@ -61,7 +62,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.EmptyConsols.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -106,29 +107,35 @@ EndIf;
 
 ### Go through dimension and delete consols with no children ###
 
-nElementCount = DimSiz( pDimension );
-nElementIndex = 1;
+nLevelIndex = DNLEV( pDimension );
+nLevelCount = 1;
 
-While( nElementIndex <= nElementCount );
+WHILE( nLevelCount <= nLevelIndex );
+  nElementCount = DimSiz( pDimension );
+  nElementIndex = 1;
 
-  sElement = DimNm( pDimension, nElementIndex );
-  sElementType = DType( pDimension, sElement );
+  While( nElementIndex <= nElementCount );
 
-  If( sElementType @= 'C' );
-    nChildCount = ElCompN( pDimension, sElement );
-    If( nChildCount = 0 );
-      If( pDebug <= 1 );
-        DimensionElementDelete( pDimension, sElement );
-        nElementCount = nElementCount - 1;
-        nElementIndex = nElementIndex - 1;
+    sElement = DimNm( pDimension, nElementIndex );
+    sElementType = DType( pDimension, sElement );
+
+    If( sElementType @= 'C' );
+      nChildCount = ElCompN( pDimension, sElement );
+      If( nChildCount = 0 );
+        If( pDebug <= 1 );
+          DimensionElementDelete( pDimension, sElement );
+          nElementCount = nElementCount - 1;
+          nElementIndex = nElementIndex - 1;
+        EndIf;
       EndIf;
     EndIf;
-  EndIf;
 
-  nElementIndex = nElementIndex + 1;
+    nElementIndex = nElementIndex + 1;
 
-End;
+  End;
 
+  nLevelCount = nLevelCount + 1;
+END;
 
 ### End Prolog ###
 573,5
@@ -148,7 +155,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -179,6 +186,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

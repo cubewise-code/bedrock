@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"ml;>TIQSg[Tj^aB:@rG6efRP>SJBt<WmTYr:G3;i>]\rF@ZAfr3Pq[7P?:;6rsBDbAXEFWKIoGaSC>ZV;xyY_LDlie>BqP6HrbqCn97];qe\@K1LMYtzhv12`vCkied34JUWj<H25s8u`IkWcGlxhH3BM7Fk^0bf@I>?\umJRAQ<;4BT:ydJGQhtz>b5iXHWQQ?0:j]u"
+565,"gKSDb:6a=qtQnGCwaq\SC]oouPG[xkDE5<PrsoE54CGQn>q4sjyK6\[c0\;hB7S1_w4ATpzKg3yUryVBnD:G[k_s[emBV]C8`YaCyB]Am?BF6r<U^B6zcmyR`E=M@OGQr5iay=WsCe6fH]6A1bapKw9leY938`\<@f:IRpe225b`5Q9s3_ygydJtYb^HsRau3PYtn26p"
 559,1
 928,0
 593,
@@ -38,7 +39,7 @@ pDebug
 pDimensions,""
 pSubsets,"}Bedrock*"
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,4
 pDimensions,List of Dimensions Seperated by Delimiter (Blank = All Dimensions)
 pSubsets,List of Subsets Seperated by Delimiter. Wildcards Permitted on Subset Names.
@@ -56,7 +57,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process deletes public subsets
@@ -97,7 +98,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cDimension = '}Dimensions';
 
@@ -262,7 +263,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -293,6 +294,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

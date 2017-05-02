@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.Exclude"
 562,"NULL"
 586,
 585,
 564,
-565,"o1i5ZZq;A_qAn`ma=zqGAu8vmNdsf?Dmmy><NJ9JI\ysOgX5M74yCvXUwGXO80IXT<zX:_[bhgf`2evYOj6S^AW@fqTNc=g36?WY;Fgu2\uE22`\IYK`^b8R\Pk7Gvgt\pgU4^rxZb5I\D=7IYoFv?_?1Zdx_7AFTV>ZFmv>=?FYFYLm`QI:?[jhssz_zT9d7sJ6gPej"
+565,"fJ3BVSaQnIuLu5ylEJ4FAb0]ul<`OytyZfhagBB<SSja]5Cvd5<``7VJZQQQsCl5Nj3xzQJ`JAE6YYO7;ha3QZ<AOKRS\]^3lt_KtqM3VpdE5dHiN@6_xLKc4HU@cM1MmSoS9sFEa<esC<RMjqDEqbbj>RjRyOg6Aq<aICmlweAxeYdOgripGo8ujL`nS^YTwVM[=E_G"
 559,1
 928,0
 593,
@@ -41,7 +42,7 @@ pDimension,""
 pSubset,""
 pElements,""
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,5
 pDimension,Dimension
 pSubset,Subset
@@ -60,7 +61,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will remove specified elements from a subset
@@ -72,7 +73,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Exclude';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -212,7 +213,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -243,6 +244,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

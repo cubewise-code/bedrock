@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Data.Clear"
 562,"NULL"
 586,
 585,
 564,
-565,"vx;;0RIcT?[d?8h^mzxD56a8:YRyB;5tO5J4b]`l]hOAm\kI8[aVI;hFA@R:YIX<I@uCX03>;yfBUgRcaRSeI=>\`YTLAQekKYZD8aCJ?7kPHA<bKqVtCe<cXVa[6Y^gMtkEgts70:OYv3G=h7ahOCneN5BaVJf:22hF\7Zc9R>OAYTLGUWKE5IXCQtUFBODf`5O?5uu"
+565,"wq_PnOEMZ80]<TxJ=f8wS32at:k]83>HO_uUP07Hj0HbPt;[J_IdZXcIYsy>YvZZ2neKb82ge:BHD>[pUox1gMP31:3^FFrgOklJf=MS`\rd5jUGRFr7RmNUy8uuEn7IZGoQA8iYLY>Gdw]CydzdpiSR0oGu42NIHSW;4@;oNbxnSO6[7zr;S7uhlLiF:Bs;mUv672^U"
 559,0
 928,0
 593,
@@ -49,8 +50,8 @@ pFilter,""
 pDimensionDelim,"&"
 pElementStartDelim,":"
 pElementDelim,"+"
-pDestroyTempObj,1.
-pDebug,0.
+pDestroyTempObj,1
+pDebug,0
 637,8
 pCube,Cube Name
 pView,Temp view name
@@ -72,7 +73,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process creates a view and zeros it out.
@@ -89,9 +90,9 @@ pDebug,Debug Mode
 cProcess = 'Bedrock.Cube.Data.Clear';
 cUser = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
-cDefaultView = '}Bedrock_' | cTimeStamp | '_' | sRandomInt ;
+cDefaultView = 'Bedrock_' | sRandomInt ;
 
 
 ### Initialise Debug ###
@@ -231,7 +232,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -263,6 +264,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

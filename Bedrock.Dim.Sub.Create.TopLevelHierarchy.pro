@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.Create.TopLevelHierarchy"
 562,"NULL"
 586,
 585,
 564,
-565,"xkbqo76waf9c`RTRx6=NP;o:axK:9V08KZcI1FS25mUydY@0E`gG3;68z:B?uhIgs]aoX>gu0[DOaCOL@30ri7i4W]]^2betmm>zUpYH>MQItPZRpvcrDfKv9GPQnu`3fqdL]6YiSFqqZ[c7v7MCp<Ce8pDeH]SNTaw:VN>mbNRDxWt9<[D:vwZ3OAuzgZ]cj2b<Jt=@"
+565,"dR<2arC@R43y3=fbtyAYO?PTBHnU4I=Boc4kyc<@JC25_Zc7T85VYwD<gf7OB7@TTyHi1H^wj\Z1dEC5EUDadYUGZF@Oc5xsPq4dd@wUJlxpc_Xid9@]H?F8i[eo<2k8xKYC2Mk>58rECkaOplSIOyh@xqlgHl`0jOLkgNVPz``;z1XovEPx:cB<k4MrvFF7C@q7IaDI"
 559,1
 928,0
 593,
@@ -24,39 +25,43 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pDimension
 pSubset
 pConvertToStatic
+pAlias
 pDebug
-561,4
+561,5
 2
 2
 1
+2
 1
-590,4
+590,5
 pDimension,""
 pSubset,""
-pConvertToStatic,1.
-pDebug,0.
-637,4
+pConvertToStatic,1
+pAlias,""
+pDebug,0
+637,5
 pDimension,Dimension
 pSubset,Subset
 pConvertToStatic,Boolean: 1 = Convert to Static Subset
-pDebug,Debug Mode
+pAlias,Set Alias for Subset
+pDebug,pDebug
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,128
+572,172
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will Create a Top Level Hiearchy by N-Level Elements
@@ -66,7 +71,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.Sub.Create.TopLevelHierarchy';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -124,6 +129,38 @@ If( Trim( pSubset ) @= '' );
   pSubset = 'Top Level Hierarchies';
 EndIf;
 
+## Validate Alias
+sDimAttr = '}ElementAttributes_' | pDimension;
+IF(
+pAlias @<> '' );
+  IF(
+  DimensionExists( sDimAttr ) = 0 );
+    sMessage = 'No attributes exist for the dimension: ' | pDimension;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+
+  IF(
+  DIMIX( sDimAttr, pAlias ) = 0 );
+    sMessage = 'The Alias: ' | pAlias | ' does not exist in the dimension: ' | pDimension;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+
+  IF(
+  DTYPE( sDimAttr, pAlias ) @<> 'AA' );
+    sMessage = 'The Alias: ' | pAlias | ' is not an Alias in the dimension: ' | sDimAttr;
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, sMessage );
+    EndIf;
+    pAlias = '';
+  EndIf;
+ENDIF;
+
 
 ### MDX for creating subset ###
 
@@ -177,6 +214,18 @@ If( pDebug <= 1 );
 
 EndIf;
 
+### Set Alias ##
+IF(
+pAlias @<> '' );
+  If( pDebug <= 1 );
+    SubsetAliasSet( pDimension, pSubset, pAlias );
+  EndIf;
+
+  If( pDebug >= 1 );
+    sMessage = 'The Alias: ' | pAlias | ' has been set.';
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+ENDIF;
 
 ### End Prolog ###
 573,4
@@ -195,7 +244,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -226,6 +275,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

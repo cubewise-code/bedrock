@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Server.DataDir.Backup"
 562,"NULL"
 586,
 585,
 564,
-565,"v5Ir?7;p8kch5BoJt7q3EPaKSda7:tNR0t0gqmPkOZjJ0;VmflSoJ:Fx^sSMJznra:t88q_GP\dqvoF_u:MmsGhYt4Fm32:5MkNu:G>AnYwwX0y:6H1vx4?mIQAl@WA^JCm^k<_X]UdOGTfxf[zv\p?UQu<V3xX2c?F7sp0BOt7syPD_9<g>uMwwK@Ibgv7uV19BnAXU"
+565,"p8UXNxS5OvXmRHWSaQ^^sO4:RZM<0YFt]^K@TrXN_N;Jd_QPWFYVtJWBs\TdxJ9GqCj<amnUzK9f9m3NLjkmuW95?c@oY@\1rW5odfXe\Spgi:emu^1DnCWbGq<7TX9W0_yh7aJAmGtzadnlzoAH3tCOwtWLiwdvMYkk06Tx>p5HDKlie5F>hVlN<WT8jIsDdHntwWbD"
 559,1
 928,0
 593,
@@ -35,7 +36,7 @@ pDebug
 590,3
 pDataDir,""
 pBackupDir,""
-pDebug,0.
+pDebug,0
 637,3
 pDataDir,Source Directory to Backup
 pBackupDir,Destination Directory for Backup
@@ -52,7 +53,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will back up the Data Directory
@@ -63,7 +64,7 @@ pDebug,Debug Mode
 cProcess = 'Bedrock.Server.DataDir.Backup';
 cUser = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -200,7 +201,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -278,6 +279,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

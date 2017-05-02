@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"lffz>7=>86Wea5dMq\;vLn89PfVKZaAeq26wFjHL`qHqLU6eLBg9GrU2eLrTre9Ju6NYJnMXmtBz[Ga@:83^AMTTvW^[Yt^p=WM>Ni^7MKSPi]coAxpdp2E8^r]t5:3tknAn_rEG:]>xvw>bYsdpwMbHpwcS<iI?mov@Haq\qbze\:SZIr5x_mrPgWs54xM38EtGWzmP"
+565,"wyHQ;6c]BKy0rrx`M]Krlzoa6WyxV6\^TOjWG]5IF3?W8kk]9;ALSsVgHFqJ_`g]tp:e?4odBM8jMOz2TCw\SYiPcsI6g6HwxxCeXpiZATgVp>mUS[uoSMd@W2\6@9`zeMhdwO6`>:E=hTRw^0lUIiE2s_dx[UwL=EkJ=O]IgWd6y9=FDfgH9rI8b67kzC3NAcYkWdWm"
 559,1
 928,0
 593,
@@ -35,7 +36,7 @@ pDebug
 590,3
 pCubes,""
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,3
 pCubes,List of Cubes to Delete Separated by Delimiter
 pDelimiter,Delimiter
@@ -53,7 +54,7 @@ pDebug,Debug Mode
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process deletes cubes.
@@ -63,7 +64,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Cube.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -153,7 +154,7 @@ End;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -184,6 +185,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

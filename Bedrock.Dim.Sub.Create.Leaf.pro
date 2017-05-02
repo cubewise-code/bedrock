@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Sub.Create.Leaf"
 562,"NULL"
 586,
 585,
 564,
-565,"qt2:ACHIivPf:=p>Lagw2@9ZnSu_vR9kF=fQuWM`y`72OsFQ`Ql@bZA=RcDKuPbZGr@hJOfxioM@Fhx1fgC8VAe1W[Pw3q`^:qoUbKp1UMf0<tvKGbp5e@=`S^NRFwn[hHQ:QXGKNW8n:oM7O4=y=Y=p3hWGA9rGT?4wTEBH_[j<:eH]TyR?xoUKoGlMR8Q8i=LIEpV="
+565,"roj=0tr<]r`epnIHXCaj=2At6QcX_p:kgEM9S>h9WFQ@9:rfgRqDSQ`YUrTlyun[E5j8tQZP6T^I]DA_Ax@TTbDzAVDP3]hZ^HM?STGMjOyun1lmCJlrg_\mAZ3<h<>1vAWk`V<ai>3pxQXZtg?1CHus?8UtJp9BI0f@Juele4aVRGfDF1MGt9=:uRio7XY4]atKDA0k"
 559,1
 928,0
 593,
@@ -24,47 +25,52 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pDimension
 pSubset
 pAddToSubset
 pExclusions
 pDelimiter
+pAlias
 pDebug
-561,6
+561,7
 2
 2
 1
 2
 2
+2
 1
-590,6
+590,7
 pDimension,""
 pSubset,""
-pAddToSubset,0.
+pAddToSubset,0
 pExclusions,""
 pDelimiter,"&"
-pDebug,0.
-637,6
-pDimension,Dimension
-pSubset,Subset
-pAddToSubset,Add to an existing Subset (Boolean: 1=True)
-pExclusions,Excluded Elements
-pDelimiter,Delimiter
-pDebug,Debug Mode
+pAlias,""
+pDebug,0
+637,7
+pDimension,"Dimension"
+pSubset,"Subset"
+pAddToSubset,"Add to an existing Subset (Boolean: 1=True)"
+pExclusions,"Excluded Elements"
+pDelimiter,"Delimiter"
+pAlias,"Assign an alias to the subset"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,22
+603,0
+572,23
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -76,6 +82,7 @@ ExecuteProcess( 'Bedrock.Dim.Sub.Create',
   'pExclusions', pExclusions,
   'pDelimiter', pDelimiter,
   'pAddToSubset', pAddToSubset,
+  'pAlias', pAlias,
   'pDebug', pDebug
 );
 
@@ -97,6 +104,7 @@ ExecuteProcess( 'Bedrock.Dim.Sub.Create',
 #****End: Generated Statements****
 
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

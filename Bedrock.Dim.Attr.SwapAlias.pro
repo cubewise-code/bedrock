@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Attr.SwapAlias"
 562,"NULL"
 586,"Bedrock.Temp"
 585,"Bedrock.Temp"
 564,
-565,"z:;X9erx`5r9>m4Eiro;22;H8SaVmnqL5`<95=upLPebL3h8OvF9KAcT=fem`8fteWiVyRN]NxeCUY0l9qp^CCx_Z@jk3FRbHA:k4f\GO@[ygm7^bawI@Fy^=9NkJYup\R6]8uA0]GYt:Lik<HwxodXkl>Yhe;Re7ghZn`W1gg:rtdjMNUTvZkz8LC8C:jSu=yK[Cm?f"
+565,"l@l:SQ1mds05aRviv7RsVVsx>GJVkMIA<f=^v4p=@<DydP>?cRT;j5YWqk9QVKPKQEd7zoM8hIrU7OiUl?<AtO=GpTxtdIbePZK;ekDyHpIjI1R0]`kj`]z4AeEe<_0Xb@mNN>JS]`JEZ45]fOSynQeqEzKyvPK:ws`e8Xg@yTatP9X^]VzJEH1s\oePEvNZ>W^]I`T5"
 559,1
 928,0
 593,
@@ -35,7 +36,7 @@ pDebug
 590,3
 pDimension,""
 pAlias,""
-pDebug,0.
+pDebug,0
 637,3
 pDimension,Dimension
 pAlias,Alias
@@ -52,14 +53,14 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 ### Constants ###
 
 cProcess = 'Bedrock.Dim.Attr.SwapAlias';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cCubeAttr = '}ElementAttributes_' | pDimension;
 
@@ -157,7 +158,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -188,6 +189,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

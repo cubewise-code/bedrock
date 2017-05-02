@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.AllConsols.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"qwnghwme@V[:l7KK:apGAlF2;;7_L>0d>UI5S?[9IS=@ddZ=GZ4Ect>sW2=IxjS5X[yst8;e7]LiLmJL<jX5LlNVIV];iCS0qt2<LD@XANXShjfRT>4`Wqn1jLIgZxPc?SLf=zBior`98lnrCJZ7\TodpiRiLbN7A[=1pC_7S6e\v00\K;a7?qGi?T0DY]`9ksdGErDd"
+565,"yLcEU5QOKkR^XgB5DayHkZ3Gjav9@e?P?YbM@sUr4Aklp47sMRd2zbC>m_O1QjO2mA7kUwET\?l85o_5i:a^711bOIq0]PW?K<T6H5rfs@^O8vJrZRBlKmH=ICZbHf>>:@dzy83Dllk@9hGpHfX6a`ejK<6IWSYq@3<vZOjo00=m\ofdqTaDP=^`[O1^u`8ApG5[Bg@]"
 559,1
 928,0
 593,
@@ -32,7 +33,7 @@ pDebug
 1
 590,2
 pDimension,""
-pDebug,0.
+pDebug,0
 637,2
 pDimension,Target Dimension
 pDebug,Debug Mode
@@ -48,7 +49,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will delete all consolidations in the target dimension
@@ -61,7 +62,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Dim.AllConsols.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -147,7 +148,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -178,6 +179,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

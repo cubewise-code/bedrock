@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Security.Group.Create"
 562,"NULL"
 586,
 585,
 564,
-565,"vj0g=FpnKJv5u8NHQZX0hpab3kr]RxBNL?_8s<9_1i^RDWrp:Wd2ebOwe`wCo:9YLLPLRmAb6xE@TOauZHC8OX\cE26lIm22s93:jcR69^eek03fEFNQF@2PGlxSX2IwSEOq8lP8h41X@4O6:q\^SEXFdz[PyG12Snpm:GZzTi?dCA2<_eSrzkWVBWGoE>]Ccreqbf1d"
+565,"uX0DeKIh]EvvL^WAogft<aABt>hCTB\PwaOJfeUnFm7iToBs53bHs>`lXck1CP@;\8MowVtr3QqwywSx48B_Dd[4?XvSVqb6Z9pD5mWCaGa<CvER^zR:QxUCrSO5Wf<nBT82j3vC<FEo6eM7zgr^JG2BWHEo^ohyBuG>DXadEoSKBVdS`WoZ2adgr1:N5qzrnjCUKy@`"
 559,1
 928,0
 593,
@@ -35,7 +36,7 @@ pDebug
 590,3
 pGroups,""
 pDelimiter,"&"
-pDebug,0.
+pDebug,0
 637,3
 pGroups,Groups seperated by delimiter
 pDelimiter,Delimiter character
@@ -52,7 +53,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will create client groups
@@ -66,7 +67,7 @@ pDebug,Debug Mode
 
 cProcess = 'Bedrock.Security.Group.Create';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -159,7 +160,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -190,6 +191,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

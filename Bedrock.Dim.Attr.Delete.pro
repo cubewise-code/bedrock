@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Dim.Attr.Delete"
 562,"NULL"
 586,
 585,
 564,
-565,"hA25L`=Na59]^yozMw>=F\YPbRuti?lU1u4lvF^XRj7Zxfw5i>f@;^XPWm4iG;W@23?T7QiUWDpG_ntz5?996mFy;LG<QH`T4[6k2wma4?Yek`UNIhbP>8@@IZ>9x[Z`oPL5OBzwpeQcBCOu;KP\46J737km7a5zQ8AsSJX8Xaq2i==@2qHJX1<oq`Z`=rBn5Go>QJ`B"
+565,"dLHlaYFuB5og7nn5cM\Dba?okL^:[3C7[T:0F`qGPb;MfO;6zEu;X]OB?J;El_aM\N2^M]BtQB1z;O][fV2iWnV9L13qvV93u@FHUS=@o4DA7EkpSygc@lMlZpxP=:`pL@VlrmaZgMgYneV1WCeLyS[;;Yt6i]dCU?y:v94JBrlJ7;hGEjC9ojnatKlQj__F4Bin4T\o"
 559,0
 928,0
 593,
@@ -35,7 +36,7 @@ pDebug
 590,3
 pDimension,""
 pAttribute,""
-pDebug,0.
+pDebug,0
 637,3
 pDimension,Dimension Name
 pAttribute,Attribute Name
@@ -52,14 +53,14 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 ### Constants ###
 
 cProcess = 'Bedrock.Dim.Attr.Delete';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 
@@ -132,6 +133,7 @@ EndIf;
 #****End: Generated Statements****
 
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

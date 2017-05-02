@@ -1,10 +1,10 @@
 ﻿601,100
-602,"Bedrock.Dim.Element.Move"
+602,"Bedrock.Dim.Element.Component.Add"
 562,"NULL"
 586,
 585,
 564,
-565,"e:ab6altUxNZ?iXb@h^QaKFW=@[i_T6um4x;svJu^2zE@f5cl7wyV?6Har`E:xW[HN<>rJRAT5>0D31s9R<;PeCt[BP@@z[o_enYiW8u;SE@UoA55Z_kyq55Qe3zr7OwPaGL`lLiEl^6hb7z^QsVZ4OnzvdbI?TQxw7YLyXBW6ur_@Js8Eln\<WhNwrMOAuPs_mjAzlL"
+565,"dZvmaZ1tkRkIHq<LfXFIoko_`o0z`OmIy0sIJR\gnFR?Eu[nxqcgoxO<\34Ct?@o<:QPz76OEsGjss_tWQ9Pa]>6j4Xj_TytI9HBRVIQRVO`S1o==HfEaFTCdfAicQ\\l74RLmwXyko7F=]heH>j9Zi\IK2AtCIeGW>KaUR1L?]we^;OZ9q;HIm[esEPnESYasr]nJQK"
 559,1
 928,0
 593,
@@ -25,41 +25,38 @@
 569,0
 592,0
 599,1000
-560,6
+560,5
 pDimension
+pParent
 pElement
-pTargetConsol
-pAction
-pElWeight
+pWeight
 pDebug
-561,6
-2
+561,5
 2
 2
 2
 1
 1
-590,6
+590,5
 pDimension,""
+pParent,""
 pElement,""
-pTargetConsol,""
-pAction,"Add"
-pElWeight,1
+pWeight,1
 pDebug,0
-637,6
-pDimension,Dimension Name
-pElement,Element Name
-pTargetConsol,Target Consolidation
-pAction,Add or Remove Element from Consolidation
-pElWeight,Element Weight (for Add only)
-pDebug,Debug Mode
+637,5
+pDimension,"Dimension Name"
+pParent,"Parent Name"
+pElement,"Element Name"
+pWeight,"Component WeightDebug Mode"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,147
+603,0
+572,110
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -68,12 +65,11 @@ pDebug,Debug Mode
 ##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
-# This process will Add or Remove Elements from a Consolidation
-
+# This process will add a component to an element.
 
 ### Constants ###
 
-cProcess = 'Bedrock.Dim.Element.Move';
+cProcess = 'Bedrock.Dim.Element.Component.Add';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
@@ -90,11 +86,10 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
 
   # Log parameters
-  AsciiOutput( sDebugFile, 'Parameters: pDimension    : ' | pDimension );
-  AsciiOutput( sDebugFile, '            pElement      : ' | pElement );
-  AsciiOutput( sDebugFile, '            pTargetConsol : ' | pTargetConsol );
-  AsciiOutput( sDebugFile, '            pAction       : ' | pAction );
-  AsciiOutput( sDebugFile, '            pElWeight     : ' | NumberToString( pElWeight ) );
+  AsciiOutput( sDebugFile, 'Parameters: pDimension : ' | pDimension );
+  AsciiOutput( sDebugFile, '            pParent    : ' | pParent );
+  AsciiOutput( sDebugFile, '            pElement   : ' | pElement );
+  AsciiOutput( sDebugFile, '            pWeight    : ' | NumberToString( pWeight) );
 
 EndIf;
 
@@ -103,7 +98,7 @@ EndIf;
 
 nErrors = 0;
 
-# Validate dimension
+## Validate dimension
 If( Trim( pDimension ) @= '' );
   nErrors = 1;
   sMessage = 'No dimension specified';
@@ -121,7 +116,7 @@ If( DimensionExists( pDimension ) = 0 );
   ItemReject( sMessage );
 EndIf;
 
-# Validate Element
+## Validate element
 If( Trim( pElement ) @= '' );
   nErrors = 1;
   sMessage = 'No element specified';
@@ -139,36 +134,19 @@ If( DimIx( pDimension, pElement ) = 0 );
   ItemReject( sMessage );
 EndIf;
 
-# Validate target consol
-If( DimIx( pDimension, pTargetConsol ) = 0 );
+## Validate Parent
+If( Trim( pParent ) @= '' );
   nErrors = 1;
-  sMessage = 'Consolidated Element: ' | pTargetConsol | ' does not exist in dimension: ' | pDimension;
-  If( pDebug >= 1 );
-    AsciiOutput( sDebugFile, sMessage );
-  EndIf;
-  ItemReject( sMessage );
-EndIf;
-If( DType( pDimension, pTargetConsol ) @<> 'C' );
-  nErrors = 1;
-  sMessage = 'Target Consolidation: ' | pTargetConsol | ' has incorrect element type.';
-  If( pDebug >= 1 );
-    AsciiOutput( sDebugFile, sMessage );
-  EndIf;
-  ItemReject( sMessage );
-EndIf;
-If( ElIsAnc( pDimension, pElement, pTargetConsol ) = 1 );
-  nErrors = 1;
-  sMessage = 'Cannot add element: ' | pElement | ' to consolidation: ' | pTargetConsol | ' due to circular reference.';
+  sMessage = 'No parent specified';
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
   ItemReject( sMessage );
 EndIf;
 
-# Validate action
-If( pAction @<> 'Add' & pAction @<> 'Remove' );
+If( DimIx( pDimension, pParent) = 0 );
   nErrors = 1;
-  sMessage = 'Invalid action: ' | pAction | '. Valid actions are Add or Remove';
+  sMessage = 'Element: ' | pParent | ' does not exist in dimension: ' | pDimension;
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
@@ -176,35 +154,17 @@ If( pAction @<> 'Add' & pAction @<> 'Remove' );
 EndIf;
 
 
+
+sElement = DimensionElementPrincipalName( pDimension, pElement);
+### Add the element component to the dimension ###
 If( pDebug <= 1 );
-
-  ### Insert Element into consolidation ###
-
-  If( pAction @= 'Add' );
-    DimensionElementComponentAdd( pDimension, pTargetConsol, pElement, pElWeight );
-  EndIf;
-
-
-  ### Remove Element from consolidation ###
-
-  If( pAction @= 'Remove' );
-
-    # Check that element is actually a child of target consol
-    If( ElIsComp ( pDimension, pElement, pTargetConsol ) = 1 );
-      DimensionElementComponentDelete( pDimension, pTargetConsol, pElement );
-    Else;
-      nErrors = 1;
-      sMessage = 'Element: ' | pElement | ' is not a child of consolidation: ' | pTargetConsol;
-      If( pDebug >= 1 );
-        AsciiOutput( sDebugFile, sMessage );
-      EndIf;
-      ItemReject( sMessage );
-    EndIf;
-
-  EndIf;
-
+ DimensionElementComponentAdd(pDimension, pParent, pElement, pWeight);
 EndIf;
 
+If( pDebug >= 1 );
+sMessage = 'Component: ' | pElement | ' has bee added to ' | pParent | ' in ' | pDimension | ' dimension.';
+  AsciiOutput( sDebugFile, sMessage );
+EndIf;
 
 ### End Prolog ###
 573,4

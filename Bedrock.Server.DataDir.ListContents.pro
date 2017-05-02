@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Server.DataDir.ListContents"
 562,"NULL"
 586,
 585,
 564,
-565,"g0_v\i^akem8F3ppvt[Ag99ik`fYfxI=CghF96:GYucAYR4g1;w>56waHEO`FwJV`tN87`9LK8gEfE4Fc1UnUL3NWeKijh`8p`t0Nxf7aQdfgPI5aIrgoCHIxvt<ToeV0MhT\GGSxB>\EPldt1qYL=w;jYJ<cppiP\`BVr=5NE^ZMe\uO;LJuPg=Di7^ClaBpw`8GV[i"
+565,"xesXHH_?7a?9UlC=RGisO9zaahmMoT``d5BQI5?_2O5CoO;y;89kOgYYpxoMxQ2hPp?Veyc<ONC@HOnK2OZ>S\kZMlGrS2?rtQjlPH1bx_d@M=R^FwKE6TQDFFwWef@IBfh7dx@>9vfda<1VXjn1RMI5Xk@>kbztU0d];duj9N<b>rE<z@Kmr2_`1Bi9H_H[[r07e`PL"
 559,1
 928,0
 593,
@@ -32,7 +33,7 @@ pDebug
 1
 590,2
 pDataDir,""
-pDebug,1.
+pDebug,1
 637,2
 pDataDir,Data Directory (Leave Blank to use TM1 Settings)
 pDebug,Debug Mode
@@ -48,7 +49,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will list all files and processes in the data directory
@@ -61,7 +62,7 @@ pDebug,Debug Mode
 cProcess = 'Bedrock.Server.DataDir.ListContents';
 cUser = TM1User();
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cBatchFile = cProcess | '.bat';
 
@@ -141,7 +142,7 @@ ASCIIOUTPUT( sCommand, 'dir /b /s *.sub > List_All_Subsets.txt');
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 ### Initialise Debug ###
@@ -202,6 +203,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1

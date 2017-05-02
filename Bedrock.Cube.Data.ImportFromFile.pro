@@ -1,9 +1,10 @@
 ﻿601,100
+602,"Bedrock.Cube.Data.ImportFromFile"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"hCCA[WE]aZpI;FRh`vl^0]o\uPqqm\Ci:MlNd?JuNkpKx9Q1GNkQp]Tle0EMfE]o9;dek;My6IFQN7V5kDl\fcMqbB=ScDQs82mXshgXL\EPJN<lozoRPAf@jnuKWxQufNpR>3A`qP2ibUYc>bwoN4iV8sRXL;bX28rv\ly@Cbs0RMINUfuVWvg6bqrQZw7xUcNd]nkB"
+565,"jSbp1PDE`Wa5dhkzn>>d@<m\YXX<WXnn82sW[8rC0mdfZlX]`INT2\fxVS9tbqr9z]xFt_GT_xMZH\EX^9O5`IbeujPp?VO;=sG\TjNLvXHa`lPqlJ`3XJR^unG0M<as6c]Hu2S]4M142Gos:ElM9?bEvCmPCnjbhnPg87apcTU_TH4Ap<I\4b?ae4rn7O>t3MktsmRY"
 559,1
 928,0
 593,
@@ -55,23 +56,23 @@ pCube,""
 pDimension,""
 pSourceElement,""
 pTargetElement,""
-pTitleRows,1.
+pTitleRows,1
 pDelimiter,","
-pQuote,"""
-pCumulate,0.
-pDebug,0.
+pQuote,""""
+pCumulate,0
+pDebug,0
 637,11
-pSourceDir,Source Directory
-pSourceFile,Source File
-pCube,Target Cube
-pDimension,Dimension (Optional)
-pSourceElement,Source Element ( Only required if a Dimensoin is used.)
-pTargetElement,Target Element (Only required if Dimension is used.)
-pTitleRows,Number of Title Rows to Skip
-pDelimiter,Delimiter Character (default=Comma)
-pQuote,Quote Character (default=Double Quote)
-pCumulate,Accumulate Amounts
-pDebug,Debug Mode
+pSourceDir,"Source Directory"
+pSourceFile,"Source File"
+pCube,"Target Cube"
+pDimension,"Dimension (Optional)"
+pSourceElement,"Source Element ( Only required if a Dimensoin is used.)"
+pTargetElement,"Target Element (Only required if Dimension is used.)"
+pTitleRows,"Number of Title Rows to Skip"
+pDelimiter,"Delimiter Character (default=Comma)"
+pQuote,"Quote Character (default=Double Quote)"
+pCumulate,"Accumulate Amounts"
+pDebug,"Debug Mode"
 577,30
 v1
 v2
@@ -258,13 +259,14 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
-572,268
+603,0
+572,276
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # This process will load a CSV text file to the specified cube
@@ -279,7 +281,7 @@ VarType=32ColType=827
 
 cProcess = 'Bedrock.Cube.Data.ImportFromFile';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
-sRandomInt = NumberToString( INT( RAND( ) * 100000 ));
+sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 nRecordProcessedCount = 0;
@@ -313,10 +315,12 @@ EndIf;
 ### Validate Parameters ###
 
 # Validate source directory
-If( SubSt( pSourceDir, Long( pSourceDir ) - 1, 1 ) @= '\' );
+If( 
+SubSt( pSourceDir, Long( pSourceDir ) - 1, 1 ) @= '\' );
   pSourceDir = SubSt( pSourceDir, 1, Long( pSourceDir ) - 1 );
 EndIf;
-If( FileExists( pSourceDir ) = 0 );
+If( 
+FileExists( pSourceDir ) = 0 );
   If( pDebug >= 1 );
     sMessage = 'Invalid source directory specified: folder does not exist.';
     AsciiOutput( sDebugFile, sMessage );
@@ -325,7 +329,8 @@ If( FileExists( pSourceDir ) = 0 );
 EndIf;
 
 # Validate source file
-If( Trim( pSourceFile ) @= '' );
+If( 
+Trim( pSourceFile ) @= '' );
   If( pDebug >= 1 );
     sMessage = 'Invalid source file specified: file name is blank.';
     AsciiOutput( sDebugFile, sMessage );
@@ -336,7 +341,7 @@ EndIf;
 sFile = pSourceDir | '\' | pSourceFile;
 If( FileExists( sFile ) = 0 );
   If( pDebug >= 1 );
-  sMessage = 'Invalid source file specified: file does not exist in directory.';
+  sMessage = 'Invalid source file specified: file does not exist in directory:' | sFile;
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
   ProcessQuit;
@@ -409,7 +414,8 @@ ENDIF;
 
 
 ## Validate delimiter
-If( pDelimiter @= '' );
+If( 
+pDelimiter @= '' );
   pDelimiter = ',';
 EndIf;
 If( Long( pDelimiter ) > 1 );
@@ -420,11 +426,12 @@ If( Long( pDelimiter ) > 1 );
   ProcessQuit;
 EndIf;
 
-# Validate quote character
+## Validate quote character
 If( pQuote @= '' );
   pQuote = '"';
 EndIf;
-If( Long( pQuote ) > 1 );
+If( 
+Long( pQuote ) > 1 );
   nErrors = 1;
   sMessage = 'Invalid string qualIfier: ' | pQuote | ' quote character must be single character.';
   If( pDebug >= 1 );
@@ -437,7 +444,8 @@ EndIf;
 ### Determine number of dims in target cube ###
 nCount = 1;
 nDimensionIndex = 0;
-While( TabDim( pCube, nCount ) @<> '' );
+While( 
+TabDim( pCube, nCount ) @<> '' );
   sDimension = TabDim( pCube, nCount );
   If( sDimension @= pDimension );
     nDimensionIndex = nCount;
@@ -447,10 +455,12 @@ End;
 nDimensionCount = nCount - 1;
 
 ## Validate the dimension is part of the cube.
-IF( pDimension @= '');
+IF( 
+pDimension @= '');
   ## CONTINUE;
 ELSE;
-  If( nDimensionIndex = 0 );
+  If( 
+  nDimensionIndex = 0 );
     nErrors = 1;
     If( pDebug >= 1 );
       sMessage = 'Specified dimension: ' | pDimension | ' is not a component of the cube: ' | pCube;
@@ -462,7 +472,7 @@ ELSE;
       sMessage = 'The ' | pCube | ' has ' | NumberToString( nDimensionCount) | ' dimensions.';
       AsciiOutput( sDebugFile, sMessage );
       sMessage = 'Specified dimension: ' | pDimension |
-        ', is dimesion index: ' | NumberToString( nDimensionIndex ) |
+        ', is dimension index: ' | NumberToString( nDimensionIndex ) |
         ', the target cube: ' | pCube;
       AsciiOutput( sDebugFile, sMessage );
     EndIf;
@@ -538,7 +548,7 @@ ENDIF;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 # It would be too exhaustive to error trap elements not existing in dimension for each possible number of dimensions
@@ -1181,7 +1191,7 @@ nRecordPostedCount = nRecordPostedCount + 1;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
 #####################################################################################
 
 
@@ -1214,6 +1224,7 @@ EndIf;
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
+930,0
 638,1
 804,0
 1217,1
