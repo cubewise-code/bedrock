@@ -32,7 +32,7 @@ pDebug
 2
 1
 590,2
-pWaitSec,""
+pWaitSec,"1"
 pDebug,0
 637,2
 pWaitSec,Seconds
