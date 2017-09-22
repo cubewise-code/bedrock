@@ -60,7 +60,7 @@ pWednesday,"(1) Run Chore on Wednesday"
 pThursday,"(1) Run Chore on Thursday"
 pFriday,"(1) Run Chore on Friday"
 pSaturday,"(1) Run Chore on Saturday"
-pDebug,"Debug Mode"
+pDebug,"Debug Mode."
 577,0
 578,0
 579,0
