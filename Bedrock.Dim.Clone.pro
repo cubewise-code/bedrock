@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"tE5j94gh37`ZL<skmta7al60G>jhn\Dje^_@=QIWcD\VvMiBj0l9ofyxwf>Ryj027S0J\VI@:]`Ou[tZ:p^ZuXD0U0z]UcW=N@GD3a69z5MMM4L?eX>XN\ou6kzrcOqVp9XYO_4?HnESg7bOiSIJ9@GbU]8dX[Sz2?MkkPhZ\OvfPjBQIFlxJcfK?[:h9w<Ee\Jc^:l5"
+565,"sHmmx_4Hmh2qe0`ZY4\aQ=afX45Y3H>mMawRcSy4ePBr?fqgdhCfipX?>Z6V`f`9Vo2;qS=;j[s>;:EKfxZ0>EV]u7F^y9saBi6GV6@MNOgrmXrqJ?>dlcP[EqP6KcKi6SZJz0=]2Ta91mCR_I<:N4cCnk]S1MlqHxrppnBIXuY[YG`<Rt\ZwUA4Cs1Z5kcVc2SWq8?g"
 559,1
 928,0
 593,
@@ -47,7 +47,7 @@ pDebug,0
 pSourceDim,"Source Dimension"
 pTargetDim,"Target Dimension"
 pAttr,"Include Attributes? (Boolean 1=True)"
-pUnwind,"0 = Delete all Elements, 1 = Unwind Existing Elements"
+pUnwind,"0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
 pDebug,"Debug Mode"
 577,1
 vElement
@@ -62,13 +62,13 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,158
+572,162
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 1.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will clone the source dimension
@@ -144,7 +144,11 @@ If( pDebug <= 1 );
        If( pDebug >= 1 );
          AsciiOutput( sDebugFile, 'Target dimension unwound: ' | pTargetDim  );
        EndIf;
-
+    ELSEIF(
+    pUnwind = 2 );
+       If( pDebug >= 1 );
+         AsciiOutput( sDebugFile, 'Target dimension kept unchanged: ' | pTargetDim  );
+       EndIf;
     ELSE;
       DimensionDeleteAllElements( pTargetDim );
       If( pDebug >= 1 );
@@ -370,6 +374,13 @@ ENDIF;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"Bedrock.Chore.DayOfWeek.Run"
 562,"NULL"
 586,
@@ -60,7 +60,7 @@ pWednesday,"(1) Run Chore on Wednesday"
 pThursday,"(1) Run Chore on Thursday"
 pFriday,"(1) Run Chore on Friday"
 pSaturday,"(1) Run Chore on Saturday"
-pDebug,"Debug Mode."
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
@@ -75,7 +75,7 @@ pDebug,"Debug Mode."
 
 
 ####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 2.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will quit a chore if the day of the week index does not validate against the week parameter.

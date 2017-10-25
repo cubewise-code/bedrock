@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"yyGCsqzHCTu0jGRq;9q^Sfq62apzBcUJR64nXHEX29y^bCKaB1GSai6[Bfk\q9_5:eu8b5MRrZ_m9w?^7KImqyel[Lw[`5xL4rwDRvU00`MRVV[8Z;uRPbDIh2tXi3b_Qd0=4O>bmOLwEtJtK[dC8U0e8Ti7hFggE_uIQca_@x7abU3dfbgU\`=o5gLy@e5[JXSzBiw]"
+565,"oOeqlT\3fXJx@Ofa^YSxY7a`7dQPgsYvSZRJKAD7<g?l6fq3^MWcQ?47HEC`r?olQ9w42Fz@P8KSG]yaLNgH=CIJ?]U;;=?WuJmaa[xOJJ;PF3kgde6pUyjjp?NpErqT9aRS1_8xrAXOXt=d8eKd0_4PjJEXaf@9WSnDBkwGNBqTSdoH=A;?uc=CD5>lIj_yn1K6RCP;"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pDimension
+pTargetDim
 pSourceSub
 pTargetSub
 pDebug
-561,4
+561,5
+2
 2
 2
 2
 1
-590,4
+590,5
 pDimension,""
+pTargetDim,""
 pSourceSub,""
-pTargetSub,""
+pTargetSub," "
 pDebug,0
-637,4
-pDimension,"Dimension where the subset exists"
-pSourceSub,"Source Subset"
-pTargetSub,"Target Subset"
-pDebug,"Debug Mode"
+637,5
+pDimension,"Mandatory: Dimension where the subset exists"
+pTargetDim,"Optional: Target dimension (blank = same as source)"
+pSourceSub,"Mandatory: Source Subset"
+pTargetSub,"Mandatory: Target Subset"
+pDebug,"Optional: Debug Mode"
 577,1
 vElement
 578,1
@@ -58,13 +62,13 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,92
+572,109
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 ################################################################
-##~~Copyright bedrocktm1.org 2013 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2013 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 ################################################################
 
 # This process will create a copy of subset
@@ -88,6 +92,7 @@ If( pDebug >= 1 );
 
   # Log parameters
   AsciiOutput( sDebugFile, 'Parameters: pDimension       : ' | pDimension );
+  AsciiOutput( sDebugFile, '            pTargetDim         : ' | pTargetDim );
   AsciiOutput( sDebugFile, '            pSourceSub          : ' | pSourceSub );
   AsciiOutput( sDebugFile, '            pTargetSub         : ' | pTargetSub );
 
@@ -117,6 +122,20 @@ If( DimensionExists( pDimension ) = 0 );
   ItemReject( sMessage );
 EndIf;
 
+# Validate target dimension
+If( Trim( pTargetDim ) @= '' );
+  pTargetDim = pDimension;
+EndIf;
+If( DimensionExists( pTargetDim ) = 0 );
+  nErrors = 1;
+  sMessage = 'Invalid dimension: ' | pTargetDim;
+  If( pDebug >= 1 );
+    AsciiOutput( sDebugFile, sMessage );
+  EndIf;
+  DataSourceType = 'NULL';
+  ItemReject( sMessage );
+EndIf;
+
 # Validate subset
 If( Trim( pSourceSub ) @= '' );
   nErrors = 1;
@@ -139,19 +158,21 @@ EndIf;
 
 ### Create Target Subset ###
 
-If( SubsetExists( pDimension, pTargetSub ) = 1 );
-  SubsetDeleteAllElements( pDimension, pTargetSub );
+If( SubsetExists( pTargetDim, pTargetSub ) = 1 );
+  SubsetDeleteAllElements( pTargetDim, pTargetSub );
 Else;
-   SubsetCreate( pDimension , pTargetSub );
+   SubsetCreate( pTargetDim, pTargetSub );
 EndIf;
 
 nElementPosition = 0;
 
-DatasourceNameForServer = pDimension;
-DatasourceNameForClient = pDimension;
+### Set data source for process ###
+
 DatasourceType = 'SUBSET';
+DatasourceNameForServer = pDimension;
 DatasourceDimensionSubset = pSourceSub;
-573,15
+
+573,19
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -162,11 +183,15 @@ DatasourceDimensionSubset = pSourceSub;
 ################################################################
 
 
+IF( pTargetDim @= pDimension );
+  nElementPosition = nElementPosition + 1;
+ElseIF( DimIx( pTargetDim, vElement ) > 0 );
+  nElementPosition = nElementPosition + 1;
+Else;
+  ItemReject( Expand( 'Cannot insert into subset. Element  %vElement% does not exist in target dimension %pTargetDim%.' ) );
+EndIF;
 
-nElementPosition = nElementPosition + 1;
-
-
-SubsetElementInsert( pDimension , pTargetSub , vElement , nElementPosition );
+SubsetElementInsert( pTargetDim , pTargetSub , vElement , nElementPosition );
 574,3
 
 #****Begin: Generated Statements***
@@ -218,6 +243,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

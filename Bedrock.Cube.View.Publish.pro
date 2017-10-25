@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.View.Publish"
 562,"NULL"
 586,
 585,
 564,
-565,"b3aIpl<bWfahX4:@4yidXg8mz@iRfU:t\cj>GYYDWH[QB1AgM`]\JDKel^vVk4jxX]uFbjaivyPAnpKOCTwId\n<BgWlOntCRufS]EyqO[dKWikid\sZq8IQ3F?kh4`9mIk?D`K8[PUDzenLVVbR5gE_`3YKCVIQNXjQINTib0`K]ZOVXTE00j2EvQP>8IpR7\AGeESH"
+565,"t2hQ9V1k1XJitG>;Nt=ha5_Iv]RVg[SNPqw1LvF\7j08cBUC0v1Ifu=]iappr?K^L3t[9[ALq4c]K]eRSjHdXPYIm`KoYYlXsT:jFMNeIOm\tEuBDt?PJGrliEx:Hn9B7m8wsTvPKh4wE<k@OGDNsv^OHGqJpRJN44s@ljkLRCMXS_9VOtzM:YLR?N7U>_>FEBCA9RRw"
 559,1
 928,0
 593,
@@ -47,25 +47,26 @@ pSubPublish,1
 pOverwrite,0
 pDebug,0
 637,6
-pClient,Client Name
-pCube,Cube Name
-pView,Private View Name
-pSubPublish,Publish Private Subsets? (Boolean 1=Yes)
-pOverwrite,Overwrite Existing Named View? (Boolean 1=Yes)
-pDebug,Debug Mode
+pClient,"Client Name"
+pCube,"Cube Name"
+pView,"Private View Name"
+pSubPublish,"Publish Private Subsets? (Boolean 1=Yes)"
+pOverwrite,"Overwrite Existing Named View? (Boolean 1=Yes)"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
+603,0
 572,149
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process converts a private view to a public view for the named client.
@@ -129,7 +130,7 @@ EndIf;
 
 # Check that client running process is same as parameter
 sClient = TM1User( );
-If( sClient @<> pClient );
+If( sClient @<> DimensionElementPrincipalName( '}Clients', pClient ) );
   nErrors = 1;
   sMessage = 'Cannot continue, process must be executed by the view owner ( ' | pClient | ' )';
   If( pDebug >= 1 );
@@ -225,7 +226,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -263,6 +264,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

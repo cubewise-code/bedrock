@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.Dimension.Replace"
 562,"NULL"
 586,
 585,
 564,
-565,"nz=@>W9saW@Hzfa7[0@`i;7QK42N5ylY3Gsvcar6w10aA>vGw?gP2EAGlMjtCy2f`3>6=VZRl]^4b5X?WE4e456UTqg7iOPbn]:9nNIz?\H;QUfcAWh3si[WJd0<o_[HYfn[Omyzvd_firbBo_@Ts@>tDbHPodSB^W?0:9GskGYoQGpFz^egEY^@><Q89y=o48zxA=KB"
+565,"qk]6=X]0cI@k4[\HJyD8Oafs`l<C:]GLQUvYRy:sQrZ[NRywAAaN^8?f:djW?f0DB2UQa:mqS<z76lHAxlr007B2ozujA3hY69t2MbGqKYWg`F<2fpGzzws00;G8iq>WNr{gu01eIyviTseWLg<]U[LRXmEI0Qz4WNiFhb2GL^B?fqbSB;w4Hj>h]<BmDR0`S3z^1sX"
 559,1
 928,0
 593,
@@ -25,39 +25,44 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pCube
 pSourceDim
 pTargetDim
+pCtrlObjOverwrite
 pDebug
-561,4
+561,5
 2
 2
 2
 1
-590,4
+1
+590,5
 pCube,""
 pSourceDim,""
 pTargetDim,""
+pCtrlObjOverwrite,0
 pDebug,0
-637,4
-pCube,Cube
-pSourceDim,Dimension to be replaced
-pTargetDim,Replacement Dimension
-pDebug,Debug Mode
+637,5
+pCube,"Cube"
+pSourceDim,"Dimension to be replaced"
+pTargetDim,"Replacement Dimension"
+pCtrlObjOverwrite,"Allow overwrite control cubes"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
+603,0
 572,454
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process selects the cube and replaces
@@ -120,7 +125,7 @@ If( CubeExists( pCube ) = 0 );
 EndIf;
 
 # Don't allow system cubes to be modified
-If( SubSt( pCube, 1, 1 ) @= '}' );
+If( SubSt( pCube, 1, 1 ) @= '}' & pCtrlObjOverwrite <= 0 );
   nErrors = 1;
   sMessage = 'Do not modify system cubes: ' | pCube;
   If( pDebug >= 1 );
@@ -522,7 +527,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -560,6 +565,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

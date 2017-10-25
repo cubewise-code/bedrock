@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.Data.Export"
 562,"VIEW"
-586,"Bedrock Test"
-585,"Bedrock Test"
+586,"}APQ Staging TempSource"
+585,"}APQ Staging TempSource"
 564,
-565,"fFNugDan[8Rt7?uLzE8_TyqfjasfmMAGLXnRoreb=VyLI`r3nju>S\nZZa8_F99IFErO[2ZKQMnp98R8E>I_;^n]\nWUu=<l5T<ky5iP5?p@XR0e@orWJ9AQyt5=t6M\1hnkR_=xoFe@wyL]q3MHK\VDoAMU2bnmt]Qo_q^:y^BlxK3a;uWtc@UacW7Oyf9^XIffj4Ds"
+565,"lPm\N6@nstbMaAett3cKW3\FA5VeQxyiy>85Lzj?b>v1Qtz]:^rDVpvk4m]fG49h?K7r@ANv<y9AjSPhbSrJZdorSt_o5[?LWAp1@RKL:M5mb:=W@yd17E2IL5N7gT`7`IwM104EOCVLXXH1Q6pWq3BFw6Ty2Iesw2W?1ok]J45_VLhvJU5H@JIJTcbx\?fK=SIXHJ0W"
 559,1
 928,0
 593,
@@ -20,12 +20,12 @@
 588,"."
 589,
 568,""""
-570,Temp
+570,}TI_Dummy_View
 571,
 569,0
 592,0
 599,1000
-560,13
+560,15
 pCube
 pView
 pFilter
@@ -38,8 +38,10 @@ pZeroSource
 pDestroyTempObj
 pFilePath
 pFileName
+pDelimiter
+pQuote
 pDebug
-561,13
+561,15
 2
 2
 2
@@ -52,8 +54,10 @@ pDebug
 1
 2
 2
+2
+2
 1
-590,13
+590,15
 pCube,""
 pView,""
 pFilter,""
@@ -66,8 +70,10 @@ pZeroSource,0
 pDestroyTempObj,1
 pFilePath,""
 pFileName,""
+pDelimiter,","
+pQuote,""""
 pDebug,0
-637,13
+637,15
 pCube,"Cube"
 pView,"Temporary view name"
 pFilter,"Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations"
@@ -80,8 +86,10 @@ pZeroSource,"Zero Out view AFTER Copy? (Boolean 1=True)"
 pDestroyTempObj,"Retain temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
 pFilePath,"Export Directory"
 pFileName,"Export Filename (If Left Blank Defaults to cube_dim_ele_export.csv)"
+pDelimiter,"AsciiOutput delimiter character"
+pQuote,"AsciiOutput quote character"
 pDebug,"Debug Mode"
-577,34
+577,104
 V1
 V2
 V3
@@ -112,11 +120,151 @@ V27
 V28
 V29
 V30
+V31
+V32
+V33
+V34
+V35
+V36
+V37
+V38
+V39
+V40
+V41
+V42
+V43
+V44
+V45
+V46
+V47
+V48
+V49
+V50
+V51
+V52
+V53
+V54
+V55
+V56
+V57
+V58
+V59
+V60
+V61
+V62
+V63
+V64
+V65
+V66
+V67
+V68
+V69
+V70
+V71
+V72
+V73
+V74
+V75
+V76
+V77
+V78
+V79
+V80
+V81
+V82
+V83
+V84
+V85
+V86
+V87
+V88
+V89
+V90
+V91
+V92
+V93
+V94
+V95
+V96
+V97
+V98
+V99
+V100
 Value
 NVALUE
 SVALUE
 VALUE_IS_STRING
-578,34
+578,104
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
 2
 2
 2
@@ -151,7 +299,7 @@ VALUE_IS_STRING
 1
 2
 1
-579,34
+579,104
 1
 2
 3
@@ -183,10 +331,80 @@ VALUE_IS_STRING
 29
 30
 31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
 0
 0
 0
-580,34
+580,104
 0
 0
 0
@@ -221,7 +439,6 @@ VALUE_IS_STRING
 0
 0
 0
-581,34
 0
 0
 0
@@ -256,7 +473,218 @@ VALUE_IS_STRING
 0
 0
 0
-582,31
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+581,104
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+582,101
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
@@ -289,13 +717,13 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,202
+572,217
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This TI is designed to copy all data in a given cube to a file for a given "element"
@@ -341,6 +769,8 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, '            pDestroyTempObj:     ' | NumberToString( pDestroyTempObj ) );
   AsciiOutput( sDebugFile, '            pFilePath:          ' | pFilePath );
   AsciiOutput( sDebugFile, '            pFileName:          ' | pFileName );
+  AsciiOutput( sDebugFile, '            pDelimiter:          ' | pDelimiter );
+  AsciiOutput( sDebugFile, '            pQuote:          ' | pQuote );
   AsciiOutput( sDebugFile, '' );
 
   AsciiOutput( sDebugFile, 'Temporary View Name : ' | cDefaultView );
@@ -405,6 +835,17 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Export file: ' | cExportFile );
 EndIf;
 
+# Validate file delimiter & quote character
+If( pDelimiter @= '' );
+   pDelimiter = ',';
+Else;
+   pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );
+EndIf;
+If( pQuote @= '' );
+   pQuote = '"';
+Else;
+   pQuote = SubSt( Trim( pQuote ), 1, 1 );
+EndIf;
 
 ### Determine number of dims in source cube & check that version dimension exists in cube ###
 nCount = 1;
@@ -489,6 +930,8 @@ ELSE;
   DatasourceNameForServer = pCube;
   DatasourceNameForClient = pCube;
   DatasourceCubeView = cView;
+  DatasourceAsciiDelimiter = pDelimiter;
+  DatasourceAsciiQuoteCharacter = pQuote;
 ENDIF;
 
 ### End Prolog ###
@@ -504,7 +947,7 @@ ENDIF;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 ### Data Count ###
@@ -664,7 +1107,7 @@ EndIf;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -725,6 +1168,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

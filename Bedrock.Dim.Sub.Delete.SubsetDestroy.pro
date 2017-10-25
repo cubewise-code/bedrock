@@ -1,10 +1,10 @@
 601,100
-602,"Bedrock.Dim.Element.Create"
+602,"Bedrock.Dim.Sub.Delete.SubsetDestroy"
 562,"NULL"
 586,
 585,
 564,
-565,"pEwai<^=0e4Gf0>9a<E7tw[N9J5@?2^\`i4:H5O?tjZ;n9m1cbmi`VRe@XVXvZc]HRDy6QcT_OQtd2UTGV4mPg:Q?]t0^JcT\4X^catc\l3@3_Qqj7B]RYt3AHe[c26?[:YcRMEdaTD[n_6rgRWWGF_1Dsk]Waqz7aG:Mi2ICtkB`5[iqI?V6BN2p;44k\x=IsSRrB70"
+565,"cKnyBtDx>E;Zqn]VxmfT=iLoo^5^\6A~p`19sgP[:7PP5N:OuDuHR1RQNfTAd18BW>3sJ3CDPzoamtUIO;8Zw^Oti2IL=iHAF`e0MDo1f:lIEtDsQ>2K_?INpC4GLO62Hhr?pBN7Kx3pRDVbV4>8mYAh`6dDzy:gN=iuQ;91F8affy5TOFviBJ;dKkxW4sV0Fx`[vO[m"
 559,1
 928,0
 593,
@@ -25,30 +25,26 @@
 569,0
 592,0
 599,1000
-560,5
+560,4
 pDimension
-pElement
-pElementType
-pInsertionPoint
+pSubset
+pMode
 pDebug
-561,5
-2
-2
+561,4
 2
 2
 1
-590,5
+1
+590,4
 pDimension,""
-pElement,""
-pElementType,""
-pInsertionPoint,""
+pSubset,""
+pMode,0
 pDebug,0
-637,5
-pDimension,"Mandatory: Dimension Name"
-pElement,"Mandatory: Element Name"
-pElementType,"Optional: Element Type N S C (default value N)"
-pInsertionPoint,"Optional: Insertion point (default value blank)"
-pDebug,"Optional: Debug Mode"
+637,4
+pDimension,"Dimension"
+pSubset,"Subset"
+pMode,"<=1 destroy subset 2 delete all elements<=1 destroy subset 2 delete all elements"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
@@ -56,7 +52,7 @@ pDebug,"Optional: Debug Mode"
 581,0
 582,0
 603,0
-572,104
+572,92
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -65,12 +61,21 @@ pDebug,"Optional: Debug Mode"
 ##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
-# This process will create new element in a dimension
+# This process deletes public subsets
 
+# Notes:
+# - This process can work on ONLY a single dimension
+# - This process can work on ONLY a single subset 
+# - This process exists only to be called from Bedrock.Dim.Sub.Delete rather than calling the SubsetDestroy function directly in order to avoid the calling process aborting 
+# -  in case unable to delete a subset due to still being used by a view (or TM1 erroneously thinking subset still used by view even when it isn't) 
+
+# Parameters:
+# - pDimension:
+# - pSubset:
 
 ### Constants ###
 
-cProcess = 'Bedrock.Dim.Element.Create';
+cProcess = 'Bedrock.Dim.Sub.Delete.subsetDestroy';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
@@ -87,10 +92,9 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Process Started: ' | TimSt( Now, '\d-\m-\Y \h:\i:\s' ) );
 
   # Log parameters
-  AsciiOutput( sDebugFile, 'Parameters: pDimension   : ' | pDimension );
-  AsciiOutput( sDebugFile, '            pElement         : ' | pElement );
-  AsciiOutput( sDebugFile, '            pElementType : ' | pElementType );
-  AsciiOutput( sDebugFile, '            pInsertionPoint: ' | pInsertionPoint );
+  AsciiOutput( sDebugFile, 'Parameters: pDimension : ' | pDimension );
+  AsciiOutput( sDebugFile, '            pSubset    : ' | pSubset );
+  AsciiOutput( sDebugFile, '            pMode      : ' | NumberToString(pMode) );
 
 EndIf;
 
@@ -102,63 +106,43 @@ nErrors = 0;
 # Validate dimension
 If( Trim( pDimension ) @= '' );
   nErrors = 1;
-  sMessage = 'No dimension specified';
+  sMessage = 'No dim specified';
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
   ItemReject( sMessage );
-EndIf;
-If( DimensionExists( pDimension ) = 0 );
+ElseIf( DimensionExists( pDimension ) = 0 );
   nErrors = 1;
-  sMessage = 'Dimension: ' | pDimension | ' does not exist on server.';
+  sMessage = 'Invalid dim:' | pDimension;
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
   ItemReject( sMessage );
 EndIf;
 
-# Validate element
-If( Trim( pElement ) @= '' );
+# Validate subsets
+If( Trim( pSubset ) @= '' );
   nErrors = 1;
-  sMessage = 'No element specified';
+  sMessage = 'No subset specified';
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
   ItemReject( sMessage );
-EndIf;
-If( DimIx( pDimension, pElement ) > 0 );
+ElseIf( SubsetExists( pDimension, pSubset ) = 0 );
   nErrors = 1;
-  sMessage = 'Element: ' | pElement | ' already exists in dimension: ' | pDimension;
+  sMessage = 'Invalid subset:' | pSubset;
   If( pDebug >= 1 );
     AsciiOutput( sDebugFile, sMessage );
   EndIf;
   ItemReject( sMessage );
 EndIf;
 
-# Validate element type
-If( pElementType @= '' ); pElementType = 'N'; EndIf;
-pElementType = Upper( pElementType );
-If( pElementType @<> 'N' & pElementType @<> 'C' & pElementType @<> 'S' );
-  nErrors = 1;
-  sMessage = 'Invalid element type: ' | pElementType;
-  If( pDebug >= 1 );
-    AsciiOutput( sDebugFile, sMessage );
-  EndIf;
-  ItemReject( sMessage );
-EndIf;
-
-# Validate insertion point
-If( Dimix( pDimension, pInsertionPoint ) = 0 );
-  pInsertionPoint = '';
-EndIf;
-
-
-### Insert Element into dimension ###
-
-If( pDebug <= 1 );
-  DimensionElementInsert( pDimension, pInsertionPoint,  pElement, pElementType );
-EndIf;
-
+### Destroy Subset ###
+If( pMode <= 1 );
+  SubsetDestroy( pDimension, pSubset );
+Else;
+  SubsetDeleteAllElements( pDimension, pSubset );
+EndIF;
 
 ### End Prolog ###
 573,4

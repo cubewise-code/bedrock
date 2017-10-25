@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.ViewAndSubsets.Create"
 562,"NULL"
 586,
@@ -77,7 +77,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process creates a processing view for the cube and for specified dimensions of the cube
@@ -282,7 +282,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
