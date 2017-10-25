@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.Data.Copy"
 562,"VIEW"
-586,"Bedrock Test"
-585,"Bedrock Test"
+586,"zzSYS 50 Dim Cube"
+585,"zzSYS 50 Dim Cube"
 564,
-565,"h^AV5ZGTaRBmFk5t;PggAO\^s9We@khsSzOXwDsMFZz@KYnZhBLLEA;qGnZs77mqfi4Q^q=K?CQ1r0mMRJm<2MlI^sJTtaq<dZAvo[rTLnaYSdZr1K<NjcUTA8XHDtlt_Q?ElKs1IDf:Ze1l6@OaUvoe8:bYNjAu48Y<FGXJt\Bl22pegE7lYdS:2wE7bhchdrTh5L?E"
+565,"h[@DzOQOa6JIPrN[O7sR9Nvj4HW2LQ@?DHducLp4Jz9J1X4rq=yRKvrNlN]HTQ9yWMpd25SkKQ8XHYTv?YFCb>Q<Cr@gM=H@Rzl\GGnziUrcPg@9;PY_mVDv]XNV<T_Hh;0DCzPjYZox`PgUB<rJOWylqeNsOxFQ2UkTu9l^RcditmsWUM:atGM0fp_hB7UzxdhH0W_Z"
 559,1
 928,0
 593,
@@ -73,7 +73,7 @@ pZeroTarget,"Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
 pZeroSource,"Zero out Source Element AFTER Copy? (Boolean 1=True)"
 pDestroyTempObj,"Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
 pDebug,"Debug Mode"
-577,31
+577,54
 V1
 V2
 V3
@@ -102,10 +102,55 @@ V25
 V26
 V27
 V28
+V29
+V30
+V31
+V32
+V33
+V34
+V35
+V36
+V37
+V38
+V39
+V40
+V41
+V42
+V43
+V44
+V45
+V46
+V47
+V48
+V49
+V50
+Value
 NVALUE
 SVALUE
 VALUE_IS_STRING
-578,31
+578,54
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
 2
 2
 2
@@ -135,9 +180,10 @@ VALUE_IS_STRING
 2
 2
 1
+1
 2
 1
-579,31
+579,54
 1
 2
 3
@@ -166,10 +212,33 @@ VALUE_IS_STRING
 26
 27
 28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
 0
 0
 0
-580,31
+580,54
 0
 0
 0
@@ -201,7 +270,6 @@ VALUE_IS_STRING
 0
 0
 0
-581,31
 0
 0
 0
@@ -225,6 +293,7 @@ VALUE_IS_STRING
 0
 0
 0
+581,54
 0
 0
 0
@@ -233,7 +302,53 @@ VALUE_IS_STRING
 0
 0
 0
-582,28
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+582,51
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
@@ -262,6 +377,29 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=33ColType=827
 603,0
 572,349
 
@@ -269,7 +407,7 @@ VarType=32ColType=827
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This TI is designed to copy all data in a given cube
@@ -625,7 +763,7 @@ DatasourceCubeView = cTempViewFrom;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -1048,14 +1186,14 @@ If( pDebug <= 1 );
 
 
 ### End Data ###
-575,105
+575,104
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -1111,8 +1249,7 @@ pDestroyTempObj > 0 );
     AsciiOutput( sDebugFile, sMsg );
   ENDIF;
 
-  IF(
-  pZeroTarget = 1 );
+  IF( pZeroTarget = 1 );
   ## Destroy temporary target view.
 
     nRet = ExecuteProcess('Bedrock.Cube.ViewAndSubsets.Delete',
@@ -1122,7 +1259,7 @@ pDestroyTempObj > 0 );
       'pMode', pDestroyTempObj,
       'pDebug', pDebug);
 
-      IF( pDebug <= 1 );
+      IF( pDebug >= 1 );
         sMsg = 'Temporary objects destroyed: Target View. Process End State: ' | NumberToString ( nRet ) ;
         AsciiOutput( sDebugFile, sMsg );
       ENDIF;
@@ -1162,6 +1299,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

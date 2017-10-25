@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Dim.Sub.Create.ByMDX"
 562,"NULL"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"g`\8[mKaLC\W1^rg@guUbXnyI9v^>kTZp^zuiu\29cL@fjws9;Vh\G5RpCKYi^on84kIULFscVG2EPaOJ[;RWEXDL496?YQCktUHu^nMaWDLvvrQTdr3[_ZTFf[K\ovvO5OJ?MkOMN54Rffy4jKECmFYN[yj9>F\CKGlOm\YLZF4NJ;xv;6Y1b4i^:Encde@T^SPYhFb"
+565,"bGajYTx1l3iBhoaQ::7TegveUT<aMIh;gwJ0rYXCu\5aJ<p`@[xb64yitIAzjMkI5`ZNsEo^QUy;=_a3dKX94K[^BXA0ba4Sd16VCQs53Wu0TOs?jBSkn^dXFNR2W97dey\j:WMS:pPnRNvUaCRUrIiBUb:5f@qgIVTDH?fgrbFDplCJu=D`i7C^h^XWC@]Mj>L1bBkK"
 559,1
 928,0
 593,
@@ -62,7 +62,7 @@ pDebug,"Debug Mode"
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will Create a dynamic subset from an MDX expression
@@ -144,7 +144,7 @@ If( Trim( sMDXExpr ) @= '' );
   DataSourceType = 'NULL';
   ItemReject( sMessage );
 EndIf;
-If( Scan( pDimension, sMDXExpr ) = 0 );
+If( Scan( Upper( pDimension ), Upper( sMDXExpr ) ) = 0 );
   nErrors = 1;
   sMessage = 'Dimension name is not in MDX expression';
   If( pDebug >= 1 );
@@ -163,7 +163,7 @@ If( pDebug <= 1 );
     If( SubsetExists( pDimension, pSubset ) = 1 );
       SubsetDestroy( pDimension, pSubset );
     EndIf;
-    SubsetCreateByMDX( pSubset, sMDXExpr );
+    SubsetCreateByMDX( pSubset, sMDXExpr, pDimension );
 
   # If subset if to be converted to static then create temp MDX subset for processing
   Else;
@@ -177,7 +177,7 @@ If( pDebug <= 1 );
     If( SubsetExists( pDimension, cTempSubset ) = 1 );
       SubsetDestroy( pDimension, cTempSubset );
     EndIf;
-    SubsetCreateByMDX( cTempSubset, sMDXExpr );
+    SubsetCreateByMDX( cTempSubset, sMDXExpr, pDimension );
 
     SubsetElementDelete( pDimension , cTempSubset , 1 );
 
@@ -210,7 +210,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 ### Initialise Debug ###
@@ -261,6 +261,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

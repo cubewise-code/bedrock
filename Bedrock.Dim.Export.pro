@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Dim.Export"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"d=S2aR4EBG^a5mTz;ZFw<H5WzoxY5EKS\q1PWmBq[o2_8cCQEeq<]A`TFCC9fD;To][FTTBRcnGNkZW_q4U=TwsSNP8`mMSU64Rjtu7RQqecU8TuhBB14D5\XY:\naVMuSZxeI8Sf81zwA_ut@_tf^jiz<Mq:N06DRt:iVuaDUDJsfv>JRO_NkSTGO>:2h3aKZ2:FWyC"
+565,"hhxV?gwyaZl?Vv4YotvwpmJI1x@C<`Y<sCfXpIrZyXGWu9pA6D0sskM8xZo8eDXRbt51@OkLm^tH<N6Uy@NjL\7DamEtpXeuuxU7?I\^YnmOIFGuejf5U>i`2sh<2gb?NA2@xdhPY;18F0FeeJGUL[Ag=Yf0Y0Z:8lu8I[QY6u2czktn7oNub3zKh6TxR_vKH2Hu\Uz>"
 559,1
 928,0
 593,
@@ -38,17 +38,17 @@ pDebug
 1
 1
 590,5
-pDimension,"Column"
-pExportPath,"C:\Users\adavis\Documents\Bedrock 3.0\Export"
+pDimension,""
+pExportPath,""
 pExportFile,""
 pTitleRecord,1
 pDebug,0
 637,5
-pDimension,Dimension
-pExportPath,Export file path
-pExportFile,Export file name (default extension .csv)
-pTitleRecord,Boolean 1 = Yes - Include header row
-pDebug,Debug Mode
+pDimension,"Dimension"
+pExportPath,"Export file path"
+pExportFile,"Export file name (default extension .csv)"
+pTitleRecord,"Boolean 1 = Yes - Include header row"
+pDebug,"Debug Mode"
 577,1
 vElement
 578,1
@@ -61,6 +61,7 @@ vElement
 0
 582,1
 VarType=32ColType=827
+603,0
 572,108
 
 #****Begin: Generated Statements***
@@ -181,7 +182,7 @@ DatasourceDimensionSubset = 'ALL';
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -290,7 +291,7 @@ ENDIF;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -328,6 +329,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

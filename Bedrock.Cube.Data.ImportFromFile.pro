@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.Data.ImportFromFile"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"jSbp1PDE`Wa5dhkzn>>d@<m\YXX<WXnn82sW[8rC0mdfZlX]`INT2\fxVS9tbqr9z]xFt_GT_xMZH\EX^9O5`IbeujPp?VO;=sG\TjNLvXHa`lPqlJ`3XJR^unG0M<as6c]Hu2S]4M142Gos:ElM9?bEvCmPCnjbhnPg87apcTU_TH4Ap<I\4b?ae4rn7O>t3MktsmRY"
+565,"oSxjFb0dgMW3ap_arjFfzBEV>u?d8<V>Q@>nPglK8VU8t;GR9@uU7jX1so7PrYC<dnu=tHxkyjiwIcv^kv<FXYtsmPaUKHkTYYk0MIsKt42S?oWV\YBE`ZXIiiX[zcrEkibNxXAm=BL3i=zgtvdHQ\_H]8Jk;bgtv@r\<_Q5egkr]Op34?zKXum533ptGWt^P?ex07C1"
 559,1
 928,0
 593,
@@ -266,7 +266,7 @@ VarType=32ColType=827
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will load a CSV text file to the specified cube
@@ -542,13 +542,13 @@ ENDIF;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,642
+574,646
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # It would be too exhaustive to error trap elements not existing in dimension for each possible number of dimensions
@@ -735,11 +735,15 @@ If( pDebug <= 1 );
   If( nDimensionCount = 2 );
     If( CellIsUpdateable( pCube, v2, v3 ) = 1 );
       sElType = DType( sDim2, v3 );
-      IF( sElType @= 'AS' % sElType @= 'AA');
-        ATTRPUTS( v4, pCube, v2, v3 );
-      ELSEIF( sElType @= 'AN' );
-        ATTRPUTN( Numbr( v4), pCube, v2, v3 );
-      ElseIf( sElType @= 'S' );
+      sDim = SubST ( v1, LONG('}ElementAttributes_')+1, 9999);
+
+      IF( sElType @= 'AS');
+        AttrPutS( v4, sDim, v2, v3, 1 );
+      ELSEIF( sElType @= 'AA');
+        AttrPutS( v4, sDim, v2, v3 );
+      ELSEIF( sElType @= 'AN');
+        AttrPutN( NUMBR(v4), sDim, v2, v3 );
+      ELSEIF( sElType @= 'S');
         CellPutS( v4, pCube, v2, v3 );
       Else;
         IF(
@@ -1191,7 +1195,7 @@ nRecordPostedCount = nRecordPostedCount + 1;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -1231,6 +1235,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

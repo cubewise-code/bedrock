@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.Data.ViewExportToFile"
 562,"VIEW"
 586,"placeholder"
@@ -282,7 +282,7 @@ VarType=32ColType=827
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This cube exports data from the specified cube to an ASCII file.
@@ -472,7 +472,7 @@ ViewExtractSkipZeroesSet( pCube, pView, pSkipNullValues );
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -641,7 +641,7 @@ EndIf;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 

@@ -4,7 +4,7 @@
 586,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 585,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 564,
-565,"ilsXsPlRnaY2cKsNfGDER:P3Y3DdfMAzCx`pyuL?:=vK]xCku]tya8SjR`s`=>CF<@_j4oty\Z\uIxJWllc\YVFH5WwbtKqjh1=K<3J]j<wMi>>]se?xeq@CA8ADCh``93:@PZW:11G4=Pq:_dOC3nm<QzTekV<Xt5sz6aDbWn7DgX]Sj[H4IvDBat\foL=wxsNL5;`d"
+565,"wJ>B^t?<=aK?XVcyauU_6iwa34g16ZZ:jzN1cHvX1?kHnpvdpTIt\yd0Nhr817I8e_J1KOLHR;WlnO=MA:7]cykL[aUvo^F<Bq3HRiQoCX4?Tg:]i[<FHBYtzaB`0;[yIB@KoKvpBan<Rt9XEWVr7Y<Qf>nx@YpB6tp9CaC21OXFqVhFCwqfakSpmDQEyqOkc1Z0d2[K"
 559,1
 928,0
 593,
@@ -61,7 +61,7 @@ VarType=32ColType=827
 
 
 ####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 ## This process will copy the rule rule file to a temporary file and load a blank rule file.
@@ -237,6 +237,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,
