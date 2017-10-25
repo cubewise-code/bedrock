@@ -1122,7 +1122,7 @@ pDestroyTempObj > 0 );
       'pMode', pDestroyTempObj,
       'pDebug', pDebug);
 
-      IF( pDebug <= 1 );
+      IF( pDebug >= 1 );
         sMsg = 'Temporary objects destroyed: Target View. Process End State: ' | NumberToString ( nRet ) ;
         AsciiOutput( sDebugFile, sMsg );
       ENDIF;
