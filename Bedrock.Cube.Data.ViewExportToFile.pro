@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"Bedrock.Cube.Data.ViewExportToFile"
 562,"VIEW"
 586,"placeholder"
 585,"placeholder"
 564,
-565,"f9EGsTa7ulB:rPNo1k=7?xI94R?61><^xZrZ3aO[`j@eMBzH9vb7:lLyOLy_hu3De=:4nIO;kb[ngiULg\kiUSycYhdXKoxP`CA1=hOl\V6^r65xb2t?CoDh8ceGTsl6E4<ZA7mWEkUqh2et5Xav0D=^8^9=S8dp`k?2`nb4zXJc[ymc3hDYNs3T\rX>Z<Fw^1^oul>H"
+565,"c?Ta6I7`Dob3RXM;5MT`5?POa1G]fhgOko]vdPGlT<C]>[Tbidsb]Bzx^cnFdj?0zhMWs@seCyA;r]a=X^Jk\F7EeGxpHEr?zmUSN:L4ESwoiXMqTaCcT6zbsim5E0C^OavwGrOx>:C>1JPxkJtbNlrvTO9PLD0c9VWWdXMJ0zGST^LKc;hP0Fg_ukP2Si;rCoN3hTUV"
 559,1
 928,0
 593,
@@ -56,16 +56,16 @@ pSkipNullValues,1
 pTitleRecord,1
 pDebug,0
 637,9
-pCube,Source Cube
-pExportPath,Export File Path (Defaults to Logging Directory if Left Blank)
-pExportFile,If Blank Will Default to cube.view.export.csv
-pView,Source View (Blank = Whole Cube)
-pSkipRuleValues,Skip Rule Values? (Boolean 1=skip)
-pSkipCalcValues,Skip Consol Values? (Boolean 1=skip)
-pSkipNullValues,Skip Zero Values? (Boolean 1=skip)
-pTitleRecord,Include Title Record in Export File? (Boolean 1=Yes)
-pDebug,Debug Mode
-577,34
+pCube,"Source Cube"
+pExportPath,"Export File Path (Defaults to Logging Directory if Left Blank)"
+pExportFile,"If Blank Will Default to cube.view.export.csv"
+pView,"Source View (Blank = Whole Cube)"
+pSkipRuleValues,"Skip Rule Values? (Boolean 1=skip)"
+pSkipCalcValues,"Skip Consol Values? (Boolean 1=skip)"
+pSkipNullValues,"Skip Zero Values? (Boolean 1=skip)"
+pTitleRecord,"Include Title Record in Export File? (Boolean 1=Yes)"
+pDebug,"Debug Mode"
+577,31
 v1
 v2
 v3
@@ -97,10 +97,7 @@ v28
 v29
 v30
 Value
-NVALUE
-SVALUE
-VALUE_IS_STRING
-578,34
+578,31
 2
 2
 2
@@ -132,10 +129,7 @@ VALUE_IS_STRING
 2
 2
 2
-1
-2
-1
-579,34
+579,31
 1
 2
 3
@@ -167,11 +161,7 @@ VALUE_IS_STRING
 29
 30
 31
-0
-0
-0
-580,34
-0
+580,31
 0
 0
 0
@@ -203,12 +193,7 @@ VALUE_IS_STRING
 0
 0
 0
-0
-0
-581,34
-0
-0
-0
+581,31
 0
 0
 0
@@ -273,7 +258,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,182
+572,181
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -289,9 +274,8 @@ VarType=32ColType=827
 
 # Note:
 # - As this TI has a view as a data source it requires the implicit variables NValue, SValue and Value_is_String
-# - To edit this TI either without VIZIER a temp cube with 24 dims is needed as the preview data source or set the data
+# - To edit this TI in Architect a tmp cube with minimum 24 dims is needed as the preview data source or set the data
 #   source to ASCII and manually edit the TI in notepad after saving to add back the required implicit view variables
-
 
 ### Constants ###
 
@@ -679,6 +663,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"Bedrock.Cube.Clone"
 562,"VIEW"
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"h8>PNSUFa?Ul[=vCxLCixi1LbgN8;GsABbs:62<u;UOPyfWIm@Du:rM:=?\sQKX^\rnsUlJ7KNWUeYK?Mt4UhD^:0B1`gM_Wsp7VuTfzC1ryk3m>sjnu^XBE=9VXv0IS2r8\xrc:r3KKeVVRdg[msgsYda9TqGynYIhPYB6Cb?BEcZ1ikjHLt@gC4k>AJE<9^Ib9RqZ3"
+565,"oy^9]C^:Rt>@@BrapR=C1hWpG;3MzoMT>]OYE7Ra`f7OYnu]Q4p6D90c6usDc^dYYB2xQx?aeZR;fo;:fAk`nGEjfj`??j`O?lYazpGeF3cs;j0LM_<no0tI^aeWy>6TD=ZBcXHnl0E:O3ec;b?[O59J_zmGz\:li>ZMrwxuI[1ql`=aoS?aFT@UJVp5c25>llpLJI@9"
 559,1
 928,0
 593,
@@ -57,7 +57,7 @@ pIncludeData,"Include cube data? (Boolean Yes = 1)"
 pSourceView,"Source View (blank = whole cube If pIncludeData=1)"
 pRuleValues,"Skip rule values? (1=skip)"
 pDebug,"Debug Mode"
-577,31
+577,28
 v1
 v2
 v3
@@ -86,10 +86,7 @@ v25
 V26
 V27
 V28
-NVALUE
-SVALUE
-VALUE_IS_STRING
-578,31
+578,28
 2
 2
 2
@@ -118,10 +115,7 @@ VALUE_IS_STRING
 2
 2
 2
-1
-2
-1
-579,31
+579,28
 1
 2
 3
@@ -150,11 +144,7 @@ VALUE_IS_STRING
 26
 27
 28
-0
-0
-0
-580,31
-0
+580,28
 0
 0
 0
@@ -183,12 +173,7 @@ VALUE_IS_STRING
 0
 0
 0
-0
-0
-581,31
-0
-0
-0
+581,28
 0
 0
 0
@@ -265,7 +250,7 @@ VarType=32ColType=827
 
 # Notes:
 # - As this TI has a view as a data source it requires the implicit variables NValue, SValue and Value_is_String
-# - To edit this TI without Vizier either a tmp cube with 24 dims is needed as the preview data source or set the data
+# - To edit this TI in Architect a tmp cube with minimum 24 dims is needed as the preview data source or set the data
 #   source to ASCII and manually edit the TI in notepad after saving to add back the required implicit view variables
 
 
@@ -801,6 +786,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,
