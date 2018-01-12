@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Dim.Attr.ImportFromFile"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
 564,
-565,"gsoQLmxatZ@8JIC`TWRbfE<smYN?\jAk?LhQO2iR8:5<qOeQY=KUY`SQ4zX3QUqlRyeVy_ov\?5K>5n9GFev4?H[M;Z>JxK^h98LYg`Jie[oz^XUqL0f@9[Ww`VP9;E5Ldvw9ea7wjHhZ12\HZTn5aI0\cXhM>J:G@p5\X\rfXMvDrPx3VybUR?4Go?z3MNW078rl;gE"
+565,"luQ[S=@Imzr7a\[0>yp8`A?5cikeYk8p0cLsCbxtHOkHP<^hrhFfnqs5?>Qv2Cp7?dU`=k@CBkw[=SkGUUeJdu>ShFKlt@ils<d9@\AeuQE4O07X37jYD_XZxFD?kgF9Q3?WZKzX1TAnWeQ3HHCZE25GL`01?6c`gXi2tcZNPtcvI]JntTfUXmN3H7`rB7:mWdxZCPe1"
 559,1
 928,0
 593,
@@ -47,16 +47,16 @@ pSourceDir,""
 pSourceFile,""
 pTitleRows,1
 pDelimiter,","
-pQuote,"""
+pQuote,"'"
 pDebug,0
 637,7
-pDimension,Target Dimension
-pSourceDir,File Directory
-pSourceFile,File Name
-pTitleRows,Number of Title Rows to Skip
-pDelimiter,Delimiter Character (default=Comma)
-pQuote,Quote Character (default=Double Quote)
-pDebug,Debug Mode
+pDimension,"Target Dimension"
+pSourceDir,"File Directory"
+pSourceFile,"File Name"
+pTitleRows,"Number of Title Rows to Skip"
+pDelimiter,"Delimiter Character (default=Comma)"
+pQuote,"Quote Character (default=Double Quote)"
+pDebug,"Debug Mode"
 577,3
 vAttribute
 vAttrType
@@ -81,13 +81,14 @@ V3
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
+603,0
 572,123
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will create Attributes to the dimension from a file.
@@ -211,7 +212,7 @@ DatasourceASCIIQuoteCharacter = pQuote;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -261,7 +262,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -299,6 +300,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"Bedrock.Dim.Consol.Create.Leaf"
 562,"SUBSET"
 586,"}Dimensions"
@@ -65,7 +65,7 @@ VarType=32ColType=827
 ### Start Prolog ###
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -222,7 +222,7 @@ DataSourceDimensionSubset = 'All';
 ### Start Metadata ###
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 

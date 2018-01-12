@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"Bedrock.Security.Client.Password.Reset"
 562,"NULL"
 586,
@@ -57,7 +57,7 @@ pDebug,Debug Mode
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process can be used by admins to reset a client password.
@@ -175,7 +175,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 

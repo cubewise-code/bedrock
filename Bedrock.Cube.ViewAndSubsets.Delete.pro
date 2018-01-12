@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"Bedrock.Cube.ViewAndSubsets.Delete"
 562,"NULL"
 586,
@@ -62,7 +62,7 @@ pDebug,"Debug"
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process deletes a view and all subsets that have the same name
@@ -178,7 +178,7 @@ ENDIF;
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 

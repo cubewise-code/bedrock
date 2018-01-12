@@ -1,10 +1,10 @@
 601,100
-602,"Bedrock.Server.SaveDataAll"
+602,"Bedrock.Server.DeleteAllPersistentFeeders"
 562,"NULL"
 586,
 585,
 564,
-565,"ssKLdAUI`vgWtwzdi>oaN0JccS\Q^<;q@PQbmZ2RZaqlTdcEzaViE3cI<W_7w<FFkT9\BS@HN5v>9VV79I0]t5Xh8]U0qPXU9j>lBhKPq]tEM<TsA\nUG\V5cRyfDb`\s9Iq7==qvI\i__y13uCu?ZXLrc[t;^:0o_AiTnxM?wy]cBefjs>0H7EQj7<wnSzQnTe2Nx`q"
+565,"ufW^UKF4>[EM852XVdm<JyDg9I?2^_7v@PxS8H_RDIg@vKjyLH_W20Hj_eTqi>=2TS@|Z5pMyRoa]x59VJOTFUf_1cI|wrbo?rt>mOCWWg9eVZEsASrK]iJG27PuN?=u7ib4`c6FLvCRBYb6=@8]62?i37ZfIEN^Jo5Dx5QRaIrc9lfcFkbNIk]tp1XPuf26q`XlxQ["
 559,1
 928,0
 593,
@@ -32,13 +32,14 @@ pDebug
 590,1
 pDebug,0
 637,1
-pDebug,Debug Mode
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
+603,0
 572,40
 
 #****Begin: Generated Statements***
@@ -53,7 +54,7 @@ pDebug,Debug Mode
 
 ### Constants ###
 
-cProcess = 'Bedrock.Server.SaveDataAll';
+cProcess = 'Bedrock.Server.DeleteAllPersistentFeeders';
 cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
@@ -75,7 +76,7 @@ EndIf;
 ### Save Data ###
 
 If( pDebug <= 1 );
-  SaveDataAll;
+  DeleteAllPersistentFeeders;
 EndIf;
 
 
@@ -121,6 +122,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

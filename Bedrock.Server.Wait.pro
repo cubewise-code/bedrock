@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"d:K1aS4qRkMM3FKsVeQVel47AJ\FycLzF0]Y\[VF5kki:as;LJL<dnRWdw3EcUvQM`u7mBHO>MO7Ijq;wK84a^8Ra0FqNg8RqOL\=H<G^;5KFi:rtn1sg@G1<7=WIdxJK<\qabLAk]WLHUSkG^fCs5?PNcWyTYlGnUvYAK>m7jB@K=9WpimJqwmVQGwiWI]<ThmYJbD>"
+565,"jkP>t5yGlSaLwZc@TKtp@i5c@JIwiiSk?f@bPV]_6N7YGQNtU16E^56oUCMjf_oX6dI[Up0Uh6rk?GjPvMA0lgRJpl8`XiJ;8g?pTIIW7y9`1>;0?ubdKZs923WLfZ?Mv7:wtOR>_7Xema<93iz;\mj@@:UZ3S;b7hFPAf5:m:Bdc4PrZ@O6>QdUS<AdY]^@TWp0LNTV"
 559,1
 928,0
 593,
@@ -35,22 +35,23 @@ pDebug
 pWaitSec,"5"
 pDebug,0
 637,2
-pWaitSec,Seconds
-pDebug,
+pWaitSec,"Seconds"
+pDebug,""
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,43
+603,0
+572,38
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -76,15 +77,10 @@ If( pDebug >= 1 );
 
 EndIf;
 
-### LOOP TIME ##
-nStartNow = NOW();
-nWaitTime = nStartNow + ( StringToNumber( pWaitSec ) / 86400 );
+### SLEEP ##
+nWaitTime = StringToNumber( pWaitSec ) * 1000;
+Sleep ( nWaitTime );
 
-
-nTime = NOW();
-WHILE( nTime <= nWaitTime );
-  nTime = NOW();
-END;
 
 
 573,3
@@ -127,6 +123,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

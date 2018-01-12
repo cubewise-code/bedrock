@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"dn3?aPESNg>XB6[GDX3UhYTkQ_D_dMIHj@c2r>^hlsMmk5KyVeA0^b:[skb<WnH4DF`igS7DWdiI9iXn\pSJriK27EBM>KdcTEVQ\`YsMi3h4<l?htFMVL84j;wMvQ4LzF9UTbnb54_zVU]XZ>bQzaa_4zdCrv9:<M=Dphpu>V]p[2y>OWn]>Dt:PECeddPLn\^z?P[8"
+565,"iusfqZha@a1R2@;7[P6y]7j38ompMHdfeNl>Gn83_=QtLQ>D4NPG\B1mfJzWoWbn[chUViYd=S^eHrdwDtL:^y=A3v;\t0r@8cYeXzWKleYbD4s8@KKd9`V`[wy=VX`p5]eJThRXiG?cW<SbbqDJh6QGYqH5`6iFz7hygdogS8539NIr3j0LoHk\Fqum6^]QSIL01p?5"
 559,1
 928,0
 593,
@@ -47,25 +47,26 @@ pBedrockDays,7
 pCSVDays,7
 pDebug,0
 637,6
-pLogDir,Log file directory. (Blank = from TM1 configuration file)
-pLogDays,The number of days to retain log Files
-pErrorDays,The number of day to retain TM1 Error Logs
-pBedrockDays,The number of days to retain Bedrock Debug Files
-pCSVDays,The number of days to retain CSV files
-pDebug,Debug Mode
+pLogDir,"Log file directory. (Blank = from TM1 configuration file)"
+pLogDays,"The number of days to retain log Files"
+pErrorDays,"The number of day to retain TM1 Error Logs"
+pBedrockDays,"The number of days to retain Bedrock Debug Files"
+pCSVDays,"The number of days to retain CSV files"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
+603,0
 572,107
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will back up the Data Directory
@@ -239,6 +240,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

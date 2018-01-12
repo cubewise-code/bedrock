@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Dim.CloneFromSubset"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"w<Zs5;NNH7gy57F:q<ft\`sa@aXrPBmU<rMRbX2bOT3eycM0vDjn\7cU@fi[;9QYWLNm0fZ7XKo[_s5`uOvd3eusvuEJ>DGSep[f?YKa;DM`k\[Gtf@;_DIxR<ST[pyeUF=:PPJ8oSNHQA\D::qtZYI@W<h1\ny]hXNi_bS[QvE:gSm]:cU2]nnVM<d1;Zz>syu2D2n9"
+565,"pnU0zY<]0I>QeY[qa3^LXm\Z43n0]2rYGqmN`YL7G@KI4E<2lF28awyt5]vtzAxV7;0EY60xa:zMb0wAdEF7x:8v9J\7j;HkkJeFV11E8ba?r@W5GGXkR4u4fQZJbwKFaWhDXOs7htBC1JecyT8lmeZAPsdnld38bBgTxb7ipt1]Otj8spYsobzSvDhEM0Ejv_dL=fHj"
 559,1
 928,0
 593,
@@ -51,7 +51,7 @@ pSourceDim,"Source Dimension"
 pSubset,"Source Subset"
 pTargetDim,"Target Dimension"
 pAttr,"Include Attributes? (Boolean 1=True)"
-pUnwind,"0 = Delete all Elements, 1 = Unwind Existing Elements"
+pUnwind,"0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
 pDebug,"Debug Mode"
 577,1
 vElement
@@ -66,13 +66,13 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,174
+572,180
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will clone the source dimension
@@ -104,7 +104,7 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, '' );
   # Log parameters
   AsciiOutput( sDebugFile, 'Parameters: pSourceDim : ' | pSourceDim );
-  AsciiOutput( sDebugFile, '            pSourceDim : ' | pSubset );
+  AsciiOutput( sDebugFile, '            pSourceSub : ' | pSubset );
   AsciiOutput( sDebugFile, '            pTargetDim : ' | pTargetDim );
   AsciiOutput( sDebugFile, '            pAttr      : ' | NumberToString( pAttr ) );
   AsciiOutput( sDebugFile, '' );
@@ -137,7 +137,9 @@ SubsetExists( pSourceDim, pSubset) = 0 );
 ELSE;
   cSubset = pSubset;
   nSubsetSize = SubsetGetSize( pSourceDim, pSubset );
-  AsciiOutput( sDebugFile, '            Subset Siz      : ' | NumberToString( nSubsetSize ) );
+    If( pDebug >= 1 );
+      AsciiOutput( sDebugFile, '            Subset Siz      : ' | NumberToString( nSubsetSize ) );
+    EndIf;
 ENDIF;
 
 ## Validate target dimension
@@ -164,7 +166,11 @@ If( pDebug <= 1 );
        If( pDebug >= 1 );
          AsciiOutput( sDebugFile, 'Target dimension unwound: ' | pTargetDim  );
        EndIf;
-
+    ELSEIF(
+    pUnwind = 2 );
+       If( pDebug >= 1 );
+         AsciiOutput( sDebugFile, 'Target dimension kept unchanged: ' | pTargetDim  );
+       EndIf;
     ELSE;
       DimensionDeleteAllElements( pTargetDim );
       If( pDebug >= 1 );
@@ -399,6 +405,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

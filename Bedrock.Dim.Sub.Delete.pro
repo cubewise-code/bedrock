@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"gKSDb:6a=qtQnGCwaq\SC]oouPG[xkDE5<PrsoE54CGQn>q4sjyK6\[c0\;hB7S1_w4ATpzKg3yUryVBnD:G[k_s[emBV]C8`YaCyB]Am?BF6r<U^B6zcmyR`E=M@OGQr5iay=WsCe6fH]6A1bapKw9leY938`\<@f:IRpe225b`5Q9s3_ygydJtYb^HsRau3PYtn26p"
+565,"lNLPYJB3aLl3yIRXELd\vfnD7v;lMbP{0tdj4M^vxA>pqIJk5w1k2RdU^`TA<@:BS7@u:kmZG^h1Ip517=J@7azxR8G\K;u6n0>3=^9>IAKuXJFsQe5<_0J]Q_4@HZ9Wnb0PfL;1`MpR0bnFyO5=;b\sdlQh0tS?bcUB_;a7v2@fyRMBf7a?I;zNMoIvpv;VT8Ilcpc"
 559,1
 928,0
 593,
@@ -25,39 +25,44 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pDimensions
 pSubsets
 pDelimiter
+pMode
 pDebug
-561,4
+561,5
 2
 2
 2
 1
-590,4
+1
+590,5
 pDimensions,""
 pSubsets,"}Bedrock*"
 pDelimiter,"&"
+pMode,0
 pDebug,0
-637,4
-pDimensions,List of Dimensions Separated by Delimiter (Blank = All Dimensions)
-pSubsets,List of Subsets Separated by Delimiter. Wild-cards Permitted on Subset Names.
-pDelimiter,Delimiter Character
-pDebug,Debug Mode
+637,5
+pDimensions,"List of Dimensions Separated by Delimiter (Blank = All Dimensions)"
+pSubsets,"List of Subsets Separated by Delimiter. Wild-cards Permitted on Subset Names."
+pDelimiter,"Delimiter Character"
+pMode,"<=1 destroy subset 2 delete all elements"
+pDebug,"Debug Mode"
 577,0
 578,0
 579,0
 580,0
 581,0
 582,0
-572,195
+603,0
+572,204
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process deletes public subsets
@@ -101,7 +106,7 @@ cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
 sRandomInt = NumberToString( INT( RAND( ) * 1000 ));
 cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 cDimension = '}Dimensions';
-
+cSubProc = 'Bedrock.Dim.Sub.Delete.SubsetDestroy';
 
 ### Initialise Debug ###
 
@@ -117,6 +122,7 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, 'Parameters: pDimensions : ' | pDimensions );
   AsciiOutput( sDebugFile, '            pSubsets    : ' | pSubsets );
   AsciiOutput( sDebugFile, '            pDelimiter  : ' | pDelimiter );
+  AsciiOutput( sDebugFile, '            pMode      : ' | NumberToString(pMode) );
 
 EndIf;
 
@@ -208,7 +214,11 @@ While( nDimensionDelimIndex <> 0 );
             AsciiOutput( sDebugFile, 'Subset: ' | sSubset | ' OK' );
           EndIf;
           If( pDebug <= 1 );
-            SubsetDestroy( sDimension, sSubset );
+            If( pMode = 2 );
+              SubsetDeleteAllElements( sDimension, sSubset );
+            Else;
+              ExecuteProcess( cSubProc, 'pDimension', sDimension, 'pSubset', sSubset, 'pMode', pMode, 'pDebug', pDebug );
+            EndIf;
           EndIf;
         EndIf;
       Else;
@@ -226,7 +236,11 @@ While( nDimensionDelimIndex <> 0 );
               AsciiOutput( sDebugFile, 'Subset: ' | sSubset | ' OK' );
             EndIf;
             If( pDebug <= 1 );
-              SubsetDestroy( sDimension, sSubset );
+              If( pMode = 2 );
+                SubsetDeleteAllElements( sDimension, sSubset );
+              Else;
+                ExecuteProcess( cSubProc, 'pDimension', sDimension, 'pSubset', sSubset, 'pMode', pMode, 'pDebug', pDebug );
+              EndIf;
             EndIf;
           EndIf;
           sFilename = WildcardFileSearch( sSearch, sFilename );
@@ -263,7 +277,7 @@ End;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -301,6 +315,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

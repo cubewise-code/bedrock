@@ -4,7 +4,7 @@
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-565,"bFavNlpxE]nbe\z_5p81o5Imz[fUEOPteWzuM@a\:pd;7@>:8hujpvCI@MCdL<mN1<^v_bg[^@F12Oc<:[nGIVJ0ur1xVwd\11noUc]qQtq]5qXa\snfZwCo0BxvUUknTA_geb@83KH4ho_S^2mXIP3ZV^3Rcy@Oztn@3Fd\d1ijfF=fmmV72ft3ZKiBr\>3K2@Jh[4`"
+565,"yjxtyEir4f@P1^\ZN6LbHpc5qab@lUnQ47Hv=b@u>TWt24Q9nXoknoO3<8VT7G[?2z0dR7nI4?k7[^pEaD:wtUMWzb\l]IhkDyn>ce[ihr]rJygowHV8Tpl@T<uo@i>z7Q21kZ;7cB`aADT1b`Y4Sc9F_7>U@j0a5Jj?zkQMffF;uyQAp5@0Wu_Urh2o\F7\bJdU4c2b"
 559,1
 928,0
 593,
@@ -53,14 +53,14 @@ pUnwind,1
 pEmptyConsol,0
 pDebug,1
 637,8
-pDimension,Dimension
-pAttribute,Attribute
-pTopNode,Optional: The name of the consolidation top element
-pPrefix,Optional: Prefix before the attribute value
-pSuffix,Optional: Suffix after the attribute value
-pUnwind,Boolean: 1 = True unwind current hierarchy.
-pEmptyConsol,Optional: 1 = Remove empty consoldation from dimension.
-pDebug,pDebug
+pDimension,"Dimension"
+pAttribute,"Attribute"
+pTopNode,"Optional: The name of the consolidation top element"
+pPrefix,"Optional: Prefix before the attribute value"
+pSuffix,"Optional: Suffix after the attribute value"
+pUnwind,"Boolean: 1 = True unwind current hierarchy."
+pEmptyConsol,"Optional: 1 = Remove empty consoldation from dimension."
+pDebug,"pDebug"
 577,6
 vElement
 vAttribute
@@ -100,13 +100,14 @@ VALUE_IS_STRING
 VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
+603,0
 572,222
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.0~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will create a parent rollup attribute for the nominated top node hierarchy
@@ -537,6 +538,13 @@ ENDIF;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,

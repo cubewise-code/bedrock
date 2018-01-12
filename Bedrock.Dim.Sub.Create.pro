@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"Bedrock.Dim.Sub.Create"
 562,"SUBSET"
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"oVXmx<df@9eGBg?a@fBWqs0vnTxPO?WnpnJ>K[SbJexkdyd>^zjC7xWT0pNT8Qn4>baxIz]mVEOMnxN4jsk]4Zg_mBme:oJs1zNWghZE]z9j3G\m:3k[H7y>RiWbbnU`05QQ21?p5VRT=BlER3xkxprjr\iGkDyD=@\A`RvE?<XDbARDoXUhyRPATnuNrYKW5\HsUp5S"
+565,"pI2NjSW>NYhOnZkEaul9eWpt:4`07o?^2nOV[eCTp1HZ_Z\BY6z3UmAwl<ry4c_fbAtsY?8:MP7JSh;IwbwRy\Z@^d73<oM:6=vTj<Y8FVuFE0WWJ<j5_QOMTRqK7:voAtJ9QRKkvZ8ARyOhu;90xrk9ottsq7]64ilEsT=URhaP\dYA5W]?>sONE>HJV?[czFIq`Yoj"
 559,1
 928,0
 593,
@@ -98,7 +98,7 @@ VarType=32ColType=827
 ### Start Prolog ###
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 # This process will create a static subset
@@ -359,7 +359,7 @@ DataSourceDimensionSubset = 'All';
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -430,7 +430,7 @@ EndIf;
 #****End: Generated Statements****
 
 #####################################################################################
-##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.0.2~~##
+##~~Copyright bedrocktm1.org 2011 www.bedrocktm1.org/how-to-licence.php Ver 3.1.0~~##
 #####################################################################################
 
 
@@ -493,6 +493,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,
