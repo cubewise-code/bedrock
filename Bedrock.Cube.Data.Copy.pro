@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"Bedrock.Cube.Data.Copy"
 562,"VIEW"
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"h[@DzOQOa6JIPrN[O7sR9Nvj4HW2LQ@?DHducLp4Jz9J1X4rq=yRKvrNlN]HTQ9yWMpd25SkKQ8XHYTv?YFCb>Q<Cr@gM=H@Rzl\GGnziUrcPg@9;PY_mVDv]XNV<T_Hh;0DCzPjYZox`PgUB<rJOWylqeNsOxFQ2UkTu9l^RcditmsWUM:atGM0fp_hB7UzxdhH0W_Z"
+565,"aal;vrdiMe8nX<\1QF3\qT\8AbI[p8`s\rUtd@L_EYnvokMqZBy6KGT45XLbU0u9]I<w2sMQAk_r;H53l\0YWEU_L1`JJ;odHa4i_zz4KrPM^F3<pizWtMF2mx2Hd<<jfg3?z@6\ydg7J>bViLe8e7LeBwwA2GaWpj117mwWpQ8uXOR8THg6jUo>CppKCfd9:j7hmrhm"
 559,1
 928,0
 593,
@@ -73,7 +73,7 @@ pZeroTarget,"Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
 pZeroSource,"Zero out Source Element AFTER Copy? (Boolean 1=True)"
 pDestroyTempObj,"Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
 pDebug,"Debug Mode"
-577,54
+577,51
 V1
 V2
 V3
@@ -125,10 +125,7 @@ V48
 V49
 V50
 Value
-NVALUE
-SVALUE
-VALUE_IS_STRING
-578,54
+578,51
 2
 2
 2
@@ -180,10 +177,7 @@ VALUE_IS_STRING
 2
 2
 1
-1
-2
-1
-579,54
+579,51
 1
 2
 3
@@ -235,11 +229,7 @@ VALUE_IS_STRING
 49
 50
 51
-0
-0
-0
-580,54
-0
+580,51
 0
 0
 0
@@ -291,12 +281,7 @@ VALUE_IS_STRING
 0
 0
 0
-0
-0
-581,54
-0
-0
-0
+581,51
 0
 0
 0
@@ -401,7 +386,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,349
+572,348
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -417,9 +402,8 @@ VarType=33ColType=827
 
 # Note:
 # - As this TI has a view as a data source it requires the implicit variables NValue, SValue and Value_is_String
-# - To edit this TI without VIZIER either a temp cube with 24 dims is needed as the preview data source or set the data
+# - To edit this TI in Architect a tmp cube with minimum 24 dims is needed as the preview data source or set the data
 #   source to ASCII and manually edit the TI in notepad after saving to add back the required implicit view variables
-
 
 ### Constants ###
 
