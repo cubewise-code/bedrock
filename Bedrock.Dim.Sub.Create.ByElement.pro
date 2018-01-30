@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"Bedrock.Dim.Sub.Create.ByElement"
 562,"NULL"
 586,
 585,
 564,
-565,"mQ4>vOCEsk=;`aZFC[dMOk`7?0>3@H=5pmESeObIVvZXab`^R3T2nj=AB1N\OK3wKO2bSqgiW]Z?Gbru;3eah_lMEQ5:YV6TljLMtNR_ME1Zw]11j;HFS]HfeRTH8vVqNXo<xb<;F7m[X1V?3M39=0^0Dk<JFlo^K`_zfV:z:<p=vjchqQt5HMr5[SuKFGpDWnjVdzRp"
+565,"mgMg]^;]O7WscaME[\CoWqgsIDClv5D>a88FG>uv43@:xYI;Y<Jt@LCseBeXuzT<eLjm0KNQTq=ubjKisS`cUWO1sCHz>1NT`oVyzeOFEv1:f:5u6R[S3KEypz8y6AlcfNDGE4_Pw52U68b:0ieVq4aSF2pZI?VMTxrFg<zR8ZTnnjH15[hH:nenDIB6bnmS>C1CKIpu"
 559,1
 928,0
 593,
@@ -255,19 +255,19 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
            'pDebug', pDebug
           );
 
-          If( pDebug <= 1 );
+          If( pDebug >= 1 );
             AsciiOutput( sDebugFile, 'Consolidation: ' | sElement | ' has been added to the subset.' );
           EndIf;
       ELSE;
         SubsetElementInsert( pDimension, pSubset, sElement, nSubsetIndex );
-        If( pDebug <= 1 );
+        If( pDebug >= 1 );
           AsciiOutput( sDebugFile, 'Element: ' | sElement | ' has been added to the subset.' );
         EndIf;
       ENDIF;
     EndIf;
     nSubsetIndex = nSubsetIndex + 1;
   Else;
-    If( pDebug <= 1 );
+    If( pDebug >= 1 );
       AsciiOutput( sDebugFile, 'Element: ' | sElement | ' does not exist in dimension: ' | pDimension | ', skipping' );
     EndIf;
   EndIf;
@@ -329,6 +329,13 @@ EndIf;
 900,
 901,
 902,
+938,0
+937,
+936,
+935,
+934,
+932,0
+933,0
 903,
 906,
 929,
