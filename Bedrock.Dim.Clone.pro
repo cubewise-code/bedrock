@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"sHmmx_4Hmh2qe0`ZY4\aQ=afX45Y3H>mMawRcSy4ePBr?fqgdhCfipX?>Z6V`f`9Vo2;qS=;j[s>;:EKfxZ0>EV]u7F^y9saBi6GV6@MNOgrmXrqJ?>dlcP[EqP6KcKi6SZJz0=]2Ta91mCR_I<:N4cCnk]S1MlqHxrppnBIXuY[YG`<Rt\ZwUA4Cs1Z5kcVc2SWq8?g"
+565,"wkEEPzjloT=l?5ATh=LK[<1agREieZvUJjpYg]4[tlU0y\@wyizT?I<N^d132`Exdn5FDW\\1vRWkKl9OHBo6GbIl4Ex7;DjWkQ63E0J@I<\WmIjMo9JDch9h>YXXbRiA7RNS8OQ=E?]1>?IwYs?c^>2n[No`TbDbmso:h[z85BOT;STNxrt=bjrZ2Pjt8iUrPsj?@Wu"
 559,1
 928,0
 593,
@@ -266,7 +266,7 @@ EndIf;
 
 
 ### End MetaData ###
-574,48
+574,52
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -297,12 +297,16 @@ If( pDebug <= 1 );
       sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
       If( sAttrType @= 'S' % sAttrType @= 'A' );
         sAttrVal = AttrS( pSourceDim, vElement, sAttrName );
-        If( sAttrVal @<> '' );
-          AttrPutS( sAttrVal, pTargetDim, vElement, sAttrName );
+        If( sAttrVal @<> '' & CellIsUpdateable( '}ElementAttributes_' | pTargetDim, vElement, sAttrName ) = 1 );
+          If( sAttrType @= 'A' );
+            AttrPutS( sAttrVal, pTargetDim, vElement, sAttrName, 1 );
+          Else;
+            AttrPutS( sAttrVal, pTargetDim, vElement, sAttrName );
+          EndIf;
         EndIf;
       Else;
         nAttrVal = AttrN( pSourceDim, vElement, sAttrName );
-        If( nAttrVal <> 0 );
+        If( nAttrVal <> 0 & CellIsUpdateable( '}ElementAttributes_' | pTargetDim, vElement, sAttrName ) = 1 );
           AttrPutN( nAttrVal, pTargetDim, vElement, sAttrName );
         EndIf;
       EndIf;
