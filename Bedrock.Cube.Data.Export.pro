@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"Bedrock.Cube.Data.Export"
 562,"VIEW"
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"lPm\N6@nstbMaAett3cKW3\FA5VeQxyiy>85Lzj?b>v1Qtz]:^rDVpvk4m]fG49h?K7r@ANv<y9AjSPhbSrJZdorSt_o5[?LWAp1@RKL:M5mb:=W@yd17E2IL5N7gT`7`IwM104EOCVLXXH1Q6pWq3BFw6Ty2Iesw2W?1ok]J45_VLhvJU5H@JIJTcbx\?fK=SIXHJ0W"
+565,"j1k\@lwAeFas^I23aMpQ;b@yM2`RsU;slD\Um87ufs4s3tlnaUGiCi][?JJgXGq=>4b;F7C9NM1`@siei9tf1liOHd>Icl<UUzvlpFevAmK6>[krVar@a;_cacKsPNkV2VEe@3by3^[Hn=[=:MrwAJ2?jYbcxAvkx[W]awbrv5G9RskScNJya6PVHX2`A7ikx2U;W8Sd"
 559,1
 928,0
 593,
@@ -89,7 +89,7 @@ pFileName,"Export Filename (If Left Blank Defaults to cube_dim_ele_export.csv)"
 pDelimiter,"AsciiOutput delimiter character"
 pQuote,"AsciiOutput quote character"
 pDebug,"Debug Mode"
-577,104
+577,101
 V1
 V2
 V3
@@ -191,10 +191,7 @@ V98
 V99
 V100
 Value
-NVALUE
-SVALUE
-VALUE_IS_STRING
-578,104
+578,101
 2
 2
 2
@@ -296,10 +293,7 @@ VALUE_IS_STRING
 2
 2
 2
-1
-2
-1
-579,104
+579,101
 1
 2
 3
@@ -401,10 +395,10 @@ VALUE_IS_STRING
 99
 100
 101
+580,101
 0
 0
 0
-580,104
 0
 0
 0
@@ -503,16 +497,7 @@ VALUE_IS_STRING
 0
 0
 0
-0
-0
-0
-0
-0
-0
-581,104
-0
-0
-0
+581,101
 0
 0
 0
@@ -717,7 +702,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,217
+572,216
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -731,9 +716,8 @@ VarType=32ColType=827
 
 # Note:
 # - As this TI has a view as a data source it requires the implicit variables NValue, SValue and Value_is_String
-# - To edit this TI without VIZIER either a temp cube with 27 dims is needed as the preview data source or set the data
+# - To edit this TI in Architect a tmp cube with minimum 24 dims is needed as the preview data source or set the data
 #   source to ASCII and manually edit the TI in notepad after saving to add back the required implicit view variables
-
 
 ### Constants ###
 
