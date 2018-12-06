@@ -1219,11 +1219,11 @@ pDestroyTempObj > 0 );
 
   ## Destroy temporary source view.
   IF(
-  nExistingSourceFlag = 0 );
+  nExistingSourceFlag = 1 );
     nRet = ExecuteProcess('Bedrock.Cube.ViewAndSubsets.Delete',
       'pCube', pCube,
       'pView', cTempViewFrom,
-      'pSubset', cTempViewFrom,
+      'pSubset', cTempSubFrom,
       'pMode', pDestroyTempObj,
       'pDebug', pDebug);
   ENDIF;
