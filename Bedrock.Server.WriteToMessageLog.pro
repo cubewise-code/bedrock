@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rNYM_D]hRFzPKlXMh1ag]R@@qopMagDC>\nH<5xp>k]48JmlpcCCxL^2nf9n0O_3bFBMiD7eSasa>iNWD^GHHh;@wX;U:tz_WegpgKPQx[@kVMo<OE`HxErUZv0\o`9FNtmGlO56ReVV]@J0v7X<SYv5MK5O;4K8>@2;s<I9OS^<P9FTfLC]A;gYHmrTagt6K8VAr:pv"
+565,"kE^dIe5d0F]ap[_bQ:^@]uOn0zsglIpPClMepyssYlmS07[rHESgrGRGkvl:1D1Lu1\ohM[YP=2rr[b@09A3UH\]6PxPBhHyY:uqwuA\;\zJ?3U?_=oZSp`0Slv7i9\uWmKAK7fRPUqEtctK0;8>U\5[nZLLPLnLmexMSbI51c>c96cYTwazyUy:TDG`oJA4XyiM1R6A"
 559,1
 928,0
 593,
@@ -39,7 +39,7 @@ pType,""
 pMessage,""
 637,3
 pDebug,"Debug Mode (String)"
-pType,"pType (String) INFO, DEBUG or ERROR"
+pType,"pType (String) DEBUG, INFO, WARN, ERROR, FATAL"
 pMessage,"pMessage (String)"
 577,0
 578,0
@@ -93,7 +93,7 @@ sErr = '';
 # ValidateType
 
 sType = Upper ( pType );
-If ( sType @<> 'ERROR' & sType @<> 'DEBUG' & sType @<> 'INFO' );
+If ( sType @<> 'ERROR' & sType @<> 'DEBUG' & sType @<> 'INFO' & sType @<> 'WARN' & sType @<> 'FATAL'  );
   nErr = nErr + 1;
   sErr = 'Invalid Type: ' | pType | cLF;
   If( pDebug >= 1 );
