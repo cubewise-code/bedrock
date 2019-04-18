@@ -14,6 +14,14 @@ Trialled and implemented for over many years in numerous highly complex TM1 site
 * Reduction in Developer/Administration training.
 * Reduction in cost of Administrating TM1.
 
+## Minimum TM1 / IBM Planning Analytics Version
+
+The latest release **bedrock v4.0** is a complete reebuild of the bedrock library for Planning Analytics 2.x (TM1 Server 11.x). Due to incorporation of support for new Planning Analytics features (alternate hierarchies, temporary objects, processes execution on independent threads) please note that the _**minimum supported version is PA 2.0.6 (TM1 Server 11.4)**_.
+
+### Where is Bedrock v3?
+
+If you are still using TM1 Server 10.2.2 the Bedrock 3 processes are still available. You can find then in the [v3-archive branch](https://github.com/cubewise-code/bedrock/tree/v3-archive).
+
 ## Why Bedrock?
 
 Given that there is a large uptake of **TM1** globally there exists an education gap that is ever widening. With this hunger for standards and experience, **Bedrock** is not just a home for all these questions on how TM1 works from the ground up or what the best implementation methodologies are. Uniquely, it is a quick-start collection of assets to dramatically increase efficiency and effectiveness of your **TM1** system.
@@ -46,6 +54,7 @@ End Users who never thought they could develop now find TM1 simpler and clearer 
 
 The first place for further information is the [code.cubewise.com/bedrock](https://code.cubewise.com/bedrock) website. Key resources:
 
+* [Bedrock Wiki](https://github.com/cubewise-code/bedrock/wiki). Each process has a full documentation of what it does, the intended purpose, needed parameters, and dependencies within the library
 * [Bedrock Modular Approach White Paper](https://code.cubewise.com/s/White_Paper_Modular_Approach.pdf)
 * [Best Practice Turbo Integrator](https://code.cubewise.com/s/White_Paper_Best_Practice_Turbo_Integrator.pdf)
 * [Best Practice Cube Design](https://code.cubewise.com/s/White_Paper_Best_Practice_Cube_Design.pdf)
