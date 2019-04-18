@@ -61,7 +61,8 @@ End Users who never thought they could develop now find TM1 simpler and clearer 
 The first place for further information is the [code.cubewise.com/bedrock](https://code.cubewise.com/bedrock) website. Key resources:
 
 * [Bedrock Wiki](https://github.com/cubewise-code/bedrock/wiki). Each process has a full documentation of what it does, the intended purpose, needed parameters, and dependencies within the library
-* [Bedrock Modular Approach White Paper](https://code.cubewise.com/s/White_Paper_Modular_Approach.pdf)
+**White Papers**:
+* [Bedrock Modular Approach](https://code.cubewise.com/s/White_Paper_Modular_Approach.pdf)
 * [Best Practice Turbo Integrator](https://code.cubewise.com/s/White_Paper_Best_Practice_Turbo_Integrator.pdf)
 * [Best Practice Cube Design](https://code.cubewise.com/s/White_Paper_Best_Practice_Cube_Design.pdf)
 * [Best Practice Rules](https://code.cubewise.com/s/White_Paper_Best_Practice_Rules.pdf)
