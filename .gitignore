@@ -1,0 +1,25 @@
+# TM1 binary files
+*.cub
+*.dim
+
+# TM1 metadata
+*.sub
+*.vue
+*.xbv
+*.blob
+*.blb
+
+# working files which shouldn't be in the data directory
+*.csv
+*.xls
+*.xlsx
+*.xlsm
+*.pdf
+*.doc
+*.docx
+
+# other text files
+*.rux
+*.log
+*.debug
+*.txt
