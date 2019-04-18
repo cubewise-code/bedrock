@@ -58,7 +58,8 @@ End Users who never thought they could develop now find TM1 simpler and clearer 
 
 ## Where can I get more information?
 
-The first place for further information is the [code.cubewise.com/bedrock](https://code.cubewise.com/bedrock) website. Key resources:
+The first place for further information is the [code.cubewise.com/bedrock](https://code.cubewise.com/bedrock) website. 
+**Key resources**:
 
 * [Bedrock Wiki](https://github.com/cubewise-code/bedrock/wiki). Each process has a full documentation of what it does, the intended purpose, needed parameters, and dependencies within the library.
 
