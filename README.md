@@ -26,7 +26,7 @@ For bedrock v4 the TI process _source code_ has been split into 2 folders:
 
 ### Where is Bedrock v3?
 
-If you are still using TM1 Server 10.2.2 the Bedrock 3 processes are still available. You can find then in the [v3-archive branch](https://github.com/cubewise-code/bedrock/tree/v3-archive).
+If you are still using TM1 Server 10.2.2 the Bedrock 3 processes are still available. You can find them in the [v3-archive branch](https://github.com/cubewise-code/bedrock/tree/v3-archive).
 
 ## Why Bedrock?
 
@@ -61,7 +61,6 @@ End Users who never thought they could develop now find TM1 simpler and clearer 
 The first place for further information is the [code.cubewise.com/bedrock](https://code.cubewise.com/bedrock) website. 
 
 **Key resources**:
-
 * [Bedrock Wiki](https://github.com/cubewise-code/bedrock/wiki). Each process has a full documentation of what it does, the intended purpose, needed parameters, and dependencies within the library.
 
 **White Papers**:
