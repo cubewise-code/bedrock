@@ -10,7 +10,7 @@ Trialled and implemented for over many years in numerous highly complex TM1 site
 * 30-50% reduction in TI coding due to a new functional method employed. 
 * Increased scalability in terms of business logic complexity, data sizes & concurrency.
 * Dramatically faster proto-typing phase. 
-* Increased auditing & testing via a 3-mode standardised logging system.
+* Increased auditing & testing via standardised logging system.
 * Reduction in Developer/Administration training.
 * Reduction in cost of Administrating TM1.
 
