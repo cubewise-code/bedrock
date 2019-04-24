@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wkH^Mivn3[aOqU9:PwpLh_]a3hNjb?<^5zC2[;masKecQMzrbZ:ecyXLYqQIxyYrfb5`ltwx^6XNQM?a]5QVApy5KIUZl<^Fph\EMGWwUJlLi[wm@tRKj\EwJK=UuH?awM3MCeKT54[^GRC4XXxI\r]UPOxMUBl`]gTZE@1@MCn<okIZSgrc2AnRqnWmEpqv1j\=IgYP"
+565,"uVmL`;9tpBQ0w;QmATOV9akV_3RL=cYQhmOZrBU?@iUlI<4tt1M;qk43wW4CQM?]0=t6h@k>>ci\`69I=7:B]<LzbfYZaw>=9Fqgl[?H=uH;IGmJQIGVH];HGs<15lB_7g35[ZoW;l^JYJP7iPbEvjx?Grrkuc7C_]vEG^^A4y^m`:l9jW1hpJXUreaVH>mD47O[`=_D"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pDelim,"Optional: delimiter character for element list (required if pEle paramet
 581,0
 582,0
 603,0
-572,247
+572,240
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -111,11 +111,9 @@ If( Trim( pDim ) @= '' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-# Validate Element filter
-If( Trim( pEle ) @= '' );
-    nErrors = 1;
-    sMessage = 'No element filter specified. User * to include all elements';
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 # Validate Hierarchy
@@ -125,11 +123,6 @@ ElseIf(pHier @= 'Leaves' );
     nErrors = 1;
     sMessage = 'Invalid  Hierarchy: ' | pDim |':'|pHier;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
-
-# If blank delimiter specified then convert to default
-If( pDelim @= '' );
-    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing
