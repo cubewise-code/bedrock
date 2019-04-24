@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xb80s=woWokCOc`BY@2<_iu<a1pLbT`93==O0]GcWhTla[ZMlIwnP3X5UCWkEmT1rURu]xCSg0v<zGlc:QM;Ua0SE2okng=VSZWIhLuCytHnigaGbat`Nu4`I90TJ2?60@JYkX4iG]<4xr3fWfwv0pm0xrmA:n1>r5\26Dau1u3JW9_E8PvnPT?cpOBMA8vaz9fS\lZM"
+565,"pZh\Kwct0n0C5Vc0aC4[Lh]59738L01NB9^<@8AidU?MNk:Cjn`V0?d\C1Gj=[SZBKdtUjdNK^hsIs8hq5[F0G`qMvlYSj;yAmXdnIW=AbrXtKo?qtYhecCCb7qsiIW`CWbCzCF`2PGpv?xGw3>]p9PAq9r<jhxO2tY`iz^;KW0^<G=\LfJ3P;^TKj4^H\yiExr9`6wH"
 559,1
 928,0
 593,
@@ -25,34 +25,30 @@
 569,0
 592,0
 599,1000
-560,6
+560,5
 pLogOutput
 pDim
 pHier
 pEle
 pDelim
-pTemp
-561,6
+561,5
 1
 2
 2
 2
 2
-1
-590,6
+590,5
 pLogOutput,0
 pDim,""
 pHier,""
 pEle,""
 pDelim,"&"
-pTemp,1
-637,6
+637,5
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: dimension name"
 pHier,"Optional: hierarchy name (if blank then same named hierarchy as dimension is assumed)"
 pEle,"Optional: filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used)"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pDelim,"Optional: delimiter character for element list (default to '&' if blank)"
 577,0
 578,0
 579,0
@@ -60,7 +56,7 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,179
+572,162
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -150,28 +146,14 @@ If( HierarchyExists( pDim, sHier ) = 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-## Validate Delimiter if elements are specified
-If( pEle @<>'' & pDelim @= '' );
-    nErrors = 1;
-    sMessage = 'If an element is specified, then delimiter needs to be populated as well.';
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
-
-## Validate pTemp
-IF( pTemp <> 0 & pTemp <> 1 );
-    nErrors = 1;
-    sMessage = 'Wrong parameter pTemp value (only 0 or 1 accepted).';
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
-  
-### Check for errors before continuing
-If( nErrors > 0 );
-    ProcessBreak;
-EndIf;
-
 # If blank delimiter specified then convert to default
 If( pDelim @= '' );
     pDelim = '&';
+EndIf;
+
+### Check for errors before continuing
+If( nErrors > 0 );
+    ProcessBreak;
 EndIf;
 
 sEles = pEle;
@@ -189,17 +171,14 @@ While( nDelimiterIndex <> 0 );
     # Check if a wildcard has been used to specify the Element name.
     # If it hasn't then just delete the Element if it exists
     If( sEle @= '*' );
-        nElementCount = Dimsiz(pDim|':'|sHier);
-        nElementIndex = 1;
-        While( nElementIndex <= nElementCount );
+        nElementIndex = Dimsiz(pDim|':'|sHier);
+        While( nElementIndex >= 1 );
             sEle = ElementName( pDim, sHier, nElementIndex );
             sElType = ElementType( pDim, sHier, sEle );
             If( sElType @= 'C' );
                 HierarchyElementDelete( pDim, sHier,sEle );
-                nElementCount = nElementCount - 1;
-                nElementIndex = nElementIndex - 1;
             EndIf;
-            nElementIndex = nElementIndex + 1;
+            nElementIndex = nElementIndex - 1;
         End;
     ElseIf( Scan( '*', sEle ) = 0);
         If( HierarchyElementExists( pDim,sHier, sEle ) = 1 );
@@ -224,7 +203,7 @@ While( nDelimiterIndex <> 0 );
         	'pSub', cTempSub,
         	'pMDXExpr', sMdx,
         	'pConvertToStatic', 1,
-        	'pTemp', pTemp
+        	'pTemp', 1
         );
         nCount = HierarchySubsetGetSize(pDim, sHier, cTempSub);
         While( nCount >= 1 );
@@ -251,7 +230,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,36
+575,24
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -259,18 +238,6 @@ End;
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
-
-### Remove any temporary objects
-If( HierarchySubsetExists( pDim, sHier, cTempSub ) = 1 & pTemp = 0 );
-    ExecuteProcess( '}bedrock.hier.sub.delete',
-      'pLogOutput', pLogOutput,
-    	'pDim', pDim,
-    	'pHier', sHier,
-    	'pSub', cTempSub,
-    	'pDelim', pDelim,
-    	'pMode', 0
-    );
-EndIf;
 
 ### Return code & final error message handling
 If( nErrors > 0 );
