@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"d[@:aJ]wLWFLbMxjwSi:9DJV<7P3f5S<VZB9Q4>q=s6zbVZm;VL8B5i<uwv1B7S[mq`Y2yfS=jK<mW=e^zUnWELuUSRBR[g^lYCzCCIy_wuC6Tcln1lZ4KX`zZw?dzpdnWF9n_3FwU7@KZTbKDl0e>i_7oATvAEau5rCdz\nbOzfflWnn`_hL]^;gDMZJ;P`1r7K<c\e"
+565,"wkH^Mivn3[aOqU9:PwpLh_]a3hNjb?<^5zC2[;masKecQMzrbZ:ecyXLYqQIxyYrfb5`ltwx^6XNQM?a]5QVApy5KIUZl<^Fph\EMGWwUJlLi[wm@tRKj\EwJK=UuH?awM3MCeKT54[^GRC4XXxI\r]UPOxMUBl`]gTZE@1@MCn<okIZSgrc2AnRqnWmEpqv1j\=IgYP"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pDelim,"Optional: delimiter character for element list (required if pEle paramet
 581,0
 582,0
 603,0
-572,250
+572,247
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -69,12 +69,9 @@ pDelim,"Optional: delimiter character for element list (required if pEle paramet
 # Description:
 # This process will delete specified or all elements from a dimension Hierarchy. Elements might be
 # specified as a delimited list of elements. Each member in the list might be specified exactly or
-# by a wildcard pattern. Wildcards `*` and `?` are accepted.
-
-# Note:
-# Valid dimension name (pDim) otherwise the process will abort.
-
-# Caution: When pEle is empty, __all__ elements in pHier will be deleted!
+# by a wildcard pattern. Wildcards "\*" and "?" are accepted.
+#
+# Caution: When pEle is set to \*, __all__ elements in pHier will be deleted!
 #EndRegion @DOC
 
 ##Global Variables

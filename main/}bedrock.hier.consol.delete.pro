@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"pZh\Kwct0n0C5Vc0aC4[Lh]59738L01NB9^<@8AidU?MNk:Cjn`V0?d\C1Gj=[SZBKdtUjdNK^hsIs8hq5[F0G`qMvlYSj;yAmXdnIW=AbrXtKo?qtYhecCCb7qsiIW`CWbCzCF`2PGpv?xGw3>]p9PAq9r<jhxO2tY`iz^;KW0^<G=\LfJ3P;^TKj4^H\yiExr9`6wH"
+565,"aaprH8_p<^:Kc@[Lm^_eDe9T^zZt0mv1x>[jZORU^v:Pag4FCnS1NYW7@ulZeo@AS5[:1pB\c@f1;2zj;G4l^t;sO0uySjAStKqMr9h]s_oo<?hXpBKto4fA;v1NWKTp8f5IBT8J0CgOvbWnV]MhHuPf?tx`jJPiov667fU<wKC__>q6W7oIsm0Y]L4Qb4`G<lrESf^X"
 559,1
 928,0
 593,
@@ -75,7 +75,7 @@ pDelim,"Optional: delimiter character for element list (default to '&' if blank)
 # Note:
 # Valid dimension name (pDim) is mandatory otherwise the process will abort. Control dimensions are excluded.
 # The hierarchy (pHier) will default to pDim if not specified, otherwise it must be valid else the process will abort.
-# **ALL** consoldidated items in hierarchy will be deleted if consolidated item (pEle) is NOT specified, otherwise it needs to contain valid c-level item(s) else it will abort. 
+# **ALL** consoldidated items in hierarchy will be deleted if consolidated item (pEle) is specified as \*, otherwise it needs to contain valid c-level item(s). 
 # Caution: Target hierarchy (pHier) cannot be `Leaves`.
 #EndRegion @DOC
 
