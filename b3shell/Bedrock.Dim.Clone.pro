@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"dD`caxL:xuu\;PLzGB2E0AqV`=G\bwSM4<5=JWu`qczWI02XS5I:z<:[5x8;=FO>=^:_xiKJR7bAlxJdBh`Av016niLIXEB5vu0Do?GtWUg78xIUGkcVz:W7F4hpo2aIQQmMzdOgX]AgrzpB6KFg64]8ceMVBw7:FLg^eRqO^yMT94UHQ_4DBQTA:lg@DhR@NzbISV?;"
 559,1
 928,0
 593,
@@ -97,7 +97,7 @@ nRet = EXECUTEPROCESS('}bedrock.dim.clone',
   'pLogOutput', pDebug,
   'pSrcDim', pSourceDim,
   'pTgtDim', pTargetDim,
-  'pHier', 1,
+  'pHier', '*',
   'pAttr', pAttr,
   'pUnwind', pUnwind
   );
