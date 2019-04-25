@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"j`JbSg;ulTa=V8CsG=wmWc1K1_pIi=^E1w;dw\MeEHQOW0sMEEd<NiDO2?eDszTP7UErbqUTFmLu?cE97jQA8EsM`B1Vt`XlPAs`t?k5gF=>ky6rN`nsJLCXL<iCzQU>;?\SpxNzB<_]1O[5wxDaIQGO;_iheWK?t@A@6WkSOq[@DcKn2SD[EQi^nPL76;mUNJuT1@x>"
+565,"h>bmv^pGaaWq7;dG=vwN\Tt:x7B1HVXk1^doR>3ZQ13s?yv2Y<F:g[K[zpk]l_d82qny^j1yzEh@pq^a>j<HUs;nFZ3x@A]f4oA90?PBmLc<\5GcViZuG2\i;ou:KGhIrU3tatGKVos;7_RTiYwXeXNUymW5u@]NTzplx3yNks2smJymNE8kvF<NH5Yvm>:^PsS8Hpr?"
 559,1
 928,0
 593,
@@ -60,11 +60,11 @@ pLogOutput,0
 pDim,""
 pHier,""
 pSub,""
-pConsol,""
+pConsol,"*"
 pAttr,""
 pAttrValue,""
 pLevelFrom,0
-pLevelTo,20
+pLevelTo,999
 pExclusions,""
 pDelim,"&"
 pAddToSubset,0
@@ -75,7 +75,7 @@ pLogOutput,"Optional: write parameters and action summary to server message log 
 pDim,"Required: Dimension name"
 pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"Required: Subset name"
-pConsol,"Optional: Elements within Consolidated Element (Blank Equals All)"
+pConsol,"Optional: Elements within Consolidated Element (Blank or * Equals All)"
 pAttr,"Optional: Attribute (Blank Equals All)"
 pAttrValue,"Optional: Attribute Value"
 pLevelFrom,"Optional: From Element Level"
@@ -197,7 +197,7 @@ EndIf;
 
 ## Validate consolidation
 pConsol = Trim( pConsol );
-If( pConsol @<> '' );
+If( pConsol @<> '' & pConsol @<> '*' );
     If( ElementIndex ( pDim, sHier, pConsol ) = 0 );
         nErrors = 1;
         sMessage = 'The ' | pConsol | ' consolidation does not exist in the '| pDim |' dimension:Hierarchy ' | pDim |':'| sHier;
@@ -328,7 +328,7 @@ EndIf;
 ### Add elements to subset ###
 
 ## Check that element is a descendant of specified consolidation
-If( pConsol @<> '' );
+If( pConsol @<> '' & pConsol @<> '*' );
   If(ElementIsAncestor(pDim, pHier, pConsol, vEle) = 0 & vEle @<> pConsol );
     ItemSkip;
   EndIf;
