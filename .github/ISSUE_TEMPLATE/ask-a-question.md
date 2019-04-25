@@ -2,7 +2,7 @@
 name: Ask a question
 about: Use this template for usage questions
 title: ''
-labels: ''
+labels: question
 assignees: ''
 
 ---
