@@ -23,8 +23,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Version**
- - OS: [e.g. iOS]
-  - TM1 Server Version [e.g. 11.4]
+ - OS: [e.g. Windows Server 2106]
+  - TM1 Server Version: [e.g. 11.4]
 
 **Additional context**
 Add any other context about the problem here.

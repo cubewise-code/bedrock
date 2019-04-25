@@ -16,8 +16,8 @@ Didn't get the expected result? Describe:
 2. A clear and concise description of what you are trying to do.
 
 **Version**
-OS: e.g. Windows Server 2106
-TM1 Version: e.g. 11.4
+- OS: [e.g. Windows Server 2106]
+- TM1 Server Version: [e.g. 11.4]
 
 **Additional context**
 Add any other context or screenshots about the feature request here.
