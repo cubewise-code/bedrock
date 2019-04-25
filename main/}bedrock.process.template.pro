@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"jmJ6<DL0k1a32N<nG]ZGrUi4cd?Um5@K_YJzJpEMojXmofTeOh2^kYsIK?fIaf[RWybpazxpHYsbeJ1A;w?b`>R@G>75ICDXyt91:nP=3Gk69FCY9zu^aXs^2>nFT_I4>tqR:L87ALHLc^SXxu2>Xas1]t:fYv:GnBiO<b8juDL4P7stbz_3pXke3;RBGjA60UeBdH=h"
+565,"hZ<PqG7paJ39f:u3QGiv`IE0?fiWYTEQAPEJDqh_?seV?QaDnU2f\kR7=ph1]X`9UT54frO3OM@7vQ0RnzJD;80bV2HeJ@u9_hwyvB0WCm8HS3iKoPwqmfOo_L@VPDwcUcF4XgVjqz>7Zs5\n2^2nTL_IfBhBa>ZAllV=nINJ:c`:\Fc3EP:Dz8\yCEmFW5FI6FE1SAv"
 559,1
 928,0
 593,
@@ -73,7 +73,7 @@ pTemp,"Use temporary objects"
 ################################################################################################# 
 #Region Process Declarations
 ### Process Parameters
-# a short description of what the process does goes here, e.g. "copied data from cube A to cube B". This will be written to the message log if pLogOutput=1
+# a short description of what the process does goes here in cAction variable, e.g. "copied data from cube A to cube B". This will be written to the message log if pLogOutput=1
 cAction             = 'ran with no action';
 cParamArray         = '';
 # to use the parameter array remove the line above and uncomment the line below, adding the needed parameters in the provided format
