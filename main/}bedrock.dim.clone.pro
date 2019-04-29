@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"gj[wEvWa1e3<xG2Rnlo;t@r4FOr8DRJ5G8qOKmgtb=xc<;dOb@0HpOtV:;rzFk6LKy5fWAf2`N;f\OQ@^UxD@]Od2Pmi7eJe;\XT=DteO_Wc`NPJ^@0B0S_i^7fpGeRgQM1e7TqGui^ixbYpwOpHi=uIiymV7^dmOz8`u\r6GU1gHz[hR=rQ?^4Lshc8eKS8ASWTYhru"
+565,"iS\OJLZOSa6HGQFNDEOa^`<fWn54e?3w=>gx]6<n=UdzY6k9d<2?MWvpuTu8vUynS<Zwe4O?6AP`C\dsa6xQzd6eejGuc986XY[tIlMZzY7=UQDkSgj^NpZgFh>1a8[mhPf`a`l76384WvtCB7?2db^DrzZ8A3NNl19e=`=p>1ac9ncOkOYo]3cpf;g6]LZUX1HQbHf1"
 559,1
 928,0
 593,
@@ -225,7 +225,7 @@ EndIf;
 
 
 ### End Prolog ###
-573,34
+573,30
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -241,12 +241,10 @@ If( nErrors <> 0 );
     ProcessBreak;
 EndIf;
 
-
-
 ### Add Elements to target dimension ###
-sElType = DType( pSrcDim, vEle );
 
-IF(   sElType @= 'C' & ElCompN( pSrcDim, vEle ) > 0 );
+sElType = DType( pSrcDim, vEle );
+IF( sElType @= 'C' & ElCompN( pSrcDim, vEle ) > 0 );
     nChildren = ElCompN( pSrcDim, vEle );
     nCount = 1;
     While( nCount <= nChildren );
@@ -257,10 +255,8 @@ IF(   sElType @= 'C' & ElCompN( pSrcDim, vEle ) > 0 );
     End;
 EndIf;
 
-
-
 ### End MetaData ###
-574,45
+574,47
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -276,34 +272,36 @@ If( nErrors <> 0 );
     ProcessBreak;
 EndIf;
 
-
 ### Replicate Attributes ###
-
 # Note: DTYPE on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
+
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 
     nCount = 1;
     While( nCount <= nNumAttrs );
-      sAttrName = DimNm( sAttrDim, nCount );
-      sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
-      If( sAttrType @= 'S' % sAttrType @= 'A' );
-        sAttrVal = AttrS( pSrcDim, vEle, sAttrName );
-        If( sAttrVal @<> '' );
-          AttrPutS( sAttrVal, pTgtDim, vEle, sAttrName, 1 );
+        sAttrName = DimNm( sAttrDim, nCount );
+        sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
+        If( CellIsUpdateable( sAttrDim, vEle, sAttrName ) = 1 );
+            If( sAttrType @= 'S' % sAttrType @= 'A' );
+                sAttrVal = AttrS( pSrcDim, vEle, sAttrName );
+                If( sAttrVal @<> '' );
+                    If( sAttrType @= 'A' );
+                        AttrPutS( sAttrVal, pTgtDim, vEle, sAttrName, 1 );
+                    Else;
+                        AttrPutS( sAttrVal, pTgtDim, vEle, sAttrName );
+                    EndIf;
+                EndIf;
+            Else;
+                nAttrVal = AttrN( pSrcDim, vEle, sAttrName );
+                If( nAttrVal <> 0 );
+                    AttrPutN( nAttrVal, pTgtDim, vEle, sAttrName );
+                EndIf;
+            EndIf;
         EndIf;
-      Else;
-        nAttrVal = AttrN( pSrcDim, vEle, sAttrName );
-        If( nAttrVal <> 0 );
-          AttrPutN( nAttrVal, pTgtDim, vEle, sAttrName );
-        EndIf;
-      EndIf;
-      nCount = nCount + 1;
+        nCount = nCount + 1;
     End;
 
 EndIf;
-
-
-
 
 ### End Data ###
 575,204

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hZ<PqG7paJ39f:u3QGiv`IE0?fiWYTEQAPEJDqh_?seV?QaDnU2f\kR7=ph1]X`9UT54frO3OM@7vQ0RnzJD;80bV2HeJ@u9_hwyvB0WCm8HS3iKoPwqmfOo_L@VPDwcUcF4XgVjqz>7Zs5\n2^2nTL_IfBhBa>ZAllV=nINJ:c`:\Fc3EP:Dz8\yCEmFW5FI6FE1SAv"
+565,"h4GD6mTca?VQOIsANsE=8`k[EIARPBQL@wEZ;[\dyVLyBlKWsEFoRApFGGW^n4TcIigTj0`uaRO5e7zVUo:?f@ZEDEzzI>JcJDnVN5EDC^?L43RkRCyOw<px4Wrh5;ftUOMk=_p`?PAGmhXZKwV_P\H5hQqOnOop[IwUtKY6C9PASRYf@UU?A;e_paY\cF[VHcxtEZcf"
 559,1
 928,0
 593,
@@ -32,11 +32,11 @@ pTemp
 1
 1
 590,2
-pLogOutput,1
+pLogOutput,0
 pTemp,1
 637,2
 pLogOutput,"Write status messages to tm1server.log file?"
-pTemp,"Use temporary objects"
+pTemp,"Use temporary objects for views & subsets?"
 577,0
 578,0
 579,0

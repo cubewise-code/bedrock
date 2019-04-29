@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hxTmsBYezJnWD4a`ZkfWu1w=0>XGC3;vbP0ZV^L6YkXccXeMYtOT>oACuTi>Od=Um>6}VH?mtf_AHTQneXhkAvQdMvbC]:NApeTrAe?kRg]b7ztuYUE\:7UKL=lfYgt`=8PAsu7p=KtFk>N1G<]WVUHGq<YQe^kGgiDt7vRQ<yU9f8H?To_AVOnW5iz6J\fGYwMtWPAShxTmsBYetJnWD4a`ZkfWu1w=0>XGC3;6hP0ZV^L6YkXccXhMYtOT>oACu$O=OdmRm>6]QH?mtfoMH4TneXhkAvQdMvrB]:NApeTBEe?kRg]b7zD4UUE\:7UKL=lfIzq`=hVa}u7p=Ktff>NQE<]wUUHGq<YQe^kGgitu7v2]<yU9&;H?To_AV_`W5iz6J\jGSwMtWPAS"
+565,"tDD90YORDbwTR4z5]fRIzEqmcQdE6i`uBE7<Fv0;R1]upZuhH7K866ajpZi>4o4uOYXr6SSpEyY1;X1kOGET3RB6<?a3FutMruA{QaPi8STN76uu9v<VahD`D?9i_gd:H1pLctjN:O9Ck\u3GLOUvQ>0=>hcsjhcMaBt]v]QIhgziX>BDo@aAE^m>hbuX\FMyLijDbXNtDD90YORDbwTR4z5]fRItEqmcQdE6i`5HE7<Fv0;R1]upZxhH7K866ajp*_74odrOYXR1SSpEyi=;84kOGET3RB6<?q2FutMruAkPaPi8STN76E45v<VahD`D?9iO]k:HavlmtjN:O9cf\ucILOUuQ>0=>hcsjhcMaru]v=]Ihgz)[>BDo@aAUPm>hbuX\JMsLijDbXN"
 559,1
 928,0
 593,
@@ -48,7 +48,7 @@ pDim,"Required: Map of dimensions to include in cell security as a array of 1:0 
 581,0
 582,0
 603,0
-572,117
+572,119
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -59,15 +59,17 @@ pDim,"Required: Map of dimensions to include in cell security as a array of 1:0 
 
 #Region @DOC
 # Description:
-# This process will create a cell security cube for the specified cube for the specified list of dimensions.
+# This process will create a cell security cube for the specified cube for the specified list of dimensions 
+# using the TI function _CellSecurityCubeCreate_. The benefit of this process is not needing to write a custom
+# process each time in order to create a cell security cube.
 
 # Use case: Intended for development.
-# 1/ Set up initial security.
+# 1/ Set up cell security cubes
 
 # Note:
-# Naturally, a valid cube (pCube) is mandatory otherwise the process will abort.
-# If cell security has already been set up the TI will abort.
-# The pDim parameter must map ALL the dimensions in order in the cube with a 0 or 1.
+# * Naturally, a valid cube (pCube) is mandatory otherwise the process will abort.
+# * If cell security has already been set up the TI will abort.
+# * The pDim parameter must map _ALL_ the dimensions in order in the cube with a 0 or 1.
 #EndRegion @DOC
 
 ##Global Variables
