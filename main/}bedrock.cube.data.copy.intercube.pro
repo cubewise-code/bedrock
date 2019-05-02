@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"wOw2\e4fUsmnOThUK;WHtt2aAJy5R2n5Sdk1tNA?^cuUyXc@edg:4bkyY]CJIjgz]7WEMGUmD6VY<4?JpsI=:U7rZgv]=@nYu<8eUn?@VkBxJgT2[UG\evEb]A]ePR:eVc[CGLfY9`InJnB;c_>Zj>?bSkVBp?`hcAXvQo9UzQQga2Xl^MlZ6JD^^^SEJaOeRCVmid;4"
+565,"pQ<jcT=sNGKi2=Z@agBWGhpC5<wLF^N7SW@q1C@FC9D:K9AS^OUg4qU[;=AFMU7Y`ctzP?L<60OF6tMDHTqZaf[^t_z?a<2F6@^XF0YVK^e_Xk98w`Y1@?\ZKrJI`TkVYZWMQ4S[MUwrtndMu]bmc_Al;sJ4=d\tTXM4`3AVe_C[l4`p;Gc_P@Tg]_6a<qpdDWsX=iga"
 559,1
 928,0
 593,
@@ -282,7 +282,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1070
+572,1071
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -557,6 +557,7 @@ sTgtDimString = '^^'|sDim1|'^^'|sDim2|'^^'|sDim3|'^^'|sDim4|'^^'|sDim5|'^^'|sDim
                     |sDim21|'^^'|sDim22|'^^'|sDim23|'^^'|sDim24|'^^'|sDim25|'^^'|sDim26|'^^'|sDim27|'^^';
 
 ### We have to remove spaces from the search string before going to include the string in searching loop
+sTgtDimString = UPPER( sTgtDimString );
 nSPIndex = SCAN( ' ', sTgtDimString );
 While ( nSPIndex <> 0);
   sTgtDimString = DELET( sTgtDimString, nSPIndex, 1 );
@@ -1099,7 +1100,7 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         # Found a dimension!
-        sDimension = sWord;
+        sDimension = UPPER( sWord );
         nDimInTgt=0;
         # See if the dimension is in the target cube
         IF(scan('^^'|sDimension|'^^', sTgtDimString)>0);
