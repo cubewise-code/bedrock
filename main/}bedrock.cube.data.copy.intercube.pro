@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"mtPmsDiG<`pB`aFo89XrdpvZ_;AVz3NyuVJt:JPfA3_QxBbhiYQuRg3f0i=AtAQQ29LX9iEL>IVxCE<m8mzGQ6cGw2Rjt@ciP;h@HWh?Q<p;[[J_bytC:Os5yM>ANZsjb:iX:;`r\j4MlLa4>@5JL7KO58`:CzZ?h8zr4y2BpLXeuHq6XHsMn]tVssrf=QTOK]fQJADz"
+565,"pQ<jcT=sNGKi2=Z@agBWGhpC5<wLF^N7SW@q1C@FC9D:K9AS^OUg4qU[;=AFMU7Y`ctzP?L<60OF6tMDHTqZaf[^t_z?a<2F6@^XF0YVK^e_Xk98w`Y1@?\ZKrJI`TkVYZWMQ4S[MUwrtndMu]bmc_Al;sJ4=d\tTXM4`3AVe_C[l4`p;Gc_P@Tg]_6a<qpdDWsX=iga"
 559,1
 928,0
 593,
@@ -282,7 +282,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1063
+572,1071
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -555,6 +555,14 @@ sDim27 = TabDim( pTgtCube, 27 );
 sTgtDimString = '^^'|sDim1|'^^'|sDim2|'^^'|sDim3|'^^'|sDim4|'^^'|sDim5|'^^'|sDim6|'^^'|sDim7|'^^'|sDim8|'^^'|sDim9|'^^'|sDim10|'^^'
                     |sDim11|'^^'|sDim12|'^^'|sDim13|'^^'|sDim14|'^^'|sDim15|'^^'|sDim16|'^^'|sDim17|'^^'|sDim18|'^^'|sDim19|'^^'|sDim20|'^^'
                     |sDim21|'^^'|sDim22|'^^'|sDim23|'^^'|sDim24|'^^'|sDim25|'^^'|sDim26|'^^'|sDim27|'^^';
+
+### We have to remove spaces from the search string before going to include the string in searching loop
+sTgtDimString = UPPER( sTgtDimString );
+nSPIndex = SCAN( ' ', sTgtDimString );
+While ( nSPIndex <> 0);
+  sTgtDimString = DELET( sTgtDimString, nSPIndex, 1 );
+  nSPIndex = SCAN( ' ', sTgtDimString );
+End;
 
 ###########################################
 #Region ### MAPPING Target DIMENSIONS #####
@@ -1092,7 +1100,7 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         # Found a dimension!
-        sDimension = sWord;
+        sDimension = UPPER( sWord );
         nDimInTgt=0;
         # See if the dimension is in the target cube
         IF(scan('^^'|sDimension|'^^', sTgtDimString)>0);
