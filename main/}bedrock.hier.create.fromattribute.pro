@@ -4,11 +4,7 @@
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-<<<<<<< HEAD
-565,"f5K8Lha8`U3rk4A7<RFW90^^Y8@1jwk5GK4ha^l]61<<XMKWB3AVHuc7qtWftKPs6n[TO:wsygABK^nQIk[@AlqL5p:eDk0v>MII2><kYqom;zP]`Bkv@qw?AvaXj]eXHgRbaX9PexIrz>gVW\H?GqcZnR[NG`A=;2wd2TmwdwHyn<\2imXq3bP?hMov8h:K3jVJCK4["
-=======
 565,"hR44[B=<aAN?hokC4R;39TPZ@5^i4K;g2skW]2Jz77wW:3Hpr7;hp^pyyvsz>l9PiPh1ihSa41fl8@GFZF@HH1q@27=7;f=SjRRc@ZWT31hpnefu\;QR1lieFFuD>Hp7;yNXtsx<AEnjrcP<Mak83hzD?THrn6=[RDK7mH_\Ab9Ub5C5d4aPwZlt]Ryzaox^dKk1oP9c"
->>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -71,13 +67,8 @@ pAttr,"Required: Attribute"
 pTopNode,"Optional: The name of the Target Hierarchy top element (will default to 'All ' attribute name )"
 pPrefix,"Optional: Prefix before the attribute value"
 pSuffix,"Optional: Suffix after the attribute value"
-<<<<<<< HEAD
-pSkipBlank,"To manage empty attribute: 0= Skip,  1=Send to unallocated node"
-pUnallocated,"Naming convention for rollup if  attribute is empty (eg. Unallocated <pAttr>, No <pAttr>, Undefined <pAttr>)"
-=======
 pSkipBlank,"Optional: To manage empty attribute: 0= Skip,  1=Send to unallocated node (by default blank attribute values are skipped)"
 pUnallocated,"Optional: Naming convention for rollup if attribute is empty (eg. Unallocated <pAttr>, No <pAttr>, Undefined <pAttr>)"
->>>>>>> upstream/master
 577,3
 vEle
 vAttr

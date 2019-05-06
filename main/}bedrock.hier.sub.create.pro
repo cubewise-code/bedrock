@@ -4,11 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-<<<<<<< HEAD
-565,"j`JbSg;ulTa=V8CsG=wmWc1K1_pIi=^E1w;dw\MeEHQOW0sMEEd<NiDO2?eDszTP7UErbqUTFmLu?cE97jQA8EsM`B1Vt`XlPAs`t?k5gF=>ky6rN`nsJLCXL<iCzQU>;?\SpxNzB<_]1O[5wxDaIQGO;_iheWK?t@A@6WkSOq[@DcKn2SD[EQi^nPL76;mUNJuT1@x>"
-=======
 565,"h>bmv^pGaaWq7;dG=vwN\Tt:x7B1HVXk1^doR>3ZQ13s?yv2Y<F:g[K[zpk]l_d82qny^j1yzEh@pq^a>j<HUs;nFZ3x@A]f4oA90?PBmLc<\5GcViZuG2\i;ou:KGhIrU3tatGKVos;7_RTiYwXeXNUymW5u@]NTzplx3yNks2smJymNE8kvF<NH5Yvm>:^PsS8Hpr?"
->>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -64,19 +60,11 @@ pLogOutput,0
 pDim,""
 pHier,""
 pSub,""
-<<<<<<< HEAD
-pConsol,""
-pAttr,""
-pAttrValue,""
-pLevelFrom,0
-pLevelTo,20
-=======
 pConsol,"*"
 pAttr,""
 pAttrValue,""
 pLevelFrom,0
 pLevelTo,999
->>>>>>> upstream/master
 pExclusions,""
 pDelim,"&"
 pAddToSubset,0
@@ -87,11 +75,7 @@ pLogOutput,"Optional: write parameters and action summary to server message log 
 pDim,"Required: Dimension name"
 pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"Required: Subset name"
-<<<<<<< HEAD
-pConsol,"Optional: Elements within Consolidated Element (Blank Equals All)"
-=======
 pConsol,"Optional: Elements within Consolidated Element (Blank or * Equals All)"
->>>>>>> upstream/master
 pAttr,"Optional: Attribute (Blank Equals All)"
 pAttrValue,"Optional: Attribute Value"
 pLevelFrom,"Optional: From Element Level"
@@ -213,11 +197,7 @@ EndIf;
 
 ## Validate consolidation
 pConsol = Trim( pConsol );
-<<<<<<< HEAD
-If( pConsol @<> '' );
-=======
 If( pConsol @<> '' & pConsol @<> '*' );
->>>>>>> upstream/master
     If( ElementIndex ( pDim, sHier, pConsol ) = 0 );
         nErrors = 1;
         sMessage = 'The ' | pConsol | ' consolidation does not exist in the '| pDim |' dimension:Hierarchy ' | pDim |':'| sHier;
@@ -348,11 +328,7 @@ EndIf;
 ### Add elements to subset ###
 
 ## Check that element is a descendant of specified consolidation
-<<<<<<< HEAD
-If( pConsol @<> '' );
-=======
 If( pConsol @<> '' & pConsol @<> '*' );
->>>>>>> upstream/master
   If(ElementIsAncestor(pDim, pHier, pConsol, vEle) = 0 & vEle @<> pConsol );
     ItemSkip;
   EndIf;
