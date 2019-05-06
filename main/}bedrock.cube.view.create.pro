@@ -4,7 +4,11 @@
 586,
 585,
 564,
+<<<<<<< HEAD
 565,"gasFuyNacvIF;J_PM:aX>7v0>o^R3AqK8GH6ASZVbBLU6JivaCb0]Cyj2u<J5?pRo7FF>Mp:RQ0MG;>G2A5V=C^1SVCYQh1t22ns3tf?NF=6klqlqCMWmg\1It`ATtXfpIDE\[xyZCXHIF:dwSvm]?j]7SwktnXaDP1aB=b^\<jPDUo5N<zjLY0SZ]B535^XqKR=AXgM"
+=======
+565,"jz^OrGiNRoaXQ^<a@uN^6yfyFtRQzd05IuDnnqWcRaU^5Te3N6p]AW8D3^@ExuCY_Y7kRRPqRL0P@jITWzB^eGnYtq69x^=e6woOXW[YkSmR_okr;>1Kq91z=mq6wrPct\TC?0`H66FR119o8eJeIeGgvS0YZou7tXBZZ3R`SyLg::>TFjgy63GKxa:YKxp7C1o8HdLL"
+>>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -84,7 +88,11 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
+<<<<<<< HEAD
 572,390
+=======
+572,393
+>>>>>>> upstream/master
 
 #****Begin: Generated Statements***s
 #****End: Generated Statements****
@@ -432,6 +440,7 @@ If(pSubN = 1);
     sDimC = TabDim( pCube, nCountDimC );
     sDimString = sDimC;
   
+<<<<<<< HEAD
     # filters created by other bedrock processes skip spaces from dim names  
     While(Scan(' ',sDimString)>0);
       sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
@@ -440,6 +449,19 @@ If(pSubN = 1);
     # to make sure that the name of the dim is not part of the name of another dim
     If(Scan(pDimDelim|sDimString|pEleStartDelim, sFilter)=0 & scan(pDimDelim|sDimC|pEleStartDelim,sFilter)=0
       & Scan(sDimString|pEleStartDelim, sFilter)<>1 & scan(sDimC|pEleStartDelim,sFilter)<>1);
+=======
+    # filters created by other bedrock processes skip spaces from dim names and between separators
+    While(Scan(' ',sDimString)>0);
+      sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
+    End; 
+    sTFilter = sFilter;
+    While(Scan(' ',sTFilter)>0);
+      sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
+    End;
+  
+    # to make sure that the name of the dim is not part of the name of another dim
+    If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
+>>>>>>> upstream/master
       sProc   = '}bedrock.hier.sub.create';
       nRet    = ExecuteProcess( sProc,
       'pLogOutput', pLogOutput,

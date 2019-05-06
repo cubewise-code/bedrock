@@ -4,7 +4,11 @@
 586,
 585,
 564,
+<<<<<<< HEAD
 565,"d[@:aJ]wLWFLbMxjwSi:9DJV<7P3f5S<VZB9Q4>q=s6zbVZm;VL8B5i<uwv1B7S[mq`Y2yfS=jK<mW=e^zUnWELuUSRBR[g^lYCzCCIy_wuC6Tcln1lZ4KX`zZw?dzpdnWF9n_3FwU7@KZTbKDl0e>i_7oATvAEau5rCdz\nbOzfflWnn`_hL]^;gDMZJ;P`1r7K<c\e"
+=======
+565,"zB16O=Y_VWYdkzckrneIN9Fr;Ga[gOZ?G:@1dbsu3yHxeic?a[726;Ci2NlQtTNmJj_ATiSZ3J5JJj96`wX0paaiJkSojLvNGUt4Xb[:6zdG:1hI;vYmC8xUft5Y<0KmUKjyi`:q@dVoj^rueck`TT9Y?hR9i=JVt^6W_P3Q3XuaVF8[2vJsG1rQ`S44ZJILk]83U[69"
+>>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -56,7 +60,11 @@ pDelim,"Optional: delimiter character for element list (required if pEle paramet
 581,0
 582,0
 603,0
+<<<<<<< HEAD
 572,250
+=======
+572,244
+>>>>>>> upstream/master
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -69,12 +77,18 @@ pDelim,"Optional: delimiter character for element list (required if pEle paramet
 # Description:
 # This process will delete specified or all elements from a dimension Hierarchy. Elements might be
 # specified as a delimited list of elements. Each member in the list might be specified exactly or
+<<<<<<< HEAD
 # by a wildcard pattern. Wildcards `*` and `?` are accepted.
 
 # Note:
 # Valid dimension name (pDim) otherwise the process will abort.
 
 # Caution: When pEle is empty, __all__ elements in pHier will be deleted!
+=======
+# by a wildcard pattern. Wildcards "\*" and "?" are accepted.
+#
+# Caution: When pEle is set to \*, __all__ elements in pHier will be deleted!
+>>>>>>> upstream/master
 #EndRegion @DOC
 
 ##Global Variables
@@ -114,11 +128,17 @@ If( Trim( pDim ) @= '' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+<<<<<<< HEAD
 # Validate Element filter
 If( Trim( pEle ) @= '' );
     nErrors = 1;
     sMessage = 'No element filter specified. User * to include all elements';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+=======
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
+>>>>>>> upstream/master
 EndIf;
 
 # Validate Hierarchy
@@ -130,11 +150,14 @@ ElseIf(pHier @= 'Leaves' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+<<<<<<< HEAD
 # If blank delimiter specified then convert to default
 If( pDelim @= '' );
     pDelim = '&';
 EndIf;
 
+=======
+>>>>>>> upstream/master
 ### Check for errors before continuing
 If( nErrors <> 0 );
     ProcessBreak;
@@ -208,7 +231,15 @@ While( nCountDim >= 1 );
             EndIf;
 
             # Create subset of Hierarchies using Wildcard
+<<<<<<< HEAD
             sHierExp = '"'|sDim|':'|sHierarchy|'"';
+=======
+            If( sHierarchy @= sDim );
+                sHierExp = '"'|sDim|'"';
+            Else;
+                sHierExp = '"'|sDim|':'|sHierarchy|'"';
+            EndIf;
+>>>>>>> upstream/master
             sMdxHierPart = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sHierDim| '])},'| sHierExp | ')}';
             IF( sMdxHier @= ''); 
               sMdxHier = sMdxHierPart; 

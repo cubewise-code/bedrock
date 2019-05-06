@@ -4,7 +4,11 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
+<<<<<<< HEAD
 565,"ljwpj]YugXZaaONM?LJaDE>kcE;:lmY3alH80;1=bOGw^YClCSIdpanWgFr<imuEUhesyMCsq8AI53bN0qNLk1ZZO[2a9H72yneH`RDyPD=K=nKTgXa\3Ikz\bzh>2nSJiTW;YfS4\<:vAoSG_T=k?mi7c@;TEWqyx<[\xtJ@D;gUaj93eHpCW?VmQNIH>3O`12A]7i\"
+=======
+565,"pQ<jcT=sNGKi2=Z@agBWGhpC5<wLF^N7SW@q1C@FC9D:K9AS^OUg4qU[;=AFMU7Y`ctzP?L<60OF6tMDHTqZaf[^t_z?a<2F6@^XF0YVK^e_Xk98w`Y1@?\ZKrJI`TkVYZWMQ4S[MUwrtndMu]bmc_Al;sJ4=d\tTXM4`3AVe_C[l4`p;Gc_P@Tg]_6a<qpdDWsX=iga"
+>>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -282,7 +286,11 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
+<<<<<<< HEAD
 572,1066
+=======
+572,1071
+>>>>>>> upstream/master
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -296,6 +304,7 @@ VarType=32ColType=827
 # This is the process used to copy data from a source cube to a different target cube.
 
 # Use case: Mainly used in production environments.
+<<<<<<< HEAD
 #1/ This process could be used to populate a Reporting cube.
 #2/ The process could be used to archive data from one cube to another one for any use.
 
@@ -309,6 +318,22 @@ VarType=32ColType=827
 # For dimensions in the source but not the target, the process will accumulate the values of all n level elements 
 # (or all n level elements specified by the pFilter parameter).
 # The pFilter parameter contains the dimensons and elements to be used for filtering the source cube.
+=======
+# 1. This process could be used to populate a Reporting cube.
+# 2. The process could be used to archive data from one cube to another one for any use.
+
+# Note:
+# * The target cube may have a different number of dimensions as the source cube.
+# * Where the target and source cubes share the same dimensions, the process will match the dimensions even if their position in the cube is different.
+# * An input element must be specified for each dimension which is in the target but not in the source using the parameter pMappingToNewDims.
+# * The format of parameter pMappingToNewDims using default delimiters & and : is DimInTargetButNotSource1:ElementOfDim & DimInTargetButNotSource2:ElementOfDim.
+# * The input element must be an N level unless pSuppressConsol is set to 0.
+# * The maximum number of dimensions catered for in the target cube is 27. (In principle adding support for cubes with higher dimensionality is not difficult). 
+
+# For dimensions in the source but not the target, the process will accumulate the values of all n level elements 
+# (or all n level elements specified by the pFilter parameter).
+# The pFilter parameter contains the dimensions and elements to be used for filtering the source cube.
+>>>>>>> upstream/master
 # The format of the pFilter parameter is as follows, using default delimiters & + : Dim1: Elem1 + Elem2 & Dim2: Elem3 + Elem4.
 # The dimension parameters do not need to be given in the index order of dimensions in the cube.
 # The dimension name is specified as the first member of the delimited string of elements.
@@ -320,6 +345,7 @@ VarType=32ColType=827
 # and passed to a recursive call of the process being added to pFilter.
 
 # An example:
+<<<<<<< HEAD
 # To copy the 2011 Actual Sales data from the Sales cube to the General Ledger cube, 
 # set pFilter to Year: 2011 & Version: Actual.
 # Say the General Ledger cube has an Account dimension but the Sales cube doesn't and
@@ -329,11 +355,23 @@ VarType=32ColType=827
 # If only sales for Company X are to be copied, set pFilter to Year: 2011 & Version: Actual & Company:X.
 # If sales from other companies are already in the General Ledger, 
 # set pZeroTarget to 0 to add Company X's data to the existing data.
+=======
+# To copy the 2011 Actual Sales data from the Sales cube to the General Ledger cube set pFilter to Year: 2011 & Version: Actual.
+# Say the General Ledger cube has an Account dimension but the Sales cube doesn't and the Account for sales is 9999 (an n level element).
+# Set the pMappingToNewDims parameter to Account:9999.
+# This will copy all Actual 2011 Sales to Account 9999 in the General Ledger.
+# If only sales for Company X are to be copied, set pFilter to Year: 2011 & Version: Actual & Company:X.
+# If sales from other companies are already in the General Ledger set pZeroTarget to 0 to add Company X's data to the existing data.
+>>>>>>> upstream/master
 # Setting pZeroTarget to 1 will clear our data in the target cube for the elements specified in the
 # pMappingToNewDims parameter and the pFilter parameter for dimensions that are in the target.
 #EndRegion @DOC
 
+<<<<<<< HEAD
 ##Global Variables
+=======
+### Global Variables
+>>>>>>> upstream/master
 StringGlobalVariable('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
 
@@ -558,6 +596,17 @@ sTgtDimString = '^^'|sDim1|'^^'|sDim2|'^^'|sDim3|'^^'|sDim4|'^^'|sDim5|'^^'|sDim
                     |sDim11|'^^'|sDim12|'^^'|sDim13|'^^'|sDim14|'^^'|sDim15|'^^'|sDim16|'^^'|sDim17|'^^'|sDim18|'^^'|sDim19|'^^'|sDim20|'^^'
                     |sDim21|'^^'|sDim22|'^^'|sDim23|'^^'|sDim24|'^^'|sDim25|'^^'|sDim26|'^^'|sDim27|'^^';
 
+<<<<<<< HEAD
+=======
+### We have to remove spaces from the search string before going to include the string in searching loop
+sTgtDimString = UPPER( sTgtDimString );
+nSPIndex = SCAN( ' ', sTgtDimString );
+While ( nSPIndex <> 0);
+  sTgtDimString = DELET( sTgtDimString, nSPIndex, 1 );
+  nSPIndex = SCAN( ' ', sTgtDimString );
+End;
+
+>>>>>>> upstream/master
 ###########################################
 #Region ### MAPPING Target DIMENSIONS #####
 ###########################################
@@ -606,10 +655,17 @@ While( TabDim( pSrcCube, nSourceIndex ) @<> '' );
             nMappedDim12 = 1;
             sMappedV12  = 'V' | NumberToString(nSourceIndex);
           ElseIf(nTargetIndex = 13);
+<<<<<<< HEAD
             nMappedV13 = 1;
             sMappedV13  = 'V' | NumberToString(nSourceIndex);
           ElseIf(nTargetIndex = 14);
             nMapped14 = 1;
+=======
+            nMappedDim13 = 1;
+            sMappedV13  = 'V' | NumberToString(nSourceIndex);
+          ElseIf(nTargetIndex = 14);
+            nMappedDim14 = 1;
+>>>>>>> upstream/master
             sMappedV14  = 'V' | NumberToString(nSourceIndex);
           ElseIf(nTargetIndex = 15);
             nMappedDim15 = 1;
@@ -627,10 +683,17 @@ While( TabDim( pSrcCube, nSourceIndex ) @<> '' );
             nMappedDim19 = 1;
             sMappedV19  = 'V' | NumberToString(nSourceIndex);
           ElseIf(nTargetIndex = 20);
+<<<<<<< HEAD
             nMappedDim10 = 1;
             sMappedV20  = 'V' | NumberToString(nSourceIndex);
           ElseIf(nTargetIndex = 21);
             nMappedDim11 = 1;
+=======
+            nMappedDim20 = 1;
+            sMappedV20  = 'V' | NumberToString(nSourceIndex);
+          ElseIf(nTargetIndex = 21);
+            nMappedDim21 = 1;
+>>>>>>> upstream/master
             sMappedV21  = 'V' | NumberToString(nSourceIndex);
           ElseIf(nTargetIndex = 22);
             nMappedDim22 = 1;
@@ -702,10 +765,17 @@ ElseIf(nTargetIndex = 12);
   nMappedDim12 = 1;
   sMappedV12  = 'V' | NumberToString(nSourceIndex);
 ElseIf(nTargetIndex = 13);
+<<<<<<< HEAD
   nMappedV13 = 1;
   sMappedV13  = 'V' | NumberToString(nSourceIndex);
 ElseIf(nTargetIndex = 14);
   nMapped14 = 1;
+=======
+  nMappedDim13 = 1;
+  sMappedV13  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 14);
+  nMappedDim14 = 1;
+>>>>>>> upstream/master
   sMappedV14  = 'V' | NumberToString(nSourceIndex);
 ElseIf(nTargetIndex = 15);
   nMappedDim15 = 1;
@@ -723,10 +793,17 @@ ElseIf(nTargetIndex = 19);
   nMappedDim19 = 1;
   sMappedV19  = 'V' | NumberToString(nSourceIndex);
 ElseIf(nTargetIndex = 20);
+<<<<<<< HEAD
   nMappedDim10 = 1;
   sMappedV20  = 'V' | NumberToString(nSourceIndex);
 ElseIf(nTargetIndex = 21);
   nMappedDim11 = 1;
+=======
+  nMappedDim20 = 1;
+  sMappedV20  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 21);
+  nMappedDim21 = 1;
+>>>>>>> upstream/master
   sMappedV21  = 'V' | NumberToString(nSourceIndex);
 ElseIf(nTargetIndex = 22);
   nMappedDim22 = 1;
@@ -936,7 +1013,11 @@ WHILE (nChar <= nCharCount);
             nNewDim8 = 1;
             sNewV8 = sElement;
           ElseIf(nTargetIndex = 9);
+<<<<<<< HEAD
             nNewDim8 = 1;
+=======
+            nNewDim9 = 1;
+>>>>>>> upstream/master
             sNewV9 = sElement;
           ElseIf(nTargetIndex = 10);
             nNewDim10 = 1;
@@ -1094,7 +1175,11 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         # Found a dimension!
+<<<<<<< HEAD
         sDimension = sWord;
+=======
+        sDimension = UPPER( sWord );
+>>>>>>> upstream/master
         nDimInTgt=0;
         # See if the dimension is in the target cube
         IF(scan('^^'|sDimension|'^^', sTgtDimString)>0);
@@ -1263,7 +1348,10 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
 Else;
   # Clear out target view
   If(pZeroTarget = 1 & LONG(sTargetFilter)>= 0 & nErrors = 0);
+<<<<<<< HEAD
     ASCIIOUTPUT( '..\TgtFilter.txt', sTargetFilter );
+=======
+>>>>>>> upstream/master
       ###### Create View of target to clear out ###
       # Create View of target ###
       nRet = ExecuteProcess('}bedrock.cube.view.create',

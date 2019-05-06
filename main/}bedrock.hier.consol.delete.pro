@@ -4,7 +4,11 @@
 586,
 585,
 564,
+<<<<<<< HEAD
 565,"xb80s=woWokCOc`BY@2<_iu<a1pLbT`93==O0]GcWhTla[ZMlIwnP3X5UCWkEmT1rURu]xCSg0v<zGlc:QM;Ua0SE2okng=VSZWIhLuCytHnigaGbat`Nu4`I90TJ2?60@JYkX4iG]<4xr3fWfwv0pm0xrmA:n1>r5\26Dau1u3JW9_E8PvnPT?cpOBMA8vaz9fS\lZM"
+=======
+565,"aaprH8_p<^:Kc@[Lm^_eDe9T^zZt0mv1x>[jZORU^v:Pag4FCnS1NYW7@ulZeo@AS5[:1pB\c@f1;2zj;G4l^t;sO0uySjAStKqMr9h]s_oo<?hXpBKto4fA;v1NWKTp8f5IBT8J0CgOvbWnV]MhHuPf?tx`jJPiov667fU<wKC__>q6W7oIsm0Y]L4Qb4`G<lrESf^X"
+>>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -25,34 +29,54 @@
 569,0
 592,0
 599,1000
+<<<<<<< HEAD
 560,6
+=======
+560,5
+>>>>>>> upstream/master
 pLogOutput
 pDim
 pHier
 pEle
 pDelim
+<<<<<<< HEAD
 pTemp
 561,6
+=======
+561,5
+>>>>>>> upstream/master
 1
 2
 2
 2
 2
+<<<<<<< HEAD
 1
 590,6
+=======
+590,5
+>>>>>>> upstream/master
 pLogOutput,0
 pDim,""
 pHier,""
 pEle,""
 pDelim,"&"
+<<<<<<< HEAD
 pTemp,1
 637,6
+=======
+637,5
+>>>>>>> upstream/master
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: dimension name"
 pHier,"Optional: hierarchy name (if blank then same named hierarchy as dimension is assumed)"
 pEle,"Optional: filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))"
+<<<<<<< HEAD
 pDelim,"Optional: delimiter character for element list (required if pEle parameter is used)"
 pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+=======
+pDelim,"Optional: delimiter character for element list (default to '&' if blank)"
+>>>>>>> upstream/master
 577,0
 578,0
 579,0
@@ -60,7 +84,11 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
+<<<<<<< HEAD
 572,179
+=======
+572,162
+>>>>>>> upstream/master
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -79,7 +107,11 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 # Note:
 # Valid dimension name (pDim) is mandatory otherwise the process will abort. Control dimensions are excluded.
 # The hierarchy (pHier) will default to pDim if not specified, otherwise it must be valid else the process will abort.
+<<<<<<< HEAD
 # **ALL** consoldidated items in hierarchy will be deleted if consolidated item (pEle) is NOT specified, otherwise it needs to contain valid c-level item(s) else it will abort. 
+=======
+# **ALL** consoldidated items in hierarchy will be deleted if consolidated item (pEle) is specified as \*, otherwise it needs to contain valid c-level item(s). 
+>>>>>>> upstream/master
 # Caution: Target hierarchy (pHier) cannot be `Leaves`.
 #EndRegion @DOC
 
@@ -150,6 +182,7 @@ If( HierarchyExists( pDim, sHier ) = 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+<<<<<<< HEAD
 ## Validate Delimiter if elements are specified
 If( pEle @<>'' & pDelim @= '' );
     nErrors = 1;
@@ -164,16 +197,26 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
   
-### Check for errors before continuing
-If( nErrors > 0 );
-    ProcessBreak;
-EndIf;
-
+=======
 # If blank delimiter specified then convert to default
 If( pDelim @= '' );
     pDelim = '&';
 EndIf;
 
+>>>>>>> upstream/master
+### Check for errors before continuing
+If( nErrors > 0 );
+    ProcessBreak;
+EndIf;
+
+<<<<<<< HEAD
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
+EndIf;
+
+=======
+>>>>>>> upstream/master
 sEles = pEle;
 nDelimiterIndex = 1;
 While( nDelimiterIndex <> 0 );
@@ -189,17 +232,27 @@ While( nDelimiterIndex <> 0 );
     # Check if a wildcard has been used to specify the Element name.
     # If it hasn't then just delete the Element if it exists
     If( sEle @= '*' );
+<<<<<<< HEAD
         nElementCount = Dimsiz(pDim|':'|sHier);
         nElementIndex = 1;
         While( nElementIndex <= nElementCount );
+=======
+        nElementIndex = Dimsiz(pDim|':'|sHier);
+        While( nElementIndex >= 1 );
+>>>>>>> upstream/master
             sEle = ElementName( pDim, sHier, nElementIndex );
             sElType = ElementType( pDim, sHier, sEle );
             If( sElType @= 'C' );
                 HierarchyElementDelete( pDim, sHier,sEle );
+<<<<<<< HEAD
                 nElementCount = nElementCount - 1;
                 nElementIndex = nElementIndex - 1;
             EndIf;
             nElementIndex = nElementIndex + 1;
+=======
+            EndIf;
+            nElementIndex = nElementIndex - 1;
+>>>>>>> upstream/master
         End;
     ElseIf( Scan( '*', sEle ) = 0);
         If( HierarchyElementExists( pDim,sHier, sEle ) = 1 );
@@ -224,7 +277,11 @@ While( nDelimiterIndex <> 0 );
         	'pSub', cTempSub,
         	'pMDXExpr', sMdx,
         	'pConvertToStatic', 1,
+<<<<<<< HEAD
         	'pTemp', pTemp
+=======
+        	'pTemp', 1
+>>>>>>> upstream/master
         );
         nCount = HierarchySubsetGetSize(pDim, sHier, cTempSub);
         While( nCount >= 1 );
@@ -251,7 +308,11 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
+<<<<<<< HEAD
 575,36
+=======
+575,24
+>>>>>>> upstream/master
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -260,6 +321,7 @@ End;
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
+<<<<<<< HEAD
 ### Remove any temporary objects
 If( HierarchySubsetExists( pDim, sHier, cTempSub ) = 1 & pTemp = 0 );
     ExecuteProcess( '}bedrock.hier.sub.delete',
@@ -272,6 +334,8 @@ If( HierarchySubsetExists( pDim, sHier, cTempSub ) = 1 & pTemp = 0 );
     );
 EndIf;
 
+=======
+>>>>>>> upstream/master
 ### Return code & final error message handling
 If( nErrors > 0 );
     sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';

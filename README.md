@@ -10,9 +10,23 @@ Trialled and implemented for over many years in numerous highly complex TM1 site
 * 30-50% reduction in TI coding due to a new functional method employed. 
 * Increased scalability in terms of business logic complexity, data sizes & concurrency.
 * Dramatically faster proto-typing phase. 
-* Increased auditing & testing via a 3-mode standardised logging system.
+* Increased auditing & testing via standardised logging system.
 * Reduction in Developer/Administration training.
 * Reduction in cost of Administrating TM1.
+
+## Minimum TM1 / IBM Planning Analytics Version
+
+The latest release **bedrock v4.0** is a complete reebuild of the bedrock library for Planning Analytics 2.x (TM1 Server 11.x). Due to incorporation of support for new Planning Analytics features (alternate hierarchies, temporary objects, processes execution on independent threads) please note that the _**minimum supported version is PA 2.0.6 (TM1 Server 11.4)**_.
+
+### What do I need for v4?
+For bedrock v4 the TI process _source code_ has been split into 2 folders:
+
+* **main**: this contains all the bedrock 4 processes. For any new project using Planning Analytics theses are the processes you need
+* **b3shell**: the processes in this folder have the same names as the old bedrock v3 processes. However, they are _not_ the old processes. Rather they are "caller shells" which do nothing more than call the new bedrock 4 processes to produce the same behaviour from the same parametes as in bedrock 3. These processes are included for _backwards compatibility_ and _unit testing_ for models where bedrock 3 is already implemented. This allows anyone with a model where many custom processes call the bedrock library to switch and test bedrock 4 without any code change to existing custom processes. For anyone implementing bedrock for the frst time you _don't need and shouldn't include_ these processes. 
+
+### Where is Bedrock v3?
+
+If you are still using TM1 Server 10.2.2 the Bedrock 3 processes are still available. You can find them in the [v3-archive branch](https://github.com/cubewise-code/bedrock/tree/v3-archive).
 
 ## Why Bedrock?
 
@@ -44,9 +58,14 @@ End Users who never thought they could develop now find TM1 simpler and clearer 
 
 ## Where can I get more information?
 
-The first place for further information is the [code.cubewise.com/bedrock](https://code.cubewise.com/bedrock) website. Key resources:
+The first place for further information is the [code.cubewise.com/bedrock](https://code.cubewise.com/bedrock) website. 
 
-* [Bedrock Modular Approach White Paper](https://code.cubewise.com/s/White_Paper_Modular_Approach.pdf)
+**Key resources**:
+* Check out the [What's New](https://github.com/cubewise-code/bedrock/wiki/WhatsNew) page to familiarize yourself with what is different versus the previous version. 
+* [Bedrock Wiki](https://github.com/cubewise-code/bedrock/wiki). Each process has a full documentation of what it does, the intended purpose, needed parameters, and dependencies within the library.
+
+**White Papers**:
+* [Bedrock Modular Approach](https://code.cubewise.com/s/White_Paper_Modular_Approach.pdf)
 * [Best Practice Turbo Integrator](https://code.cubewise.com/s/White_Paper_Best_Practice_Turbo_Integrator.pdf)
 * [Best Practice Cube Design](https://code.cubewise.com/s/White_Paper_Best_Practice_Cube_Design.pdf)
 * [Best Practice Rules](https://code.cubewise.com/s/White_Paper_Best_Practice_Rules.pdf)

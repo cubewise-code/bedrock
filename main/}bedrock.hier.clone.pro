@@ -4,7 +4,11 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
+<<<<<<< HEAD
 565,"hbI9pMV6aD<6FCke5b>t]BLL21W<5YizLL@5Aj2ed`Rla9QxiAO64Wet7GA9_HA:EhPZ0t[oj0Dw18z>IBUOyVNe;0U8Pm@j9c35VUS^JUG\Jb^bPC9eHewE8;fY=Huf@CivFZwfpKh@<QOr2hqfelzkkoafje98[AWxDQTqbrqevmYYHi]caUZLZAsx]d5JQBWH=jBD"
+=======
+565,"o`EvXz2QFxODDsna=hmpiZ0iy7chmZ2^me5vP^oYQfQS_ZKyRw7XhG[JEwBVE7PLmWBmUAvHj>hlEau^QbXIgmBzthU=3[0<sL_MrCaD5iNGdV4l[d[dR4;Ex[uCIZav^i<TG3[uYBByY=Q\vJfgzBv9y>LulA4`r4<HN9Ot`a]<RAT9gCr?feZ9oZ^jE6hyXNELZ4Om"
+>>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -255,7 +259,11 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
 
 ### End Prolog ###
+<<<<<<< HEAD
 573,38
+=======
+573,31
+>>>>>>> upstream/master
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -268,6 +276,7 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
+<<<<<<< HEAD
   ProcessBreak;
 EndIf;
 
@@ -295,6 +304,28 @@ EndIf;
 
 ### End MetaData ###
 574,50
+=======
+    ProcessBreak;
+EndIf;
+
+### Add Elements to target dimension ###
+
+sElType = ElementType(pSrcDim, pSrcHier, vEle);
+
+IF( sElType @= 'C' & ElementComponentCount( pSrcDim, pSrcHier, vEle  ) > 0 );
+    nChildren = ElementComponentCount( pSrcDim, pSrcHier, vEle );
+    nCount = 1;
+    While( nCount <= nChildren );
+        sChildElement = ElementComponent( pSrcDim, pSrcHier, vEle, nCount );
+        sChildWeight = ElementWeight( pSrcDim,pSrcHier, vEle, sChildElement );
+        HierarchyElementComponentAdd(pTgtDim, pTgtHier, vEle, sChildElement, sChildWeight);
+        nCount = nCount + 1;
+    End;
+EndIf;
+
+### End MetaData ###
+574,51
+>>>>>>> upstream/master
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -307,6 +338,7 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
+<<<<<<< HEAD
   ProcessBreak;
 EndIf;
 
@@ -343,6 +375,45 @@ EndIf;
   EndIf;
 
 
+=======
+    ProcessBreak;
+EndIf;
+
+### Replicate Attributes ###
+# Note: DTYPE on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
+
+If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
+
+    nCount = 1;
+    While( nCount <= nNumAttrs );
+        sAttrName = DimNm( sAttrDim, nCount );
+        sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
+        
+        If( sAttrType @= 'S' % sAttrType @= 'A' );
+            sAttrVal = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
+            
+            If( sAttrVal @<> '' );
+                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, vEle, sAttrName ) = 1 );
+                    If( sAttrType @= 'A' );
+                        ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vEle, sAttrName, 1 );
+                    Else;
+                        ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vEle, sAttrName );
+                    EndIf;
+                EndIf;
+            EndIf;
+        Else;
+            nAttrVal = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
+            If( nAttrVal <> 0 );
+                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, vEle, sAttrName ) = 1 );
+                    ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vEle, sAttrName );
+                EndIf;
+            EndIf;  
+        EndIf;
+        nCount = nCount + 1;
+    End;
+
+EndIf;
+>>>>>>> upstream/master
 
 ### End Data ###
 575,36
@@ -354,11 +425,19 @@ EndIf;
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
+<<<<<<< HEAD
  If(pTgtDim @=pTgtHier);
    sTargetDimHier = pTgtDim;
  Else;
    sTargetDimHier =pTgtDim|':'|pTgtHier;
  Endif;
+=======
+If(pTgtDim @=pTgtHier);
+    sTargetDimHier = pTgtDim;
+Else;
+    sTargetDimHier =pTgtDim|':'|pTgtHier;
+EndIf;
+>>>>>>> upstream/master
 
 ### Set the target Sort Order ###
   CELLPUTS( sSortElementsType, '}DimensionProperties', sTargetDimHier, 'SORTELEMENTSTYPE');

@@ -4,7 +4,11 @@
 586,
 585,
 564,
+<<<<<<< HEAD
 565,"jmJ6<DL0k1a32N<nG]ZGrUi4cd?Um5@K_YJzJpEMojXmofTeOh2^kYsIK?fIaf[RWybpazxpHYsbeJ1A;w?b`>R@G>75ICDXyt91:nP=3Gk69FCY9zu^aXs^2>nFT_I4>tqR:L87ALHLc^SXxu2>Xas1]t:fYv:GnBiO<b8juDL4P7stbz_3pXke3;RBGjA60UeBdH=h"
+=======
+565,"h4GD6mTca?VQOIsANsE=8`k[EIARPBQL@wEZ;[\dyVLyBlKWsEFoRApFGGW^n4TcIigTj0`uaRO5e7zVUo:?f@ZEDEzzI>JcJDnVN5EDC^?L43RkRCyOw<px4Wrh5;ftUOMk=_p`?PAGmhXZKwV_P\H5hQqOnOop[IwUtKY6C9PASRYf@UU?A;e_paY\cF[VHcxtEZcf"
+>>>>>>> upstream/master
 559,1
 928,0
 593,
@@ -32,11 +36,19 @@ pTemp
 1
 1
 590,2
+<<<<<<< HEAD
 pLogOutput,1
 pTemp,1
 637,2
 pLogOutput,"Write status messages to tm1server.log file?"
 pTemp,"Use temporary objects"
+=======
+pLogOutput,0
+pTemp,1
+637,2
+pLogOutput,"Write status messages to tm1server.log file?"
+pTemp,"Use temporary objects for views & subsets?"
+>>>>>>> upstream/master
 577,0
 578,0
 579,0
@@ -73,7 +85,11 @@ pTemp,"Use temporary objects"
 ################################################################################################# 
 #Region Process Declarations
 ### Process Parameters
+<<<<<<< HEAD
 # a short description of what the process does goes here, e.g. "copied data from cube A to cube B". This will be written to the message log if pLogOutput=1
+=======
+# a short description of what the process does goes here in cAction variable, e.g. "copied data from cube A to cube B". This will be written to the message log if pLogOutput=1
+>>>>>>> upstream/master
 cAction             = 'ran with no action';
 cParamArray         = '';
 # to use the parameter array remove the line above and uncomment the line below, adding the needed parameters in the provided format
