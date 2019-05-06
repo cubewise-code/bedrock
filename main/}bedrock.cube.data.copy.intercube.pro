@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"pQ<jcT=sNGKi2=Z@agBWGhpC5<wLF^N7SW@q1C@FC9D:K9AS^OUg4qU[;=AFMU7Y`ctzP?L<60OF6tMDHTqZaf[^t_z?a<2F6@^XF0YVK^e_Xk98w`Y1@?\ZKrJI`TkVYZWMQ4S[MUwrtndMu]bmc_Al;sJ4=d\tTXM4`3AVe_C[l4`p;Gc_P@Tg]_6a<qpdDWsX=iga"
+565,"vrD_UA?y57IhOL]U:GvAsUaMUwcXUhDwM7Xsvf?<7tCzODKu]04eDW4OwfacyUGQ5E5o=zT@AGs@<oyXcx6Pr;?IDdFbM^aE;2[fKc4cNm]K_Eqr3]m[8P=GujwBfSZ`fW;Dj2ay1S]WjHY;mSR7KR7gDfqvc74koKFFWYXR7jSrWW=;c:mL:l?jb?Qv6<b:l^X>JT`Z"
 559,1
 928,0
 593,
@@ -1406,9 +1406,9 @@ sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);
     If( CellIsUpdateable( pTgtCube, sV1, sV2 ) = 1 );
       sElType = DType( sDim2, sV2 );
       IF( sElType @= 'AS' % sElType @= 'AA');
-        ATTRPUTS( sV3, pTgtCube, sV1, sV2 );
+        CellPutS( sV3, pTgtCube, sV1, sV2 );
       ELSEIF( sElType @= 'AN' );
-        ATTRPUTN( Numbr( sV3) * nFactor, pTgtCube, sV1, sV2 );
+        CellPutS( NumberToString( Numbr( sV3) * nFactor ), pTgtCube, sV1, sV2 );
       ElseIf( sElType @= 'S' );
         CellPutS( sV3, pTgtCube, sV1, sV2 );
       Else;
