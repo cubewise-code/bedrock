@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"txG2[QbQ1x=@a]tW8C[maOjRdDuzLC\Kr8pggQF4Q2FQKJb_xtsJthsr32G7aW4hs@ku4K9WOAQdY:V9J2aPv_h2WCiF5hqUJXgw`l;3A^WJFhLeraog1o<dJ42m0PAcqK7SJ<X:4oaYr0<7KLLFcg9O:BRIvA3fXl\0Uzh<NGyMFUJ?CPwKVat:mcputfY\JIATyR>T"
+565,"mUcRl;[GrPR8SaofDXQK>7zE84b38<`SUXOus4Zf\D<<SO2lVu;^=eV84Hw7@a`N]8TeJjkPn3_w@X[Ksv>4_d\afIO14GFWoNz`L;1sNh_C;7ECLm_No`s8GY0Whh^[I47Z=Itt=iMtYpAU3N3j:`b@jwxEo:20M1Ee;;RaKhBjpn0aWyLy4_N?iuC]nFH>boXW8:kc"
 559,1
 928,0
 593,
@@ -44,14 +44,14 @@ pLogOutput,0
 pCube,""
 pMode,""
 pFileName,""
-pDelim,";"
+pDelim,"&"
 pPath,""
 637,6
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"Required: Cube Name to Load/Unload rule (Separated by Delimiter, Accepts Wild card)"
 pMode,"Required: Load/Unload the cube rule (=Load, the file name should be available in the data directory with the required file name Suffix)"
 pFileName,"Optional: Full file name for storing the rule (if empty = cube name.txt)"
-pDelim,"Optional: Delimiter"
+pDelim,"Optional: Delimiter  (default value if blank = '&')"
 pPath,"Optional: Saves the file and the backup of the existing rule in this location. If Null, backup will be saved in Data Directory. Default value Null"
 577,0
 578,0
@@ -60,7 +60,7 @@ pPath,"Optional: Saves the file and the backup of the existing rule in this loca
 581,0
 582,0
 603,0
-572,229
+572,233
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -130,6 +130,10 @@ If( Trim(pCube) @= '' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 Endif;
 
+## Default filter delimiters
+If( pDelim     @= '' );
+    pDelim     = '&';
+EndIf;
 
 # define backupdir
 If(pPath @<> '');

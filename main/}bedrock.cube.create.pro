@@ -4,7 +4,7 @@
 586,"Variables"
 585,"Variables"
 564,
-565,"jS@LNA44sNy?7LGq?7<=WkaOC6kGv0Iyp[QZ5lmnlT>M2J:j8r6r695FphTa>5?rM8=qZktQ?xnQ]pURR8f@aDtq?qCL7yDkVvF8}kk3Mg6fLwEsQMlzm9:zWYbvE8aL`2<P9D6gcdxbF=avx93}:9;?RvT4UdxMoce7A?aQYPMgiDZpxt0UL;Ex<xG6uV06=:BXcvx"
+565,"bnyHO3ewBjezbMV96PCYhYjQf0qV\i0zpX20\4OGj7g=WCzkPerw6Fmi]oTqqK32pF5y:_mWZ1jAave^7yynO1@iKdB<7p;>^aE0m5e8uN6?:gFsAD]HM]z\vgX_M]h?ar?@UJ;b5<2pThVEo2Md0733@BcSoJy_j5J46Q`X:Tgy:QKzrlkJ[I8ySo]r69VTxuNOxs"
 559,1
 928,0
 593,
@@ -42,13 +42,13 @@ pLogOutput,0
 pCube,""
 pDims,""
 pRecreate,0
-pDelim,"+"
+pDelim,"&"
 637,5
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"Required: Cube Name"
 pDims,"Required: Dim1+ Dim2 + Dim3 + Dim4 + Dim5"
 pRecreate,"Optional: If cube exists delete and recreate (Default=0)"
-pDelim,"Optional: Delimiter for Dimension list"
+pDelim,"Optional: Delimiter for Dimension list (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -56,7 +56,7 @@ pDelim,"Optional: Delimiter for Dimension list"
 581,0
 582,0
 603,0
-572,641
+572,639
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -125,9 +125,7 @@ EndIf;
 
 # Check the delimiter
 If( cDelimDim @= '' );
-  sMessage = 'The dimension delimiter is blank.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    cDelimDim = '&';
 EndIf;
 
 # Check the dimension list can't be empty

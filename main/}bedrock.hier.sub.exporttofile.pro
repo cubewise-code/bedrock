@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"u[8LjSCOxOm3yr[mM<68jaZ]lJqqmWHnoD>@?;Gsc=p@wE_PNsy?0hZ\sh_dpb7xu6C=PaZbOvV_S9jADb4ieVEH[uo`ux^`u\KN>wi:;uNsm5=DBHhDtFMpcXW[nk6vwAAWTuMMdDVTk[9d\99ESxjmvhVWhfE;@>YilGVKSoyJ:V>Q6ZZOlLO\Dy>pnCWtY2]Z0s1c"
+565,"lc=dHv=rmQP>a72`6gTYhDJaD8i]p1_AI?be2n]mjC`5Efk:]LAwJP@ApRPyFd:`]jbOT\6zY75JOw<<wyhqnf:a=St7W0dHXhFsEsDd_q;=uWQbhI_6D2vvYwfpS`2Y155xprOT_9AC\x1]Z3ZRzM:orJZ4uCn@_Ho[<HqGkptuntPGEMMb5Q\fyZL5ddTQ1C<vB\`2"
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pTgtDir,"Required: Target Directory Path"
 pTgtFile,"Optional: Target File Name (Default Extension .csv)"
 pTitleRecord,"Optional: Boolean: 1 = Yes include header row"
 pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Default=double quote)"
+pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 577,1
 vElement
 578,1
@@ -78,7 +78,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,193
+572,206
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -120,7 +120,7 @@ cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, 
 cAttributeDim       = '}ElementAttributes_' | pDim;
 cLenASCIICode = 3;
 
-pDelimiter        = TRIM(pDelim);
+pDelim = TRIM(pDelim);
 
 ## LogOutput parameters
 IF ( pLogoutput = 1 );
@@ -191,17 +191,15 @@ If( FileExists( pTgtDir ) = 0 );
 EndIf;
 
 # Validate file delimiter & quote character
-If( pDelimiter @= '' );
-    sMessage = 'Data delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+If( pDelim @= '' );
+    pDelim = ',';
 Else;
-    # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
+    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
     nValid = 0;
-    If ( LONG(pDelimiter) = cLenASCIICode );
+    If ( LONG(pDelim) = cLenASCIICode );
       nChar = 1;
       While ( nChar <= cLenASCIICode );
-        If( CODE( pDelimiter, nChar )>=CODE( '0', 1 ) & CODE( pDelimiter, nChar )<=CODE( '9', 1 ) );
+        If( CODE( pDelim, nChar )>=CODE( '0', 1 ) & CODE( pDelim, nChar )<=CODE( '9', 1 ) );
           nValid = 1;
         Else;
           nValid = 0;
@@ -210,17 +208,32 @@ Else;
       End;
     EndIf;
     If ( nValid<>0 );
-      pDelimiter=CHAR(StringToNumber( pDelimiter ));
+      pDelim=CHAR(StringToNumber( pDelim ));
     Else;
-      pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );
+      pDelim = SubSt( Trim( pDelim ), 1, 1 );
     EndIf;
 EndIf;
 If( pQuote @= '' );
-    sMessage = 'Quote delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    ## Use no quote character 
 Else;
-    pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
 EndIf;
 
 # Validate filename
@@ -267,7 +280,7 @@ DatasourceNameForServer = pDim|':'|pHier;
 DatasourceNameForClient = pDim|':'|pHier;
 DataSourceType = 'SUBSET';
 DatasourceDimensionSubset = pSub;
-DatasourceAsciiDelimiter= pDelimiter;
+DatasourceAsciiDelimiter= pDelim;
 DatasourceAsciiQuoteCharacter = pQuote;
 
 

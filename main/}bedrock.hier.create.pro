@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"e^d`ja4?R=CG3mwnsnzgWR9^<OeUyRttsKnWh;osXF1XD:P0Swy4z<ylXrVp3HdSJR4jKWxXTGWYNY3j7?iSMuol=8HXI=nxN3<<mi74c\TUH`KU2wdCZaoN=toHIgKW6^yywsSyMoNo<FOc`Bs3BFBsNPqxusmP07ds@HFUELn1GzKZLZRzRk4>YJylJVbg[82VrMDG"
+565,"bVaQIz>@qj4dznUO:X6AXcQ[5E[GWDLu<O_GsgYvGm3dKyWxzF?9\eacHXS[zbczN?p9`ZBv7anY6GBVYJm1zfm?Oo<mrvxx=15?7OETz<vu@vjWUyfQBmC;Ee9LkEoaB1w5jCz8M]@LO0Oip``jTr]BYNqX[Ns4xAgSu`Rh5JDiJkard;L?L\VrqG\?oLqIoh>3O6fW"
 559,1
 928,0
 593,
@@ -44,7 +44,7 @@ pDelim,"&"
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"Optional: Hierarchy, accepts delimited list"
-pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
+pDelim,"Optional: delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -52,7 +52,7 @@ pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
 581,0
 582,0
 603,0
-572,154
+572,159
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -107,6 +107,11 @@ If( Trim( pDim ) @= '' );
   nErrors = 1;
   sMessage = 'No dimension specified.';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing

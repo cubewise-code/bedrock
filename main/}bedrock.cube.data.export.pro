@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"h=V8BAV\agutqjU=PBvq35\6>e5[9jeXT:Babvbgynx>2;GPC^e1j@MjsXU^B8p1rSfZ;1z@F?AV1=xc7;cBQZpTqkeNPYbm<5xKK=g2B3`s>LS7tnj8O\B[oRwmX@PDKqazZL>n>^FM:paZt:c9z4vjP_cY[z9B7=pSkgxGYiutYle]`:eRqTpA^D]ZjiTc1>Upu9`R"
+565,"g5E?[CpaX1Q?=vxW12x[k:;L9hMe1lK3bfn1zoql28GY`5?b4`Q;r7ho\=RBy9?<PerY7jXvSaoSkWDP:eTz`t9>9v3GR<v`x]aEGISoBvr43aKbpA\dqHlfU6qi\DF?_enFqh8zJy81ND=Lx>T8=k;=NjvL7Ozg;V[@o5aw?NLyy4?H`;ld\_5;cX^rvCZTph>2lbSm"
 559,1
 928,0
 593,
@@ -95,9 +95,9 @@ pView,"Optional: Temporary view name"
 pFilter,"Optional: Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations (Blank=whole cube)"
 pFilterParallel,"Optional: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
-pDimDelim,"Optional: Delimiter between dimensions"
-pEleStartDelim,"Optional: Delimiter for start of element list"
-pEleDelim,"Optional: Delimiter between elements"
+pDimDelim,"Optional: Delimiter between dimensions  (default value if blank = '&')"
+pEleStartDelim,"Optional: Delimiter for start of element list  (default value if blank = '¦')"
+pEleDelim,"Optional: Delimiter between elements  (default value if blank = '+')"
 pSuppressZero,"Optional: Suppress Zero Values (1=Suppress)"
 pSuppressConsol,"Optional: Suppress Consolidated Values? (1=Suppress)"
 pSuppressRules,"Optional: Suppress Rule Values? (1=Suppress)"
@@ -107,7 +107,7 @@ pTemp,"Optional: Retain temporary view and Subset ( 0 = retain View and Subsets 
 pFilePath,"Optional: Export Directory (will default to error file path)"
 pFileName,"Optional: Export Filename (If Left Blank Defaults to cube_export.csv)"
 pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Default=double quote)"
+pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pTitleRecord,"Optional: Include Title Record in Export File? (Boolean 0=false, 1=true, Default=1)"
 577,101
 V1
@@ -722,7 +722,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,304
+572,317
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -869,9 +869,7 @@ EndIf;
 
 # Validate file delimiter & quote character
 If( pFieldDelim @= '' );
-    sMessage = 'Field delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    pFieldDelim = ',';
 Else;
     # If length of pFieldDelim is exactly 3 chars and each of them is decimal digit, then the pFieldDelim is entered as ASCII code
     nValid = 0;
@@ -893,11 +891,26 @@ Else;
     EndIf;
 EndIf;
 If( pQuote @= '' );
-    sMessage = 'Quote delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    ## Use no quote character 
 Else;
-    pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
 EndIf;
 
 # Jump to Epilog if any errors so far

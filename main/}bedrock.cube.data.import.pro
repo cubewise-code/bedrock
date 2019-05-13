@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"cHzaL2N1RLE;ziSRv5m@6?\bdv4LUVqbPzop6Oo`StETLSp2jP`cb]LozK^jOsl]cbPy4IztGX3fUDDd<erXXnHS9t5SoH5<Tt<MQKqHshbL6^?f:0RxxBysVt?yvyA`4s_cTuPQJ`spskX6]g8tuVQ8Lozum3xEllW3AJp2eCOIPj]yD[][fG9NoI]Biycx:bJjJGqP"
+565,"mSqQYE=yNqR9MademIp5dud7zHWJ2m5RAHdXp@=t]3a1`V^LM9Vd7KbhF>7qxaTp]ejFkLHD@DEf\eC<L3[kOKRHFoNK@Nu\RC`h9KMDMcVpGIQj4gBm`D\S\nLk>B7l8?4^T1@VGq8h6VdNDaeLm]O51IyU@m8qqzD9pGD:U@>H3g2e2mL5FUXr58GYa@^hS]33`A^d"
 559,1
 928,0
 593,
@@ -74,7 +74,7 @@ pSrcEle,"Optional: Source Element ( Only required if a Dimension is used.)"
 pTgtEle,"Optional: Target Element (Only required if Dimension is used.)"
 pTitleRows,"Required: Number of Title Rows to Skip"
 pDelim,"Required: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Required: Quote (Default=double quote)"
+pQuote,"Required: Quote (Accepts empty quote, exactly 3 digits = ASCII code)"
 pCumulate,"Required: Accumulate Amounts (0 = Overwrite values, 1 = Accumulate values)"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
 577,30
@@ -264,7 +264,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,278
+572,291
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -362,9 +362,7 @@ EndIf;
 
 # Validate file delimiter & quote character
 If( pDelimiter @= '' );
-    sMessage = 'Data delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    pDelimiter = ',';
 Else;
     # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
     nValid = 0;
@@ -386,11 +384,26 @@ Else;
     EndIf;
 EndIf;
 If( pQuote @= '' );
-    sMessage = 'Quote delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    ## Use no quote character 
 Else;
-    pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
 EndIf;
 
 ### Check for errors before continuing

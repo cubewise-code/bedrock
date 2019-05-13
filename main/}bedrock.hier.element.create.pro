@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ja:;B?J8gKaOxuePkceoMImP36_bMvs9DxnMd3sGvUU>Ut7\p8dbh<ng>=yeRIJqUUAohXFk6FE3=He7W0f]yfhNhBv9nb`eMC__McrLS<8ms6Bze2aaXh_x_H3_wUDSCRb]JF\PgZ4mm[<5Xo4wR?]DUzgP6nqGsQBBs_EqvH9B06@7hKiPg84sN[A4YlI?bZ<<[Pqn"
+565,"rmO\6w17;Lk]\ITAzbaDdqBjV_SIL6@z>sy0uz4Ws:eJRQnEp9gc@DjoJgP9J;Yq:H\KyNS:br3SMYd3Qdkk=x^c]MZsN>sfzY^Snq2BYhHFF;K1aw5Oesb^BY>86m;7\;Bg3NPZ;<@3Iz]m3y[ZJrmd^@hGavFJD1NM^46aM>mVFN[o^F_aMZIsv3CI@QWAKS7jX1EY"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pHier,"Optional: hierarchy (default value same named hierarchy as dimension), ac
 pEle,"Required: element name, accepts delimited list"
 pEleType,"Optional: element type N S C (default value N)"
 pInsertionPoint,"Optional: insertion point (default value blank)"
-pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
+pDelim,"Optional: delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -64,7 +64,7 @@ pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
 581,0
 582,0
 603,0
-572,253
+572,258
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -142,6 +142,11 @@ If( pEleType @<> 'N' & pEleType @<> 'C' & pEleType @<> 'S' );
     nErrors = 1;
     sMessage = 'Invalid element type: ' | pEleType;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing

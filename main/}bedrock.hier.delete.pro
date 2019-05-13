@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"pY?FF<XF_6n3>qlvaAoeqUKe0We7]pUCp1xk<LqEUx5=4vkl3FW7[7ia^av;6koBqGs[MvUd90CtEiCSr>vQ[ero8o?yVRy7B5ij[l>_3>P13AYdvxA7P2mmCMD=8=y]DH];X3Hj8iqaW>Iv:FZBJDqUt:AadPvq>pnQrf8fMAQUnrg24vzTSOkDV2Jh;Yr9Zha^OiKJ"
+565,"ws3@bw8kQdFkxyg=ns<N3hIaFDmFUEQaNy5tJPk6p1ueA1kRd=PG0SGsgcAdu^iXY<4wdZq3x0qfU>h_a6vJLN8b;ZhX_hu<d0SSlQUO\qso`I48Ju;_[v5[U1@wMD7tMz1LgaCBF6xj>yn_[InkO7TbZ^BBlMWsIcAY9H_?Y;\bG55xbA`]j>mf\yMG8B\2_7Vdws]K"
 559,1
 928,0
 593,
@@ -44,7 +44,7 @@ pDelim,"&"
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"Optional: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
-pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
+pDelim,"Optional: delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -52,7 +52,7 @@ pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
 581,0
 582,0
 603,0
-572,219
+572,224
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -124,6 +124,11 @@ ElseIf(  Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier )
   nErrors = 1;
   sMessage = 'Cannot delete same named hierarchy: "}bedrock.dim.delete" process should be used for this purpose';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing
