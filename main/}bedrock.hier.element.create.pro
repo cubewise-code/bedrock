@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ja:;B?J8gKaOxuePkceoMImP36_bMvs9DxnMd3sGvUU>Ut7\p8dbh<ng>=yeRIJqUUAohXFk6FE3=He7W0f]yfhNhBv9nb`eMC__McrLS<8ms6Bze2aaXh_x_H3_wUDSCRb]JF\PgZ4mm[<5Xo4wR?]DUzgP6nqGsQBBs_EqvH9B06@7hKiPg84sN[A4YlI?bZ<<[Pqn"
+565,"aaw=ds[w[oOleSZ1O9?y@]hO@cfgu0R_aqWImqoyo4ZpYRMmdBo]1?kOh>cIJw^MWXTh[x2tKy5wxO`MeHeLyv:q7LDpMturjvI]yiqYuPloIhvEl=`]]Y=>BZNiIKGzf9no6lLyqPEAwhC8wq>ifrAjNbF56Qx:h>HeHkIII8nJGd9OFlnPl_NSKh]@MJXuzLi^zzxr"
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
 581,0
 582,0
 603,0
-572,253
+572,258
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -142,6 +142,11 @@ If( pEleType @<> 'N' & pEleType @<> 'C' & pEleType @<> 'S' );
     nErrors = 1;
     sMessage = 'Invalid element type: ' | pEleType;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing

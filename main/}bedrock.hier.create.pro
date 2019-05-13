@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"e^d`ja4?R=CG3mwnsnzgWR9^<OeUyRttsKnWh;osXF1XD:P0Swy4z<ylXrVp3HdSJR4jKWxXTGWYNY3j7?iSMuol=8HXI=nxN3<<mi74c\TUH`KU2wdCZaoN=toHIgKW6^yywsSyMoNo<FOc`Bs3BFBsNPqxusmP07ds@HFUELn1GzKZLZRzRk4>YJylJVbg[82VrMDG"
+565,"fx:Mm<aIyVwMrT_YAf3UuN@i^Mzlx0AOOk>:8[YHU8d^oVhtMj40zarRTC?K\fq9g1d^6yiTXXo9h?2?veTf[OmmhNgxraG\>sdy@>zppvdfM:x0TUiL4k_37oUXynkEm131O_U7Hj7<aRRGis=0nhtM`B;^UhDJZk[axCLXqq>w?g@I\\94hRSrvFUw8A5LuK\Tte0a"
 559,1
 928,0
 593,
@@ -52,7 +52,7 @@ pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
 581,0
 582,0
 603,0
-572,154
+572,159
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -107,6 +107,11 @@ If( Trim( pDim ) @= '' );
   nErrors = 1;
   sMessage = 'No dimension specified.';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing

@@ -4,7 +4,7 @@
 586,"Variables"
 585,"Variables"
 564,
-565,"jS@LNA44sNy?7LGq?7<=WkaOC6kGv0Iyp[QZ5lmnlT>M2J:j8r6r695FphTa>5?rM8=qZktQ?xnQ]pURR8f@aDtq?qCL7yDkVvF8}kk3Mg6fLwEsQMlzm9:zWYbvE8aL`2<P9D6gcdxbF=avx93}:9;?RvT4UdxMoce7A?aQYPMgiDZpxt0UL;Ex<xG6uV06=:BXcvx"
+565,"y`o4A1>z9ZcoMQLbJ1Ql6yrc=yW32A:P9CsLL5GxgDCjKZ[y?01dk689hT1L?92t8i}jwTRDT`Q]s5mC\Y3Ocaq2>D\k`FKbcl>m>A3us^U5RDsAb>Pz^U?mTkZB_aI>jR<`_p1f[Oq21KlVO86]IF20UU:P;dq?3`Eyl7aK_^2cYboWAY]=IK29`ywG~f5vMe?X;G7"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pDelim,"Optional: Delimiter for Dimension list"
 581,0
 582,0
 603,0
-572,641
+572,639
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -125,9 +125,7 @@ EndIf;
 
 # Check the delimiter
 If( cDelimDim @= '' );
-  sMessage = 'The dimension delimiter is blank.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    cDelimDim = '+';
 EndIf;
 
 # Check the dimension list can't be empty

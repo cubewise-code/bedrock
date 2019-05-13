@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"o0_`uBoejR[Gc>ya9<KRO6Y^Nm@nIcvjvYdEGPITRMnyz<`8BQSAdaTVSC1J3OP7wdp6cLx2CaTaYW;BDOpzOiU8mlrPrFVZ2vfe]iaI;Kr@\5h;bpWoNBn:wV8XBD\Tx=]@cAXeNXaBP7>OUFOCI\F:27_OQr3QOhH6I:pW:KpC6h1HmO7@Iz@DCaM9^<OFw0cc?D^D"
+565,"tfix?SMlD=At`KnHFs=eaREdllVd^eB7ts8JraCo^:od1huRdaw>N;N[X<SzISQAf;V;^HVmqzPjq[BJx9R[_sZ6lW5WPfICC]v7Dg?wiQkH:J`rTFk<HByUPre1;Ge=<J:IA3PhWVgc0cM6ozm\gPzXjuC]9pIE]HX8mrAVN3J1gJc:rH8Dl?x0FjjI@]K3N641lpZN"
 559,1
 928,0
 593,
@@ -52,7 +52,7 @@ pDelim,"Delimiter Character"
 581,0
 582,0
 603,0
-572,220
+572,218
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -138,9 +138,7 @@ EndIf;
 
 # Validate delimiter
 If( Trim( pDelim ) @= '' );
-  sMessage = 'No delimiter specified.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+  pDelim     = '&';
 EndIf;
 
 

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"iS\OJLZOSa6HGQFNDEOa^`<fWn54e?3w=>gx]6<n=UdzY6k9d<2?MWvpuTu8vUynS<Zwe4O?6AP`C\dsa6xQzd6eejGuc986XY[tIlMZzY7=UQDkSgj^NpZgFh>1a8[mhPf`a`l76384WvtCB7?2db^DrzZ8A3NNl19e=`=p>1ac9ncOkOYo]3cpf;g6]LZUX1HQbHf1"
+565,"n1vbNMrbte_3i9a6;sfZ@CQ;T5XXSfU<\1HBumotgRzH`PJX_Q>kmRc8:qb:GD;gZedaO@g?DHez7:niO5kyuruc27`lBS0IYPGF]5pshZSfDv88=7fDI9@DJ?untbRYhMZ8k^@X^?8mAOq;al?p3\cP;DOgfuFxKc<2>pHEmd6>FvXd]_oDBIrYE8sH:C:^dfrPtmtD"
 559,1
 928,0
 593,
@@ -70,7 +70,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,154
+572,159
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -147,6 +147,11 @@ Endif;
 
 If( Trim( pHier ) @= '' );
     ## use same name as Dimension. Since wildcards are allowed, this is managed inside the code below
+EndIf;
+
+## Default delimiter
+If( pDelim     @= '' );
+    pDelim     = '&';
 EndIf;
 
 ### Check for errors before continuing

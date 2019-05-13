@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"pY?FF<XF_6n3>qlvaAoeqUKe0We7]pUCp1xk<LqEUx5=4vkl3FW7[7ia^av;6koBqGs[MvUd90CtEiCSr>vQ[ero8o?yVRy7B5ij[l>_3>P13AYdvxA7P2mmCMD=8=y]DH];X3Hj8iqaW>Iv:FZBJDqUt:AadPvq>pnQrf8fMAQUnrg24vzTSOkDV2Jh;Yr9Zha^OiKJ"
+565,"gJA68rpaK>kwG[H[WYw8KdJd@:w?HZ3DhrU1vkRAXTT=VGCLu]WETe7DU<7M^z9?xK_tU03Nob]c38IOLvFY`D[hb6Yr]HZWNBqkEePiVFy9q4X417y?i<WEtpyKaE?Vt1Emw:0fZoPkjhND3<;wAo;`pqnaIKc50HgL2=]wR>hMyxMtA:<EX\zi?rZ4VVaoregBWItH"
 559,1
 928,0
 593,
@@ -52,7 +52,7 @@ pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
 581,0
 582,0
 603,0
-572,219
+572,224
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -124,6 +124,11 @@ ElseIf(  Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier )
   nErrors = 1;
   sMessage = 'Cannot delete same named hierarchy: "}bedrock.dim.delete" process should be used for this purpose';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"txG2[QbQ1x=@a]tW8C[maOjRdDuzLC\Kr8pggQF4Q2FQKJb_xtsJthsr32G7aW4hs@ku4K9WOAQdY:V9J2aPv_h2WCiF5hqUJXgw`l;3A^WJFhLeraog1o<dJ42m0PAcqK7SJ<X:4oaYr0<7KLLFcg9O:BRIvA3fXl\0Uzh<NGyMFUJ?CPwKVat:mcputfY\JIATyR>T"
+565,"dbItadE4vsTo9Ro4B4kVb[_UkwwbSIk[S3IEQJi6pZKA\xq^LKF5h3w]B2UTk26cbNutjaz^HBb2Twguo4=8FV;<PfGpdJpZ>fzwKixmdp<s7rJ^B[@z2I@M9GEzJ8Phm5L8`A0jixvXn:L>sXKcS\;zYX\TLFMshSuWq]APJMOp^V^<3OXd]SA<hDNZUYw3YZ]8n\J="
 559,1
 928,0
 593,
@@ -44,7 +44,7 @@ pLogOutput,0
 pCube,""
 pMode,""
 pFileName,""
-pDelim,";"
+pDelim,"&"
 pPath,""
 637,6
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
@@ -60,7 +60,7 @@ pPath,"Optional: Saves the file and the backup of the existing rule in this loca
 581,0
 582,0
 603,0
-572,229
+572,233
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -130,6 +130,10 @@ If( Trim(pCube) @= '' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 Endif;
 
+## Default filter delimiters
+If( pDelim     @= '' );
+    pDelim     = '&';
+EndIf;
 
 # define backupdir
 If(pPath @<> '');

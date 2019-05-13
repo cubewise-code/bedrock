@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"o`EvXz2QFxODDsna=hmpiZ0iy7chmZ2^me5vP^oYQfQS_ZKyRw7XhG[JEwBVE7PLmWBmUAvHj>hlEau^QbXIgmBzthU=3[0<sL_MrCaD5iNGdV4l[d[dR4;Ex[uCIZav^i<TG3[uYBByY=Q\vJfgzBv9y>LulA4`r4<HN9Ot`a]<RAT9gCr?feZ9oZ^jE6hyXNELZ4Om"
+565,"gHfb>;IayAfy`[w;^c6v8p[V6f5__FFK=A70os:Vm[HH40Qf4<e03za[?>eb\77>9RhW[oXI<2bLj1]hp[Cy@Mt]7gfc4DXWV5<hqiQE9[1beFu_MlHKP]Sjqrvew\`39kJv]ucc[3FBfJm8oBq4;Y3BR[pq>[`ZhmwvqbKzDnC`M:][p<Lm?GrRHK__0Lv:CJupBr`S"
 559,1
 928,0
 593,
@@ -70,7 +70,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,184
+572,198
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -109,6 +109,9 @@ cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = '%cThisProcName% : %sMessage% : %cUserName%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pAttr:%pAttr%, pUnwind:%pUnwind%.';
+
+nProcessSameNamedHier = 0;
+sEpilogTgtHier = '';
 
 ## LogOutput parameters
 IF ( pLogoutput = 1 );
@@ -159,6 +162,8 @@ EndIf;
 
 If ( DimensionExists( pTgtDim ) = 0 );
   DimensionCreate( pTgtDim );
+  ### In this case clone source hierarchy into same-named hierarchy of the new target dimension first. This will allow attributes to be processed in the data tab.
+  nProcessSameNamedHier = 1;
 EndIf;
 
 # Validate target hierarchy
@@ -167,10 +172,19 @@ If( pSrcDim @= pTgtDim);
         pTgtHier = pSrcHier | '_Clone';
     EndIf;
 ElseIf(pTgtHier @= '');
-    pTgtHier = pSrcHier;
+    If( nProcessSameNamedHier = 1 );
+      sEpilogTgtHier = pTgtHier;
+      pTgtHier = pTgtDim;
+    Else;
+      pTgtHier = pSrcHier;
+    EndIf;
+ElseIf( nProcessSameNamedHier = 1 );
+    sEpilogTgtHier = pTgtHier;
+    pTgtHier = pTgtDim;
 Endif;
 
 pTgtHier = Trim(pTgtHier);
+
 
 IF(pTgtHier @= 'Leaves' );
   nErrors = 1;
@@ -339,7 +353,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
 
 ### End Data ###
-575,36
+575,50
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -347,6 +361,7 @@ EndIf;
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
+
 
 If(pTgtDim @=pTgtHier);
     sTargetDimHier = pTgtDim;
@@ -359,6 +374,19 @@ EndIf;
   CELLPUTS( sSortElementsSense, '}DimensionProperties', sTargetDimHier, 'SORTELEMENTSSENSE');
   CELLPUTS( sSortComponentsType, '}DimensionProperties',sTargetDimHier, 'SORTCOMPONENTSTYPE');
   CELLPUTS( sSortComponentsSense, '}DimensionProperties', sTargetDimHier, 'SORTCOMPONENTSSENSE');
+  
+### If a new dimension has been created, call the process recursively to clone the alternate hierarchy, after the same named hierarchy has been processed
+If( nProcessSameNamedHier = 1 );
+  EXECUTEPROCESS('}bedrock.hier.clone',
+    'pLogOutput', pLogOutput,
+    'pSrcDim', pSrcDim,
+    'pSrcHier',pSrcHier,
+    'pTgtDim', pTgtDim,
+    'pTgtHier', sEpilogTgtHier,
+    'pAttr', pAttr,
+    'pUnwind', pUnwind
+    );
+EndIf;
   
 ### Return code & final error message handling
 If( nErrors > 0 );

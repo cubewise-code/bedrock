@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"b=auFqljIBX9gmbJ9\bCyf9UTgJZMRX9xvoowm=r=zP>8FdyIK6y0JyfelZOZ1o=YMr5wmj8jyR9dysB_BydlK6N5Tjh_TPbBf;ldlcKH?N946gsKemvioLE@p96jZcWi\tTtPC?NW\7`KdSMyzyH<t`M`s9c9IvP:YpAGXtNi4LaY0X@xI`Mv]k^O8szq5y\m8C5QIE"
+565,"p<K;r=I=;IY0jpqCaVZ6g<kP9bG^8arH`i8zJm_fxf:<4>ESCYSKfx<sWhZ2fG4[KZQOz4O9:wK5Sfrd^@qFFNDYE62RA?rQwloni3Rxk@n07QzG5xgV`E<0`]65m<D^qqY0I=ua;U;Z5=Ib3g[6j[d<niqaF?9W3PE[AcASTPK^8FyjnBXtfjb>oblptK`a\cpAF_>C"
 559,1
 928,0
 593,
@@ -63,7 +63,7 @@ pTgtDir,"Optional: Target Directory Path (defaults to Error File Directory)"
 pTgtFile,"Optional: Target File Name (defaults to Dimension Hierarchy_Export.csv if blank)"
 pTitleRecord,"Required: Boolean 1 = Yes - Include header row"
 pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Default=double quote)"
+pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pLegacy,"Required: Boolean 1 = Legacy format"
 577,1
 vEle
@@ -78,7 +78,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,174
+572,187
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -204,9 +204,7 @@ EndIf;
 
 # Validate file delimiter & quote character
 If( pDelimiter @= '' );
-    sMessage = 'Data delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    pDelimiter = ',';
 Else;
     # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
     nValid = 0;
@@ -228,11 +226,26 @@ Else;
     EndIf;
 EndIf;
 If( pQuote @= '' );
-    sMessage = 'Quote delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    ## Use no quote character 
 Else;
-    pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
 EndIf;
 
 # Construct full export filename including path

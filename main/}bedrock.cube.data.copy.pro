@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"p0PO?Cw<`n`EcksTaGJlzg?Z7AJ6bhqbSe_Kx9rk0<ohYazqarR4k8Z@m>:DdcK9X6uSZMn97?;d:c?N_vXxIm:8W@_XJ`>;OzEdGQuo^EkaW>s1G>QZ=p`uzhI3@RVAFTW6Mr9t[F1M9\xVM`EQ9YyWa1G<Z=dRG;@<X\gn@4ZpTUf3Si3Jta3WDi8iphg>ERnViC63"
+565,"lD_ANJo1O2LhaU\NBI9kcXt3Xm>Vo773bpAuXFq^6UPP92d_h_]E@B>EVdDfBa8epH3nlUU:g1\XDHoi[:Q<Ag36ogpg;SuUOjpHO@pCAX9IP0rhS2;hBorFzjLq;eTM^1tz3?ocR2^TqNsrRokrZxjayDNv:tNgCm]yX\xStCAYJF>ZQnr^vPSu0\mW=htjlD2HH\=U"
 559,1
 928,0
 593,
@@ -422,7 +422,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,762
+572,765
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -560,6 +560,9 @@ If( pEleStartDelim@= '' );
 EndIf;
 If( pEleDelim     @= '' );
     pEleDelim     = '+';
+EndIf;
+If( pMappingDelim     @= '' );
+    pMappingDelim     = '->';
 EndIf;
 
 # Validate cube

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"nyW:B2v`ElMJuIaYYxCh?C8zvnq^;^6;cVzQ8EyNrgj7jQ@@CBtX[wMSNZ>smwZ^4ZQo@Cx\G\e[OAA168Ert3yAHePsDPZm;FxI5ihVCP_AW7HBr8Lmd3N`Or:F<mVA=8[MiGjyvv9oNGPSU:`xSYt`Dxna1oGV9:vVO4GV\z^_jWjhA=fdeT4==qJYFxaePgkcJwE]"
+565,"bFaOJTx1vM5=<uvkNpI^HDOpyY8JVZwKC=vhl3VqM5DyhwH;BiwfO[OS2]cE>?yGoaVziWMEpSH<v9j[?OWu\hzXPQKxRPflHM86npD=5mc3bTnlmjQuOm9tfSTE^NNA]7hwa3p=da3^@A5<?[`bivUFrDZw1^4Ty4Cqu8<6O7hbmQ6VmrFaWgA>hg]=Qts415?QZI]["
 559,1
 928,0
 593,
@@ -80,7 +80,7 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pDim"
 581,0
 582,0
 603,0
-572,280
+572,278
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -188,9 +188,7 @@ EndIf;
 
 # Validate delimiter
 If( pDelim @= '' );
-    sMessage = 'Invalid value for delimiter.';  
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    pDelim     = '&';
 EndIf;
 
 ### Check for errors before continuing
