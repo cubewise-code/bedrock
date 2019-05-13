@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"iS\OJLZOSa6HGQFNDEOa^`<fWn54e?3w=>gx]6<n=UdzY6k9d<2?MWvpuTu8vUynS<Zwe4O?6AP`C\dsa6xQzd6eejGuc986XY[tIlMZzY7=UQDkSgj^NpZgFh>1a8[mhPf`a`l76384WvtCB7?2db^DrzZ8A3NNl19e=`=p>1ac9ncOkOYo]3cpf;g6]LZUX1HQbHf1"
+565,"xWhFYY?4aYW3?@]MdpKAQ7y\aVVrBCf<WamsfCd^=wkLx_t2l^8e<Sk;4j_Sy]3OKxd5XNESM>3>^iW_hLa9clll7XcqUtBNyxbVl]h@dvOE@dXh06A5OhfKm][TJ34Je]c`]LVk^h@JP8cRwduZ6bF[1]@Jm6Mc8lvZxVL?GpdR;?SjQC\[=QkUjbbrbbxUduxGM:Y["
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pTgtDim,"Optional: Target Dimension (will default to pSrcDim_clone If blank (or)
 pHier,"Required: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
 pAttr,"Required: Include Attributes? (Boolean 1=True)"
 pUnwind,"Required: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used)"
+pDelim,"Optional: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
 577,1
 vEle
 578,1
@@ -70,7 +70,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,154
+572,159
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -147,6 +147,11 @@ Endif;
 
 If( Trim( pHier ) @= '' );
     ## use same name as Dimension. Since wildcards are allowed, this is managed inside the code below
+EndIf;
+
+## Default delimiter
+If( pDelim     @= '' );
+    pDelim     = '&';
 EndIf;
 
 ### Check for errors before continuing

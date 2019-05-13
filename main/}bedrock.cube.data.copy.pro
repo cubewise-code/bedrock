@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"p0PO?Cw<`n`EcksTaGJlzg?Z7AJ6bhqbSe_Kx9rk0<ohYazqarR4k8Z@m>:DdcK9X6uSZMn97?;d:c?N_vXxIm:8W@_XJ`>;OzEdGQuo^EkaW>s1G>QZ=p`uzhI3@RVAFTW6Mr9t[F1M9\xVM`EQ9YyWa1G<Z=dRG;@<X\gn@4ZpTUf3Si3Jta3WDi8iphg>ERnViC63"
+565,"ozKQMjr48Gw>ns9aMW@qIbx\fMPIVh8nlAwQ^lOA:ghEwb8es`U3I=WLAhC3[5?44BD:T@\h@e]UpfR7iLHj:nnKwp?T5LLAsTN1;[<6h<]i[]pUBF\xI@;`qY6mP<=^9tReo1n5Uxr_Af1b^6i;K7x5mE[h;:RbG?K:1rn;y]L?Tyqx?xOZwOSQ7@t_5^6gyfiiy;=<"
 559,1
 928,0
 593,
@@ -97,10 +97,10 @@ pFilter,"OPTIONAL: Filter Unmapped Dimensions using format: Year: 2006 + 2007 & 
 pFilterParallel,"OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
 pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy:SourceElement->TargetElement & Dim2ToCopy:Source Element->TargetElement etc"
-pMappingDelim,"OPTIONAL: Delimiter between source element and target element in pEleMapping"
-pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
-pEleStartDelim,"REQUIRED: Delimiter for start of element list"
-pEleDelim,"REQUIRED: Delimiter between elements"
+pMappingDelim,"OPTIONAL: Delimiter between source element and target element in pEleMapping  (default value if blank = '->')"
+pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
+pEleStartDelim,"REQUIRED: Delimiter for start of element list  (default value if blank = '¦')"
+pEleDelim,"REQUIRED: Delimiter between elements (default value if blank = '+')"
 pFactor,"OPTIONAL: Multiply source value by factor (1 keeps the value as is). To modify existing values make the target element the same as the source with pZeroTarget = 0"
 pSuppressRules,"OPTIONAL: Suppress Rules (Skip = 1)"
 pCumulate,"OPTIONAL: 1 = Add source to existing value in target (if zero out target = 0 False). 0 = Replace target with source."
@@ -422,7 +422,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,762
+572,765
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -560,6 +560,9 @@ If( pEleStartDelim@= '' );
 EndIf;
 If( pEleDelim     @= '' );
     pEleDelim     = '+';
+EndIf;
+If( pMappingDelim     @= '' );
+    pMappingDelim     = '->';
 EndIf;
 
 # Validate cube

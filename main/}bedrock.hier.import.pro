@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"sGdd`w;q9iJLRPBIeW=a:@`fXBsbNh]IsI]Znn58;vHe1f3Pt]TYQg>V1utr[uN2P\hXRRaxSX=g_?>QEtMEojJ^EZ9mc_q>CoxztGeH_K<?N?WSngepmP;g8=:d73UKkqXTbo0@6nZ@T3NTl::]W4HYfiO5?\:Uz<w7mv:Ok@nc0EZgY30=bGBI`Z>\mwt`MX8VDXbl"
+565,"d@<?aIaCjHOM@2K`kR_qKFBmbA?r5=_nZTHk0gggk?CJLquXiEaOzJ@4csohOpGXkh5FYk>EFP[7XUs4t@^qk4SIdk0QoWjL]B>=vv7shYN5YA>^EJD?t@kjLe4yX97wAkrF=PH88Qa27^pB?I7LvIXTfbPZD[Fw\sOMYhi>nbi:nti1@6Xk[L;lR=aD\>cKF]kl4NMH"
 559,1
 928,0
 593,
@@ -59,7 +59,7 @@ pHier,"Optional: Target Hierarchy (defaults to dimension name if blank)"
 pSrcDir,"Optional: Source Directory Path (defaults to Error File Directory)"
 pSrcFile,"Optional: Source File Name (defaults to 'Dimension Hierarchy _Export.csv' if blank)"
 pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Default=double quote)"
+pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pLegacy,"Required: Boolean 1 = Legacy format"
 577,6
 V1
@@ -104,7 +104,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,200
+572,213
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -157,7 +157,7 @@ cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%.';
 cLenASCIICode = 3;
 
-pDelimiter        = TRIM(pDelim);
+pDelim  = TRIM(pDelim);
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -228,17 +228,15 @@ If( FileExists( sFilename ) = 0 );
 EndIf;
 
 # Validate file delimiter & quote character
-If( pDelimiter @= '' );
-    sMessage = 'Data delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+If( pDelim @= '' );
+    pDelim = ',';
 Else;
-    # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
+    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
     nValid = 0;
-    If ( LONG(pDelimiter) = cLenASCIICode );
+    If ( LONG(pDelim) = cLenASCIICode );
       nChar = 1;
       While ( nChar <= cLenASCIICode );
-        If( CODE( pDelimiter, nChar )>=CODE( '0', 1 ) & CODE( pDelimiter, nChar )<=CODE( '9', 1 ) );
+        If( CODE( pDelim, nChar )>=CODE( '0', 1 ) & CODE( pDelim, nChar )<=CODE( '9', 1 ) );
           nValid = 1;
         Else;
           nValid = 0;
@@ -247,17 +245,32 @@ Else;
       End;
     EndIf;
     If ( nValid<>0 );
-      pDelimiter=CHAR(StringToNumber( pDelimiter ));
+      pDelim=CHAR(StringToNumber( pDelim ));
     Else;
-      pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );
+      pDelim = SubSt( Trim( pDelim ), 1, 1 );
     EndIf;
 EndIf;
 If( pQuote @= '' );
-    sMessage = 'Quote delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    ## Use no quote character 
 Else;
-    pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
 EndIf;
 
 ### Check for errors before continuing
@@ -300,7 +313,7 @@ cCubeS1         = '}DimensionProperties';
 DataSourceType          = 'CHARACTERDELIMITED';
 DatasourceNameForServer = sFilename;
 DatasourceNameForClient = sFilename;
-DatasourceAsciiDelimiter= pDelimiter;
+DatasourceAsciiDelimiter= pDelim;
 DatasourceAsciiQuoteCharacter = pQuote;
 
 

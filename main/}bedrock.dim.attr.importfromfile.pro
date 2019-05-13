@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 585,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 564,
-565,"k\H_=[p1f27aT;tZ>e]mTxT=HF9dK\^CEi6jRJz=f0HUn4A6@WgCBgb3lT4^VVBNf>:n:qHoMIrl4qcqQ@_Z]2nu_sq=P:aL@_HKFFRspfKlFILpXQePl8KJtbh0_bYL6?K1gjEEEJU=7Sk1YDHXOEWmBi5QK9qn>wFDLlcRaB82I11i4084:Hwoj1ZD8xMmOyl[<rr^"
+565,"ekD_naT1_CU6xW9=VL2wU8Tg_5fwlC;27fEmJ7c0\rSBXLGZ:Uqu@BJiDCaq6JOpqc3\hhp]_5DGD__OjWX@It0vvq6<X<y4>RX`CM4T2?c55I;S0pnR9UJa3JI]lMV5wKO1fgB05`6lY:gcoo4tcMTd=[9MFJQ4FEkczMWB>`DvxW?8uhzC?@B>xca0H<gaiDgvEr4M"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pSrcDir,"Required: Source Directory"
 pSrcFile,"Required: Source File Name"
 pTitleRows,"Oprional: Number of Title Rows to Skip (default = 1)"
 pDelim,"Optional: File Delimiter Character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: Quote Character (default=Double Quote)"
+pQuote,"Optional: Quote Character (Accepts empty quote, exactly 3 digits = ASCII code)"
 577,2
 vAttr
 vAttrType
@@ -76,7 +76,7 @@ vAttrType
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,132
+572,145
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -163,9 +163,7 @@ EndIf;
 
 # Validate file delimiter & quote character
 If( pDelimiter @= '' );
-    sMessage = 'Data delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    pDelimiter = ',';
 Else;
     # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
     nValid = 0;
@@ -187,11 +185,26 @@ Else;
     EndIf;
 EndIf;
 If( pQuote @= '' );
-    sMessage = 'Quote delimiter for file not specified.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    ## Use no quote character 
 Else;
-    pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
 EndIf;
 
 ### Check for errors before continuing

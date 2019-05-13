@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"nyW:B2v`ElMJuIaYYxCh?C8zvnq^;^6;cVzQ8EyNrgj7jQ@@CBtX[wMSNZ>smwZ^4ZQo@Cx\G\e[OAA168Ert3yAHePsDPZm;FxI5ihVCP_AW7HBr8Lmd3N`Or:F<mVA=8[MiGjyvv9oNGPSU:`xSYt`Dxna1oGV9:vVO4GV\z^_jWjhA=fdeT4==qJYFxaePgkcJwE]"
+565,"wR078w]]`W>Fcx^su_]G?`Wa?<l4EV_cYC2OBppnb7x1kq1A]=9[qD0C4hEZFWOWd2P<jjqkY]9yHZ7z4UbfODi;[?6\xF@PtJ0gNl^PB0]]iLulC<Ziz4q;gknHJKJoI6roTYkDvFBOt1WZ6CK3MH>DtruLt`9UW8ibDtB40bN=h6oABr\]QKkS;<2Nb]P:]Se69[;t"
 559,1
 928,0
 593,
@@ -67,7 +67,7 @@ pCube,"Required: List of Cubes (Separated by Delimiter, Accepts Wild card)"
 pView,"Optional: View (will default to pSubset if left blank)"
 pSub,"Optional: Subset (will default to pView if left blank)"
 pDim,"Required: Dimension(s) to create empty processing subsets for (separated by delimiter), * = all"
-pDelim,"Optional: List Delimiter"
+pDelim,"Optional: List Delimiter (default value if blank = '&')"
 pSuppressZero,"Optional: Suppress Zeros (Boolean Yes = 1)"
 pSuppressConsol,"Optional: Suppress Calcs (Boolean Yes = 1)"
 pSuppressRules,"Optional: Suppress Rules (Boolean Yes = 1)"
@@ -80,7 +80,7 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pDim"
 581,0
 582,0
 603,0
-572,280
+572,278
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -188,9 +188,7 @@ EndIf;
 
 # Validate delimiter
 If( pDelim @= '' );
-    sMessage = 'Invalid value for delimiter.';  
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    pDelim     = '&';
 EndIf;
 
 ### Check for errors before continuing
