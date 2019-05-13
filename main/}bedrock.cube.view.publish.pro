@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"pu4PzIlR0kDq6770ap7;cG5q>K2idd;5OCFYI9@lyL<PgiVaYtwjuOyRGnUjm0PeE?RyzUbMDTnu[F5sQAi@>jIqKMZ4S\Z>DlfODX>bb_W[\8V[c`_2eyz=bZJQgNKpWmRqjEChD=Tn:ZYI6JoZZM4tx3bISL3B8N;7tK4?kjCjiXNzLskQKmW1:p:>H@`^^uxIiGx:"
+565,"po=6:IzEMKzu:LQKaPhg5kiGkIREJleS>3u0CHAc[0kfVD=xk94;hAHa:zPe=p9x7KMK]W?GIkV?wu;cHF;<[uN^9iDzxVuhmM`nfIBgUVA_c;2g9UPiz_i_uYnPoE=uw\g78\oBiSLFcZ8Vi2Sd=ngGi\sb1jqCXx^@Nxflg]r5gk3`6K2=vAk3e4B1vP6biyoftfQj"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pOverwrite,"Optional: Overwrite Existing Named View? (Boolean 1=Yes)"
 581,0
 582,0
 603,0
-572,100
+572,109
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -105,6 +105,15 @@ ENDIF;
 ### Validate Parameters ###
 nErrors = 0;
 
+# create friendly name for user handle
+If( DimIx( '}ElementAttributes_}Clients', '}TM1_DefaultDisplayValue' ) > 0 );
+    pClient = AttrS( '}Clients', cUserName, '}TM1_DefaultDisplayValue' );
+    If( pClient @= '' );
+        pClient = cUserName;
+    EndIf;
+Else;
+    pClient = cUserName;
+EndIf;
 
 # Validate Cube
 If( Trim( pCube ) @= '' );
