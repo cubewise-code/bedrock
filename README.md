@@ -1,4 +1,4 @@
-# Bedrock for TM1
+<img src="https://s3-ap-southeast-2.amazonaws.com/downloads.cubewise.com/web_assets/CubewiseLogos/Bedrock+FOUR+logo+2019_Orange.png" style="width: 70%; height: 70%;text-align: center"/>
 
 ## What is Bedrock?
 
