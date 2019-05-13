@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"p<K;r=I=;IY0jpqCaVZ6g<kP9bG^8arH`i8zJm_fxf:<4>ESCYSKfx<sWhZ2fG4[KZQOz4O9:wK5Sfrd^@qFFNDYE62RA?rQwloni3Rxk@n07QzG5xgV`E<0`]65m<D^qqY0I=ua;U;Z5=Ib3g[6j[d<niqaF?9W3PE[AcASTPK^8FyjnBXtfjb>oblptK`a\cpAF_>C"
+565,"ei8KEaNlNYYz4yorAtexsL<N4fqU8msf94Fa]tP4p4:p^1p21RJ4HE2SEWrE6D;b@S8YxhOMB_U<Dj:Enf0C2aSuNjTJ=In1z\Ub3u0?oo9urES^z16@cRc]E:3RjH;EpDrR1lNnVtkL5UKA9Jl351fT<aM\eWyjCmT><c73CDoqlBId24OavuDir`xCVNvB<10A@8lP"
 559,1
 928,0
 593,
@@ -138,7 +138,7 @@ cAttrName       = 'Attr Name-';
 cAttrValue      = 'Attr Value-';
 cLenASCIICode = 3;
 
-pDelimiter        = TRIM(pDelim);
+pDelim  = TRIM(pDelim);
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -203,15 +203,15 @@ ElseIf( Scan( '.', pTgtFile ) = 0 );
 EndIf;
 
 # Validate file delimiter & quote character
-If( pDelimiter @= '' );
-    pDelimiter = ',';
+If( pDelim @= '' );
+    pDelim = ',';
 Else;
-    # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
+    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
     nValid = 0;
-    If ( LONG(pDelimiter) = cLenASCIICode );
+    If ( LONG(pDelim) = cLenASCIICode );
       nChar = 1;
       While ( nChar <= cLenASCIICode );
-        If( CODE( pDelimiter, nChar )>=CODE( '0', 1 ) & CODE( pDelimiter, nChar )<=CODE( '9', 1 ) );
+        If( CODE( pDelim, nChar )>=CODE( '0', 1 ) & CODE( pDelim, nChar )<=CODE( '9', 1 ) );
           nValid = 1;
         Else;
           nValid = 0;
@@ -220,9 +220,9 @@ Else;
       End;
     EndIf;
     If ( nValid<>0 );
-      pDelimiter=CHAR(StringToNumber( pDelimiter ));
+      pDelim=CHAR(StringToNumber( pDelim ));
     Else;
-      pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );
+      pDelim = SubSt( Trim( pDelim ), 1, 1 );
     EndIf;
 EndIf;
 If( pQuote @= '' );
@@ -262,7 +262,7 @@ DatasourceNameForServer     = pDim | IF(pHier@='','',':'|pHier) ;
 DatasourceNameForClient     = DatasourceNameForServer ;
 DataSourceType              = 'SUBSET';
 DatasourceDimensionSubset   = 'ALL';
-DatasourceAsciiDelimiter= pDelimiter;
+DatasourceAsciiDelimiter= pDelim;
 DatasourceAsciiQuoteCharacter = pQuote;
 
 ### End Prolog ###

@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"uF0=4hT=Kn_@syz]oQWF>aZdYzkD^uh`yTfz3>gVU=d40o=^ONaPp8bT5]lv1e_`i35WyM=;cSReJ2H^k8dTSYdmNe8s9?b9=mqTBjJsk9P<35DHqa\]su2Z;7OU0u9\Smk=ERu1H]b7L@yYMX<M4:r7e?d>2u;k\7BvWF928shz4lOqIKaO3C8T1=r0nC4KDu?xMkNv"
+565,"d@<?aIaCjHOM@2K`kR_qKFBmbA?r5=_nZTHk0gggk?CJLquXiEaOzJ@4csohOpGXkh5FYk>EFP[7XUs4t@^qk4SIdk0QoWjL]B>=vv7shYN5YA>^EJD?t@kjLe4yX97wAkrF=PH88Qa27^pB?I7LvIXTfbPZD[Fw\sOMYhi>nbi:nti1@6Xk[L;lR=aD\>cKF]kl4NMH"
 559,1
 928,0
 593,
@@ -157,7 +157,7 @@ cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%.';
 cLenASCIICode = 3;
 
-pDelimiter        = TRIM(pDelim);
+pDelim  = TRIM(pDelim);
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -228,15 +228,15 @@ If( FileExists( sFilename ) = 0 );
 EndIf;
 
 # Validate file delimiter & quote character
-If( pDelimiter @= '' );
-    pDelimiter = ',';
+If( pDelim @= '' );
+    pDelim = ',';
 Else;
-    # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
+    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
     nValid = 0;
-    If ( LONG(pDelimiter) = cLenASCIICode );
+    If ( LONG(pDelim) = cLenASCIICode );
       nChar = 1;
       While ( nChar <= cLenASCIICode );
-        If( CODE( pDelimiter, nChar )>=CODE( '0', 1 ) & CODE( pDelimiter, nChar )<=CODE( '9', 1 ) );
+        If( CODE( pDelim, nChar )>=CODE( '0', 1 ) & CODE( pDelim, nChar )<=CODE( '9', 1 ) );
           nValid = 1;
         Else;
           nValid = 0;
@@ -245,9 +245,9 @@ Else;
       End;
     EndIf;
     If ( nValid<>0 );
-      pDelimiter=CHAR(StringToNumber( pDelimiter ));
+      pDelim=CHAR(StringToNumber( pDelim ));
     Else;
-      pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );
+      pDelim = SubSt( Trim( pDelim ), 1, 1 );
     EndIf;
 EndIf;
 If( pQuote @= '' );
@@ -313,7 +313,7 @@ cCubeS1         = '}DimensionProperties';
 DataSourceType          = 'CHARACTERDELIMITED';
 DatasourceNameForServer = sFilename;
 DatasourceNameForClient = sFilename;
-DatasourceAsciiDelimiter= pDelimiter;
+DatasourceAsciiDelimiter= pDelim;
 DatasourceAsciiQuoteCharacter = pQuote;
 
 

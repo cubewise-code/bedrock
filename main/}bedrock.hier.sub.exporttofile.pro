@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"s4SAy@p1L]D4Vkedeviaob_3:LJ:xgOhTDIJNN@^Mq55GYkw?[N<5tCHoB;t0>m]^prd_34SDHbAJDI]M^a=m6L33=iU\w_mpLnCTn0WYas\wnoQv]B59\m]DJUXO;vEDFFxh0nC::Rg:lFaDBly@y6cudKnf48loQv:=:oeDhAGuXOIOBr>;o9WkJ7CFeInfI35ynp3"
+565,"lc=dHv=rmQP>a72`6gTYhDJaD8i]p1_AI?be2n]mjC`5Efk:]LAwJP@ApRPyFd:`]jbOT\6zY75JOw<<wyhqnf:a=St7W0dHXhFsEsDd_q;=uWQbhI_6D2vvYwfpS`2Y155xprOT_9AC\x1]Z3ZRzM:orJZ4uCn@_Ho[<HqGkptuntPGEMMb5Q\fyZL5ddTQ1C<vB\`2"
 559,1
 928,0
 593,
@@ -120,7 +120,7 @@ cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, 
 cAttributeDim       = '}ElementAttributes_' | pDim;
 cLenASCIICode = 3;
 
-pDelimiter        = TRIM(pDelim);
+pDelim = TRIM(pDelim);
 
 ## LogOutput parameters
 IF ( pLogoutput = 1 );
@@ -191,15 +191,15 @@ If( FileExists( pTgtDir ) = 0 );
 EndIf;
 
 # Validate file delimiter & quote character
-If( pDelimiter @= '' );
-    pDelimiter = ',';
+If( pDelim @= '' );
+    pDelim = ',';
 Else;
-    # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
+    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
     nValid = 0;
-    If ( LONG(pDelimiter) = cLenASCIICode );
+    If ( LONG(pDelim) = cLenASCIICode );
       nChar = 1;
       While ( nChar <= cLenASCIICode );
-        If( CODE( pDelimiter, nChar )>=CODE( '0', 1 ) & CODE( pDelimiter, nChar )<=CODE( '9', 1 ) );
+        If( CODE( pDelim, nChar )>=CODE( '0', 1 ) & CODE( pDelim, nChar )<=CODE( '9', 1 ) );
           nValid = 1;
         Else;
           nValid = 0;
@@ -208,9 +208,9 @@ Else;
       End;
     EndIf;
     If ( nValid<>0 );
-      pDelimiter=CHAR(StringToNumber( pDelimiter ));
+      pDelim=CHAR(StringToNumber( pDelim ));
     Else;
-      pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );
+      pDelim = SubSt( Trim( pDelim ), 1, 1 );
     EndIf;
 EndIf;
 If( pQuote @= '' );
@@ -280,7 +280,7 @@ DatasourceNameForServer = pDim|':'|pHier;
 DatasourceNameForClient = pDim|':'|pHier;
 DataSourceType = 'SUBSET';
 DatasourceDimensionSubset = pSub;
-DatasourceAsciiDelimiter= pDelimiter;
+DatasourceAsciiDelimiter= pDelim;
 DatasourceAsciiQuoteCharacter = pQuote;
 
 

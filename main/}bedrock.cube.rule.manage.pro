@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"dbItadE4vsTo9Ro4B4kVb[_UkwwbSIk[S3IEQJi6pZKA\xq^LKF5h3w]B2UTk26cbNutjaz^HBb2Twguo4=8FV;<PfGpdJpZ>fzwKixmdp<s7rJ^B[@z2I@M9GEzJ8Phm5L8`A0jixvXn:L>sXKcS\;zYX\TLFMshSuWq]APJMOp^V^<3OXd]SA<hDNZUYw3YZ]8n\J="
+565,"mUcRl;[GrPR8SaofDXQK>7zE84b38<`SUXOus4Zf\D<<SO2lVu;^=eV84Hw7@a`N]8TeJjkPn3_w@X[Ksv>4_d\afIO14GFWoNz`L;1sNh_C;7ECLm_No`s8GY0Whh^[I47Z=Itt=iMtYpAU3N3j:`b@jwxEo:20M1Ee;;RaKhBjpn0aWyLy4_N?iuC]nFH>boXW8:kc"
 559,1
 928,0
 593,
@@ -51,7 +51,7 @@ pLogOutput,"Optional: write parameters and action summary to server message log 
 pCube,"Required: Cube Name to Load/Unload rule (Separated by Delimiter, Accepts Wild card)"
 pMode,"Required: Load/Unload the cube rule (=Load, the file name should be available in the data directory with the required file name Suffix)"
 pFileName,"Optional: Full file name for storing the rule (if empty = cube name.txt)"
-pDelim,"Optional: Delimiter"
+pDelim,"Optional: Delimiter  (default value if blank = '&')"
 pPath,"Optional: Saves the file and the backup of the existing rule in this location. If Null, backup will be saved in Data Directory. Default value Null"
 577,0
 578,0

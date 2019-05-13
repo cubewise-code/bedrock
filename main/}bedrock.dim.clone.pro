@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"n1vbNMrbte_3i9a6;sfZ@CQ;T5XXSfU<\1HBumotgRzH`PJX_Q>kmRc8:qb:GD;gZedaO@g?DHez7:niO5kyuruc27`lBS0IYPGF]5pshZSfDv88=7fDI9@DJ?untbRYhMZ8k^@X^?8mAOq;al?p3\cP;DOgfuFxKc<2>pHEmd6>FvXd]_oDBIrYE8sH:C:^dfrPtmtD"
+565,"xWhFYY?4aYW3?@]MdpKAQ7y\aVVrBCf<WamsfCd^=wkLx_t2l^8e<Sk;4j_Sy]3OKxd5XNESM>3>^iW_hLa9clll7XcqUtBNyxbVl]h@dvOE@dXh06A5OhfKm][TJ34Je]c`]LVk^h@JP8cRwduZ6bF[1]@Jm6Mc8lvZxVL?GpdR;?SjQC\[=QkUjbbrbbxUduxGM:Y["
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pTgtDim,"Optional: Target Dimension (will default to pSrcDim_clone If blank (or)
 pHier,"Required: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
 pAttr,"Required: Include Attributes? (Boolean 1=True)"
 pUnwind,"Required: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used)"
+pDelim,"Optional: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
 577,1
 vEle
 578,1

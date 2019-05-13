@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aaw=ds[w[oOleSZ1O9?y@]hO@cfgu0R_aqWImqoyo4ZpYRMmdBo]1?kOh>cIJw^MWXTh[x2tKy5wxO`MeHeLyv:q7LDpMturjvI]yiqYuPloIhvEl=`]]Y=>BZNiIKGzf9no6lLyqPEAwhC8wq>ifrAjNbF56Qx:h>HeHkIII8nJGd9OFlnPl_NSKh]@MJXuzLi^zzxr"
+565,"rmO\6w17;Lk]\ITAzbaDdqBjV_SIL6@z>sy0uz4Ws:eJRQnEp9gc@DjoJgP9J;Yq:H\KyNS:br3SMYd3Qdkk=x^c]MZsN>sfzY^Snq2BYhHFF;K1aw5Oesb^BY>86m;7\;Bg3NPZ;<@3Iz]m3y[ZJrmd^@hGavFJD1NM^46aM>mVFN[o^F_aMZIsv3CI@QWAKS7jX1EY"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pHier,"Optional: hierarchy (default value same named hierarchy as dimension), ac
 pEle,"Required: element name, accepts delimited list"
 pEleType,"Optional: element type N S C (default value N)"
 pInsertionPoint,"Optional: insertion point (default value blank)"
-pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
+pDelim,"Optional: delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0

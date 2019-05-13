@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"gJA68rpaK>kwG[H[WYw8KdJd@:w?HZ3DhrU1vkRAXTT=VGCLu]WETe7DU<7M^z9?xK_tU03Nob]c38IOLvFY`D[hb6Yr]HZWNBqkEePiVFy9q4X417y?i<WEtpyKaE?Vt1Emw:0fZoPkjhND3<;wAo;`pqnaIKc50HgL2=]wR>hMyxMtA:<EX\zi?rZ4VVaoregBWItH"
+565,"ws3@bw8kQdFkxyg=ns<N3hIaFDmFUEQaNy5tJPk6p1ueA1kRd=PG0SGsgcAdu^iXY<4wdZq3x0qfU>h_a6vJLN8b;ZhX_hu<d0SSlQUO\qso`I48Ju;_[v5[U1@wMD7tMz1LgaCBF6xj>yn_[InkO7TbZ^BBlMWsIcAY9H_?Y;\bG55xbA`]j>mf\yMG8B\2_7Vdws]K"
 559,1
 928,0
 593,
@@ -44,7 +44,7 @@ pDelim,"&"
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"Optional: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
-pDelim,"Optional: delimiter character for element list. Defaults to & if blank"
+pDelim,"Optional: delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0

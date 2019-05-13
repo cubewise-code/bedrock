@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"mOG?CcaEHOJCza:O>9M5z^2kSFZhb[Bm`ebAMIZ@KZr>j_T\i:tDn9TZCqw6]3dE876CrLkMQek]GL0zsFSMuPT0YduMe2Ytz1gjVsp?@]plm043;0D\Fqn1m=qr`kH;Bk70K6=wMW><mGoLeS\CN:W^LJEVr>XXgtXZSvBVZjl:3^LGnWQ=Wv`mrdmdGsEvlw5rV?Ox"
+565,"uOPHV[]kb>KY8^20A]=TJaC@W?u>ubF\MtS00DtMhi0Zj<0yJzZ`a8H_Zu75]DQkzID@@qY\gFEi<6p3:VNR=x=2B=OcFP<j]nO6ANtXfkMZObsEvUD8HPD?Sgn9E`4?[Ub2`Q9J:M;1bB3qJ_hyWnrhpGh2fNhk0:auZtT?9Uu?N_`5`Rk]zY<5jx2U;0<V^g]:CyME"
 559,1
 928,0
 593,
@@ -40,7 +40,7 @@ pDelim,"&"
 637,3
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: Dimension (Delimited list & wildcards (*) acceptable)"
-pDelim,"Required: delimiter character for attribute list. (Defaults to & if blank)"
+pDelim,"Required: delimiter character for attribute list. (default value if blank = '&')"
 577,0
 578,0
 579,0

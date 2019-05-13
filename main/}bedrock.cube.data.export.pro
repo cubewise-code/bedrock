@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"x8ADveb8lYG:Gf26oDs<3h>maJBBd@d6p0IMte1YZ0ps1u?XukhT;;Am]30BfnpGi5msaTgUhR69>J?L<mGeOb[dfzVfRdB`Obda;T5K?oo?]EPJwN3tyKYBT8Em^=4TvG0CSQ2TOm@mE4OwCJaxweJ?cwwFnVn\roo2g8\@iMl7YWf]:N9^XFZXORV8^EYSc2?P0GwN"
+565,"g5E?[CpaX1Q?=vxW12x[k:;L9hMe1lK3bfn1zoql28GY`5?b4`Q;r7ho\=RBy9?<PerY7jXvSaoSkWDP:eTz`t9>9v3GR<v`x]aEGISoBvr43aKbpA\dqHlfU6qi\DF?_enFqh8zJy81ND=Lx>T8=k;=NjvL7Ozg;V[@o5aw?NLyy4?H`;ld\_5;cX^rvCZTph>2lbSm"
 559,1
 928,0
 593,
@@ -95,9 +95,9 @@ pView,"Optional: Temporary view name"
 pFilter,"Optional: Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations (Blank=whole cube)"
 pFilterParallel,"Optional: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
-pDimDelim,"Optional: Delimiter between dimensions"
-pEleStartDelim,"Optional: Delimiter for start of element list"
-pEleDelim,"Optional: Delimiter between elements"
+pDimDelim,"Optional: Delimiter between dimensions  (default value if blank = '&')"
+pEleStartDelim,"Optional: Delimiter for start of element list  (default value if blank = '¦')"
+pEleDelim,"Optional: Delimiter between elements  (default value if blank = '+')"
 pSuppressZero,"Optional: Suppress Zero Values (1=Suppress)"
 pSuppressConsol,"Optional: Suppress Consolidated Values? (1=Suppress)"
 pSuppressRules,"Optional: Suppress Rule Values? (1=Suppress)"

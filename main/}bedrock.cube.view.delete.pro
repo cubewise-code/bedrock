@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tfix?SMlD=At`KnHFs=eaREdllVd^eB7ts8JraCo^:od1huRdaw>N;N[X<SzISQAf;V;^HVmqzPjq[BJx9R[_sZ6lW5WPfICC]v7Dg?wiQkH:J`rTFk<HByUPre1;Ge=<J:IA3PhWVgc0cM6ozm\gPzXjuC]9pIE]HX8mrAVN3J1gJc:rH8Dl?x0FjjI@]K3N641lpZN"
+565,"iPMQM`toTakSnW`nYV?9eF8VJpzhU^qSPFHmy@giTOto4X5r9sintCxT?uIx;OjkpB09>xxkX9Syb?15y@8NjVf<HkYN]bK@Q2_A:Tn7U8T0\JsDxSmvbQXt>`gD68lW`;O;ILFpM;;80PpINxa=1TT^G`7:PiK5=3d]N2POtYzM:smG6svLW;:lkUI6n_WZ9Wt\MEZ["
 559,1
 928,0
 593,
@@ -44,7 +44,7 @@ pDelim,"&"
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"Required: List of Cubes Separated by Delimiter (For all cubes just the wildcard character alone i.e. *)"
 pView,"Required: List of Views Separated by Delimiter. Wildcards Permitted on View Names."
-pDelim,"Delimiter Character"
+pDelim,"Delimiter Character  (default value if blank = '&')"
 577,0
 578,0
 579,0

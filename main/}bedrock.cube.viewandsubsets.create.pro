@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"bFaOJTx1vM5=<uvkNpI^HDOpyY8JVZwKC=vhl3VqM5DyhwH;BiwfO[OS2]cE>?yGoaVziWMEpSH<v9j[?OWu\hzXPQKxRPflHM86npD=5mc3bTnlmjQuOm9tfSTE^NNA]7hwa3p=da3^@A5<?[`bivUFrDZw1^4Ty4Cqu8<6O7hbmQ6VmrFaWgA>hg]=Qts415?QZI]["
+565,"wR078w]]`W>Fcx^su_]G?`Wa?<l4EV_cYC2OBppnb7x1kq1A]=9[qD0C4hEZFWOWd2P<jjqkY]9yHZ7z4UbfODi;[?6\xF@PtJ0gNl^PB0]]iLulC<Ziz4q;gknHJKJoI6roTYkDvFBOt1WZ6CK3MH>DtruLt`9UW8ibDtB40bN=h6oABr\]QKkS;<2Nb]P:]Se69[;t"
 559,1
 928,0
 593,
@@ -67,7 +67,7 @@ pCube,"Required: List of Cubes (Separated by Delimiter, Accepts Wild card)"
 pView,"Optional: View (will default to pSubset if left blank)"
 pSub,"Optional: Subset (will default to pView if left blank)"
 pDim,"Required: Dimension(s) to create empty processing subsets for (separated by delimiter), * = all"
-pDelim,"Optional: List Delimiter"
+pDelim,"Optional: List Delimiter (default value if blank = '&')"
 pSuppressZero,"Optional: Suppress Zeros (Boolean Yes = 1)"
 pSuppressConsol,"Optional: Suppress Calcs (Boolean Yes = 1)"
 pSuppressRules,"Optional: Suppress Rules (Boolean Yes = 1)"
