@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rmO\6w17;Lk]\ITAzbaDdqBjV_SIL6@z>sy0uz4Ws:eJRQnEp9gc@DjoJgP9J;Yq:H\KyNS:br3SMYd3Qdkk=x^c]MZsN>sfzY^Snq2BYhHFF;K1aw5Oesb^BY>86m;7\;Bg3NPZ;<@3Iz]m3y[ZJrmd^@hGavFJD1NM^46aM>mVFN[o^F_aMZIsv3CI@QWAKS7jX1EY"
+565,"hNMimtFlaQ0?O9J4vzw8Dc\9gPKo@pwA=TX>kBotr>;uTBeeA^VexlB4zm9yT9euOLYfE^JgwMLrJ^\9:HvFLBkd\p`q0Gn?u]zrte<2`udZhl\?PF:@eHRg3?Sn?]bdw3cm:;Ze[n67a<J>vZrRD3vpw`QEEi7b]xQGW9n[?lY=zJg=goUSw`fSNjQAcM5_>dKOMDHF"
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pDelim,"Optional: delimiter character for element list. (default value if blank 
 581,0
 582,0
 603,0
-572,258
+572,262
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -230,7 +230,11 @@ While( nCountDim >= 1 );
             EndIf;
 
             # Create subset of Hierarchies using Wildcard
-            sHierExp = '"'|sDim|':'|sHierarchy|'"';
+            If( sHierarchy @= sDim );
+                sHierExp = '"'| sHierarchy |'"';
+            Else;
+                sHierExp = '"'|sDim|':'|sHierarchy|'"';
+            EndIf;
             sMdxHierPart = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sHierDim| '])},'| sHierExp | ')}';
             IF( sMdxHier @= ''); 
               sMdxHier = sMdxHierPart; 
