@@ -226,7 +226,7 @@ AttrDelete( pSrcDim, cHierAttr );
 AttrInsert( pSrcDim, '', cHierAttr, 'S' );
 
 # Disable excessive transaction logging of the attributes cube if it is logged
-sAttrCube = '}ElementAttributes_' | pSourceDim;
+sAttrCube = '}ElementAttributes_' | pSrcDim;
 nAttrCubeLogChanges = CubeGetLogChanges(sAttrCube);
 If( nAttrCubeLogChanges = 1 );
    CubeSetLogChanges( sAttrCube, 0 );
