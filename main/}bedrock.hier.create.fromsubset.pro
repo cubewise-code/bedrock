@@ -225,6 +225,10 @@ DatasourceDimensionSubset = cSubset;
 AttrDelete( pSrcDim, cHierAttr );
 AttrInsert( pSrcDim, '', cHierAttr, 'S' );
 
+# Disable excessive transaction logging of the attributes cube
+sAttrCube = '}ElementAttributes_' | pSrcDim;
+CubeSetLogChanges( sAttrCube, 0 );
+
 nIndex = 1;
 nLimit = HierarchySubsetGetSize( pSrcDim, pSrcHier, pSubset );
 WHILE( nIndex <= nLimit);
@@ -239,6 +243,8 @@ WHILE( nIndex <= nLimit);
     nIndex = nIndex + 1;
 END;
 
+# Re-enable transaction logging of the attributes cube
+CubeSetLogChanges( sAttrCube, 1 );
 
 ### Replicate Attributes ###
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
