@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tDD90YORDbwTR4z5]fRIzEqmcQdE6i`uBE7<Fv0;R1]upZuhH7K866ajpZi>4o4uOYXr6SSpEyY1;X1kOGET3RB6<?a3FutMruA{QaPi8STN76uu9v<VahD`D?9i_gd:H1pLctjN:O9Ck\u3GLOUvQ>0=>hcsjhcMaBt]v]QIhgziX>BDo@aAE^m>hbuX\FMyLijDbXNtDD90YORDbwTR4z5]fRItEqmcQdE6i`5HE7<Fv0;R1]upZxhH7K866ajp*_74odrOYXR1SSpEyi=;84kOGET3RB6<?q2FutMruAkPaPi8STN76E45v<VahD`D?9iO]k:HavlmtjN:O9cf\ucILOUuQ>0=>hcsjhcMaru]v=]Ihgz)[>BDo@aAUPm>hbuX\JMsLijDbXN"
+565,"cDxz3>\Qy;I3kxCc2`NMbB>qhDwlG_B~2HRl1MOW1v>qXZuUN;@\knVW8PiN@88ESSx}f@gzV`_Q>Ra4`@1hLlvVRKe3PSk4bMd~QYe^0vjLHHruyNF>OtfCxI]8SgD47=0HC`yp;5>E;Xt47buYv7Z_jLMP9Fx;>8Nt:OVQa>R@gh8LiLflvE>ob1i`US6OYDabVxjYcDxt3>\Qy;I3kxCc2`NMbB>qhDwlG_B>8HRl1MOW1v>qXZxUN;@\knVW8 _C@8hBSSx]a@gzV`o]>2d4`@1hLlvVRKu2PSk4bMd>YYe^0vjLHHB4uNF>OtfCxI]8smK47m6hM`yp;5>e6Xt48buYp7Z_jLMP9Fx;>8~u:O6]a>R@'k8LiLflvU0ob1i`US:OSDabVxjY"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pDim,"Required: Map of dimensions to include in cell security as a array of 1:0 
 581,0
 582,0
 603,0
-572,119
+572,127
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.cube.cellsecurity.create', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pDim', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hri6is`Zan1ZN1BYYAyl`bQlIR<@>vR`4?@wjFgMY4HMf]lHr3L04B?LO00yW[BxSr97:[Ef;oChrKraG4vcL[`_KWq0a[BFkd?LE8OLu<yZI9RGXZVtl`bcuMjAiU8VQN^c[OnwYpggOs1mrQ\2:5SF7loq8ynNl;FE[dghs`skEiz2OoK^C1n1o=GPC4LWnGtnjz@a"
+565,"dSJ?a[bivc>git1\qg?r>aKP>HXyir9yj^P5QUr`WQ6>D9z7\NgYoMyiWboHI]KVza80J[tPWuG7QgtXm8YWvx^vvWb8Bt<rz^`n8FCzt]G8eqyWu^mcaoDbc3nm8C?5z:`AowMi4JLiGY2NScGOoxYhMWfJw\<ND4vQZ7^dQKivr65TMK<VR1m9jdlA9U`Ujy:Z0Vsq"
 559,1
 928,0
 593,
@@ -52,7 +52,15 @@ pDelim,"Optional: Delimiter character"
 581,0
 582,0
 603,0
-572,179
+572,187
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.client.password.reset', 'pLogOutput', pLogOutput,
+	    'pClient', '', 'pPassword', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

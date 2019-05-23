@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"nEta>0@OoJvnkXaP@l?x^Ewg[\]rB1L45sR>SdBQy<LRPJ\AgFO[qhqF@p3zDkQd]D^P8Mv6Iq?jey3vEdY3xGfndGjZhwSS4O7AbD9k5<HZLHL]b\kL^?ypS<UbhQ6[P]Dw^G]AvW7hVdVE_]yfDeIFYowQk1WLdgX]hrV;hkJM;dRwAmuSfQO@_>zcVI0SAQ`_u194"
+565,"w;6_UGhZRMZ843JUq?zbDq7a698Eo4]vT\[lrJS7DGt3KmF<wLT[[=NjUKF>i9uSR;whWUlQoCg?R[[VhH<zt^4>4bo5vUWl@MWRt<IzQ8WLP?I[v6eZWlz?j^vli7uwo;8it?\OP^A:]v4^bNI;?wMrzQUK=ks4YBjiPNdWctN1l1UT5ElD[_;tfME8FFdkeDjXS5m9"
 559,1
 928,0
 593,
@@ -60,7 +60,16 @@ pSecurityRefresh,"Required: Refresh Security?"
 581,0
 582,0
 603,0
-572,263
+572,272
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.client.group.assign', 'pLogOutput', pLogOutput,
+    	'pClient', '', 'pGroup', '',
+    	'pDelim','&', 'pAddOrRemove', 'Add', 'pSecurityRefresh', 'Yes'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

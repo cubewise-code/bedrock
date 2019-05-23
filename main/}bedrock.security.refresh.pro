@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"iMxJC^0r9a9Ri7sEtLmaBvm[ylF8?]0v4_YoTF9_<xMNE5VNk^D]WI\IFQ622\[bo>w]uLY1ESQOj2FC017[y\uVF9O441c02mMhGGH72<BEz4?Xh3;UGExrS1P7yG>ANoW]OK\YaFb=35_LpMlvlES=oxJohq?nN0e9@JUbgM_ViZo:i;[?lW_Ze<eDpGh80S3DqEs="
+565,"sc0RFBr\Le7s9mq8[^QaL8N1CWUgpS=XjdvvO[;OytI45?@`;;?3sp4_j0IKVCjsuSRNbikz5keK?mdFlmOT`gy@=Aq\=XfU70O=``MjTVaBDAmI>eigspYt`_eC@pGojV_EHLCfBQdC?<W1jf\8lHs[qHkeZhrCNu_M55CrJV]cDIh]OA=\<Ca@GyM;tH?kMLBmjqvp"
 559,1
 928,0
 593,
@@ -40,7 +40,13 @@ pLogOutput,"Optional: write parameters and action summary to server message log 
 581,0
 582,0
 603,0
-572,46
+572,52
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.refresh', 'pLogOutput', pLogOutput );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
