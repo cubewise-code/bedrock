@@ -4,7 +4,7 @@
 586,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 585,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 564,
-565,"xPAqk=O9iAsQ`KJB:oJtd[eWyIc\97NYcs\T@d;^3@QdyRR3@Hn9E5fdAKmgRaf=v^@FZ=Tu?xDdea7EB4t3V8j\Z]4cB@>VHd`?=RpDVCKAY[@/;Kdn[Skqt2Utjk3TUQQk[zGiy@8Lmgrs2H84}Gw:c2x=7ec6@lKGN[d\X@@:IZD]RLu8XDmoANN[xcO%[9GwlVFU"
+565,"i1:>sope0y0dcL3DEvtLBRY[wXs4bhaXsdAjrNh=iEck]Zr?^s7PAGz;ICmGZvdMmOcFZ2uM]HM4f`7nYMmr<?5qPs6SF2?AQQQ1}6;?QAzfK\E/k\BPR5Rc?Gkci;fviVAd{yKoBrUH}>\xRup9mVX]6VB2YG98skG7XIcLjyTv@Jma=GVllI]gQ@uZGdO+;>SrQ3AZ"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pDelim,"Optional: Delimiter"
 581,0
 582,0
 603,0
-572,119
+572,127
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.rule.processfeeders', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pDelim', '&'
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

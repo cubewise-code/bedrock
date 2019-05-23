@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"juGFHa\i0va?379H;@2DQugirjq_Nb@Bk\rV^77vsLUGcPH>QR@>>C4KkGeFLu:nGp6h80ZgKfs4J2dvznEG9C`7OfIDd^4p>P\vFag\ENpzoRB^r^^YLHjJX2kW^Ky=6AIuY_DzCW\CVQBJ1cTxk_lBW5f4ZKtkjyabpRF>EtkKdcWAzrekXQSW`YwM4RY[HL6_tV<x"
+565,"fSxuS;aGp??ygPK2@]3ht;cko8]<gcB>Vwg\SRf0;zeQEUyA3aWfuc^@TucVJmiBEN4R>2qgAu2qLVnTOphvHW[>DXf[w35eF9L[oAn9Rv19HT6TwH610[coBqPq=9>u==;;xo>q0\n68rSgtxsnews9q02J[T^:\_[KRC>4dYh7i?3jzbEyjTtu?Z]c0\jCbcUs=dlf"
 559,1
 928,0
 593,
@@ -56,7 +56,17 @@ pTemp,"Optional: Make View Temporary (1=Temporary)"
 581,0
 582,0
 603,0
-572,104
+572,114
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.create.bymdx', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '',
+    	'pMDXExpr', '',
+    	'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

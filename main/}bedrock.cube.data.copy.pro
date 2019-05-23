@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"ozKQMjr48Gw>ns9aMW@qIbx\fMPIVh8nlAwQ^lOA:ghEwb8es`U3I=WLAhC3[5?44BD:T@\h@e]UpfR7iLHj:nnKwp?T5LLAsTN1;[<6h<]i[]pUBF\xI@;`qY6mP<=^9tReo1n5Uxr_Af1b^6i;K7x5mE[h;:RbG?K:1rn;y]L?Tyqx?xOZwOSQ7@t_5^6gyfiiy;=<"
+565,"zZuP@6RSYzE8JQRQ]<E2lqJLcQag3LE<B2jKO\y9Rn:_@RRU9V2?e;rk<C\Y]_Eq<I[haJ]vMhMgt6]wc0vsKh0;]aQkhowa8=YrNvI8aT07>l=2Sl1o1CHJyzb2t8TWx<GZDMT30G3@jyqgT8K>G\_d[2HJBthhH:>m6ro2AR@a`XY<[WkF7w9D>MIflpoum0TI2sFc"
 559,1
 928,0
 593,
@@ -74,7 +74,7 @@ pSrcView,""
 pTgtView,""
 pFilter,""
 pFilterParallel,""
-pParallelThreads,2
+pParallelThreads,0
 pEleMapping,""
 pMappingDelim,"->"
 pDimDelim,"&"
@@ -422,7 +422,21 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,765
+572,779
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.data.copy', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pSrcView', '', 'pTgtView', '', 'pFilter', '',
+    	'pFilterParallel', '', 'pParallelThreads', 0,
+    	'pEleMapping', '', 'pMappingDelim', '->',
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pFactor', 1, 'pSuppressRules', 1, 'pCumulate', 0,
+    	'pZeroTarget', 1, 'pZeroSource', 0,
+    	'pTemp', 1, 'pCubeLogging', 0
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

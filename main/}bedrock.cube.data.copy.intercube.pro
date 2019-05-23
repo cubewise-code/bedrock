@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"vrD_UA?y57IhOL]U:GvAsUaMUwcXUhDwM7Xsvf?<7tCzODKu]04eDW4OwfacyUGQ5E5o=zT@AGs@<oyXcx6Pr;?IDdFbM^aE;2[fKc4cNm]K_Eqr3]m[8P=GujwBfSZ`fW;Dj2ay1S]WjHY;mSR7KR7gDfqvc74koKFFWYXR7jSrWW=;c:mL:l?jb?Qv6<b:l^X>JT`Z"
+565,"d0PFaZvxzZ:d?exd<_mcwxvHlDFZJ`e^Q?[WdEqs2l=Q1iTZF7OAcH=bpjFK3n9=3`L@Tx<a?S\wTc48T2zCmK6pIt5QFANiL>7qapxu9zDq;MMfih4R6<;OC3L0rpAA]np^bl^tbQ^oEuratBb<7NmYFXxZmQ<d<`w;SlM29Pf0ikhv\b[l6bDE>\dR<T:w=yItkKxd"
 559,1
 928,0
 593,
@@ -68,7 +68,7 @@ pLogOutput,0
 pSrcCube,""
 pFilter,""
 pFilterParallel,""
-pParallelThreads,2
+pParallelThreads,0
 pTgtCube,""
 pMappingToNewDims,""
 pSuppressConsol,1
@@ -282,7 +282,22 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1071
+572,1086
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.data.copy.intercube', 'pLogOutput', pLogOutput,
+    	'pSrcCube', '', 'pFilter', '',
+    	'pFilterParallel', '', 'pParallelThreads', 0,
+    	'pTgtCube', '', 'pMappingToNewDims', '',
+    	'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pZeroTarget', 1, 'pZeroSource', 0,
+    	'pFactor', 1,
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pTemp', 1, 'pCubeLogging', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

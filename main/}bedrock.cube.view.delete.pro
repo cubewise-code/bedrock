@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"iPMQM`toTakSnW`nYV?9eF8VJpzhU^qSPFHmy@giTOto4X5r9sintCxT?uIx;OjkpB09>xxkX9Syb?15y@8NjVf<HkYN]bK@Q2_A:Tn7U8T0\JsDxSmvbQXt>`gD68lW`;O;ILFpM;;80PpINxa=1TT^G`7:PiK5=3d]N2POtYzM:smG6svLW;:lkUI6n_WZ9Wt\MEZ["
+565,"zCOX;eTa_mj7p]c1_G3\N\EPiraSDl6YkkFw\?Pc3T?NlaPScw5WR;Ag@dvX]wgG09issOpr4SXkrmrHDD?P>kSjlGn_\LBow_BAP73dWYz`N^P[OnJ5<CPGU]sr>b;\PJOyyyUOPrvuOvZ3V;f@OvaA:eCQDcLxF1lg2VWQ>juq?:MTDw=r6k>pKwZpr_;fNvcB31XI"
 559,1
 928,0
 593,
@@ -52,7 +52,15 @@ pDelim,"Delimiter Character  (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,218
+572,226
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.delete', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pView', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wR078w]]`W>Fcx^su_]G?`Wa?<l4EV_cYC2OBppnb7x1kq1A]=9[qD0C4hEZFWOWd2P<jjqkY]9yHZ7z4UbfODi;[?6\xF@PtJ0gNl^PB0]]iLulC<Ziz4q;gknHJKJoI6roTYkDvFBOt1WZ6CK3MH>DtruLt`9UW8ibDtB40bN=h6oABr\]QKkS;<2Nb]P:]Se69[;t"
+565,"lL_e;lJa>8QqaKvFrmIYPfWiG0o5>u>?khaoa7G6o>1:\<NoEDprZ4WPFnldb0?APib`sl?ze67Q`DS=E3gJn5o24F`LOfZh5gyO=NBZ:8zjYZgx^e8^3w1Ak;Y=zvY5pOm3X269sv^Pn<b]t5K[q:_nxdxUjMudBnNG`3e4U2PlY^xTyJS]q`=b1wYC`b6=\7jH>x=i"
 559,1
 928,0
 593,
@@ -80,7 +80,18 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pDim"
 581,0
 582,0
 603,0
-572,278
+572,289
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.viewandsubsets.create', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '', 'pSub', '', 
+    	'pDim', '*', 'pDelim', '&',
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pTemp', 1, 'pSubN', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

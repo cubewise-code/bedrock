@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"mXh:XiSAzlVC4ay<Hib5Ni[Ns>A;BR0otCFAo8YaLTuz3nQ72m9cnm4rU0@9n08yi_Vs`s1]JJQg;epF@LuTsWTf2sCZT4c^Io=v@Ji4A1M_mz>p7x4v4DpQb^HqVPCsNFmW9z8\3eO4^L3nD_5DHwCT2t]TU2lFhNdlxbmdyy_6d4EE5[ufqf:Ox4a2eK3>RD?ANGGS"
+565,"cqaak96]NiX6K[o6d4gI^vNf67TmUkhEJhfNqArAml_BW9DrCaA7F<tO6WKQY8_Xo[nks9sMiPmWih\V14ivpQBlophp38wp4dFX2jyj[t76GC?w229@``TDAxUlc[Sv3RSYwd4eD?>GDun<5dtvf^SCFjfDf5X]5l2>?PZNsrP@Q97[:Kt[Q[=I>4G9U;OMYJngPnrK"
 559,1
 928,0
 593,
@@ -56,7 +56,15 @@ pMode,"Required: Delete temporary view and Subset (0 = Delete View and Subsets i
 581,0
 582,0
 603,0
-572,130
+572,138
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.viewandsubsets.delete', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pView', '', 'pSub', '', 'pMode', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
