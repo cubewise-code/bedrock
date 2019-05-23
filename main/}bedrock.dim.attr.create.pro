@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fxXhkpafbrG43W=MC3KLy?XhgLlv>xpt<HBzu?HvhP2Gy`Bh<BwAm[D3`wL@bS0nl;Bb4P7Cw_Ahe@6?h@ZLKxGn_fK>2Uc72BcOn6\xJdoU\Xuax@QXdeSUiVOGRq:zpGW8Cs:l:7Jd\ExE;FUe@ucRoeDU<T4G3ilRR6Ojlw:fPxDLMTZb?z47tsjA;AWB[R=b[D16"
+565,"jASn6\NEmza0yC:pY^5iq^KucglvkS?nOkX]C5[C?_uu;b2P@D8Ft4IlKv[OY[F;@q>0kk@7KYp^iy8]9<<IatQ4s0V<jXqWb2JfK6o_]ujZcj525qF?0IlhY93e][U2Zoww7<TP]16DQk5puA3Y]HzHJ]u@Q>V]EpU:YY=q?m\U<TDIILv@CcnydvD<M9hgh3b`y5ZF"
 559,1
 928,0
 593,
@@ -60,7 +60,17 @@ pDelim,"Optional: delimiter character for attribute list. (Defaults to & if blan
 581,0
 582,0
 603,0
-572,191
+572,201
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.attr.create', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pAttr', '',
+    	'pPrevAttr', '', 'pAttrType', '',
+    	'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

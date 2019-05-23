@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 585,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 564,
-565,"ekD_naT1_CU6xW9=VL2wU8Tg_5fwlC;27fEmJ7c0\rSBXLGZ:Uqu@BJiDCaq6JOpqc3\hhp]_5DGD__OjWX@It0vvq6<X<y4>RX`CM4T2?c55I;S0pnR9UJa3JI]lMV5wKO1fgB05`6lY:gcoo4tcMTd=[9MFJQ4FEkczMWB>`DvxW?8uhzC?@B>xca0H<gaiDgvEr4M"
+565,"w5Wlrvf_Fp^7`q4Q>>Xn?1ha3wT>ShE<kRa:[X?@RqEROo67rY5rGecBICy9v7InaBRKfzfH:M:Y9U>]xgCw5`>O\4@x3<x:T;yfHmxe_<Yv]P_CqSUSP3lrb@_dB2\L^][OvqtSR4LKHYINQkJ5nYeI8_CRECRhjc;cqm3v>9@cWpKlRHZ0a57IyC>a5Db5[SGe;hr1"
 559,1
 928,0
 593,
@@ -48,7 +48,7 @@ pSrcDir,""
 pSrcFile,""
 pTitleRows,1
 pDelim,","
-pQuote,"'"
+pQuote,""""
 637,7
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: dimension name"
@@ -76,7 +76,16 @@ vAttrType
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,145
+572,154
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.attr.importfromfile', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pSrcDir', '', 'pSrcFile', '',
+    	'pTitleRows', 1, 'pDelim', ',', 'pQuote', '"'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

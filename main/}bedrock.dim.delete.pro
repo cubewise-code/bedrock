@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"uOPHV[]kb>KY8^20A]=TJaC@W?u>ubF\MtS00DtMhi0Zj<0yJzZ`a8H_Zu75]DQkzID@@qY\gFEi<6p3:VNR=x=2B=OcFP<j]nO6ANtXfkMZObsEvUD8HPD?Sgn9E`4?[Ub2`Q9J:M;1bB3qJ_hyWnrhpGh2fNhk0:auZtT?9Uu?N_`5`Rk]zY<5jx2U;0<V^g]:CyME"
+565,"eBkdzaPSG>92=S\q3EROZBZCtGxk3m]Q?2JApnZZOdG3UC_=2H7ei7[3pX?DB\B6PhJe:mJ[EFB`NiGAaB:VjSpzOA1sXH9\oFGJ8]7oC3ho[BEwL=C^O29xr0QQXy\gDOUZ3Um]`?cua_KeUGcUEEIVTREWhf@SF<^L_mfACEKzrqiNYYH?6tE9BUmNLl]Twg@PanUB"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pDelim,"Required: delimiter character for attribute list. (default value if blan
 581,0
 582,0
 603,0
-572,165
+572,173
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.delete', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

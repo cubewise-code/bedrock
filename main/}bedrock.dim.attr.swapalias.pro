@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"m\k^jd?6bzjKeaf@\LNFzNfV`YXbDi[6R\pNaI:BVz^NN\3wBL=7RY9:TueK]nLd\pQcRqvNHWv8<_PaaE2qyj>Vr7eL2@[m5gPBt]Vuo2;mbxm2vXGuYJlig<Dz^:IIYjEHkT;?wRF<tYD]cYVLr^ga[]rSN6`oV5pgRQkZEdoY\G?]xmJME_T0QVl?;gzKdjiyknE^"
+565,"p_Osc5dsW?QVuH:Ga8z6C595l`Gmq:PYd>Hd?mYw;`X0gG<jf_JNTQBwFwM9@JP[PPOk6TE9B1LeraUa81koMWYkwfVuq5]mqw]xt;?T[;cO6`[jBKm_lPZP2[HFMpKYSeDFI5v:lJ_9_f5Y1ji4]w@7[s2bKK@uVbln08r^[OH[NoVtkMNmO[dU0Vn8tR<OgMm<yxbS"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pAlias,"Required: Alias"
 581,0
 582,0
 603,0
-572,101
+572,109
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.attr.swapalias', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pAlias', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
