@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"jz^OrGiNRoaXQ^<a@uN^6yfyFtRQzd05IuDnnqWcRaU^5Te3N6p]AW8D3^@ExuCY_Y7kRRPqRL0P@jITWzB^eGnYtq69x^=e6woOXW[YkSmR_okr;>1Kq91z=mq6wrPct\TC?0`H66FR119o8eJeIeGgvS0YZou7tXBZZ3R`SyLg::>TFjgy63GKxa:YKxp7C1o8HdLL"
+565,"lOLloJRVm9j4aHn2DW<hiG>k=cLnMTH^Zhk\L8p8EuM\\@pN\iTMV6CHmLm6ekq^8\ITvPGg4[?Xg1mQM`Z7cLVg[8[^:zFS_BhbW?\g[Y@TG3qxUld<T>MirL1V7b4P^b9M4YiwIX>juL^t?c;@pf=3;6dLJ0Tc?1hbu;kv`DKAjh0s@\X8dt1KWs4xBDdWOv48[h]z"
 559,1
 928,0
 593,
@@ -84,7 +84,18 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,393
+572,404
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.create', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '', 'pFilter', '',
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pTemp', 1, 'pSubN', 0
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***s
 #****End: Generated Statements****

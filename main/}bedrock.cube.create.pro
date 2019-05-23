@@ -4,7 +4,7 @@
 586,"Variables"
 585,"Variables"
 564,
-565,"bnyHO3ewBjezbMV96PCYhYjQf0qV\i0zpX20\4OGj7g=WCzkPerw6Fmi]oTqqK32pF5y:_mWZ1jAave^7yynO1@iKdB<7p;>^aE0m5e8uN6?:gFsAD]HM]z\vgX_M]h?ar?@UJ;b5<2pThVEo2Md0733@BcSoJy_j5J46Q`X:Tgy:QKzrlkJ[I8ySo]r69VTxuNOxs"
+565,"v3yx@sZULMu`Oh0FFcRzWLyrPW?Q6=Rq0<JzE0y;`ICwuNZH7nm]>QX9pfT1OL6RU`LZ11YlrjA2uPHNP]H=XjiZB<UwC@=;q0]R?I1zUeH2Csq4FB9qm^gyaPOo1IVb2;@NEF41^|B?YbFc\=MQ<\r4c;f?BaEOcU;40qGyJmhI^pf<40MG{Ik0Og>rV3VwvDGn`\"
 559,1
 928,0
 593,
@@ -56,7 +56,16 @@ pDelim,"Optional: Delimiter for Dimension list (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,639
+572,648
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.create', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pDims', '',
+    	'pRecreate', 0, 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

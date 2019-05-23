@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lfBmbqAuGk<Ma7bWTnHH`yaN:Rs]9QR:fUVS[Dwfihg7jlxLLAI4cw:StiA0XQgRW>J<wj>M_BNaM43N6qsFHV`XZK_stpUcCY\KVSVCzaa2LYcEx[dCfk7LzDubIShQ\qEF>[w:gYZtc1?VD<;Ey?^GnLJyJiVTH[rH=XMS`yn_SH]uB]]D_5Inz0ymw9>2ws67ugu7"
+565,"j57pW>j9aqarTzwK^bDbO1925383;xF3Cz;orAbVT7KJ_P1Qmo5G8rMpj4EknCqe@RWFJ>i[WcLQAG8XBrrUpz:7<8kr=KvX:\DNGpVK:c:a5h63wDKvAj=7AE8FiApxFII7pE`D?m3\Rf@M;fx_;_Ut4i5@HPXCZhV=sSTdOGoq7bX^@3Evrp4pyMmeXSHwTAzWmxco"
 559,1
 928,0
 593,
@@ -52,7 +52,16 @@ pCtrlObj,"Optional: to Delete control cube 1= Delete control objects, 0 = Not to
 581,0
 582,0
 603,0
-572,138
+572,147
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.delete', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pDelim', '&',
+    	'pCtrlObj', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

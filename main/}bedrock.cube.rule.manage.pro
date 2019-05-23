@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"mUcRl;[GrPR8SaofDXQK>7zE84b38<`SUXOus4Zf\D<<SO2lVu;^=eV84Hw7@a`N]8TeJjkPn3_w@X[Ksv>4_d\afIO14GFWoNz`L;1sNh_C;7ECLm_No`s8GY0Whh^[I47Z=Itt=iMtYpAU3N3j:`b@jwxEo:20M1Ee;;RaKhBjpn0aWyLy4_N?iuC]nFH>boXW8:kc"
+565,"z5ET]\aTJIstnCu1iZB[gdsxPQak2GsC;=A=2pT61G1M[Z`LV;6iStS9N5`TriTfuCP<YaX\Om:Fw<8W1k2QS]4]`TfNDsDQfCn=k9yBRlISeMlEI2MvXgJ>Ed3gI:Flw>u4c5^jdpggR3n2>Q_nMIabDn3g\5=NoW?ddjB1wu=bEdYv\AZq7VGWF6y<fzX>ecDF[zFN"
 559,1
 928,0
 593,
@@ -60,7 +60,17 @@ pPath,"Optional: Saves the file and the backup of the existing rule in this loca
 581,0
 582,0
 603,0
-572,233
+572,243
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.rule.manage', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pMode', '',
+    	'pFileName', '', 'pDelim','&', 
+    	'pPath', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

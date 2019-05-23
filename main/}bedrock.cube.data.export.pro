@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"g5E?[CpaX1Q?=vxW12x[k:;L9hMe1lK3bfn1zoql28GY`5?b4`Q;r7ho\=RBy9?<PerY7jXvSaoSkWDP:eTz`t9>9v3GR<v`x]aEGISoBvr43aKbpA\dqHlfU6qi\DF?_enFqh8zJy81ND=Lx>T8=k;=NjvL7Ozg;V[@o5aw?NLyy4?H`;ld\_5;cX^rvCZTph>2lbSm"
+565,"aaYxNe6j>PCV?WGA64n0LbGktX\yf`>or_G4Upm7=A16yA;Wl68r40QIlYpC`H_gcm7p]aiL3rRYT1;RyrJVx`eCz<i?;5]FQo>]GHh4HJn[>`]JSSKI;_l^shyy1ZbBiy;kt?Guexs;BMfZftrDaazHY^b5nCyqaPfcd\xGKV=W9xNp]MIYWcDEbMmtD<AbZX<=X`Dw"
 559,1
 928,0
 593,
@@ -73,7 +73,7 @@ pCube,""
 pView,""
 pFilter,""
 pFilterParallel,""
-pParallelThreads,1
+pParallelThreads,0
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
@@ -722,7 +722,21 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,317
+572,331
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.data.export', 'pLogoutput', pLogoutput,
+    	'pCube', '', 'pView', '', 'pFilter', '',
+    	'pFilterParallel', '', 'pParallelThreads', 0,
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pZeroSource', 0, 'pCubeLogging', 0, 'pTemp', 1,
+    	'pFilePath', '', 'pFileName', '',
+    	'pDelim', ',', 'pQuote', '"', 'pTitleRecord', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

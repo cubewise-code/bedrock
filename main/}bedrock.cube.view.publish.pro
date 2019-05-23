@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"po=6:IzEMKzu:LQKaPhg5kiGkIREJleS>3u0CHAc[0kfVD=xk94;hAHa:zPe=p9x7KMK]W?GIkV?wu;cHF;<[uN^9iDzxVuhmM`nfIBgUVA_c;2g9UPiz_i_uYnPoE=uw\g78\oBiSLFcZ8Vi2Sd=ngGi\sb1jqCXx^@Nxflg]r5gk3`6K2=vAk3e4B1vP6biyoftfQj"
+565,"q<6X9_2z7=QbKW_W`aOvkXTBryOa;8YLVOeXO][c?mNAQ:Q]tKvUFVf9j8I75x>ERFtd;plh1rBDdwk=4Gyi\CXHHs?m`TNeJ3oySJjd_TI[:8M4HC0_<336JLMWB7tOLJ11wTphspgr@58YCuExs`EyrBLS=89OqSp1uCgCI4K[U7KPyMA;Xk:jJ7NeqIjXx2^nHtI:"
 559,1
 928,0
 593,
@@ -56,7 +56,16 @@ pOverwrite,"Optional: Overwrite Existing Named View? (Boolean 1=Yes)"
 581,0
 582,0
 603,0
-572,109
+572,118
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.publish', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '',
+    	'pSubPublish', 1, 'pOverwrite', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

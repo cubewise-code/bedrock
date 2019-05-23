@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"dj=FaGTAx\lJ]G4TWAC7ABHnmzdX<psVQ@FT1H1xbdpm:w9Q@zjOLuS[SzWX9a`<]lVd7WzdL>wASTwHX]wALEH6V>2<DlRokjdFIby40=xopFyf7IJjmM9E:rTQ@Q5F0f:Qt1JiNoWQN;;9CM86XP\56BFEn82j_j]B7J6H1<U@d7a_V\V8V>A7:s4QuW_9F7AVKfw8"
+565,"sKxr\8D5j_XM?2qD1pHasqWk`HWt5@u[`:exS<Hz\woN?:8R?4XGy5\BIy5]xOS2tdH1=4XgkETBzH<>X[O?f?_N5yX@xQarJA4;9sTi<zy:SuPazUw5EvL;0G>vOQ1juYke=?ImGZ?oJ3qkTmH]Y9eE?6UZq4h<m29A_V2GPQVxY34d3G\KGoXVx_dRc4q`<\3I37Ww"
 559,1
 928,0
 593,
@@ -80,7 +80,18 @@ pTemp,"Optional: Make Views and subsets Temporary (1=Temporary)"
 581,0
 582,0
 603,0
-572,428
+572,439
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.data.clear', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '', 'pFilter', '',
+    	'pFilterParallel', '', 'pParallelThreads', 0,
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pCubeLogging', 0, 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

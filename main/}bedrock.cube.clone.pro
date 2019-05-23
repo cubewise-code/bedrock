@@ -4,7 +4,7 @@
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"vL_:oX2[FbH2kq31CNJtasy@ceiZvz9;6;?T\7gqc8CT?liIN6U^VlLsdSuGp;wVu<R|ZST^aXH:2\9aXoMG>9A<9QOBuPTyPg1=m;>Rq2lgs<hl8P>lVj7<Y<<eYbfJ8x5ARr7Qy4V^PWzfw^Y:=?=q]PHe8r=82Ll=waqjnE;dedql@EeWlKb4u09B=FF]0c=Qipr3"
+565,"lEz4MWW@f]>Uy7xQlR@bxH4Js6SVddu1VLCg:l0`qQ@KehIR:2I\4qiVD_u7S4xfChqJ1O@V9G:\WIu1:HFSK<25zHbTzzMaK@7]4vOFyG89jblH4zAzw>X@[dE^Bc<7seEbub?sf\SP6Yn7Zc3=LKmtQy:6UM4H0e]2B|:Krb7`DcHrebXtGR]mE:JFNVUP1]Voi9Z"
 559,1
 928,0
 593,
@@ -252,7 +252,19 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,156
+572,168
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.clone', 'pLogOutput', pLogOutput,
+    	'pSrcCube' ,'', 'pTgtCube', '',
+    	'pIncludeRules', 1, 'pIncludeData', 0,
+    	'pFilter', '',
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pSuppressRules', 1, 'pTemp', 1, 'pCubeLogging', 0
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

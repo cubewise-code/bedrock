@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"jd^K6P=f6CaQoUduKZG?g[BxQKX1BbJ1sO0MPNEKR?nF7eo6:NP8j5Q@h;S4\bf4WYl\yKoiN=fLoE^ij@bJpCmnaq6P<Xe2RO5[YzpWCsHFmIO7a;L2a[kwnLqzvJ:]<<2^tJ1YM?mwnL<ogZ8C^aHRE>zyU\H>Y<Mmo;2[o;N3eecf1s_Va<D>9f4FJyZqjlakb:eL"
+565,"iCxWq?eU<awMOXXCBSqtHXlwAjfyJWgfD2HRenj3kNEOn`pdATx:Vd`G5e\Ee?vD1NLDkuvM9@QWTCpN7Aa:ofbwFMznlCpre;>6NbhGaTZYC_PDRS5@xaEK6hcZA59?wj6jho4YpUjhrDu=l[JSx4Qxm4dG=;CR[unSCtyTI?[vtM1qVU?8PE\5tufRPbZAX0@9gL8X"
 559,1
 928,0
 593,
@@ -64,7 +64,17 @@ pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,283
+572,293
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.dimension.delete', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pDim', '',
+    	'pIncludeData', 1, 'pIncludeRules', 2,
+    	'pCtrlObj', 0, 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"mSqQYE=yNqR9MademIp5dud7zHWJ2m5RAHdXp@=t]3a1`V^LM9Vd7KbhF>7qxaTp]ejFkLHD@DEf\eC<L3[kOKRHFoNK@Nu\RC`h9KMDMcVpGIQj4gBm`D\S\nLk>B7l8?4^T1@VGq8h6VdNDaeLm]O51IyU@m8qqzD9pGD:U@>H3g2e2mL5FUXr58GYa@^hS]33`A^d"
+565,"g21[6axa0R@Pqav;4L\qoikyj68<wL5ak?dbGLxL4\cB\8d?<PgN2Li<su`6P8BD]GX@iTyD3aW<iex[Z4GvCN`11g8E9@jSkiad_b<:Ks1?ez=zyR\3G:eySNZD`?_2Oby4FhvNinsPe4QHI8n5gZM\@XKGSv0;a]l\Nhnmg=<Z]uGhAQ:OjcN_A^Py0:MdCQ]bfuf<"
 559,1
 928,0
 593,
@@ -264,7 +264,18 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,291
+572,302
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.data.import', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pSrcDir', '', 'pSrcFile', '',
+    	'pDim', '', 'pSrcEle', '', 'pTgtEle', '',
+    	'pTitleRows', 1, 'pDelim', ',', 'pQuote', '"',
+    	'pCumulate', 0, 'pCubeLogging', 0
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

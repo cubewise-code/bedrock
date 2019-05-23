@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"v]]A@1EO>zSefd64_0KP^Ua3_d5SDFMqD1dbusfih5Sa[s0<YLbopPvh2Br0Qihhm9kcYNgmH8RiOf41jCwPw4hc6cxR08SzSGB;:BBkD2x1^hUFGar_U`TWRO@i2]jVgq=kX:uQqq4bPjQZkvA50UplzCT?;gMuC1SCvBAeM]gh\[G:?m0bPwY2vkU]SR7h>HlrJfOj"
+565,"umFgRbSx@KlmE:h70LyZ7as797zd_x_ji501BY@]zsLDA17GQRC2Ui_vm]?t8m\2D8eVU@I_As??r4cM`rgJUfwk<oZ6hbZVVTvNohG[r`b<OzjCLP_PnWt<tuJVOI>TkxTw1<UkO8=7eHZ8P=rGz[oqA_4c5pqCMK?kCF?Y4d@W_]M8du`v\h2TFPP8?2wp[_3GTno:"
 559,1
 928,0
 593,
@@ -29,9 +29,9 @@
 pLogOutput
 pCube
 pDim
+pDimIndex
 pIncludeData
 pEle
-pDimIndex
 pIncludeRules
 pCtrlObj
 pTemp
@@ -40,8 +40,8 @@ pTemp
 2
 2
 1
-2
 1
+2
 1
 1
 1
@@ -49,9 +49,9 @@ pTemp
 pLogOutput,0
 pCube,""
 pDim,""
+pDimIndex,1
 pIncludeData,0
 pEle,""
-pDimIndex,1
 pIncludeRules,2
 pCtrlObj,0
 pTemp,1
@@ -59,9 +59,9 @@ pTemp,1
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"Required: Cube name"
 pDim,"Required: Dimension to be added"
+pDimIndex,"Required: Dimension number of the new dimension in the cube"
 pIncludeData,"If 1 then data is kept (copied through clone cube)"
 pEle,"Required if IncludeData flag =1: Element of new dimension where to store data"
-pDimIndex,"Required: Dimension number of the new dimension in the cube"
 pIncludeRules,"Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
 pCtrlObj,"Allow overwrite control cubes"
 pTemp,"Delete the clone cube (1 = delete, 0 = not delete)"
@@ -72,7 +72,17 @@ pTemp,"Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,294
+572,304
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.dimension.add', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pDim', '', 'pDimIndex', 1,
+    	'pIncludeData', 0, 'pEle', '', 'pIncludeRules', 2,
+    	'pCtrlObj', 0, 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
