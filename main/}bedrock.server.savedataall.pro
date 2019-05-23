@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aa46Q8eTvWYf1Q98petE]i07qexYGrUO1G4[V?oLKM[zvNI9zzo8MxKAGapEokkg3LB^a]PTsr>GzUF7fa02\IfzK`:Q\4oJ0W`DgI;WVSOXH2l0T<CzCQf_^;`Gst[MzpmQYzzhRET0qpYDx@JMVD@XbRyYUk2ss\F[Y\]7DcWi9sANPPiNVL;gAmT@3nAj\a4i@J<S"
+565,"kaIydhdt7;Harg=atVwdqWwFZRmkj`tT:s6X1Ch>YB]I2RPIKop:>erJu<TM]d2F:7x34YW;vEThAApQz]J=ejdqb8@>bH8iYfyUZrzlhwpC2Fl4\HV[w>18tlJ@QeBIGJR6LgFiyI6H:YAKOBKawJwR9HDqP48c9[s[N?UfsLeFTsJF1NrN19C<3PMd8_GL[OjxO25="
 559,1
 928,0
 593,
@@ -40,7 +40,13 @@ pLogOutput,"Optional: write parameters and action summary to server message log 
 581,0
 582,0
 603,0
-572,48
+572,54
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.savedataall', 'pLogOutput', pLogOutput );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ed4WWa>0aTqG8<1=Xn1I^icIC<zw?;yAxD0Hge9?BzIFSG=dNEP71kK7S3H96\X4As@YZ]l`[oCVugU57RO<RfVWfx9G_sj585J_eD_XZXy=113:2MBj]GD3MgVtKyGpbHTWLl4lU7srF\IAPfA:Z0]]Hx3T<XnFlC^K4V8r3hSzL2hGIr><lVnM;Hm988Gxefnz6RJ0"
+565,"p>vw9uo3ZZe<g[?_a2\3NMXZ06[:lYB\V_9sK`xj;M_dL<q\2^[Ao^matt`hORdQp\QN^NJ5[hC4>pJV>Gw=^eMTmqlv:cPNciTfPry6ALpY=JV<cPs?Jj]mA_UTjh]kBIeyAtX?vvN`6hjKyKVwSmpxJQeH\MF\1u[Pj3W2d14DJjt1oibQjQ]qHL>M3NsXE9h@k0I]"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pTgtDir,"Required: Destination Directory for Backup"
 581,0
 582,0
 603,0
-572,115
+572,123
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.dir.backup', 'pLogOutput', pLogOutput,
+    	'pSrcDir', '.', 'pTgtDir', ''
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
