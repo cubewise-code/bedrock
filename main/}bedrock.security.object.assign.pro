@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"eQ\PeaUCDYZtd0zMaF;nKUv`J_@s1`1F2ISQMH7eEa:kSd0ea_AIU8DIyVMrB4`lM4>zwEqm40ZqVt^w1n^r[zfHmyRc]nMakrNnSD=l_Zwcv]n1n4812tt]PMY9]d>][87UpCE=lbD;bPfLRikkS\b@F:ILL\@PK:NfLi[9s2eEJapc`1`^lO[y<[>tt]N]j9MRUbJb"
+565,"rau9YQW08yQcx[A9l<ak^JjZv3orG8MLXws]CmJx\S<eOwebkcA1n:X4uWWmJi[x0>\yPUjOm<X`;bmsDSwPq[J>iWgVVT85?NSLuXwOaxbF<EY3tJg[_P`yuGRbl>f;O8;MJ6tihyD7r<JKmsn:fnol_gGP9HMllt9<o43OrOP[jPfbBe3SSwT4VB1iq:pf7Wj]bKHd"
 559,1
 928,0
 593,
@@ -64,7 +64,16 @@ pDelim,"Optional: Delimiter"
 581,0
 582,0
 603,0
-572,311
+572,320
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.object.assign', 'pLogOutput', pLogOutput,
+    	'pGroup', '', 'pObjectType', '', 'pObject', '',
+    	'pSecurityLevel', '', 'pSecurityRefresh', 'No', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

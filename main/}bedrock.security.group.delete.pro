@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"bQaSydTy?5iXY3UQjf_l`B;shX:d9R9v``2^@9Y\5euWRP06eaXCxOcq=q<uHn7m\JOak8lwECgtG[0ZCazexNc:`9YzEXjROLFYGZT5]jLo1JGKhACjQ<>ne3oF49X=@V?tbo=UQs6oV2r^?MEa]5^97lzKQSKB\7]X\d]7IWN\XLR9maKBrQ0V4ScqywJ^vprpxpv2"
+565,"i?[xruPJ2a;:0l6UVNwO[EJrbUZfm_yp^0:JqvprVW5HPoONe^:Nj3z^@9re7qt:x3@GckXFn\j]=6GwVgoPy0hUZ6vxBl;um<n6[:aUSB:_`vMRrI?87_Rcm3tEt8Qsx>z68f86C]w[RD[p;ggnr_?nY\YL0J3QblWv9`hR3>_y1E]Wt9l@;LLcdQCBRA4c@EKJlR0a"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pDelim,"Optional: Delimiter character (Defaults to & if left blank)"
 581,0
 582,0
 603,0
-572,188
+572,196
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.group.delete', 'pLogOutput', pLogOutput,
+	    'pGroup', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"l@lZI2wBud6]auwmgnXsUpMbCoiHS<;9Jv66=<yc1eeQ8rNXtjt3t:J`YCEObh3qQ<?4cWW6y83HRfvBHMv4w0xr2PxTZnQj3[bLI57]xRzD_HVEPYBHd4dSA[2Bqt;_AEO^_n[8p9Jv9;>CY5>=ku]R31wSxFiJ7[`PnOa46wh`IZ]PET[[oonnjXp;qD2iZ]JFUWWs"
+565,"f>aw99a2]^Bk=ZclB\OGhq^RuKY:TEyfdCB2`D9tc9JMLiJD>pWtGKlxG>IX=Zs:cOIVIz4@mZnr[5pRy[U7eVc5D825@5@CG3\4^nolSJRd@5930xQy3Gs[bcOHzi5p?;9Hn>5QE9[EYHc3]i2dOLacsvVF_HO3e`HqoZz9_kVCCw:j2Y3CND3^@CJFvyS4NR4HuCaE"
 559,1
 928,0
 593,
@@ -56,7 +56,16 @@ pDelim,"Optional: Delimiter (Use for a list of target users. Defaults to & if bl
 581,0
 582,0
 603,0
-572,112
+572,121
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.client.clone', 'pLogOutput', pLogOutput,
+    	'pSrcClient', '', 'pTgtClient', '',
+    	'pMode', 'REPLACE', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

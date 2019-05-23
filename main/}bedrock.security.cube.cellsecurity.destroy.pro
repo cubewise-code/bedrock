@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fhFOlIzCHsxAXU6Q]WfvdTzf[PR[ai1{bXNUn0i7E`2C9WU6:Jj0x2K5L_iNQs4uhN]t6VXNgMPAc[QwYk]Xg^7;dykcp1\que7|AF@DeDpw81zuiG0^PB<>aeqAUgdKh:@FS^x=FzkJk29:708PV:fC8WrcuE26?ROT8KPa\kRMh8?G^2Y2]O^yrz^t`QVFY2GOi_7IfhFOlItCHsxAXU6Q]WfvdTzf[PR[ai1;hXNUn0i7E`2C9WX6:Jj0x2K5L/?LQsdrhN]T1VXNgM`Mc;TwYk]Xg^7;dy{bp1\que7\@F@DeDpw81J4eG0^PB<>aeqAew`KhjFf]^x=Fzkjf29j108pY:fC8WrcuE26?RU8K0m\kRM(;?G^2Y2]_Pyrz^t`QZFS2GOi_7I"
+565,"fbm@6rz\<izYj5tM^\23ZOHL7G`jiTE{rD1WuFIwcd4[^PeEa\oLVMTpOTi^BB85]]msvrLyUYUQ[\aR55NO7MgO1l`S_OX12HMt1xBCZYgQ\KpuIalEG5GLoU7?XgD8r>`Jc>neiw1DK:u:7r@^6UZ31X0<[zwyoDHdD^Y1_U0[eHYs2ouQmM~0HfPfJT6B97=erV;qfbm@6rt\<izYj5tM^\23ZOHL7G`jiTE;xD1WuFIwcd4[^PhEa\oLVMTpO$oWBBh2]]mSqrLyUYe][<dR55NO7MgO1lpR_OX12HMD:xBCZYgQ\K@4EalEG5GLoU7?8SI8rnfjm>neiw1dF:u:4r@N5UZ31X0<[zwyoDxeD^9=_U0[%KYs2ouQm]p0HfPfJT:B37=erV;q"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pDelim,"Optional: Delimiter (Defaults to & if left blank.)"
 581,0
 582,0
 603,0
-572,121
+572,129
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.cube.cellsecurity.destroy', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
