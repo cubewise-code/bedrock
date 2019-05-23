@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rOLabVd=xaV_;jiadFa6Bl;bf@fm<07bSMUJaU8IQDbDuy42lKL_oXg5V_>lBJKiltfNJR7jK9fydZQkdz>35aTFleSk2DM7SnW?uDBP3\eNA6H2G@Mra48QBzLbsTXhmwMh@ebUGWprjU>3NGU0EFUp]NCNnqqvY6`ZZ<Ji]D<xd=NctBhRk[<fj?Vk5Blc?aSy<Sb8"
+565,"hgGW_C6jaGg6Lx7HnXg3Vf<V5gMnH`5PoXU^Nl6]ZbFqlQC@jR91;zT[A5w7eFQCq36l5wz;OCUZmi3:3<Cxo>Wn??@:WMoH9i?tZZyO_2=HxP>MlZ;_rmr;]lYof2z[UI1]`Wi7yVyVF[Ma\1A_Usyqc`h=D8HgQ]btd991LsvKeyB;XHSB`^Io1_AnvukeQA[U51sD"
 559,1
 928,0
 593,
@@ -64,7 +64,16 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,197
+572,206
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.exclude', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pExclusions', '', 'pDelim', '&', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

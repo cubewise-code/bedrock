@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"aamBSm5Zz?7Ed=D89fTl3YCrFAL[b0m9f`1E1aRC9NQzew:A8Ag>4tp?TCc[3X_\CT``0@gfglSa=YPvgRbMJN@\ye=^2Q8NmGvVkwi[NQfX40_ft@pM^TGUmi9qdnpxzl=0:5eCH_fwiGrBRYX>hN?`@KQsV\Il`03hM]b44L0@e@1`:qJh;U>6Ys?uc=L6ODh?]2TY"
+565,"lo_8x9`9SaQ@axgvmrv\Fty@W6ckaqrksUZsB9aZGQpHFUML1:F_kXRM:yT5<Taj90U6sPyJlNOXp=8M0V]n1ITssp9psR2B8XEsw9JSsuuc`v8yOS3`Y]hhJ41]aOd;MsQnRJLLe9PRJe4yMYW;G=MLQAAMY2RfDT4<2DY;bmh?dlp@LJ6t4sV[yXyu?xXEtYke=a`v"
 559,1
 928,0
 593,
@@ -62,7 +62,16 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,256
+572,265
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.elements.validate', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '*', 
+    	'pFirst', 1, 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

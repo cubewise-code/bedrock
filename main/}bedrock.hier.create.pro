@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"bVaQIz>@qj4dznUO:X6AXcQ[5E[GWDLu<O_GsgYvGm3dKyWxzF?9\eacHXS[zbczN?p9`ZBv7anY6GBVYJm1zfm?Oo<mrvxx=15?7OETz<vu@vjWUyfQBmC;Ee9LkEoaB1w5jCz8M]@LO0Oip``jTr]BYNqX[Ns4xAgSu`Rh5JDiJkard;L?L\VrqG\?oLqIoh>3O6fW"
+565,"hvC4mu0ka4Psf2OJbapV<AYvP0iw?ODb`hLd=rA=d:_[ta9B@9y>7]lYx8Q0=Y46KHk\4EMZU3cMRoJ`CpG2zda6eU8>]:z^OPl72YKF\@x2?RoguOD8EjmJD5;;M9l61QMGo4vd;xbb[XrYl_h>f]_2xDwk[UI6;zHsEmpm6VbOIczbVc@m4;pV1<dFkF67Ss=P2pB<"
 559,1
 928,0
 593,
@@ -52,7 +52,15 @@ pDelim,"Optional: delimiter character for element list. (default value if blank 
 581,0
 582,0
 603,0
-572,159
+572,167
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pHier', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

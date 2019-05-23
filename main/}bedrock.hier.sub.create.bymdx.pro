@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"kv]?Dbw@I_>axuL]?NLo2;q9?l[u_;tVG\5X=3y\XXxY[u0jhz[b4FXdVg\RmgXwCMu5;8O>Au;t0ljx8i^H>JPAmlcIh]avkI?FcUJgsxaS[s1k?T6GRTQd11Q0p8lJlBBB53AbZj]H@ElrtaY1y>A^vJDuF?J=OyVO^wW11R`noa:wk09B7NI?J3xA]HmDUb;OTJCH"
+565,"ez]2]af]0DIVfuBO=qy:`>=G40BssWU:]:HRT6L2Roq7q77kQvJPIz7bg?0jeH5lZZO[F;ruN`A>d2mibtSS`<M4R7GV@r:uRPZ3w718Hv7xXV`zG6xqHdQVl]n;RrVz9PPkJdyzoCP1Ul_d;5XUzahys0LDfr=K2Yj=Q582mmyh=?xWI14Y?iXBhW@QE@:dB[ad4y7_"
 559,1
 928,0
 593,
@@ -64,7 +64,17 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,127
+572,137
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.bymdx', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pMDXExpr', '',
+    	'pConvertToStatic', 1, 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

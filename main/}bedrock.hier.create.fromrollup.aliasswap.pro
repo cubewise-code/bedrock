@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"h`P8orh8aSHk[jy=A_>Z4DauSv:F\GXOn;RtRXMMA732z7Jcy`4o];8vhXX:IK4bM<RPZy@O@JrnRv5NE9FU73@BYKH_9Ek>BxZk5Q>OFA9fDchg7?6Ki_^92GW?imXpO@<6u;z7ezQ;4Rp4lEEGfE[B@aQRuRG>uStviHzt7ZfLbSsMOefd_Gn[Hy><\Bbpa60o8B1I"
+565,"g0y^FA7aIdp_;ugVW:9x;OpI]ul;xTH<hZL?4Ns0hi=sOyun0uhAbrzWillq:W@Yw6VadGZd7;R\sIOaQyDq=vZ0@`UPwsX6J1uE=x<1woFBpAqqtX^RYoGm18UYLK_qq^6uZyHu7HK3ek:mJQo``dGgzNx38g;TV:[:IqTvauQGR40W@Wyvx4@DgnM9@`HalLldJHx>"
 559,1
 928,0
 593,
@@ -76,7 +76,18 @@ pAliasSwap,"Required: Name of the attribute with names to be swapped"
 581,0
 582,0
 603,0
-572,195
+572,206
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create.fromrollup.aliasswap', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pSrcHier', '', 'pConsol', '',
+    	'pTgtDim', '', 'pTgtHier', '',
+    	'pAttr', 1, 'pUnwind', 2, 'pRemove', 0,
+    	'pAliasSwap', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

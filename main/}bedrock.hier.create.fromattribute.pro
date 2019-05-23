@@ -4,7 +4,7 @@
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-565,"hR44[B=<aAN?hokC4R;39TPZ@5^i4K;g2skW]2Jz77wW:3Hpr7;hp^pyyvsz>l9PiPh1ihSa41fl8@GFZF@HH1q@27=7;f=SjRRc@ZWT31hpnefu\;QR1lieFFuD>Hp7;yNXtsx<AEnjrcP<Mak83hzD?THrn6=[RDK7mH_\Ab9Ub5C5d4aPwZlt]Ryzaox^dKk1oP9c"
+565,"g=7xVE<ax?Y=8Ez7O^n9`2CjD]eBeCfl39eeg`nFyBzyCh5dEUy4O7gYJ4`qAmNsA[kHyoGuo9t;e6>F?K1RDKmcSDRy]w<Ilmq_hy]=guS?IE=f7f=IManDjE=@81i:RTDm^c@`P?=4?wZg`1jN5[:ZJD3D2wTHCf9BJt7VP;L?vbJ_h<GB>JV>joxq6]4K;D8y@cjJ"
 559,1
 928,0
 593,
@@ -48,7 +48,7 @@ pUnallocated
 1
 2
 590,10
-pLogOutput,1
+pLogOutput,0
 pDim,""
 pSrcHier,""
 pTgtHier,""
@@ -94,7 +94,17 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,178
+572,188
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create.fromattribute', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pSrcHier', '', 'pTgtHier', '', 'pAttr', '',
+    	'pTopNode', 'Total <pAttr>', 'pPrefix', '', 'pSuffix', '',
+    	'pSkipBlank', 0, 'pUnallocated', 'Undefined <pAttr>'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

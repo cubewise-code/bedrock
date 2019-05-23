@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"s@Qcca81l8Ds4>b2p`Qa2NGc9KLVN[t0:nUPX?:J7DX24F4OWk8lLWfgx?bY0WU5\yHCK7TBRmhH48rHCueX0kg6>_ntN]zraX6>6<lYBxwcwzptW?QzM3`IINT`Fdx^uzT_2a1XXE2hnREA=u\_VOF^6eZH?WJeF>=lWXmm9O3fGTq;OWBkRfu8fs8YK14fx7frNovL"
+565,"t:qWBLM<]CRJ92=RqKzMadau9358<qqGNSX5n2i9n9Rr48@cMVA]:CMP155XNv52bSvYykUMC=ag>DnWbXj>MRO\1Pu`pDXTv<fe7=0q>7wiek;NO13:gRmAI7agW:Dkq]7LxM\WxM1_OBDcH7NnHt@bmTYi[8vwtF_F]NRTyN4Ejmp0S5OJvOzyZD1Zl4ITHAY?RbWY"
 559,1
 928,0
 593,
@@ -52,7 +52,15 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,141
+572,148
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.orphans', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pHier', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -60,7 +68,6 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
-
 
 #Region @DOC
 # Description:

@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"eooxXzRMKP6JuZ3sX;i1@[b_YKVtbsp13wxL2k;SZAn?xhkFvZg=qviK5pe1;q~IBFPV7rhY>4B?UZV7:KD;HI8P?Yl35fB2PQ4;42FOBYUg:`aF1NvdijO<a^Op30By|F]zHvcE_fGCtA8`dv`=1IWqerqgzA0hABWYn2b1dZ^ybAv`tzB@bep<lJ=LeACoyqrn8uNeooxXtRMKP6JuZ3sX;i1@[b_YKVtbsp17wxL2k;SZAn?xHjFvZg=qviK50@4;qnNBFPF5rhY>4B7UZU7:KD;HI8P?Yl85fB2PQ4k?2FOBYUg:`qH3NvdijO<a^Op?J;By\@]yHvcE_f7FtAhadv@>1IWqerqgzA0hA2SYn2m1dZ^yaAv`tzB@Bnp<lJ=LELsiyqrn8uN"
+565,"xTY_f_4iTmyxNXK7WnCk<FI0zqeSt?f2SsrGI^mRi^cVKk{9U=b=xT0rU~eAHzz9ZvnTGK;afnC_BPfuBKTYdMowlVcsOo?X7_v:tpUO`]rW>uaFApp88UotfW3Pr30G_vF_:f<JZ5]C3Pi9Pd6eM:hSDRwp57seCXGWmH626IuUrr1jLxzMmmEp@OIiCg1@OOG94OC>xTY_f_4iTmyxNXK7WnCk<FI0tqeSt?f2WsrGI^mRi^cVKKz9U=b=xT0rU>`GHzj>ZvnDEK;afnCWBPeuBKTYdMowlVcxOo?X7_vJzpUO`]rW>uqHCpp88UotfW3PBR2G_V@_9f<JZ5]36PiISd65B:hSDRwp57seCX7SmH6=6IuUrq1jLxzMmMNp@OIiCG<pIOG94OC>"
 559,1
 928,0
 593,
@@ -70,7 +70,20 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,135
+572,148
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.leaves.orphan.check', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '*',
+    	'pTgtSubLeaves', 'Bedrock - Orphan Elements - Leaves',
+    	'pIncludeNoParentElems', 0,
+    	'pTgtSubNoParents', 'Bedrock - No Parents',
+    	'pDelim', '&' 
+	);
+EndIf;
+#EndRegion CallThisProcess
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 

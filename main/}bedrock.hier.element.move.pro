@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"w3TtFG:68n:4;:<S]^dAh;AaTgfwMx3:7z6:Y3]E?_bUx3UkZ<honWcM`>JVTdiHvo^[p6vkAiZzkE\?s:aN^?N;v[Bem;JD2kC?L7L=i?@Edv:mM`=RPk3F3:gP5qREuBGWu<01BUQwl6oxBOiGS>Tp]5Es;gf>q73XPB:Ojjb<[HvGtrT;A:wOJeB=dS3Qh9Km5Gtz"
+565,"oFlw^xkc\V2fTLgaUn2ZMN?>T3DoerdLUHJ^WDKNw2GXk^e0libud@Z]RzlQRwsi9LWumpoP93uXX[s7htuTb8btv[4nl;IgJ5KIZh5ZROJNsl=ik4R>`F:>9lu;_6LQU0^?lHK3^=EEl^QS6^B@DHDZ0^JA2jc_uJoqz[UZpu=GM^@Ktk<]J\Ns<[_k]2y\jmau7Ia3"
 559,1
 928,0
 593,
@@ -64,7 +64,16 @@ pWeight,"Optional: Element Weight (for Add only)"
 581,0
 582,0
 603,0
-572,136
+572,145
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.element.move', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pEle', '',
+    	'pTgtConsol', '', 'pMode', 'Add', 'pWeight', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

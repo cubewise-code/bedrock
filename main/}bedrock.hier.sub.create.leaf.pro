@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xP[Si4PU3bwPrrz:HToQO`eNa^Sqpe4XLacH`xFyp;Qo5wuCUxr4>bxXrYks?11ywTrhj85f0E:amP7><Lu_y\3HzYI41iSm@dtX3CD8k^^AI`R;RnoffH6YeZ6Kbxs1rSmaklJImUYHQH3Rl^KE@laETP`BnyBI2]WD=z576<1T457NIT\SFsrqkSopcTV:e?sHBn>6"
+565,"g0M8A@DaM@2yZi5G57S3>Qi6]Ay]T@9b<J^e4WE<9BQR9L<FOh_reCj1V7XxSQfht4Get=X[ie;[WeH?13mPnLmW;kuj:yz2LnI4J]bS^Rkv:6N0i;rwdsxDd2QA?nhK`6czE`OZ>G2VCyEV;Gn?zV;GFp?<9PY_0Ga4yDq<>imAIeIFQ=MJjI:@7fqR78\EKlFkx@H0"
 559,1
 928,0
 593,
@@ -72,7 +72,17 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,67
+572,72
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.leaf', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pAddToSubset', 0, 'pExclusions', '',
+    	'pDelim', '&', 'pAlias', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -126,18 +136,13 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-nReturncode = ExecuteProcess( '}bedrock.hier.sub.create',
-                              'pDim', pDim,
-                              'pHier',pHier,
-                              'pSub', pSub,
-                              'pLevelFrom', 0,
-                              'pLevelTo', 0,
-                              'pExclusions', pExclusions,
-                              'pDelim', pDelim,
-                              'pAddToSubset', pAddToSubset,
-                              'pAlias', pAlias,
-                              'pTemp', pTemp
-                            );
+nReturncode = 
+ExecuteProcess( '}bedrock.hier.sub.create', 'pLogOutput', pLogOutput,
+    'pDim', pDim, 'pHier',pHier, 'pSub', pSub,
+    'pLevelFrom', 0, 'pLevelTo', 0,
+    'pExclusions', pExclusions, 'pAddToSubset', pAddToSubset,
+    'pDelim', pDelim, 'pAlias', pAlias, 'pTemp', pTemp
+);
 
 ### End Prolog ###
 573,4
