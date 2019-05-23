@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"d@<?aIaCjHOM@2K`kR_qKFBmbA?r5=_nZTHk0gggk?CJLquXiEaOzJ@4csohOpGXkh5FYk>EFP[7XUs4t@^qk4SIdk0QoWjL]B>=vv7shYN5YA>^EJD?t@kjLe4yX97wAkrF=PH88Qa27^pB?I7LvIXTfbPZD[Fw\sOMYhi>nbi:nti1@6Xk[L;lR=aD\>cKF]kl4NMH"
+565,"pQlZjiR6LqmVY>OyazWUEh0\t]ZcpL4v5z]thla17tKwKRK>?yB7IHiV:=_q]z3A9NCaoRx?6y1u0;M0gwNJ=X?0vvBG0`wdF<Xj<KSgP0AC5oOmToB;660q?zT9\UM4MSl8T`06c?0d9EOawh@TzVNhIh9G2y2iCpimR4_cRc>sdOWi\9IsYYZ3a_<Q:4_7?Fu\_ALk"
 559,1
 928,0
 593,
@@ -104,7 +104,18 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,213
+572,224
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.import', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '',
+    	'pSrcDir', '', 'pSrcFile', '',
+    	'pDelim', ',', 'pQuote', '"',
+    	'pLegacy', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

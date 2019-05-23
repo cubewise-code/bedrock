@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"f<oVdCaGnjbq:wupzPMLG6vG21n>9GFRZaVzt>rS8owMIK0<em\KkM6aeZaS;8KAQ]XiPy2YBrCD=7\rQ@g;w[6srV2a1XVaq?puP0EKA3OU]Ad;v8r2fV[]AU\kH4lWU]>HMmPeGQ^FU^q;E`Y=S3=Ttj:L6L`YLyg5[ku3V\n`9=\3r?IN=VD\QMrJy5@<Nq?WxC;c"
+565,"u9tVw@I426I3hY3j>6_h;aNfZDEFZwO0khCkNaCh=?Eg\rd2pc6SJVsx0`@RdRLb3rS^xxr:E=WuvN9<8WW026tOAFJ9F7bC1\B_exif9d;vvN5[u8Kw65dB9C8TSKWgjJg:gRykcbq<8CVCl<0lHyTC:Kwe7hP3cd[\YpmDO=nV9u7@\823<Ww\:l?\A>FQwcqotyYs"
 559,1
 928,0
 593,
@@ -72,7 +72,17 @@ pRemove,"Optional: Remove cons elements from source? (1 = Yes, 0 = No)"
 581,0
 582,0
 603,0
-572,159
+572,169
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create.fromrollup', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pSrcHier', '', 'pConsol', '',
+    	'pTgtDim', '', 'pTgtHier', '',
+    	'pAttr', 1, 'pUnwind', 2, 'pRemove', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

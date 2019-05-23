@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"mp^aw[SvXy^O@aG5VrSzrzdK@f8B9lj1TK_o0XK72?wB4bDr5?Rj2UP7htlH8iZ;<1P[x8VDCpGiFVY^srR\]:;QoUBzekAd<4[BOyTDd^<r7V`VUTd?y32Qm1u?q`BYmZ;oA0:aHfhGjpC0DnQ6MgpS@BYgSJfGZWl;ZGYHwhVqr`@Auor`\uw2i_PP2y8ffhd96OJK"
+565,"aazn4Lx:fnpS7mEyWS7Ks[ZM6?X7:uW7J2jk45^nkbx]Ui;@G[Ay9i6adgZ5F`a_EwiTI]\JK3Ouw2dRvNw7?grv99NRaSY6J\9i]mut=hSSuVQgV0RSYo4[k=NYE5=B0::y5u<85:iva`D8x8TN[Sklu35@=lwCeHo5o_O1_vQ]sI>6l<zkWf4CqBftBNvhXXioknDz"
 559,1
 928,0
 593,
@@ -74,7 +74,17 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,144
+572,154
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.clone', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pSrcHier', '', 'pSrcSub', '',
+    	'pTgtDim', '', 'pTgtHier', '', 'pTgtSub', '',
+    	'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"w@?<RDK;Vy;J7p[5h87<6@`aOaIITKTeybX9S<2DXQpLiA>HvQ?h3ZXV?etpzfRWffi[>fEmNatJ`^__B=m<E_NLl:dwT;`rM4^XMSrvNU[SW9jHphBK@wIQ9vvd_6AmpRV0=[VqRDdJn1y@vYl::Zkx=MBmM=lND4d6eDp_5H[<l<2ECM@KDPnx?GGo6:MeD65qna:g"
+565,"nvp2RK3?dJRV5iyeb6:EdAGx^XZ5c4pyV[<y\cfO>EFx8@xw\[PZ[^@0s]YQdKeF9JYsESw4j4wT0U1?dXzLjyG^>0LYJ^6Dd2v9]11VeOzg5@O\V0z7=T]bwUbImVxc^^SD{j1?=yD!oc`ZhA`2MN>jsZ@Y6Kyy7Vi54hX59FI<fDAQUfI\E6B6:7ixxcNXWXsSgs]q"
 559,1
 928,0
 593,
@@ -78,7 +78,17 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,179
+572,197
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create.fromsubset', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pSrcHier', '', 'pSubset', '',
+    	'pTgtDim', '', 'pTgtHier', '',
+    	'pAttr', 1, 'pUnwind', 0, 'pFlat', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -200,12 +210,9 @@ If( HierarchyExists(pTgtDim, pTgtHier) = 0 );
     HierarchyCreate( pTgtDim, pTgtHier );
 Else;
     IF(pUnwind = 1 );
-        ExecuteProcess( '}bedrock.hier.unwind',
-            'pLogOutput', 0,
-            'pDim', pTgtDim,
-            'pHier', pTgtHier,
-             'pConsol', '',
-             'pRecursive', 1
+        ExecuteProcess( '}bedrock.hier.unwind', 'pLogOutput', 0,
+            'pDim', pTgtDim, 'pHier', pTgtHier, 'pConsol', '*',
+            'pRecursive', 1
         );
     ELSEIF(
         pUnwind = 2 );
@@ -253,7 +260,7 @@ EndIf;
 
 ### Replicate Attributes ###
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
-
+ 
 sAttrDim = '}ElementAttributes_' | pSrcDim;
 sLastAttr = '';
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
@@ -267,7 +274,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
         nCount = nCount + 1;
     End;
 EndIf;
-
+ 
 ### End Prolog ###
 573,46
 
@@ -375,7 +382,7 @@ Endif;
 
 sCube = '}DimensionProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pCube', sCube,
@@ -386,7 +393,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
@@ -398,7 +405,7 @@ ENDIF;
   
 sCube = '}HierarchyProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pCube', sCube,
@@ -409,7 +416,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,

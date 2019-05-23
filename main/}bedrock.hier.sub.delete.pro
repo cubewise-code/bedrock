@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"b1a>>s5O`LZp7_Q2s<1[4sP0ubPRMN10[TVYGYxrRhREKGTAmAm0`A@4YTRmOvWcQYT6ICe;9BxnG=5ts@WY9:ABoJwQjVXMwzvT;OVa<xcB1[r6ta^@RYCeR0iUEbsF7>=Se^=6xR@phaQRt0G?hE@BOi?Qw1N_;zK=<];DeXRMbJoBDnoDM`GIpOYj2Csbe2HRj8eQ"
+565,"f0:d`Ma1oCeWuUA1L60xNqPBAe@NurchVY;JgfgXakmxB?B3iVi_[?r;JLn9UadlThwD:ihdqF[dR<m[Kwo8nV_[WFVEGYv?:1Ah;mRN>s8IOA_WeuC[y6Y6nz60GN_@nTT4Oy^UzmcA756nbl3rneOYWn9dWEY9w?rPVT\88F4k`rW[PF<:R6ybKR6DGSSA[6n4WE7A"
 559,1
 928,0
 593,
@@ -60,7 +60,17 @@ pMode,"Optional: <=1 destroy subset, 2 delete all elements"
 581,0
 582,0
 603,0
-572,305
+572,315
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.delete', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pDelim', '&', 'pMode', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 

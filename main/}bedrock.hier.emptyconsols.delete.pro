@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"s^hLL8y<w2hHDGzis@CazHuQC;EhvT>]rANkE0BhtC^zLd_cNCVM^43fa96>UxbwZnLjdwSIWej3ri0nzL9WJuQxx9<QR[kDVZH>RF=@S:U`u6V<j4qMgIsv4BHr^hV^HM4sIC0zjt[Ea@;kfcRv_@Pvh[5XMMCbfBjbfETEysmVND:r4oUE6BnSUo2CSdmX\It?9Tmz"
+565,"jTaeu5=4t:a<fQ3uB>ei=01UXxNfWklC2IhFXHTv4kmn3DERqj?S@qyGzw@[V^>GDZjT1]VhM]\zirD9Kw8PRV]OhmZ88s572\M[KamrY[4P3sd=Mju`IahO@0u9SaC\J`4QBk??hYdQ[l[QUF1BKjaoacu>xp4YBnrq5]T@G\;<jlD03npSP?xCEv3v8r9ug@Y=QNMH"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pHier,"Optional: Target Hierarchy (uses default hierarchy if left blank)"
 581,0
 582,0
 603,0
-572,100
+572,108
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.emptyconsols.delete', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pHier', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

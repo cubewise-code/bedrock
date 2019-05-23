@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lszlwH6snozWaTMTy=Vj^pKrDE[>y6]xUs7c=8OuH<azlYqcrlom=g2imdbeLXrmGI8X78xB@73InW1lrn=O]Kg\G4:6jxki4GE?4Bs[f`8VM=crt<62tA0C\h\A_a11UctZJozl78Y6up\U6jex@Q?lHzqb?\M4J[sCQ]N0<Afn;_<_Uh6sFLoj>a]aT`RGVUj9K8\H"
+565,"xSk]E^cyi=r2r4ufNFHSAw4YarjE`Q@JWc]44MIwND8@L8ELx1@f\FrksBY67YGIevmAk02Vtb?M\P5cOMqLPSIrNLCX7f_Hh`LOigGybpk9SmgVMuabQkvJr_S9hGI:kI:pzV>ql0lrqhico8kDCrHJ5=5TL7CP;K=0Hi0rt0sLrgEDymGk79aSE7xe]p3IR><HIXJ["
 559,1
 928,0
 593,
@@ -80,7 +80,18 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,62
+572,73
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.attribute.leaf', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pAttr', '', 'pAttrValue', '',
+    	'pAddToSubset', 0, 'pExclusions', '',
+    	'pDelim', '&', 'pAlias', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

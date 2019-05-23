@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fNmt=caCO=GcQaFo::y0ZLy_uQj6^<n=R>`z]\]LpoXhpl@9MDwkdTeY9?qxhtlQo[i2=O_T08qOh=EpIC]_rhn>]jMBY`;1NZX`GBm>P@A@vnq6yIZ\wTs9AykgHQ<X^_5n;[e;TEkPTE6t1L@\xf16]miwP91Yxl?llapJ2t^zNEx7NmdeuLYRoT=WT<1543zUmjU5"
+565,"hZ7oQ;ZiaTrf1LC_r1uImQK[A;gkUhD1S7RfF<ubx;DLRti?keKHq<Iad8jZ=<=oT[?v\i@_08MPWuO7tgSnEA31c0PJyV1ED<yqh[3=7tUyiihZTa6[7DSXGEJ2]=87bScNwjrN?ebbRyFYR7V>hl>`AVi47DS5wO_aUbxk`Jkmij2oSvFpGY[X?E8etzee<[Bzr_bD"
 559,1
 928,0
 593,
@@ -76,7 +76,17 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,75
+572,78
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.consolidation.all', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '', 'pConsol', '',
+    	'pAddToSubset', 0, 'pExclusions', '',
+    	'pDelim', '&', 'pAlias', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -128,22 +138,15 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-nReturnCode = ExecuteProcess('}bedrock.hier.sub.create',
-                              'pLogOutput', pLogOutput,
-                              'pDim', pDim,
-                              'pHier',pHier,
-                              'pSub', pSub,
-                              'pConsol', pConsol,
-                              'pAttr', '',
-                              'pAttrValue', '',
-                              'pLevelFrom', 0,
-                              'pLevelTo', 99,
-                              'pExclusions', pExclusions,
-                              'pDelim', pDelim,
-                              'pAddToSubset', pAddToSubset,
-                              'pAlias', pAlias,
-                              'pTemp', pTemp
-                            );
+nReturnCode = 
+ExecuteProcess( '}bedrock.hier.sub.create', 'pLogOutput', pLogOutput,
+    'pDim', pDim, 'pHier', pHier, 'pSub', pSub, 'pConsol', pConsol,
+    'pAttr', '', 'pAttrValue', '',
+    'pLevelFrom', 0, 'pLevelTo', 999,
+    'pExclusions', pExclusions, 'pDelim', pDelim,
+    'pAddToSubset', pAddToSubset,
+    'pAlias', pAlias, 'pTemp', pTemp
+);
                             
 IF ( nReturnCode <> ProcessExitNormal() );
   sMessage = cMsgErrorShell;
