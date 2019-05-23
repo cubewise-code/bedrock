@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"o<3><;nO;]BgXYEaIYvu\vfi=KwKX6;<5VB5TC1q4VXekJz?ZGc^eMbMGXl@>y4zt^PH:\C=lS<KLjvFXX]u@9]JVt;sDyPSffa[Wp<GnBs>vH3m><tpzxT:4^xL`5<b2bj`>:g>oi`5cBFCnQh=Yc=iENECcRYY^tMKr;FK01ujmP?7n6U<wdBrnShqU8Z[y1p^n]EK"
+565,"cZla7EuA;qPzKwoGE;63RJzZ]]A`8C?`[I<hV9oEI;xRr_1WYa3ZwR5h9LZkX5Eiy?lD`y`y2Zlij8SBlOQ6q;_rxpBH1s0Q@CCUQmgvkE;jqP_VLkG>m1\eK4hkwI<lAFaeeGb<KZdkTnSSI49p^R00RTXtwG]Z[JVsWd4uY3PokH4pIC;lHbljXqwtH1]Pa5sGr?fk"
 559,1
 928,0
 593,
@@ -56,7 +56,15 @@ pCtrlObj,"Required: Include control dimensions (1 = include, 0 = not include)"
 581,0
 582,0
 603,0
-572,196
+572,204
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.attr.delete', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pAttr', '', 'pDelim', '&', 'pCtrlObj', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
