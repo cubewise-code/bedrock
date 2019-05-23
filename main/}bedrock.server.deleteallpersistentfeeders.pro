@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"i3;LQTII4ycCM6rrigHm<_@2TAO[20l{P]W3k[9ZPzx6hCJ8_mNjOQlFofT1?x;rD3isJTG62XcaWsUVR1j6jY;?C?KLces;5^B>]OoaL5u?P`BsQn<7_N?<BUWoCOJgRlb=P=Jm]c@2WMjVum3]?utwEK=`5zYLTmeWW<AgA;SiiuKh5PMKLkRd\r?Y|f<VAfEEsI\"
+565,"op4rW6wA2KX80@\yeN>zt4<oBfb34en`7We>;iH>x@FyEzMIL:>>R7GIjTQLR5RgOb~Z7Ib_nd16~E;<\JbZbu9P^LlfP[3E[d8m;G[nibUeGFsA_]T[1a9B2D;H_[r:dr>pLb8i?^srcdoFWS4]7iBKme@XmwNWKc5Dv31zM;uiYJ9c]mOgG[B\xVkapf:VGS2[h9i"
 559,1
 928,0
 593,
@@ -44,7 +44,15 @@ pRun,"Optional: Do you want to delete Persistent Feeders? (Y or N)"
 581,0
 582,0
 603,0
-572,43
+572,51
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.deleteallpersistentfeeders', 'pLogOutput', pLogOutput,
+	    'pRun', 'Y'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

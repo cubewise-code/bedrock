@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"efp`=a4qRizI5_uDAp;ozhP98G?2v8[OzzIwvx9tnzE^6ooPKc\Skvh9Ito?dhQW4HY><Aw1_Y6HJ8=9bEfgJv8RU?hwfr?f::9XebU8h:I3n<T1nQh3iN6ht8jhho>N;DzFCg;YGBK@IW\=JIAj^tddlK6TBkZR4IO[E6AOV1Ii8Y6SaxpHViu`_I<:M8khDpPMGfUa"
+565,"edE`;ay:_TQI4QzNA<CLKv];vQhzmh22^nN0?Wz2BQefu0Y=SZe1I\4`hVOx6UF0dyiOV0:F@Hb`ptQSYe3[Eo4Qo4HKu9\kDbyeMQK`LPW0MQS6z`d00pOfGyU\k7TuxOvxUCeTOegwRO;<7?rWtEE8G5oP^HHu\`;k1v``oxbO=;OUfKNvk9uhlUryuw<KxF4]eJbL"
 559,1
 928,0
 593,
@@ -48,7 +48,15 @@ pMessage,"Required: Message to display in TM1 server Message Log"
 581,0
 582,0
 603,0
-572,56
+572,64
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.writetomessagelog', 'pLogOutput', pLogOutput,
+    	'pLevel', '', 'pMessage', ''
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"g:gaB?=a:cX7f;^v[6`brv\gB_7T?MwRer^6HN^LYOA4SMMP41IAVn=X@;P[qUY<Y9e4Uymt6W6Wmf>]xS\vHMzePufd<0De]VLvSUd[2\i@LCnqFG=Rk6HLeY8K9\jZ9?Trk^FgMi9\RS8H_Q50\DPLOWPZmuE4JMfOqpsZb2hca?lI58kmSeDz13lM>Lw5VXEreuua"
+565,"wnY;hrshRAehv6S7J`4gbW=a4Dj<eke\`0s:q4MnxccTs[oEU@NN1sYkm1avmO@5sv]7zB6OaEhD]8DP=Dg8KYaZm\MBWza<[>gj8SV;;49zYI;YA^eOWTVTINNfT>[0beKZbA2I2mOy1^i8dbg273`0kgHg;]NbQZ2xBiX0T7ew\;?XapWrqWnE]gDn8ROfvk7BB:1S"
 559,1
 928,0
 593,
@@ -44,7 +44,15 @@ pSrcDir,"Optional: Data Directory (Leave Blank to use TM1 Settings)"
 581,0
 582,0
 603,0
-572,83
+572,91
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.dir.listcontents', 'pLogOutput', pLogOutput,
+	    'pSrcDir', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

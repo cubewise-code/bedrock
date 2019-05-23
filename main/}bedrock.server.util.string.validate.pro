@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"l=TORNLZk:fOapqGwWiJw[3q2RI1=<7>TL9wt0H`UKL]U`n_Jo]IrPorpaBGztvrx>F:fl1ci:F@z;J[>Fh]g@Mc3DMV2e=Dc86peY1QBlj=>164@@1km]<Z]=uTswvPWNkgrHu_0bDmo19JAW8R\4n=yZA2jbsXoaE8YT8I1l`f7_HZ_94j:o?8aFa4D>5vDr9ETH2l"
+565,"hcYhaAHIa]2Wj^ujAhh4xxo?Q=3scVSsgxnO<haNkTRv2XA\DD1LXfO]s31hHo2pz960etyYG;wjsPwz:?Z;oM2XVI[IR6_sZR=^6Et8`71?W[1a\iyG[ibEnL@Jfev;aL6yEmaFUHY]mT0sMmn:yzmGN\[t=Eg42?bs=aIl9ihG=\8JT0LYgGo8[OiD:z9gN5GfA@Yk"
 559,1
 928,0
 593,
@@ -72,7 +72,18 @@ pMode,"Required: 1=Validate for File System only, 2=Validate for 1st only, 3=Val
 581,0
 582,0
 603,0
-572,169
+572,180
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.util.string.validate', 'pLogOutput', pLogOutput,
+	    'pInputString', '', 'pUndesirableFileSystem', '/|\>"<:?*', 'pUndesirable1st', Char(39) | '+-[]@!{}%',
+	    'pChanges', '\,B Slash&/,F Slash&|, &-,Minus&+,Plus&>,greater than&<,less than',
+	    'pReplaceIfNotFound', '_',
+	    'pDelim', '&', 'pSeperator', ',', 'pMode', 3 
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
