@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"n=T@\t691C=P^4aY63Z]_>DQAt`@p57D@G_>KAu9;i<?UFVYxasCzQBN[Zr8Sw[nYSQwD5tzcvsFY_?Qr7S1trDd\3LS]f<:I]6V@@<hfvX[T\;Q_69;N3s4e`5`h8YpgtT\Hs6k0QEMr^55SS89[^TpB]NP2p2sUu;:rdhShFmi4mM9`h^\q0NVyioExC\PJp;1>44v"
 559,1
 928,0
 593,
@@ -85,7 +85,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.server.wait',
   'pLogOutput', pDebug,
-  'pWaitSec', pWaitSec
+  'pWaitSec', StringToNumber( pWaitSec )
   );
 
 573,3
