@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"nvp2RK3?dJRV5iyeb6:EdAGx^XZ5c4pyV[<y\cfO>EFx8@xw\[PZ[^@0s]YQdKeF9JYsESw4j4wT0U1?dXzLjyG^>0LYJ^6Dd2v9]11VeOzg5@O\V0z7=T]bwUbImVxc^^SD{j1?=yD!oc`ZhA`2MN>jsZ@Y6Kyy7Vi54hX59FI<fDAQUfI\E6B6:7ixxcNXWXsSgs]q"
+565,"i:Ry73I?byxvo6:V]nrjBW?O4E4]Eqjsv>5JJ\`BxJpx@BHEDtF8x2VDmTY1T;fFvMgsEg^gbZ|D4WA[L<\kPS>>\UNIdyzw]^q9MRI]06]5eiO\fX5@s4k<L[T8bVjh:_3M{\5El^j)RDQhJv:M3KKGkbWipkJd`nuewWuLCmakd@oR>^It=b_\GW<Ud>Qg3OQR@tr"
 559,1
 928,0
 593,
@@ -78,7 +78,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,197
+572,193
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -245,10 +245,6 @@ WHILE( nIndex <= nLimit);
     sElName = SubsetGetElementName( pSrcDim|':'|pSrcHier, pSubset, nIndex );
     ElementAttrPuts( cAttrVal, pSrcDim, pSrcHier, sElName, cHierAttr );
     sElType = ElementType( pSrcDim, pSrcHier, sElName );
-    IF(
-        sElType @<> 'S');
-        sElType = 'N';
-    ENDIF;
     HierarchyElementInsert(pTgtDim, pTgtHier, '',sElName, sELType);
     nIndex = nIndex + 1;
 END;
@@ -312,7 +308,7 @@ Else;
     nLimit = ElementComponentCount( pSrcDim, pSrcHier, vElement );
     WHILE( nIndex <= nLimit );
         sElName = ElementComponent( pSrcDim, pSrcHier, vElement, nIndex );
-        sDecendant = ATTRS( pSrcDim, sElName, cHierAttr);
+        sDecendant = ElementAttrS(pSrcDim, pSrcHier, sElName, cHierAttr);
         IF(
             sDecendant @= cAttrVal);
             nElWeight = ElementWeight( pSrcDim, pSrcHier, vElement, sElName );
