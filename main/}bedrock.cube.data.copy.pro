@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"pj7f8U<uF3Qc6qIQab=ZqoPODqYTNmsx5t8^\g;0P7:ChhvLVByU\YDEDmJxl[@[67iwPCMi7udPG@8_YwPuZu<1AD;3XsHC^bBj\f5z2euH;j8zx[hI`wfCB5[@QDi5w<`0<9Kem2[e[Q3VgI;w`lEa6U^HybPYle6hx71USHdJ>6xC<aR1YxWYW_R1Qcp5ffLO8?Zp"
+565,"lxw1CUmy2UEJad^Otncvx\hYKwnQMgsXvdoWcFRkpJxY_7cvV8QqSk>7B?oqjuOSbRdPJ<YdkIF7lro4Klww@kg2aG@a9_TiWEg54z?qlfa2uDu\p1x5os7OnPUJkPB0j2w3W:iLv`8>q<0X>x:Jx]`dt3<iTOtP>3h6pk9UgBqX37c0ouLQp5VMUr`Wg<rNejsTWx_l"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,21
+560,22
 pLogOutput
 pCube
 pSrcView
@@ -39,6 +39,7 @@ pDimDelim
 pEleStartDelim
 pEleDelim
 pFactor
+pSuppressConsol
 pSuppressRules
 pCumulate
 pZeroTarget
@@ -47,7 +48,7 @@ pTemp
 pCubeLogging
 pSandbox
 pThreadMode
-561,21
+561,22
 1
 2
 2
@@ -67,9 +68,10 @@ pThreadMode
 1
 1
 1
+1
 2
 1
-590,21
+590,22
 pLogOutput,0
 pCube,""
 pSrcView,""
@@ -83,6 +85,7 @@ pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 pFactor,1
+pSuppressConsol,1
 pSuppressRules,1
 pCumulate,0
 pZeroTarget,1
@@ -91,7 +94,7 @@ pTemp,1
 pCubeLogging,0
 pSandbox,""
 pThreadMode,0
-637,21
+637,22
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
 pSrcView,"OPTIONAL: Temporary view name for source"
@@ -105,6 +108,7 @@ pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set  (default valu
 pEleStartDelim,"REQUIRED: Delimiter for start of element list  (default value if blank = '¦')"
 pEleDelim,"REQUIRED: Delimiter between elements (default value if blank = '+')"
 pFactor,"OPTIONAL: Multiply source value by factor (1 keeps the value as is). To modify existing values make the target element the same as the source with pZeroTarget = 0"
+pSuppressConsol,"OPTIONAL: Suppress Consolidated Cells (Skip = 1)"
 pSuppressRules,"OPTIONAL: Suppress Rules (Skip = 1)"
 pCumulate,"OPTIONAL: 1 = Add source to existing value in target (if zero out target = 0 False). 0 = Replace target with source."
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
@@ -426,7 +430,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,795
+572,797
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -435,7 +439,7 @@ If( 1 = 0 );
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pEleMapping', '', 'pMappingDelim', '->',
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pFactor', 1, 'pSuppressRules', 1, 'pCumulate', 0,
+    	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pCumulate', 0,
     	'pZeroTarget', 1, 'pZeroSource', 0,
     	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', ''
     );
@@ -487,7 +491,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressRules:%pSuppressRules%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%.' ;   
+cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%';   
 cDefaultView    = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 
 ## LogOutput parameters
@@ -696,7 +700,7 @@ sElementStartDelim  = TRIM( pEleStartDelim );
 sDelimDim           = TRIM( pDimDelim );
 sFilter             = TRIM( pFilter);
 sTargetFilter       = '';
-sSuppressConsol     = 1;
+nSuppressConsol     = pSuppressConsol;
 nSubN               = 0;
 nChar               = 1;
 nCharCount          = LONG( sElementMapping );
@@ -893,7 +897,9 @@ If( nCharCount > 0 );
 
           If ( DTYPE( sDimension, sElement) @= 'C' );
               IF( nElementCount = 1 );
-                sSuppressConsol = 0;
+                If( pSuppressConsol <> 1 );
+                  nSuppressConsol = 0;
+                EndIf;
                 nSubN = 1;
               Else;
                 sMessage = Expand( 'Target element: %sElement% for dimension %sDimension% is consolidated' );
@@ -1138,7 +1144,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       	'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
       	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
       	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-      	'pFactor', pFactor, 'pSuppressRules', pSuppressRules, 'pCumulate', pCumulate,
+      	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pCumulate', pCumulate,
       	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
       );
   	  nThreadElCounter = 0;
@@ -1151,7 +1157,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
     	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
     	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-    	'pFactor', pFactor, 'pSuppressRules', pSuppressRules, 'pCumulate', pCumulate,
+    	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pCumulate', pCumulate,
     	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
     );
   ENDIF;
@@ -1193,7 +1199,7 @@ Else;
     'pView', cViewSource,
     'pFilter', sFilter,
     'pSuppressZero', 1,
-    'pSuppressConsol', sSuppressConsol,
+    'pSuppressConsol', nSuppressConsol,
     'pSuppressRules', pSuppressRules,
     'pDimDelim', pDimDelim,
     'pEleStartDelim', pEleStartDelim,
