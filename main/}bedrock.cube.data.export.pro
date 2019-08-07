@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"aaYxNe6j>PCV?WGA64n0LbGktX\yf`>or_G4Upm7=A16yA;Wl68r40QIlYpC`H_gcm7p]aiL3rRYT1;RyrJVx`eCz<i?;5]FQo>]GHh4HJn[>`]JSSKI;_l^shyy1ZbBiy;kt?Guexs;BMfZftrDaazHY^b5nCyqaPfcd\xGKV=W9xNp]MIYWcDEbMmtD<AbZX<=X`Dw"
+565,"d47]aJqJl5FFYnIpD>38vzi=\>9NEz:TVv3L=>Mbs\KTPT`Y93`umL7Twnj1zMJb:2MF?5BIRzcGv8AY6`R4E8W0yr8fpiTyZ3Xxd6sbsZLCJIYw==xEPrzTK[>D3SLh:2xskPsEJ^R4Y4[FFi^V0Kt]A5BbC_iS>B[O=]B0UNhCFOYQ3oAI6Z<f6AS:MJc>f\>6:yFM"
 559,1
 928,0
 593,
@@ -18,14 +18,14 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,}TI_Dummy_View
 571,
 569,0
 592,0
 599,1000
-560,20
+560,21
 pLogoutput
 pCube
 pView
@@ -46,7 +46,8 @@ pFileName
 pDelim
 pQuote
 pTitleRecord
-561,20
+pSandbox
+561,21
 1
 2
 2
@@ -67,7 +68,8 @@ pTitleRecord
 2
 2
 1
-590,20
+2
+590,21
 pLogoutput,0
 pCube,""
 pView,""
@@ -88,7 +90,8 @@ pFileName,""
 pDelim,","
 pQuote,""""
 pTitleRecord,1
-637,20
+pSandbox,""
+637,21
 pLogoutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"Required: cube name"
 pView,"Optional: Temporary view name"
@@ -109,6 +112,7 @@ pFileName,"Optional: Export Filename (If Left Blank Defaults to cube_export.csv)
 pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pTitleRecord,"Optional: Include Title Record in Export File? (Boolean 0=false, 1=true, Default=1)"
+pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 577,101
 V1
 V2
@@ -722,7 +726,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,331
+572,346
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -733,7 +737,7 @@ If( 1 = 0 );
     	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
     	'pZeroSource', 0, 'pCubeLogging', 0, 'pTemp', 1,
     	'pFilePath', '', 'pFileName', '',
-    	'pDelim', ',', 'pQuote', '"', 'pTitleRecord', 1
+    	'pDelim', ',', 'pQuote', '"', 'pTitleRecord', 1, 'pSandbox', pSandbox
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -927,6 +931,21 @@ Else;
     EndIf;
 EndIf;
 
+# Validate Sandbox
+If( TRIM( pSandbox ) @<> '' );
+    If( ServerSandboxExists( pSandbox ) = 0 );
+        SetUseActiveSandboxProperty( 0 );
+        nErrors = nErrors + 1;
+        sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    Else;
+        ServerActiveSandboxSet( pSandbox );
+        SetUseActiveSandboxProperty( 1 );
+    EndIf;
+Else;
+    SetUseActiveSandboxProperty( 0 );
+EndIf;
+
 # Jump to Epilog if any errors so far
 IF ( nErrors > 0 );
     DataSourceType = 'NULL';
@@ -975,7 +994,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
         	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
         	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-        	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord
+        	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox
         );
     	  nThreadElCounter = 0;
     	  sFilter = '';
@@ -992,7 +1011,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
     	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
     	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-    	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord
+    	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox
     );
   ENDIF;
   DataSourceType = 'NULL';
