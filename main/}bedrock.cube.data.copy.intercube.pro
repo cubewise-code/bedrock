@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"d0PFaZvxzZ:d?exd<_mcwxvHlDFZJ`e^Q?[WdEqs2l=Q1iTZF7OAcH=bpjFK3n9=3`L@Tx<a?S\wTc48T2zCmK6pIt5QFANiL>7qapxu9zDq;MMfih4R6<;OC3L0rpAA]np^bl^tbQ^oEuratBb<7NmYFXxZmQ<d<`w;SlM29Pf0ikhv\b[l6bDE>\dR<T:w=yItkKxd"
+565,"wlCvz]wQwvHSHo_tqz50`K2a<lhgp^=g=0Eeq835BdLJqP3qPwtx<qwMdmDKvz42uHWp\QO9G?cs4RZIcn?zKWWEtLWxgAqrg<vc85aB@<1Y80DnwQRJ3VLx0JIqhaW_Y`^9zq^JjGb=11PwkkfO7`B9L<:HZDgaulDZ4H9`q3^qNQ<:GYfjT;gi?R9qimlG`RnhNaf^"
 559,1
 928,0
 593,
@@ -18,14 +18,14 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,Default
 571,
 569,0
 592,0
 599,1000
-560,18
+560,19
 pLogOutput
 pSrcCube
 pFilter
@@ -43,8 +43,9 @@ pEleStartDelim
 pEleDelim
 pTemp
 pCubeLogging
+pSandbox
 pThreadMode
-561,18
+561,19
 1
 2
 2
@@ -62,8 +63,9 @@ pThreadMode
 2
 1
 1
+2
 1
-590,18
+590,19
 pLogOutput,0
 pSrcCube,""
 pFilter,""
@@ -81,8 +83,9 @@ pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pCubeLogging,0
+pSandbox,""
 pThreadMode,0
-637,18
+637,19
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
 pFilter,"OPTIONAL: Filter on source cube in format Year: 2006 + 2007 & Scenario: Actual + Budget. Blank for whole cube"
@@ -100,6 +103,7 @@ pEleStartDelim,"OPTIONAL: Delimiter for start of element list"
 pEleDelim,"OPTIONAL: Delimiter between elements"
 pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
 pCubeLogging,"OPTIONAL: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 577,29
 V1
@@ -282,7 +286,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1086
+572,1100
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -294,7 +298,7 @@ If( 1 = 0 );
     	'pZeroTarget', 1, 'pZeroSource', 0,
     	'pFactor', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pTemp', 1, 'pCubeLogging', 0
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', pSandbox
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -413,6 +417,21 @@ If( pParallelThreads > 0 );
   nMaxThreads = pParallelThreads;
 Else;
   nMaxThreads = 1;
+EndIf;
+
+# Validate Sandbox
+If( TRIM( pSandbox ) @<> '' );
+    If( ServerSandboxExists( pSandbox ) = 0 );
+        SetUseActiveSandboxProperty( 0 );
+        nErrors = nErrors + 1;
+        sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    Else;
+        ServerActiveSandboxSet( pSandbox );
+        SetUseActiveSandboxProperty( 1 );
+    EndIf;
+Else;
+    SetUseActiveSandboxProperty( 0 );
 EndIf;
 
 ### Check for errors before continuing
@@ -1206,8 +1225,6 @@ WHILE (nChar <= nCharCount);
           EndIf;
 
           nElementCount = nElementCount + 1;
-
-
           sLastDelim = sChar;
 
           # Clear the word
@@ -1265,7 +1282,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         	'pSrcCube', pSrcCube, 'pFilter', sFilter, 'pFilterParallel', '', 'pTgtCube', pTgtCube, 'pMappingToNewDims', pMappingToNewDims,
         	'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
           'pFactor', pFactor, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-          'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pThreadMode', 1
+          'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
         );
     	  nThreadElCounter = 0;
     	  sFilter = '';
@@ -1277,7 +1294,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pSrcCube', pSrcCube, 'pFilter', sFilter, 'pFilterParallel', '', 'pTgtCube', pTgtCube, 'pMappingToNewDims', pMappingToNewDims,
     	'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
       'pFactor', pFactor, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-      'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pThreadMode', 1
+      'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
     );
   ENDIF;      
   DataSourceType = 'NULL';
@@ -1316,8 +1333,9 @@ Else;
           'pDimDelim', pDimDelim,
           'pEleStartDelim', pEleStartDelim,
           'pEleDelim', pEleDelim,
-          'pTemp', pTemp ,
-          'pCubeLogging', pCubeLogging
+          'pTemp', pTemp,
+          'pCubeLogging', pCubeLogging,
+          'pSandbox', pSandbox
           );
   
       IF(nRet <> 0);

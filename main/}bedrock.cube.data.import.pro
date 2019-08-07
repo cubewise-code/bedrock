@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"g21[6axa0R@Pqav;4L\qoikyj68<wL5ak?dbGLxL4\cB\8d?<PgN2Li<su`6P8BD]GX@iTyD3aW<iex[Z4GvCN`11g8E9@jSkiad_b<:Ks1?ez=zyR\3G:eySNZD`?_2Oby4FhvNinsPe4QHI8n5gZM\@XKGSv0;a]l\Nhnmg=<Z]uGhAQ:OjcN_A^Py0:MdCQ]bfuf<"
+565,"gRGDKxfaloAA>>:<[J2Cu:7eLk7=Q@qSlVJgTr<`6bwlU@HoGS[tYwRBsPY8469]Boj40bUZkCuDKcqnafBGhN;Wzi72vm:CJHvt3l\0^5b[Y<x?qpc54D2L5myVE88@CRgvmdpjQy3N]D5XLbBsEMkp?qDen@ExWCefnx;e8;G_?@r48KR7hkFe3uCeSSZvZ47gl]pR"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,2
 592,0
 599,1000
-560,12
+560,13
 pLogOutput
 pCube
 pSrcDir
@@ -38,7 +38,8 @@ pDelim
 pQuote
 pCumulate
 pCubeLogging
-561,12
+pSandbox
+561,13
 1
 2
 2
@@ -51,7 +52,8 @@ pCubeLogging
 2
 1
 1
-590,12
+2
+590,13
 pLogOutput,0
 pCube,""
 pSrcDir,""
@@ -64,7 +66,8 @@ pDelim,","
 pQuote,""""
 pCumulate,0
 pCubeLogging,0
-637,12
+pSandbox,""
+637,13
 pLogOutput,"Required: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"Required: Target Cube"
 pSrcDir,"Optional: Source Directory (will default to error log path)"
@@ -77,6 +80,7 @@ pDelim,"Required: AsciiOutput delimiter character (Default=comma, exactly 3 digi
 pQuote,"Required: Quote (Accepts empty quote, exactly 3 digits = ASCII code)"
 pCumulate,"Required: Accumulate Amounts (0 = Overwrite values, 1 = Accumulate values)"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 577,30
 v1
 v2
@@ -264,7 +268,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,302
+572,316
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -272,7 +276,7 @@ If( 1 = 0 );
     	'pCube', '', 'pSrcDir', '', 'pSrcFile', '',
     	'pDim', '', 'pSrcEle', '', 'pTgtEle', '',
     	'pTitleRows', 1, 'pDelim', ',', 'pQuote', '"',
-    	'pCumulate', 0, 'pCubeLogging', 0
+    	'pCumulate', 0, 'pCubeLogging', 0, 'pSandbox', pSandbox
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -417,6 +421,21 @@ Else;
     EndIf;
 EndIf;
 
+# Validate Sandbox
+If( TRIM( pSandbox ) @<> '' );
+    If( ServerSandboxExists( pSandbox ) = 0 );
+        SetUseActiveSandboxProperty( 0 );
+        nErrors = nErrors + 1;
+        sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    Else;
+        ServerActiveSandboxSet( pSandbox );
+        SetUseActiveSandboxProperty( 1 );
+    EndIf;
+Else;
+    SetUseActiveSandboxProperty( 0 );
+EndIf;
+
 ### Check for errors before continuing
 If( nErrors <> 0 );
   ProcessBreak;
@@ -462,7 +481,6 @@ IF( pDimension @<> '');
   sTargetElement = DimensionElementPrincipalName( pDimension, pTargetElement);
 
 ENDIF;
-
 
 ## Validate delimiter
 pDelimiter = TRIM(pDelim);
