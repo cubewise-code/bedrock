@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lOLloJRVm9j4aHn2DW<hiG>k=cLnMTH^Zhk\L8p8EuM\\@pN\iTMV6CHmLm6ekq^8\ITvPGg4[?Xg1mQM`Z7cLVg[8[^:zFS_BhbW?\g[Y@TG3qxUld<T>MirL1V7b4P^b9M4YiwIX>juL^t?c;@pf=3;6dLJ0Tc?1hbu;kv`DKAjh0s@\X8dt1KWs4xBDdWOv48[h]z"
+565,"wDLN9LJ2S_4><E[ENV]6]5vaM^Jnr7z5FrvFL>solXsZ@a\JnI_zi_[C4Z<ItbA64:y<_jfC`WQz:bgyuNtxid3^[:@yFOfiPB`Sn\<hNqD99TSPYE\T[gIprT>8WqJQuYnP3;;mgUBc?Vj0NuV5b]Gnw;870bfM;cF7:7qrYc=MNf`v;bTR>IyjjiunKEd3I@SX<uy5"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -84,7 +84,7 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,404
+572,403
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -171,18 +171,18 @@ If( pEleDelim     @= '' );
 EndIf;
 
 # If specified cube does not exist then terminate process
-If( TRIM(pCube) @= '' );
+If( Trim( pCube ) @= '' );
   sMessage = 'A cube name must be provided.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( CubeExists(   pCube   ) = 0 );
+ElseIf( CubeExists( pCube ) = 0 );
   sMessage = 'Cube: ' | pCube | ' does not exist.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 ## Validate the View parameter
-If( TRIM(pView) @= '' );
+If( Trim( pView ) @= '' );
   sMessage = 'A view name must be provided.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -219,7 +219,7 @@ If( ViewExists( pCube, pView ) = 1 );
         If( SubsetExists( sCubeDimName, sSubset ) = 1 );
             # Add all elements
             If( SubsetIsAllSet(sCubeDimName, sSubset, 1) <> 1 );
-                sMessage = 'Unable to add all elements on subset ' | sSubset | ' on dimension ' | sCubeDimName;
+                sMessage = Expand('Unable to add all elements on subset %sSubset% in dimension %sCubeDimName%');
                 nErrors = nErrors + 1;
                 LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
             EndIf;
@@ -228,7 +228,7 @@ If( ViewExists( pCube, pView ) = 1 );
     End;
 Else;
     ### Create View ###
-    sMessage = 'Creating view ' | pView | ' on cube ' | pCube;
+    sMessage = Expand('Creating view %pView% in cube %pCube%');
     LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
     ViewCreate( pCube, pView, pTemp );
 EndIf;
@@ -297,12 +297,11 @@ WHILE (nChar <= nCharCount);
         nCount = 1;
         nDimensionIndex = 0;
         While( TabDim( pCube, nCount ) @<> '' );
-          sCubeDimName = TabDim( pCube, nCount );
-          IF(
-          sDimension @= sCubeDimName);
-            nDimensionIndex = nCount;
-          ENDIF;
-          nCount = nCount + 1;
+            sCubeDimName = TabDim( pCube, nCount );
+            If( sDimension @= sCubeDimName );
+                nDimensionIndex = nCount;
+            EndIf;
+            nCount = nCount + 1;
         End;
 
         If( nDimensionIndex = 0 );
@@ -320,7 +319,7 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         # Attach to the view
-        ViewSubsetAssign(pCube, pView, sDimension, sSubset);
+        ViewSubsetAssign( pCube, pView, sDimension, sSubset );
 
         nIndex = 1;
         sLastDelim = sChar;
