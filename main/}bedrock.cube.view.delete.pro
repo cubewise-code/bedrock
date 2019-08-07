@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"zCOX;eTa_mj7p]c1_G3\N\EPiraSDl6YkkFw\?Pc3T?NlaPScw5WR;Ag@dvX]wgG09issOpr4SXkrmrHDD?P>kSjlGn_\LBow_BAP73dWYz`N^P[OnJ5<CPGU]sr>b;\PJOyyyUOPrvuOvZ3V;f@OvaA:eCQDcLxF1lg2VWQ>juq?:MTDw=r6k>pKwZpr_;fNvcB31XI"
+565,"rR`QWvY`tLc1srjJLfa;BMHITo8pXtSpjZGkD;k=<nwZB?Lhvx2;fc`_<g<?vWL?n33R>evHCMh5G68=6aLr5lQaL@26J6l;RfELztD06JvoLh1@L\\Y5iaE?yJ9;bctMP0W>rObva_poOb4M[fKwVF:SVQlvhQY=;zo5EmFXxpNXEdH8sbed1GVqP\1nl]\5\:EV[>G"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,7 +38,7 @@ pDelim
 590,4
 pLogOutput,0
 pCube,""
-pView,"}Bedrock*"
+pView,"}bedrock*"
 pDelim,"&"
 637,4
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
@@ -52,7 +52,7 @@ pDelim,"Delimiter Character  (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,226
+572,223
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -146,17 +146,16 @@ EndIf;
 
 # Validate delimiter
 If( Trim( pDelim ) @= '' );
-  pDelim     = '&';
+    pDelim     = '&';
 EndIf;
-
 
 ### Iterate through cubes ###
 
 # If no cube has been specified then process all cubes
 If( Trim( pCube ) @= '' );
-  sMessage = 'No cube specified.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    sMessage = 'No cube specified.';
+    nErrors = nErrors + 1;
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 ### Check for errors before continuing
@@ -180,7 +179,7 @@ While( nCubeDelimIndex <> 0 );
 
     # Create subset of cubes using Wildcard to loop through cubes in pCube with wildcard
     sCubeExp = '"'|sCube|'"';
-    sMdxPart = '{TM1FILTERBYPATTERN( TM1SUBSETALL( [}Cubes] ), '| sCubeExp | ')}';
+    sMdxPart = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [}Cubes] ), %sCubeExp% )}');
     IF( sMdx @= ''); 
       sMdx = sMdxPart; 
     ELSE;
@@ -214,10 +213,10 @@ EndIf;
           While( nViewDelimIndex <> 0 );
               nViewDelimIndex       = Scan( sDelimiter, sViews );
               If( nViewDelimIndex = 0 );
-                  sView           = sViews;
+                  sView           = Trim( sViews );
               Else;
-                  sView           = SubSt( sViews, 1, nViewDelimIndex - 1 );
-                  sViews          = SubSt( sViews, nViewDelimIndex + Long( sDelimiter ), Long( sViews ) );
+                  sView           = Trim( SubSt( sViews, 1, nViewDelimIndex - 1 ) );
+                  sViews          = Trim( SubSt( sViews, nViewDelimIndex + Long( sDelimiter ), Long( sViews ) ) );
               EndIf;
   
               # Check if a wildcard has been used to specify the view name.
@@ -232,10 +231,10 @@ EndIf;
               # If it has then iterate through '}Views_CubeName' dimension
               Else;
                   sDimViews       = '}Views_' | sCurrentCube ;
-                  If( DimIx( '}Dimensions', sDimViews ) <>0 );
+                  If( DimensionExists( sDimViews ) = 1 );
                     # Create subset of views using Wildcard to loop through views in current cube
                     sViewExp = '"'|sView|'"';
-                    sMdxViewPart = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sDimViews| '])},'| sViewExp | ')}';
+                    sMdxViewPart = Expand('{TM1FILTERBYPATTERN( {TM1SUBSETALL([%sDimViews%])}, %sViewExp% )}');
                     IF( sMdxView @= ''); 
                       sMdxview = sMdxViewPart; 
                     ELSE;
@@ -256,7 +255,7 @@ EndIf;
                         # Validate attribute name in sDim
                         If( ViewExists( sCurrentCube, sViewEle ) = 1 );
                           If( pLogOutput = 1 );
-                            LogOutput( 'INFO', Expand( '  Destroying view %sViewEle% in cube %sCurrentCube%.' ) );
+                            LogOutput( 'INFO', Expand( 'Destroying view %sViewEle% in cube %sCurrentCube%.' ) );
                           EndIf;
                             ViewDestroy( sCurrentCube, sViewEle );
                         Endif;
@@ -275,8 +274,6 @@ EndIf;
             
       nCountCubes = nCountCubes - 1;
     End;
-
-
 
 ### End Prolog ###
 573,4
