@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"gRGDKxfaloAA>>:<[J2Cu:7eLk7=Q@qSlVJgTr<`6bwlU@HoGS[tYwRBsPY8469]Boj40bUZkCuDKcqnafBGhN;Wzi72vm:CJHvt3l\0^5b[Y<x?qpc54D2L5myVE88@CRgvmdpjQy3N]D5XLbBsEMkp?qDen@ExWCefnx;e8;G_?@r48KR7hkFe3uCeSSZvZ47gl]pR"
+565,"pQvZc7GC:t;:o?RFa:hBCyaCA5cf8LS6gi>o3[_aG>PNPwxQV8I0E2PwO_VIzIfznYoYqjGf0@:Ua7Ycm5?c^Oc4@:e_?MJuzVZkOck3ILuQJQI>p2^h[]u3O4hxkOoFd03fEC`0VoX9CNbmSfOxo?=OD6Ooun;QO8C2vTz;[Dfx7>q7otRnB>9xvWn:v[tAiz5=Kp1r"
 559,1
 928,0
 593,
@@ -320,7 +320,7 @@ cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pCube:%pCube%, pDim:%pDim%, pSrcEle:%pSrcEle%, pTgtEle:%pTgtEle%, pTitleRows:%pTitleRows%, pDelim:%pDelim%, pQuote:%pQuote%, pCumulate:%pCumulate%, pCubeLogging:%pCubeLogging%.' ;   
+cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pCube:%pCube%, pDim:%pDim%, pSrcEle:%pSrcEle%, pTgtEle:%pTgtEle%, pTitleRows:%pTitleRows%, pDelim:%pDelim%, pQuote:%pQuote%, pCumulate:%pCumulate%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%';   
 cLenASCIICode = 3;
 
 pDelimiter        = TRIM(pDelim);
