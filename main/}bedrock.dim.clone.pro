@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"rge<PvF3z_EIGwKaKtaDQuIDPqXfCp?U]s`5iW_0sfcDHz=X6YAsMpt:Xzmzzwr_XPBC]:M23hWXOF71jDD`ciikEb4ZBfEC>2Tys4=;lhvYZuM0Z``ZacOR>kJe]H@;dY2?i3;M8WpMW0@RS?lGOc1hszA_MeLnyUZFN6<IjhmpjwCQc[6>C<s<zwck8_6tnbOsY\qH"
+565,"lT?Xv5R4GRPHaJ87IE`E^xWGoaQtw8r]jJ<Q9?wvdzOTqoi_KmAesHhr[=F^izp:xiF[Dif4UXX8ORg8;_Bjq]_187LHyN;=0gYOnT7ir?iQ@>HeX@z4=Uv?phj_rYmc912^ccpp2gk1vz`lzi@r?R2iRCCKJz^lEai@RszG0UB:x\MlfVQbUbmffcu1j]jA1UHtBOEG"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -218,7 +218,7 @@ DatasourceDimensionSubset = 'ALL';
 ### Replicate Attributes ###
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 sAttrDim = '}ElementAttributes_' | pSrcDim;
-sAttrTragetDim = '}ElementAttributes_' | pTgtDim;
+sAttrTargetDim = '}ElementAttributes_' | pTgtDim;
 
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
   nNumAttrs = DimSiz( sAttrDim );
@@ -227,9 +227,9 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
     sAttrName = DimNm( sAttrDim, nCount );
     sAttrType = SubSt(DType( sAttrDim, sAttrName ), 2, 1 );
       
-      If ( DimensionExists( sAttrTragetDim ) = 0);
+      If ( DimensionExists( sAttrTargetDim ) = 0);
          AttrInsert(pTgtDim,'',sAttrName,sAttrType );
-       ElseIF(DimIx(sAttrTragetDim, sAttrName) = 0);
+       ElseIF(DimIx(sAttrTargetDim, sAttrName) = 0);
          AttrInsert(pTgtDim,'',sAttrName,sAttrType );
       Endif;
         
@@ -295,7 +295,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
     While( nCount <= nNumAttrs );
         sAttrName = DimNm( sAttrDim, nCount );
         sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
-        If( CellIsUpdateable( sAttrDim, vEle, sAttrName ) = 1 );
+        If( CellIsUpdateable( sAttrTargetDim, vEle, sAttrName ) = 1 );
             If( sAttrType @= 'S' % sAttrType @= 'A' );
                 sAttrVal = AttrS( pSrcDim, vEle, sAttrName );
                 If( sAttrVal @<> '' );
