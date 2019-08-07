@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"t2flrmVM[\hN0t\@GjDoaHtdIMDmZR;GkvN:yz^7_U\0aorWZQdMwXZL?l73^C2:F96Z_E7aAy]xzU\Z2wl>?1N=No3j?fi<[4<^`WFVHHSG@deL9@5Fitqtc03Q`E838n9lYOD1aT9zudi_Bsuy9Z9qqc3ZfzrLdqUp@gehvqt7Tr5^2Y=kswu;XnK:3e0`xPke1^Z0"
+565,"j\niAJLLCGa;hA;GB<24KTbxJwtRgIg7OE]]rkt8WVtg<TN^AgIu0ZFwQOkBaH;=^gyLpb_zNyVHcxB2n:]Mb<bHY[lf@L\kbBU2ZNuhv3SEAnC8>@a[kwvu^Ukv4^\I;FsGT;J[6Z\zAR77XPQbnjorC`Ez?u3W0hAsSYlove\S\^B4xkbTg`tdPQF5^PNtz0:<ftwC"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -66,7 +66,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,388
+572,394
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -199,6 +199,11 @@ EndIf;
 ### If there is no separator and wildcard in the parameters, execute the unwind of the specific consolidated element
 If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 );
 
+    ### In case alias used for pConsol convert to principal name 
+    If( ElementIndex( pDim, pHier, pConsol ) > 0 );
+        pConsol = HierarchyElementPrincipalName( pDim, pHier, pConsol );
+    EndIf;
+
     ### Turn-off Logging in the Attribute cube
     sAttrCube = '}ElementAttributes_' | pDim;
     If( CubeExists( sAttrCube ) = 1 );
@@ -206,22 +211,22 @@ If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & S
         CubeSetLogChanges( sAttrCube, 0 );
     EndIf;
     
-    ### Set Descendent attribute value
+    ### Create Temp Descendent Attribute
     AttrDelete( pDim, cHierAttr );
     AttrInsert( pDim, '', cHierAttr, 'S' );
     
-    nElementIndex = 1;
-    nElementCount = ElementCount( pDim , pHier );
-    While( nElementIndex <= nElementCount );
-      sElement = ElementName( pDim, pHier, nElementIndex );
-      If( ElementIsAncestor( pDim, pHier, pConsol, sElement ) = 1 );
-          ElementAttrPutS( cAttrVal, pDim, pHier, sElement, cHierAttr );
-      EndIf;
-      nElementIndex = nElementIndex + 1;
-    End;
-  
     ### Assign data source ###
-    If( pRecursive = 1);
+    If( pRecursive      = 1);
+        # Set Descendent attribute value
+        nElementIndex   = 1;
+        nElementCount   = ElementCount( pDim , pHier );
+        While( nElementIndex <= nElementCount );
+            sElement = ElementName( pDim, pHier, nElementIndex );
+            If( ElementIsAncestor( pDim, pHier, pConsol, sElement ) = 1 % pConsol @= sElement );
+                ElementAttrPutS( cAttrVal, pDim, pHier, sElement, cHierAttr );
+            EndIf;
+            nElementIndex = nElementIndex + 1;
+        End;
         # Assign Data Source
         DataSourceType            = 'SUBSET';
         DatasourceNameForServer   = pDim|':'|pHier;
@@ -229,16 +234,14 @@ If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & S
         DatasourceDimensionSubset = 'ALL';
     Else;
         ### Remove direct children from the target consol ###
-        nChildren = ElementComponentCount( pDim, pHier, pConsol );
-        While( nChildren > 0 );
-            # Unwind direct children of target hierarchy only
-            sChild = ElementComponent( pDim, pHier, pConsol, nChildren );
-            HierarchyElementComponentDelete( pDim, pHier, pConsol, sChild );
+        If( ElementComponentCount( pDim, pHier, pConsol ) > 0 );
+            sEleNext = ElementName( pDim, pHier, ElementIndex( pDim, pHier, pConsol ) + 1 );
             If( pLogOutput = 1 );
-                LogOutput( 'INFO', Expand( 'Deleting component "%sChild%" from consolidation %pConsol% in hierarchy "%pHier%" of "%pDim%" dimension.' ) );
+                LogOutput( 'INFO', Expand( 'Deleting all components from consolidation %pConsol% in hierarchy "%pHier%" of "%pDim%" dimension.' ) );
             EndIf;
-            nChildren = nChildren - 1;
-        End;
+            HierarchyElementDelete( pDim, pHier, pConsol );
+            HierarchyElementInsert( pDim, pHier, sEleNext, pConsol, 'C' );
+        EndIf;
         # No data source, straight to Epilog
         DataSourceType = 'NULL';
     EndIf;
@@ -246,19 +249,21 @@ If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & S
 ### If pConsol is "*" and there is no separator and wildcard in the pDim & pHier parameters then unwind the whole hierarchy
 ElseIf( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Trim( pConsol ) @= '*' );
 
-    # as pConsol is * wildcard it doesn't matter if recursive or not. We unwind everything
-    nCtrEle = ElementCount( pDim, pHier );
-    While( nCtrEle > 0 );
+    # as pConsol is * wildcard it doesn't matter if recursive or not. We unwind everything. As speed enhancement rather than removing children delete and add back C elements to empty children in one step (not steps = count of children)
+    nMaxEle = ElementCount( pDim, pHier );
+    nCtrEle = 1;
+    While( nCtrEle <= nMaxEle );
         sEle = ElementName( pDim, pHier, nCtrEle);
-        If( ElementType( pDim, pHier, sEle ) @= 'C' );
-            nCtrChld = ElementComponentCount( pDim, pHier, sEle );
-            While( nCtrChld > 0 );
-                sChild = ElementComponent( pDim, pHier, sEle, nCtrChld );
-                HierarchyElementComponentDelete( pDim, pHier, sEle, sChild );
-                nCtrChld = nCtrChld - 1;
-            End;
+        If( ElementComponentCount( pDim, pHier, sEle ) > 0 );
+            If( nCtrEle < nMaxEle );
+                sEleNext = ElementName( pDim, pHier, nCtrEle + 1 );
+            Else;
+                sEleNext = '';
+            EndIf;
+            HierarchyElementDelete( pDim, pHier, sEle );
+            HierarchyElementInsert( pDim, pHier, sEleNext, sEle, 'C' );
         EndIf;
-        nCtrEle = nCtrEle - 1;
+        nCtrEle = nCtrEle + 1;
     End;
 
     # since hierarchy already fully unwound no subset; datasource = NULL
@@ -381,24 +386,25 @@ Else;
                         sMessage = Expand( 'Hierarchy "%sCurrHierName%" in Dimension "%sDim%" being processed....' );
                         LogOutput( 'INFO', Expand( cMsgInfoContent ) );
                     EndIf;
-                    # Loop through consolidated elements in in pConsol
+                    # Loop through consolidated elements in pConsol
                     sEles = Trim( pConsol );
                     If( sEles @= '*' );
                         # no need for recursive call for ALL wildcard. We can just unwind whole hierarchy
-                        nCtrEle = ElementCount( sDim, sCurrHierName );
-                        While( nCtrEle > 0 );
+                        nMaxEle = ElementCount( sDim, sCurrHierName );
+                        nCtrEle = 1;
+                        While( nCtrEle <= nMaxEle );
                             sEle = ElementName( sDim, sCurrHierName, nCtrEle);
-                            If( ElementType( sDim, sCurrHierName, sEle ) @= 'C' );
-                                nCtrChld = ElementComponentCount( sDim, sCurrHierName, sEle );
-                                While( nCtrChld > 0 );
-                                    sChild = ElementComponent( sDim, sCurrHierName, sEle, nCtrChld );
-                                    HierarchyElementComponentDelete( sDim, sCurrHierName, sEle, sChild );
-                                    nCtrChld = nCtrChld - 1;
-                                End;
+                            If( ElementComponentCount( sDim, sCurrHierName, sEle ) > 0 );
+                                If( nCtrEle < nMaxEle );
+                                    sEleNext = ElementName( sDim, sCurrHierName, nCtrEle + 1 );
+                                Else;
+                                    sEleNext = '';
+                                EndIf;
+                                HierarchyElementDelete( sDim, sCurrHierName, sEle );
+                                HierarchyElementInsert( sDim, sCurrHierName, sEleNext, sEle, 'C' );
                             EndIf;
-                            nCtrEle = nCtrEle - 1;
+                            nCtrEle = nCtrEle + 1;
                         End;
-
                     Else;
                         # a delimited list of consolidations is given. Handle with recursive call and temp descendents attribute
                         nDelimiterIndexB = 1;
@@ -455,7 +461,7 @@ Else;
 EndIf;
 
 ### End Prolog ###
-573,30
+573,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -466,23 +472,20 @@ EndIf;
 
 ## Check for errors in prolog ###
 If( nErrors <> 0 );
-  ProcessBreak;
+    ProcessBreak;
 EndIf;
 
 ### Break all parent/child links below target consol ###
-If(pConsol @= '');
+If( pConsol @= '*' );
     sAttrVal = cAttrVal;
 Else;
-    sAttrVal = ElementAttrS( pDim, pHier, vElement, cHierAttr);
+    sAttrVal = ElementAttrS( pDim, pHier, vElement, cHierAttr );
 EndIf;
 
 If( sAttrVal @= cAttrVal & ElementType( pDim, pHier, vElement ) @= 'C' & ElementComponentCount( pDim, pHier, vElement ) > 0 );
-    nChildren       = ElementComponentCount( pDim, pHier, vElement );
-    While( nChildren > 0 );
-        sChild      = ElementComponent(  pDim, pHier, vElement, nChildren );
-        HierarchyElementComponentDelete( pDim, pHier , vElement, sChild );
-        nChildren = nChildren - 1;
-    End;
+    sEleNext = ElementName( pDim, pHier, ElementIndex( pDim, pHier, vElement ) + 1 );
+    HierarchyElementDelete( pDim, pHier, vElement );
+    HierarchyElementInsert( pDim, pHier, sEleNext, vElement, 'C' );
 EndIf;
 
 ### End Metadata ###
