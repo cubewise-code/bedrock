@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"wMk]1KPR=P>BOR5PBx]mrp:adXmzy\CtwCC;Fx]LSa\r[8BqvH9MVQQo?kUq27Arf4O<s4G9vU1pzPkv?[fa=fU32_Uxd\<0]Dlm<NjOnum@hCROdNrXGEU3RgA<3czMpQXj=1iHv<b_cGQql\mM7aUbU<ZPkdjZSI:d9RjXY`lHvArZprdEuA@B[Vd5NdkBJXt6NLB`"
+565,"cCza:CMFfsuLMtnpfILd1o8Mh5bOjw059lp8qj=0[hWqusKRQTf0iaDN\Q=Y_upxbk1<p0erBI974=pPjoe?K9c2Q\9>n:HCC58nhi8i`cHZfD46FP6NcbEKLD`yn2fUsBFVr9c\wYyiMoiTboENe@bVF<D3FYY;1<Dzb2ydq2tpKRYGTvgI1P780K0=`M0O`[@Q8XgO"
 559,1
 928,0
 593,
@@ -726,7 +726,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,346
+572,355
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -835,11 +835,20 @@ Else ;
 EndIf;
 cSubset = cView;
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Validate file path
 If(Trim( pFilePath ) @= '' );
     pFilePath = GetProcessErrorFileDirectory;
 Else;
-    If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= '\' );
+    If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );
         pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );
     EndIf;
     If(  FileExists( pFilePath ) = 0 );
@@ -847,7 +856,7 @@ Else;
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     EndIf;
-    pFilePath = pFilePath | '\';
+    pFilePath = pFilePath | sOSDelim;
 EndIf;
 
 # Validate file name
