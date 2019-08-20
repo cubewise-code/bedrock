@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"zg_[Sn]z7TnsdHSluvTiPPG9L=a?T2AnlQ7n4zuqWmQ9<YLPT<DBU??yK\H<EITdrgxKt>k1u^Rp?iA6^7YGCW1XUUhVeCmAcN<rXrY<]QBKpB9JACFWcxMUcYAwKC\SKhQc:=xgtv`D6@_066G[0Bzs[poYmDKKBl_pCvGY>L8@?_=CWgZ9tpMk`g0Pe2Xw:qh^3y[\"
+565,"m\liYu31sOeNla:_HMU_50b1brPGd5gzPnO^v_O;M[_@0Ld1msWByuSl0Of;WJEa@TBvh_wMq0[wyu66Va6:Uq9eBIVdoI;wvISF_XCUyEUMZ\p8@2fwvD2As6bc2]9D1?fXlMNqpp>XmK:fai5kV:9Jn<g2lKv9AGuGDTw>oyc5716THK>vp9]t5QuD4okejAOaym:k"
 559,1
 928,0
 593,
@@ -106,10 +106,10 @@ pTgtDir             = Trim( pTgtDir );
 
 ## check operating system
 If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
@@ -201,7 +201,7 @@ LogOutput('INFO', sMessage );
 ################################################################################################# 
 
 # Create backup directory
-ExecuteCommand ( 'Bedrock.MkDir.bat ', 1 );
+ExecuteCommand ( 'Bedrock.MkDir.bat', 1 );
 # Ensure backup directory created else abort
 If( FileExists( sBackupDir ) = 0 );
     nErrors = 1;
