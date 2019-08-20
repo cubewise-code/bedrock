@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"xW0WpgrbG[m6IchZ8umGzI2haSa8cnz?RrTwyajBhJDyO:qN?DR^utcKS]R`^WLj2?gbyX2=16MybWuHN_rN6<=Iz[:0?8gU6?opi4bC`tepe3FtAMH8Kei6d7teDhNC`Qpc^YB0Bq@28R3lwJy8sujm=\QSzzqlvz[EI49=2t`k[az<zkYrCnN7b?bLL8gB<CH^i8cU"
+565,"t?wLe_8iL>C7m?Nl9tt8apRzFGM:EvGDkJ`\GE?OsqQVvUyF5tFSMBROokiC1IWLmr:k:0Krfs==Di@o4:ihMi;Z4:;:actzU`t73o1QsrmCOHnctlkAf6c1HpA@JUZ;V1;GLr4UXfEa@2CXbMdI[jgrZwiL;izTt`17nEi[KglQEEOeb<]@?u6@pb46=BC>uOv\hb[A"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -78,7 +78,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,216
+572,225
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -188,9 +188,18 @@ If( HierarchySubsetExists( pDim, pHier, pSub ) = 0 );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Validate file path
 # Strip off trailing backslash (if present)
-If( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= '\' );
+If( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= sOSDelim );
   pTgtDir = SubSt( pTgtDir, 1, Long( pTgtDir ) - 1 );
 EndIf;
 If( FileExists( pTgtDir ) = 0 );
@@ -256,7 +265,7 @@ Else;
     pTgtFile = pTgtFile | '.csv';
   EndIf;
 EndIf;
-sFile = pTgtDir | '\' | pTgtFile;
+sFile = pTgtDir | sOSDelim | pTgtFile;
 
 ### Initialise & declare variables ###
 
