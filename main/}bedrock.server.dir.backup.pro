@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"p>vw9uo3ZZe<g[?_a2\3NMXZ06[:lYB\V_9sK`xj;M_dL<q\2^[Ao^matt`hORdQp\QN^NJ5[hC4>pJV>Gw=^eMTmqlv:cPNciTfPry6ALpY=JV<cPs?Jj]mA_UTjh]kBIeyAtX?vvN`6hjKyKVwSmpxJQeH\MF\1u[Pj3W2d14DJjt1oibQjQ]qHL>M3NsXE9h@k0I]"
+565,"zg_[Sn]z7TnsdHSluvTiPPG9L=a?T2AnlQ7n4zuqWmQ9<YLPT<DBU??yK\H<EITdrgxKt>k1u^Rp?iA6^7YGCW1XUUhVeCmAcN<rXrY<]QBKpB9JACFWcxMUcYAwKC\SKhQc:=xgtv`D6@_066G[0Bzs[poYmDKKBl_pCvGY>L8@?_=CWgZ9tpMk`g0Pe2Xw:qh^3y[\"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -48,7 +48,7 @@ pTgtDir,"Required: Destination Directory for Backup"
 581,0
 582,0
 603,0
-572,123
+572,132
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -104,11 +104,20 @@ nErrors             = 0;
 pSrcDir             = Trim( pSrcDir );
 pTgtDir             = Trim( pTgtDir );
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Remove trailing \ from directory names if present
-If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= '\' );
+If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= sOSDelim );
     pSrcDir         = SubSt( pSrcDir, 1, Long( pSrcDir ) - 1 );
 EndIf;
-If( SubSt( pTgtDir, Long( pTgtDir ),1 ) @= '\' );
+If( SubSt( pTgtDir, Long( pTgtDir ),1 ) @= sOSDelim );
     pTgtDir         = SubSt( pTgtDir, 1, Long( pTgtDir ) - 1 );
 EndIf;
 
@@ -149,7 +158,7 @@ DatasourceASCIIQuoteCharacter='';
 
 ### Create Make Directory Batch File
 sFileName           = 'Bedrock.MkDir.bat' ;
-sBackupDir          = pTgtDir | '\TM1Backup_' | cTimeStamp;
+sBackupDir          = pTgtDir | sOSDelim | 'TM1Backup_' | cTimeStamp;
 ASCIIOUTPUT( sFileName, 'md "' | sBackupDir |'"' );
 
 ### Create Exclude File ###
