@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"pcJQ25sFOx@LtPXSajG^w78Zcq[BEC3U1V_Lfnk<Cq0TlKRf?d2kDShAuKL:M<<AsLgY2AJ_:gnL_aLXabdi<vIwjJ?1h>s7Lt9aAICTHfH=4aHHTk59QAFPx2PDlgMM4PfmAK1j_n8G?u]Wh2qPY@kdf\kNJi_r8CdVURa2Q6QcxhdojWG?[jMHCYHfS3QJBfavJ;CF"
+565,"uM]y;gk]EKAtVfDMGByi>aroTJFj1iX77SOuZeMRWVooDod70F2m<q9FX[8D6KVrZA_0jyhf;jiEYQRK^tpJ\zp1]l^LZI:ScBc]aVp9mK[xKF0Mn:X^mD2CT8VznW5Ox00Mt[4h7L3z=jCVxfd3l7yp<YpY^8@yLs@KS>vLng`pqFJS?mlNs4HdHn>6z`Vj\<XLd8C@"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -60,7 +60,7 @@ pCSVDays,"Required: The number of days to retain CSV files"
 581,0
 582,0
 603,0
-572,95
+572,111
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -101,6 +101,15 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pTgtDir:%pTgtDir%, pLogDays:%pLogDays%, pErrorDays:%pErrorDays%, pBedrockDays:%pBedrockDays%, pCSVDays:%pCSVDays%.' ;  
 
+## Check Operating System
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 ## LogOutput parameters
 IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
@@ -118,7 +127,7 @@ ELSE;
 ENDIF;
 
 ## Remove trailing \ from directory names if present
-If( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= '\' );
+If( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= sOSDelim );
     pTgtDir = SubSt( pTgtDir, 1, Long( pTgtDir ) - 1 );
 EndIf;
 
@@ -145,7 +154,7 @@ ExecuteProcess( '}bedrock.server.savedataall' );
 ### Create Execute File File ###
 DatasourceASCIIQuoteCharacter='';
 
-
+If( sOS @= 'Windows');
   sFileName = 'Bedrock Remove Logs.bat';
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m tm1s*.log -d -' | sLogDays | ' -c "cmd /c del @path"' );
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m tm1auditstore*.log -d -' | sLogDays | ' -c "cmd /c del @path"' );
@@ -154,6 +163,13 @@ DatasourceASCIIQuoteCharacter='';
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.csv -d -' | sCSVDays | ' -c "cmd /c del @path"' );
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.cma -d -' | sCSVDays | ' -c "cmd /c del @path"' );
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.txt -d -' | sCSVDays | ' -c "cmd /c del @path"' );
+Else;
+  sFileName = 'Bedrock Remove Logs.sh';
+
+  # UNIX command
+
+EndIf;
+
 
 
 573,4

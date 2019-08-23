@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"pQvZc7GC:t;:o?RFa:hBCyaCA5cf8LS6gi>o3[_aG>PNPwxQV8I0E2PwO_VIzIfznYoYqjGf0@:Ua7Ycm5?c^Oc4@:e_?MJuzVZkOck3ILuQJQI>p2^h[]u3O4hxkOoFd03fEC`0VoX9CNbmSfOxo?=OD6Ooun;QO8C2vTz;[Dfx7>q7otRnB>9xvWn:v[tAiz5=Kp1r"
+565,"oNkkYUhuVAf8qowah_2_46PZPvxyG0@g@T\v@71jlr54mZpASPypc;D;:KU1ikjXmOqOEGy5Xz58wkcE_pPKOetpT1kEpb15gDRUWcv?8:wEfrkAfw[9XEI2H@xe\IAYp3l0?^z_cbgR]tto:c`xd:doKkXs[zGtifFFT[Yhg0tdRH`z9d<fgj8x2B[L3=j^fo@PPNE4"
 559,1
 928,0
 593,
@@ -268,7 +268,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,316
+572,325
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -339,6 +339,15 @@ nErrors                 = 0;
 pSourceDir    = TRIM(pSrcDir);
 pSourceFile   = TRIM(pSrcFile);
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Validate source directory
 If(Trim( pSourceDir ) @= '' );
     pSourceDir = GetProcessErrorFileDirectory;
@@ -348,7 +357,7 @@ ElseIf( FileExists( pSourceDir ) = 0 );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-If( SubSt( pSourceDir, Long( pSourceDir ) - 1, 1 ) @= '\' );
+If( SubSt( pSourceDir, Long( pSourceDir ) - 1, 1 ) @= sOSDelim );
   pSourceDir = SubSt( pSourceDir, 1, Long( pSourceDir ) - 1 );
 EndIf;
 
@@ -356,7 +365,7 @@ If( pSourceFile @= '' );
     pSourceFile = Expand('%pCube%_Export.csv');
 EndIf;
 
-sFile = pSourceDir | '\' | pSourceFile;
+sFile = pSourceDir | sOSDelim | pSourceFile;
 # Validate source file
 If( FileExists( sFile ) = 0 );
   sMessage = 'Invalid source file specified: file does not exist in directory:' | sFile;

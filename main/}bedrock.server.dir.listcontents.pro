@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wnY;hrshRAehv6S7J`4gbW=a4Dj<eke\`0s:q4MnxccTs[oEU@NN1sYkm1avmO@5sv]7zB6OaEhD]8DP=Dg8KYaZm\MBWza<[>gj8SV;;49zYI;YA^eOWTVTINNfT>[0beKZbA2I2mOy1^i8dbg273`0kgHg;]NbQZ2xBiX0T7ew\;?XapWrqWnE]gDn8ROfvk7BB:1S"
+565,"b=ad0z:fBk0_3;cEh;V`LFTduxG`rCCXslzf;U9kmfP5WEpV_GHluF7iL>Fes3^x79sX<Juh0TQsCb==J[Ze\`whXmv\95KVTAYgoZ?4]pz0=Ix[s8>aGeDXC\>Ulf=vDDj:hj2Pvh_ZPbGrWrL6qhaNOrf^wBD0\2fmTF?PObHauU;cn]9B8U5pKAtn[69k1>4yT@FH"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pSrcDir,"Optional: Data Directory (Leave Blank to use TM1 Settings)"
 581,0
 582,0
 603,0
-572,91
+572,107
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -91,13 +91,23 @@ cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo            = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%.' ;  
-cBatchFile          = cThisProcName | '.bat';
 #cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
+
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+  sOS = 'Linux';
+  sOSDelim = '/';
+  cBatchFile = cThisProcName | '.sh';
+Else;
+  sOS = 'Windows';
+  sOSDelim = '\';
+  cBatchFile = cThisProcName | '.bat';
+EndIf;
 
 ### Build Command ###
 nErrors         = 0;
@@ -107,7 +117,7 @@ If( pSrcDir @= '' );
     sCommand    = cBatchFile;
 Else;
     # Trim off trailing backslash if present
-    If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= '\' );
+    If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= sOSDelim );
         pSrcDir = SubSt( pSrcDir, 1, Long( pSrcDir ) - 1 );
     EndIf;
     # Check that data directory exists
@@ -116,24 +126,30 @@ Else;
         sMessage = 'Data directory does not exist: ' | pSrcDir;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     Else;
-        sCommand = pSrcDir | '\' | cBatchFile;
+        sCommand = pSrcDir | sOSDelim | cBatchFile;
     EndIf;
 EndIf;
 
 ### Create Batch File ###
 DatasourceASCIIQuoteCharacter='';
+If( sOS @= 'Windows');
+  ASCIIOUTPUT( sCommand, 'dir /b /s *.* > List_All_Data_Directory_Files.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b /s }*.* > List_All_Control_Objects.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *.cub > List_All_Cubes.txt');
+  
+  ASCIIOUTPUT( sCommand, 'dir /b *.dim > List_All_Dimensions.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *.pro > List_All_Processes.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *.cho > List_All_Chores.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *Bedrock*.pro > List_All_Bedrock_Processes.txt');
+  
+  ASCIIOUTPUT( sCommand, 'dir /b /s *.vue > List_All_Views.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b /s *.sub > List_All_Subsets.txt');
+Else;
 
-ASCIIOUTPUT( sCommand, 'dir /b /s *.* > List_All_Data_Directory_Files.txt');
-ASCIIOUTPUT( sCommand, 'dir /b /s }*.* > List_All_Control_Objects.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *.cub > List_All_Cubes.txt');
+  # UNIX command
 
-ASCIIOUTPUT( sCommand, 'dir /b *.dim > List_All_Dimensions.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *.pro > List_All_Processes.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *.cho > List_All_Chores.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *Bedrock*.pro > List_All_Bedrock_Processes.txt');
+EndIf;
 
-ASCIIOUTPUT( sCommand, 'dir /b /s *.vue > List_All_Views.txt');
-ASCIIOUTPUT( sCommand, 'dir /b /s *.sub > List_All_Subsets.txt');
 
 ### End Prolog ###
 573,4

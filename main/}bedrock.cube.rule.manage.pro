@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"z5ET]\aTJIstnCu1iZB[gdsxPQak2GsC;=A=2pT61G1M[Z`LV;6iStS9N5`TriTfuCP<YaX\Om:Fw<8W1k2QS]4]`TfNDsDQfCn=k9yBRlISeMlEI2MvXgJ>Ed3gI:Flw>u4c5^jdpggR3n2>Q_nMIabDn3g\5=NoW?ddjB1wu=bEdYv\AZq7VGWF6y<fzX>ecDF[zFN"
+565,"w=HYYSm2XPerILDC_L[s:DuaZKgSj=anGvd5le[YrJtlP>:B=FRTU3R9twB[^@fY]jPamqMg0]@CoEEjZ39w^<Th\:[>]Az6NR=3@oWCk:Lv7>JqT\3I]thrQuqTHK1]YUW^VkIAiqNvVgb\7=8uLOPmmPNMYs7QNpZjnvN]X1`rgNokU^mvdV3gaRVe_hmrrWeZgyeY"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -60,7 +60,7 @@ pPath,"Optional: Saves the file and the backup of the existing rule in this loca
 581,0
 582,0
 603,0
-572,243
+572,284
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -112,6 +112,15 @@ cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo            = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pMode:%pMode%, pFileName:%pFileName%, pDelim:%pDelim%, pPath:%pPath%.' ;  
 
+## Check Operating System
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 ## LogOutput parameters
 IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
@@ -150,21 +159,29 @@ If(pPath @<> '');
     If(Subst(pPath,long(pPath),1) @= '\' % Subst(pPath,long(pPath),1) @= '/' );
         sPath = pPath;
     Else;
-        sPath = pPath | '\';
+        sPath = pPath | sOSDelim;
     Endif;
 else;
-  sPath = '.\';
+  sPath = '.' | sOSDelim;
 Endif;
 
 ##Create Blank Rule file in the data directory
 IF(FileExists( cBlankRuleName ) = 0 );
 
-  sFile = '.\' | cBlankRuleName;
+  sFile = '.' | sOSDelim | cBlankRuleName;
   
-  sCommand = 'cmd /c "(echo SKIPCHECK;) > ' | sFile | '"';
+  If( sOS @= 'Windows');
+    sCommand = 'cmd /c "(echo SKIPCHECK;) > ' | sFile | '"';
+  Else;
+    # UNIX command        
+  EndIf;
   ExecuteCommand ( sCommand, 0 );
   
-  sCommand = 'cmd /c "(echo FEEDERS;) >> ' | sFile | '"';
+  If( sOS @= 'Windows');
+    sCommand = 'cmd /c "(echo FEEDERS;) >> ' | sFile | '"';
+  Else;
+    # UNIX command        
+  EndIf;
   ExecuteCommand ( sCommand, 0 );
   
 ENDIF;
@@ -199,7 +216,7 @@ While( nCubeDelimIndex <> 0 );
   If( Scan( '*', sCube ) = 0);
     If(CubeExists(sCube) <> 0);
 
-      cCubeRuleFileName = '.\'|sCube | '.RUX';
+      cCubeRuleFileName = '.' | sOSDelim |sCube | '.RUX';
       cStoreDirFile = sPath | Expand(sRuleFileName);
       cBackupDirFile = sPath | Expand(sBackupFileName); 
       
@@ -210,7 +227,11 @@ While( nCubeDelimIndex <> 0 );
           ##Backup the existing rule (saved as .bkp.txt in given path or data directory) 
           ##and load the new rule file. New Rule file should available in the given path or in data directory
           
-          sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';          
+          If( sOS @= 'Windows');
+            sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';          
+          Else;
+            # UNIX command        
+          EndIf;
           ExecuteCommand(sCmd,1);
           RuleLoadFromFile( sCube, cStoreDirFile);
           
@@ -219,9 +240,17 @@ While( nCubeDelimIndex <> 0 );
           ##Before unloading, backup the existing rule (saved as .bkp.txt in data directory or with the suffix parameter)
           ##and load the blank rule
           
-          sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';
+          If( sOS @= 'Windows');
+            sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';
+          Else;
+            # UNIX command        
+          EndIf;
           ExecuteCommand(sCmd,1);
-          sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cStoreDirFile |'""" "';
+          If( sOS @= 'Windows');
+            sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cStoreDirFile |'""" "';
+          Else;
+            # UNIX command        
+          EndIf;
           ExecuteCommand(sCmd,1);
           RuleLoadFromFile( sCube, cBlankRuleName );
           
@@ -244,7 +273,7 @@ While( nCubeDelimIndex <> 0 );
     Endif;
   Else;
     # Wildcard search string
-        sSearch = '.\' | sCube | '.RUX';
+        sSearch = '.' | sOSDelim  | sCube | '.RUX';
 
         # Find all Cubes that match search string
         sFilename = WildcardFileSearch( sSearch, '' );
@@ -253,7 +282,7 @@ While( nCubeDelimIndex <> 0 );
           sCube = SubSt( sFilename, 1, Long( sFilename ) - 4 );
           
           If( CubeExists( sCube ) = 1 ); 
-            cCubeRuleFileName = '.\'|sCube | '.RUX';
+            cCubeRuleFileName = '.' | sOSDelim | sCube | '.RUX';
             cStoreDirFile = sPath | Expand(sWildFileName);
             cBackupDirFile = sPath | Expand(sBackupWildFileName); 
             
@@ -265,7 +294,11 @@ While( nCubeDelimIndex <> 0 );
                 ##Backup the existing rule (saved as .bkp.txt in data directory) 
                 ##and load the new rule file. New Rule file should available in the data directory/backupdirectory
                 
-                sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';          
+                If( sOS @= 'Windows');
+                  sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';          
+                Else;
+                  # UNIX command        
+                EndIf;
                 ExecuteCommand(sCmd,1);
                 RuleLoadFromFile( sCube, cStoreDirFile);
 
@@ -274,9 +307,17 @@ While( nCubeDelimIndex <> 0 );
                 ##Before unloading, backup the existing rule (saved as .bkp.txt in data directory or with the suffix parameter)
                 ##and load the blank rule
                 
-                sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';
+                If( sOS @= 'Windows');
+                  sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';
+                Else;
+                  # UNIX command        
+                EndIf;
                 ExecuteCommand(sCmd,1);
-                sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cStoreDirFile |'""" "';
+                If( sOS @= 'Windows');
+                  sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cStoreDirFile |'""" "';
+                Else;
+                  # UNIX command        
+                EndIf;
                 ExecuteCommand(sCmd,1);
                 RuleLoadFromFile( sCube, cBlankRuleName );
                 

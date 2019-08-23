@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"uahh?g7[Fb2S\i7^L[1MGyH`fFd6YqnAaXnk3IR1@BU4cPYs]Gf1ZsOChcjGHL54n56\Q4v`B<tWo`8<hl[mRDjZ2>yZ63EHR2A?M7O5dl0cXu82FNevY;c8fNLpoag84~2vwdS4pBvvicjdgP_=mt=FpZ?RNPXRL6GY5?hRqQYf;F68d3uqsFZXb]n9lCb:`J5liKdA"
+565,"ynF1zzuUOolv[iGn1;6CtcWp:y[@;cbHaijZ>sPGAH]AqPi1OqCe5NFQEmjW7f<T72RZ1DI\n;w7mhh@UN<:ZR4BBdrjJ]A@O\d;]K8ab0nqj@62FqUOtUu:G0Z]hqVhvybw7;Q>7]pt9v4ggbC1mE=cozR0]V^Kt8@90dj2VDV_1vxbWJ80gLjYP7uGAAR:0XbT7\iz"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -72,7 +72,7 @@ pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,332
+572,340
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -130,6 +130,15 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcDim:%pSrcDim%, pTgtDim:%pTgtDim%, pIncludeData:%pIncludeData%, pEle:%pEle%, pIncludeRules:%pIncludeRules%, pCtrlObj:%pCtrlObj%, pTemp:%pTemp%.' ;   
 cDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
+
+## Check Operating System
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
 
 ### Validate Parameters ###
 nErrors = 0;
@@ -194,7 +203,7 @@ If( pIncludeData = 1 & DIMIX(pTgtDim, pEle)=0 );
 EndIf;
 
 IF(pIncludeRules = 1 % pIncludeRules = 2);
-  cCubeRuleFileName = '.\'|pCube | '.RUX';
+  cCubeRuleFileName = '.' | sOSDelim | pCube | '.RUX';
   If(FileExists(cCubeRuleFileName) = 0);
     pIncludeRules = 0;
     LogOutput( 'INFO', Expand( 'No rule found for %pCube%.' ) );
@@ -386,13 +395,12 @@ IF(pIncludeRules = 2);
       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
       # Create error rule file 
       cErrorRuleName = 'ErrorRuleFile.rux';
+
       IF(FileExists( cErrorRuleName ) = 0 );
-        sFile = '.\' | cErrorRuleName;
-        sCommand = 'cmd /c "(echo # Rule could not be attached due to invalid !Dimension references.) > ' | sFile | '"';
-        ExecuteCommand ( sCommand, 0 );
-        sCommand = 'cmd /c "(echo # Please recover from the backup and fix manually.) >> ' | sFile | '"';
-        ExecuteCommand ( sCommand, 0 );
+        sFile = '.' | sOSDelim | cErrorRuleName;
+        LogOutput(cMsgErrorLevel, 'Rule could not be attached due to invalid !Dimension references. Please recover from the backup and fix manually.');
       ENDIF;
+
       EXECUTEPROCESS( sProc,
       'pLogOutput', pLogOutput,
       'pCube', pCube,

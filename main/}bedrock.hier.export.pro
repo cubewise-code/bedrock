@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"kXWovMwEv?qa<fV>Ua^;8T>u4uT98S<L>gOm4:I=hg0Rz_g7j=rxp2tE?o[`jpHJTM:fIsXzu^eaEZU7Tq@I_RXY8NYq<LlMdXALfY7Hd2a;<1[>Vdg\_Ku7ajU:??U7I2=xEO`=Zxy3s=5FOUOHX5GhQug3J<YiI[[T>4KbAon0tFNf>`nc;kmOBPG6o67XdzNo5kmk"
+565,"f<pHUMaLwoUyQm5IhTW04]f^6wUz^Sz<jZGCWpkkYa]f4HGL8HKKLWlqj_M17xqY>8eO83B0bbtT?o\31hVKDCsuF38K=>Q>hp:Q_vrFPs617:ZtN8pzQT[lTQhh1@n7nxT`5eeMCXffQTGnUW`jsCbNUypG_>TfR<mC5isNI\rGO8=ARumgSj9xEJ8aU_Z:jIIQ8ufh"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -78,7 +78,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,198
+572,207
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -192,6 +192,15 @@ If( HierarchyExists( pDim, sHier ) = 0 );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Validate export path
 If( Trim( pTgtDir ) @= '' );
     pTgtDir     = GetProcessErrorFileDirectory;
@@ -201,8 +210,8 @@ ElseIf( FileExists( pTgtDir ) = 0 );
     nErrors     = 1;
     sMessage    = 'Invalid export path specified. Folder does not exist.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @<> '\' );
-    pTgtDir     = pTgtDir | '\';
+ElseIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @<> sOSDelim );
+    pTgtDir     = pTgtDir | sOSDelim;
 EndIf;
 
 # Validate export filename

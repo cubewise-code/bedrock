@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"pQlZjiR6LqmVY>OyazWUEh0\t]ZcpL4v5z]thla17tKwKRK>?yB7IHiV:=_q]z3A9NCaoRx?6y1u0;M0gwNJ=X?0vvBG0`wdF<Xj<KSgP0AC5oOmToB;660q?zT9\UM4MSl8T`06c?0d9EOawh@TzVNhIh9G2y2iCpimR4_cRc>sdOWi\9IsYYZ3a_<Q:4_7?Fu\_ALk"
+565,"mFm3GJ\ijGEIha3ZaxjF<1@7jmPFtSf?A\iQ5C4boaNgn74VYo<sP3Wg2QbHCAZFr4H4IxXI3PG_7g1dGI?Qz>L?=`9^`Z9pb2\4UVZYxrMalQH\76Y4N_iq3A?\jnBYKqjnOz]2IzWale=G0cwrLwc^lxtw33q`l\RR^OttjyO_pWq<tk5Sk:<[ycd2o6_]Y>kzqlrc"
 559,1
 928,0
 593,
@@ -104,7 +104,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,224
+572,233
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -207,6 +207,15 @@ ElseIf( sHier @= 'Leaves' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 ## Validate source dir
 If( Trim( pSrcDir ) @= '' );
     pSrcDir     = GetProcessErrorFileDirectory;
@@ -216,8 +225,8 @@ ElseIf( FileExists( pSrcDir ) = 0 );
     nErrors     = 1;
     sMessage    = 'Invalid source path specified. Folder does not exist.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @<> '\' );
-    pSrcDir     = pSrcDir | '\';
+ElseIf( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @<> sOSDelim );
+    pSrcDir     = pSrcDir | sOSDelim;
 EndIf;
 
 # Validate export filename
