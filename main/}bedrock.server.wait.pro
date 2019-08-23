@@ -70,7 +70,7 @@ EndIf;
 StringGlobalVariable('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
 nProcessReturnCode= 0;
-sWailtSec = NumberToString( pWaitSec );
+sWaitSec = NumberToString( pWaitSec );
 
 ### Constants ###
 cThisProcName     = GetProcessName();
