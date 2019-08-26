@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"g]?D]MuaN>2`h7huZs6CuMP^@LvydDj8cedm>MZ_zmuF1tB5AQC7@z5;KCXY9i>`m;@B7YIM8X>ewN;5Nrf\:0pubt7J9[wPQHM2iCBN:qMr3kGGQ5=mc8Ilx\Pl8fM<kHin5U_nsk8UbppBT[o3OjAoc3D9BJB\gbYka;exKrZvwjwaMO30d7[hLeb@BA9iPefSxqC["
+565,"erUF0a^>F`rq\s;MJFGi4_z0gO<4R88s9vqCLzw4Qea97n6M<;3Q13tKyY>\fTB18]u0>xDBA@nJ<o^t=e5b7XE1YzLNHbL_]`JDo4vCxKZ>6gRd?ON71s<5dVNNerkV`zkxG;2MxA1LYul]BsS4bh7s^1Zk<P\Xt:phuXrvcNyZpg;OYk?W7yr0Z^`X]sXmfim1Ar>^"
 559,1
 928,0
 593,
@@ -232,11 +232,11 @@ EndIf;
 
 ### Delete temporary files ###
 sFileName = 'Bedrock.Server.DataDir.Backup.bat' ;
-ASCIIDelete( sFileName );
+ASCIIDelete( LOWER(sFileName) );
 sFileName = 'Bedrock.MkDir.bat';
-ASCIIDelete( sFileName );
+ASCIIDelete( LOWER(sFileName) );
 sFileName = 'Excludes.txt';
-ASCIIDelete( sFileName );
+ASCIIDelete( LOWER(sFileName) );
 
 sMessage = 'Temporary files deleted.';
 LogOutput('INFO', sMessage ); 
