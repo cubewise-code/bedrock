@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"uM]y;gk]EKAtVfDMGByi>aroTJFj1iX77SOuZeMRWVooDod70F2m<q9FX[8D6KVrZA_0jyhf;jiEYQRK^tpJ\zp1]l^LZI:ScBc]aVp9mK[xKF0Mn:X^mD2CT8VznW5Ox00Mt[4h7L3z=jCVxfd3l7yp<YpY^8@yLs@KS>vLng`pqFJS?mlNs4HdHn>6z`Vj\<XLd8C@"
+565,"nKq`RCnezBHwzZa49faYY5L8R>`1KYCmHA\oJ_OSfURniVjsDPfQO:YyfV8b81J:45446?]ipgR5IwMABg4Acn^J<ODVDwtg1?W[iO97=31oj19Zg8k6H\>Gl0i<Nl>>aVd8N[f>KO<N>Kc3;nQFCE:K=4OHarelguImR7AV\ZDHwhFWOR]6TMte\\mQOp2\JBf6I<Ml"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,","
+589,"."
 568,""""
 570,
 571,
@@ -60,7 +60,7 @@ pCSVDays,"Required: The number of days to retain CSV files"
 581,0
 582,0
 603,0
-572,111
+572,113
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -164,13 +164,15 @@ If( sOS @= 'Windows');
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.cma -d -' | sCSVDays | ' -c "cmd /c del @path"' );
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.txt -d -' | sCSVDays | ' -c "cmd /c del @path"' );
 Else;
-  sFileName = 'Bedrock Remove Logs.sh';
-
-  # UNIX command
-
+  sFileName = 'bedrock.remove.logs.sh';
+  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sLogDays |' -name "tm1s*.log" -exec rm {}\;');
+  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sLogDays |' -name "tm1auditstore*.log" -exec rm {}\;');
+  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sErrorDays |' -iname "TM1ProcessError*.log" -exec rm {}\;');
+  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sBedrockDays |' -iname "bedrock*.*" -exec rm {}\;');
+  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sCSVDays |' -iname "*.csv" -exec rm {}\;');
+  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sCSVDays |' -iname "*.cma" -exec rm {}\;');
+  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sCSVDays |' -iname "*.txt" -exec rm {}\;');
 EndIf;
-
-
 
 573,4
 
@@ -182,7 +184,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,32
+575,34
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -194,10 +196,12 @@ EndIf;
 ### Copy Data Dir to Backup ###
 sCommand = sFileName;
 
-
-ExecuteCommand ( sCommand, 1 );
+If(sOS @= 'Windows');
+  ExecuteCommand ( sCommand, 1 );
+Else;
+  ExecuteCommand ( 'sh ' | sCommand, 1 );
+EndIf;
 ASCIIDelete( sFileName);
-
 
 ### Return code & final error message handling
 If( nErrors > 0 );
