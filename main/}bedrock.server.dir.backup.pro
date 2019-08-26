@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"m\liYu31sOeNla:_HMU_50b1brPGd5gzPnO^v_O;M[_@0Ld1msWByuSl0Of;WJEa@TBvh_wMq0[wyu66Va6:Uq9eBIVdoI;wvISF_XCUyEUMZ\p8@2fwvD2As6bc2]9D1?fXlMNqpp>XmK:fai5kV:9Jn<g2lKv9AGuGDTw>oyc5716THK>vp9]t5QuD4okejAOaym:k"
+565,"g]?D]MuaN>2`h7huZs6CuMP^@LvydDj8cedm>MZ_zmuF1tB5AQC7@z5;KCXY9i>`m;@B7YIM8X>ewN;5Nrf\:0pubt7J9[wPQHM2iCBN:qMr3kGGQ5=mc8Ilx\Pl8fM<kHin5U_nsk8UbppBT[o3OjAoc3D9BJB\gbYka;exKrZvwjwaMO30d7[hLeb@BA9iPefSxqC["
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,","
+589,"."
 568,""""
 570,
 571,
@@ -48,7 +48,7 @@ pTgtDir,"Required: Destination Directory for Backup"
 581,0
 582,0
 603,0
-572,132
+572,138
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -159,7 +159,9 @@ DatasourceASCIIQuoteCharacter='';
 ### Create Make Directory Batch File
 sFileName           = 'Bedrock.MkDir.bat' ;
 sBackupDir          = pTgtDir | sOSDelim | 'TM1Backup_' | cTimeStamp;
-ASCIIOUTPUT( sFileName, 'md "' | sBackupDir |'"' );
+If(sOS @= 'Windows');
+  ASCIIOUTPUT( sFileName, 'md "' | sBackupDir |'"' );
+EndIf;
 
 ### Create Exclude File ###
 sFileName = 'Excludes.txt';
@@ -172,9 +174,13 @@ ASCIIOUTPUT( sFileName, '.feeders');
 
 ### Create Batch File ###
 sFileName = 'Bedrock.Server.DataDir.Backup.bat';
-sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c /s /e /y /exclude:Excludes.txt';
-ASCIIOUTPUT( sFileName, '@ECHO OFF');
-ASCIIOUTPUT( sFileName, sText );
+If(sOS @= 'Windows');
+  sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c /s /e /y /exclude:Excludes.txt';
+  ASCIIOUTPUT( sFileName, '@ECHO OFF');
+  ASCIIOUTPUT( sFileName, sText );
+Else;
+  sText = 'rsync -rt --exclude-from=excludes.txt "' | pSrcDir | '" "' | sBackupDir |'"';
+EndIf;
 
 
 sMessage = 'Command Line: ' | sText;
@@ -191,7 +197,7 @@ LogOutput('INFO', sMessage );
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,52
+575,60
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -201,7 +207,11 @@ LogOutput('INFO', sMessage );
 ################################################################################################# 
 
 # Create backup directory
-ExecuteCommand ( 'Bedrock.MkDir.bat', 1 );
+If(sOS @= 'Windows');
+  ExecuteCommand ( 'Bedrock.MkDir.bat', 1 );
+Else;
+  ExecuteCommand ( 'mkdir "' | sBackupDir |'"', 1);
+EndIf;
 # Ensure backup directory created else abort
 If( FileExists( sBackupDir ) = 0 );
     nErrors = 1;
@@ -214,7 +224,11 @@ ELSE;
 EndIf;
 
 ### Copy Data Dir to Backup ###
-ExecuteCommand ( 'Bedrock.Server.DataDir.Backup.bat', 1 );
+If(sOS @= 'Windows');
+  ExecuteCommand ( 'Bedrock.Server.DataDir.Backup.bat', 1 );
+Else;
+  ExecuteCommand ( sText, 1 );
+EndIf;
 
 ### Delete temporary files ###
 sFileName = 'Bedrock.Server.DataDir.Backup.bat' ;
