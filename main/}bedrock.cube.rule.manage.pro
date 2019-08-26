@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"w=HYYSm2XPerILDC_L[s:DuaZKgSj=anGvd5le[YrJtlP>:B=FRTU3R9twB[^@fY]jPamqMg0]@CoEEjZ39w^<Th\:[>]Az6NR=3@oWCk:Lv7>JqT\3I]thrQuqTHK1]YUW^VkIAiqNvVgb\7=8uLOPmmPNMYs7QNpZjnvN]X1`rgNokU^mvdV3gaRVe_hmrrWeZgyeY"
+565,"n\p1zxTXhgbHnXa]bR`a8;OZzOQedcdw:vQ<C>2nNPvqh7^295yu]3fjQf9_rQObj>n;FTq;4sdKMHgS^^C?pNblWNudY^?<Oxb9CzgrsoIl[ms^B\9_L;nyK?V8ask2aF7fk_tmnrV\0^segMlIkTMkaYUwZ8qK<mE@`[ACLr>xbqRdrNpS0fGOR4rztVP\_Fdy;HqH"
 559,1
 928,0
 593,
@@ -60,7 +60,7 @@ pPath,"Optional: Saves the file and the backup of the existing rule in this loca
 581,0
 582,0
 603,0
-572,284
+572,297
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -173,14 +173,14 @@ IF(FileExists( cBlankRuleName ) = 0 );
   If( sOS @= 'Windows');
     sCommand = 'cmd /c "(echo SKIPCHECK;) > ' | sFile | '"';
   Else;
-    # UNIX command        
+    sCommand = 'echo SKIPCHECK\; > ' | LOWER(sFile);
   EndIf;
   ExecuteCommand ( sCommand, 0 );
   
   If( sOS @= 'Windows');
     sCommand = 'cmd /c "(echo FEEDERS;) >> ' | sFile | '"';
   Else;
-    # UNIX command        
+    sCommand = 'echo FEEDERS\; >> ' | LOWER(sFile);
   EndIf;
   ExecuteCommand ( sCommand, 0 );
   
@@ -209,16 +209,29 @@ While( nCubeDelimIndex <> 0 );
   If( nCubeDelimIndex = 0 );
     sCube = sCubes;
   Else;
-    sCube = Trim( SubSt( sCubes, 1, nCubeDelimIndex - 1 ) );
+    If (sOS @= 'Windows');
+      sCube = Trim( SubSt( sCubes, 1, nCubeDelimIndex - 1 ) );
+    Else;
+      sCube = LOWER(Trim( SubSt( sCubes, 1, nCubeDelimIndex - 1 ) ));
+    EndIf;
     sCubes = Trim( Subst( sCubes, nCubeDelimIndex + Long(pDelim), Long( sCubes ) ) );
   EndIf;
 
   If( Scan( '*', sCube ) = 0);
     If(CubeExists(sCube) <> 0);
 
-      cCubeRuleFileName = '.' | sOSDelim |sCube | '.RUX';
-      cStoreDirFile = sPath | Expand(sRuleFileName);
-      cBackupDirFile = sPath | Expand(sBackupFileName); 
+      If( sOS @= 'Windows');
+        cCubeRuleFileName = '.' | sOSDelim | sCube | '.rux';
+      Else;
+        cCubeRuleFileName = '.' | sOSDelim | LOWER(sCube) | '.rux';
+      EndIf;
+      If( sOS @= 'Windows');
+        cStoreDirFile = sPath | Expand(sRuleFileName);
+        cBackupDirFile = sPath | Expand(sBackupFileName); 
+      Else;
+        cStoreDirFile = sPath | LOWER(Expand(sRuleFileName));
+        cBackupDirFile = sPath | LOWER(Expand(sBackupFileName)); 
+      EndIf;
       
         # if there already is a rule file
       If(FileExists(cCubeRuleFileName) <> 0);
@@ -230,7 +243,7 @@ While( nCubeDelimIndex <> 0 );
           If( sOS @= 'Windows');
             sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';          
           Else;
-            # UNIX command        
+            sCmd = 'cp "' | cCubeRuleFileName | '" "' | cBackupDirFile | '"';        
           EndIf;
           ExecuteCommand(sCmd,1);
           RuleLoadFromFile( sCube, cStoreDirFile);
@@ -243,13 +256,13 @@ While( nCubeDelimIndex <> 0 );
           If( sOS @= 'Windows');
             sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';
           Else;
-            # UNIX command        
+            sCmd = 'cp "' | cCubeRuleFileName | '" "' | cBackupDirFile |'"';
           EndIf;
           ExecuteCommand(sCmd,1);
           If( sOS @= 'Windows');
             sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cStoreDirFile |'""" "';
           Else;
-            # UNIX command        
+            sCmd = 'cp "' | cCubeRuleFileName | '"  "' | cStoreDirFile |'"';
           EndIf;
           ExecuteCommand(sCmd,1);
           RuleLoadFromFile( sCube, cBlankRuleName );
@@ -273,16 +286,16 @@ While( nCubeDelimIndex <> 0 );
     Endif;
   Else;
     # Wildcard search string
-        sSearch = '.' | sOSDelim  | sCube | '.RUX';
+        sSearch = '.' | sOSDelim  | sCube | '.rux';
 
         # Find all Cubes that match search string
         sFilename = WildcardFileSearch( sSearch, '' );
-        While( sFilename @<> '' & Subst( sFilename, Long(sFilename)-3, 4) @= '.RUX' );
-          # Trim .RUX off the filename
+        While( sFilename @<> '' & Subst( sFilename, Long(sFilename)-3, 4) @= '.rux' );
+          # Trim .rux off the filename
           sCube = SubSt( sFilename, 1, Long( sFilename ) - 4 );
           
           If( CubeExists( sCube ) = 1 ); 
-            cCubeRuleFileName = '.' | sOSDelim | sCube | '.RUX';
+            cCubeRuleFileName = '.' | sOSDelim | sCube | '.rux';
             cStoreDirFile = sPath | Expand(sWildFileName);
             cBackupDirFile = sPath | Expand(sBackupWildFileName); 
             
@@ -297,7 +310,7 @@ While( nCubeDelimIndex <> 0 );
                 If( sOS @= 'Windows');
                   sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';          
                 Else;
-                  # UNIX command        
+                  sCmd = 'cp "' | cCubeRuleFileName | '" "' | cBackupDirFile |'"';          
                 EndIf;
                 ExecuteCommand(sCmd,1);
                 RuleLoadFromFile( sCube, cStoreDirFile);
@@ -310,13 +323,13 @@ While( nCubeDelimIndex <> 0 );
                 If( sOS @= 'Windows');
                   sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cBackupDirFile |'""" "';
                 Else;
-                  # UNIX command        
+                  sCmd = 'cp "' | cCubeRuleFileName | '"  "' | cBackupDirFile |'"';
                 EndIf;
                 ExecuteCommand(sCmd,1);
                 If( sOS @= 'Windows');
                   sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cStoreDirFile |'""" "';
                 Else;
-                  # UNIX command        
+                  sCmd = 'cp "' | cCubeRuleFileName | '" "' | cStoreDirFile |'"';
                 EndIf;
                 ExecuteCommand(sCmd,1);
                 RuleLoadFromFile( sCube, cBlankRuleName );
