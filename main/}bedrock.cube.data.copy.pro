@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"rPyHlg2cbODCSGKFMSaji1gYi:a1\7tAt_eY76502OV^V9>r0vtgtiii=]0DGhbFJFaYreI85DS@fiNS>5FvwO2:EkXRiA^QpsWw>:[Q7zsqh>iVuT6qdGEa<<pOkK_L31`zteeq:xZNLGwkEDwWprJs6TzRgiwGif1_2WAb3D<;H1E<DyNvWI4hwqvhMN3wTYc61;U`"
+565,"j^CZmJ04uwaIQx9zaQJafPnZpQpDJR7_F8o39KZGJ\]4]5Lq?wz3cuGXuQt^rFiPskp@>ZQ0U0cz<l4>jr03\;]OZori7RASAtaML`[=5TKA?B`\DcNoA;TO5^mZynuSfABnD5CASf8t\RP>5Hc6g2@gFibXH_Z9kOpJQ;<xNllEACl81Awm:aYn>P5y=;Uq::3bQ2yD"
 559,1
 928,0
 593,
@@ -70,7 +70,7 @@ pThreadMode
 1
 1
 2
-2
+1
 590,22
 pLogOutput,0
 pCube,""
@@ -93,7 +93,7 @@ pZeroSource,0
 pTemp,1
 pCubeLogging,0
 pSandbox,""
-pThreadMode,"0"
+pThreadMode,0
 637,22
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
