@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"b=ad0z:fBk0_3;cEh;V`LFTduxG`rCCXslzf;U9kmfP5WEpV_GHluF7iL>Fes3^x79sX<Juh0TQsCb==J[Ze\`whXmv\95KVTAYgoZ?4]pz0=Ix[s8>aGeDXC\>Ulf=vDDj:hj2Pvh_ZPbGrWrL6qhaNOrf^wBD0\2fmTF?PObHauU;cn]9B8U5pKAtn[69k1>4yT@FH"
+565,"rxBd8wKICYJp7sSR^HafS2ieyYQ`[Gs82KYS]ouCSrXM11ebXte@xAmDef=cYINZH8SDr\TjIfIE^rq<v;17]G0SJ`;orC19y9qwasDcQHI0NFMRcr;b7N75K3LY7hDdi7VkULa6G>u[4GWfYbrpQa]Et2NH\i:xNFF4\^QJRH2D5]<HAjrk0jji=I9A9q_Al`h;Fnvu"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,","
+589,"."
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pSrcDir,"Optional: Data Directory (Leave Blank to use TM1 Settings)"
 581,0
 582,0
 603,0
-572,107
+572,115
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -102,7 +102,7 @@ ENDIF;
 If( Scan('/', GetProcessErrorFileDirectory)>0);
   sOS = 'Linux';
   sOSDelim = '/';
-  cBatchFile = cThisProcName | '.sh';
+  cBatchFile = LOWER(cThisProcName) | '.sh';
 Else;
   sOS = 'Windows';
   sOSDelim = '\';
@@ -145,9 +145,17 @@ If( sOS @= 'Windows');
   ASCIIOUTPUT( sCommand, 'dir /b /s *.vue > List_All_Views.txt');
   ASCIIOUTPUT( sCommand, 'dir /b /s *.sub > List_All_Subsets.txt');
 Else;
-
-  # UNIX command
-
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f > List_All_Data_Directory_Files.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "}*" > List_All_Control_Objects.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.cub" > List_All_Cubes.txt ;');
+  
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.dim" > List_All_Dimensions.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.pro" > List_All_Processes.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.cho" > List_All_Chores.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -iname "*Bedrock*.pro" > List_All_Bedrock_Processes.txt ;');
+  
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.vue" > List_All_Views.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.sub" > List_All_Subsets.txt ;');
 EndIf;
 
 
@@ -162,7 +170,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,40
+575,44
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -181,11 +189,15 @@ EndIf;
 
 ### Execute Batch File ###
 If( nErrors = 0 );
+  If(sOS @= 'Windows');
     ExecuteCommand ( sCommand, 1 );
+  Else;
+    ExecuteCommand ( 'sh ' | sCommand, 1 );
+  EndIf;
 EndIf;
 
 ### Delete temporary batch file
-ASCIIDelete ( sCommand );
+#ASCIIDelete ( sCommand );
 
 ### Return code & final error message handling
 If( nErrors > 0 );
