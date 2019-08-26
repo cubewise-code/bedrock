@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rxBd8wKICYJp7sSR^HafS2ieyYQ`[Gs82KYS]ouCSrXM11ebXte@xAmDef=cYINZH8SDr\TjIfIE^rq<v;17]G0SJ`;orC19y9qwasDcQHI0NFMRcr;b7N75K3LY7hDdi7VkULa6G>u[4GWfYbrpQa]Et2NH\i:xNFF4\^QJRH2D5]<HAjrk0jji=I9A9q_Al`h;Fnvu"
+565,"d[YfaGU=tQo57R3pYi4r5k^sry4:2]w<dIK8>6_vyKdsqtjX_r]Oy:9MLCmQM1IYBTwYSkaH;UADMxIACLU@85=FFJgep>eo]?BQsi301An?>@Vl]]a1E[mcW:du^jkDPNA94AA@w]ht\BG;bNXaJC4t?;:]rV]XUyqOVDk7MClCZILw^8tb6>3GH<4?OuM>H3lj]vv8"
 559,1
 928,0
 593,
@@ -197,7 +197,7 @@ If( nErrors = 0 );
 EndIf;
 
 ### Delete temporary batch file
-#ASCIIDelete ( sCommand );
+ASCIIDelete ( sCommand );
 
 ### Return code & final error message handling
 If( nErrors > 0 );
