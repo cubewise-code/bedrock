@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"pwx3dRTBFSx>NDO5aiR>Ow2tLJ1an?IpJa304d`fod7WCPDhXGjnjltdow3GYOF:yOGEdGYSO0D@\GDDnVGbyrvPOe5GgV]Ggb<WduYE;4uqUtID]3mdH2zb?y9eFBRbzn4Bh_Z]n2:Oq^A:VMS2<aM2B;Veh9^i?TV;mVBm1Zfp[ZC4@SuMn_4CSCZ`f]kwsE<Pzx15"
+565,"gpEqau`a@Ye2AQbPagyMK8FwF:Qx><C?g`jHUroo9gr654h`yi[SYY6;tNBxn3LO=M8s^Mkuys11<kTxQfz2]6IFed<YBX8uW@8H37g?kGUXKx_XeT^UJ0?^Rfs?6H:j\pzz3O@YI2qRNo2\c7tD;bg0Lzy<C_XjjxxT?V5ohznVej1bQ<fs18]P:@Z2E^_e<GCwbhK>"
 559,1
 928,0
 593,
@@ -283,7 +283,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,340
+574,514
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -413,19 +413,41 @@ If( pAttr = 1 & DimensionExists( sDimAttr ) = 1 & Scan( sDim|pDelim, sAttrDone )
     AsciiOutput( sFileName, cHashLine );
     AsciiOutput( sFileName, Expand('#Region Create Attributes: %sDim%') );
     nCtr            = 1;
-    sAttr           = DimNm( sDimAttr, nCtr );
-    AsciiOutput( sFileName, Expand('If( DimensionExists( ''%sDimAttr%'' ) = 0 );') );
-    AsciiOutput( sFileName, Expand('    AttrInsert( ''%sDim%'', '''', ''%sAttr%'', ''%sAttrTyp%'' );') );
-    AsciiOutput( sFileName, 'EndIf;' );
     While( nCtr     <= DimSiz( sDimAttr ) );
         sAttr       = DimNm( sDimAttr, nCtr );
         sAttrTyp    = SubSt( DType( sDimAttr, sAttr ), 2, 1 );
-        AsciiOutput( sFileName, Expand('If( DimIx( ''%sDimAttr%'', ''%sAttr%'' ) = 0 );') );
-        AsciiOutput( sFileName, Expand('    AttrInsert( ''%sDim%'', '''', ''%sAttr%'', ''%sAttrTyp%'' );') );
+        # Escape potential single apostrophes to avoid parsing errors in attribute names
+        nChar = 1;
+        nCount = 0;
+        sAttrStrOut = '';
+        While( nChar <= LONG( sAttr ) + 1 );
+          If( nChar <= LONG( sAttr ) );
+            sChar = SUBST( sAttr, nChar, 1 );
+          Else;
+            sChar = '';
+          EndIf;
+          If( sChar @= '''' );
+            nCount = nCount + 1;
+          ElseIf( nCount > 0 );
+            If( MOD( nCount, 2 ) <> 0 );
+              sAttrStrOut = sAttrStrOut | '''';
+            EndIf;
+            nCount = 0;
+          EndIf;
+          sAttrStrOut = sAttrStrOut | sChar;
+          nChar = nChar + 1;
+        End;
+        If( nCtr = 1 );
+          AsciiOutput( sFileName, Expand('If( DimensionExists( ''%sDimAttr%'' ) = 0 );') );
+          AsciiOutput( sFileName, Expand('    AttrInsert( ''%sDim%'', '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
+          AsciiOutput( sFileName, 'EndIf;' );
+        EndIf;
+        AsciiOutput( sFileName, Expand('If( DimIx( ''%sDimAttr%'', ''%sAttrStrOut%'' ) = 0 );') );
+        AsciiOutput( sFileName, Expand('    AttrInsert( ''%sDim%'', '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
         AsciiOutput( sFileName, 'Else;' );
-        AsciiOutput( sFileName, Expand('    If( DType( ''%sDimAttr%'', ''%sAttr%'' ) @<> ''%sAttrTyp%'' );') );
-        AsciiOutput( sFileName, Expand('        AttrDelete( ''%sDim%'', ''%sAttr%'' );') );
-        AsciiOutput( sFileName, Expand('        AttrInsert( ''%sDim%'', '''', ''%sAttr%'', ''%sAttrTyp%'' );') );
+        AsciiOutput( sFileName, Expand('    If( DType( ''%sDimAttr%'', ''%sAttrStrOut%'' ) @<> ''%sAttrTyp%'' );') );
+        AsciiOutput( sFileName, Expand('        AttrDelete( ''%sDim%'', ''%sAttrStrOut%'' );') );
+        AsciiOutput( sFileName, Expand('        AttrInsert( ''%sDim%'', '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
         AsciiOutput( sFileName, '    EndIf;' );
         AsciiOutput( sFileName, 'EndIf;' );
         nCtr        = nCtr + 1;
@@ -480,20 +502,83 @@ If( pEle @<> '' );
         While( nCtr <= nMax );
             # 1st insert all elements to get correct order
             sEle    = SubsetGetElementName( vDim, cTempSub, nCtr );
+            # Escape potential single apostrophes to avoid parsing errors in element names
+            nChar = 1;
+            nCount = 0;
+            sEleStrOut = '';
+            While( nChar <= LONG( sEle ) + 1 );
+              If( nChar <= LONG( sEle ) );
+                sChar = SUBST( sEle, nChar, 1 );
+              Else;
+                sChar = '';
+              EndIf;
+              If( sChar @= '''' );
+                nCount = nCount + 1;
+              ElseIf( nCount > 0 );
+                If( MOD( nCount, 2 ) <> 0 );
+                  sEleStrOut = sEleStrOut | '''';
+                EndIf;
+                nCount = 0;
+              EndIf;
+              sEleStrOut = sEleStrOut | sChar;
+              nChar = nChar + 1;
+            End;
             sEleTyp = DType( vDim, sEle );
-            AsciiOutput( sFileName, Expand('DimensionElementInsert( ''%vDim%'', '''', ''%sEle%'', ''%sEleTyp%'' );') );
+            AsciiOutput( sFileName, Expand('DimensionElementInsert( ''%vDim%'', '''', ''%sEleStrOut%'', ''%sEleTyp%'' );') );
             nCtr    = nCtr + 1;
         End;
         nCtr = 1;
         While( nCtr <= nMax );
             # 2nd loop again and create parent linkages
             sEle    = SubsetGetElementName( vDim, cTempSub, nCtr );
+            # Escape potential single apostrophes to avoid parsing errors in element names
+            nChar = 1;
+            nCount = 0;
+            sEleStrOut = '';
+            While( nChar <= LONG( sEle ) + 1 );
+              If( nChar <= LONG( sEle ) );
+                sChar = SUBST( sEle, nChar, 1 );
+              Else;
+                sChar = '';
+              EndIf;
+              If( sChar @= '''' );
+                nCount = nCount + 1;
+              ElseIf( nCount > 0 );
+                If( MOD( nCount, 2 ) <> 0 );
+                  sEleStrOut = sEleStrOut | '''';
+                EndIf;
+                nCount = 0;
+              EndIf;
+              sEleStrOut = sEleStrOut | sChar;
+              nChar = nChar + 1;
+            End;
             nPar    = 1;
             While( nPar <= ElParN( vDim, sEle ) );
                 sPar = ElPar( vDim, sEle, nPar );
+                # Escape potential single apostrophes to avoid parsing errors in parent element names
+                nChar = 1;
+                nCount = 0;
+                sParStrOut = '';
+                While( nChar <= LONG( sPar ) + 1 );
+                  If( nChar <= LONG( sPar ) );
+                    sChar = SUBST( sPar, nChar, 1 );
+                  Else;
+                    sChar = '';
+                  EndIf;
+                  If( sChar @= '''' );
+                    nCount = nCount + 1;
+                  ElseIf( nCount > 0 );
+                    If( MOD( nCount, 2 ) <> 0 );
+                      sParStrOut = sParStrOut | '''';
+                    EndIf;
+                    nCount = 0;
+                  EndIf;
+                  sParStrOut = sParStrOut | sChar;
+                  nChar = nChar + 1;
+                End;
                 sWht = NumberToString( ElWeight( vDim, sPar, sEle ) );
-                AsciiOutput( sFileName, Expand('DimensionElementInsert( ''%vDim%'', '''', ''%sPar%'', ''C'' );') );
-                AsciiOutput( sFileName, Expand('DimensionElementComponentAdd( ''%vDim%'', ''%sPar%'', ''%sEle%'', %sWht% );') );
+                AsciiOutput( sFileName, Expand('DimensionElementInsert( ''%vDim%'', '''', ''%sParStrOut%'', ''C'' );') );
+                AsciiOutput( sFileName, Expand('DimensionElementComponentAdd( ''%vDim%'', ''%sParStrOut%'', ''%sEleStrOut%'', %sWht% );') );
                 nPar = nPar + 1;
             End;
             nCtr     = nCtr + 1;
@@ -515,10 +600,52 @@ If( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & nMax >=1 );
     While( nCtr <= nMax );
         # loop elements again and internally loop attributes
         sEle    = SubsetGetElementName( vDim, cTempSub, nCtr );
+        # Escape potential single apostrophes to avoid parsing errors in element names
+        nChar = 1;
+        nCount = 0;
+        sEleStrOut = '';
+        While( nChar <= LONG( sEle ) + 1 );
+          If( nChar <= LONG( sEle ) );
+            sChar = SUBST( sEle, nChar, 1 );
+          Else;
+            sChar = '';
+          EndIf;
+          If( sChar @= '''' );
+            nCount = nCount + 1;
+          ElseIf( nCount > 0 );
+            If( MOD( nCount, 2 ) <> 0 );
+              sEleStrOut = sEleStrOut | '''';
+            EndIf;
+            nCount = 0;
+          EndIf;
+          sEleStrOut = sEleStrOut | sChar;
+          nChar = nChar + 1;
+        End;
         sEleTyp = DType( vDim, sEle );
         nAttr   = 1;
         While( nAttr <= DimSiz( sDimAttr ) );
             sAttr       = DimNm( sDimAttr, nAttr );
+            # Escape potential single apostrophes to avoid parsing errors in attribute names
+            nChar = 1;
+            nCount = 0;
+            sAttrStrOut = '';
+            While( nChar <= LONG( sAttr ) + 1 );
+              If( nChar <= LONG( sAttr ) );
+                sChar = SUBST( sAttr, nChar, 1 );
+              Else;
+                sChar = '';
+              EndIf;
+              If( sChar @= '''' );
+                nCount = nCount + 1;
+              ElseIf( nCount > 0 );
+                If( MOD( nCount, 2 ) <> 0 );
+                  sAttrStrOut = sAttrStrOut | '''';
+                EndIf;
+                nCount = 0;
+              EndIf;
+              sAttrStrOut = sAttrStrOut | sChar;
+              nChar = nChar + 1;
+            End;
             sAttrTyp    = SubSt( DType( sDimAttr, sAttr ), 2, 1 );
             sAttrVal    = '';
             If( ( sDim @<> sHier & sEleTyp @<> 'N' ) & sAttrTyp @= 'N' );
@@ -534,19 +661,45 @@ If( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & nMax >=1 );
             Else;
                 sAttrVal= AttrS( sDim, sEle, sAttr );
             EndIf;
+            sAttrValStrOut = '';
             If( sAttrVal @<> '' );
-                If( ( sDim @<> sHier & sEleTyp @<> 'N' ) & sAttrTyp @= 'N' );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutN( %sAttrVal%, ''%sDim%'', ''%sHier%'', ''%sEle%'', ''%sAttr%'' );') );
-                ElseIf( sDim @<> sHier & sEleTyp @<> 'N' );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrVal%'', ''%sDim%'', ''%sHier%'', ''%sEle%'', ''%sAttr%'' );') );
-                ElseIf( sEleTyp @= 'N' & sAttrTyp @= 'N' & DimIx( sDim, sEle ) = 0 );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutN( %sAttrVal%, ''%sDim%'', ''%sHier%'', ''%sEle%'', ''%sAttr%'' );') );
-                ElseIf( sEleTyp @= 'N' & DimIx( sDim, sEle ) = 0 );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrVal%'', ''%sDim%'', ''%sHier%'', ''%sEle%'', ''%sAttr%'' );') );
-                ElseIf( sAttrTyp @= 'N' );
-                    AsciiOutput( sFileName2, Expand('AttrPutN( %sAttrVal%, ''%sDim%'', ''%sEle%'', ''%sAttr%'' );') );
+                If( sAttrTyp @<> 'N' );
+                  # Escape potential single apostrophes to avoid parsing errors in attribute values
+                  nChar = 1;
+                  nCount = 0;
+                  While( nChar <= LONG( sAttrVal ) + 1 );
+                    If( nChar <= LONG( sAttrVal ) );
+                      sChar = SUBST( sAttrVal, nChar, 1 );
+                    Else;
+                      sChar = '';
+                    EndIf;
+                    If( sChar @= '''' );
+                      nCount = nCount + 1;
+                    ElseIf( nCount > 0 );
+                      If( MOD( nCount, 2 ) <> 0 );
+                        sAttrValStrOut = sAttrValStrOut | '''';
+                      EndIf;
+                      nCount = 0;
+                    EndIf;
+                    sAttrValStrOut = sAttrValStrOut | sChar;
+                    nChar = nChar + 1;
+                  End;
                 Else;
-                    AsciiOutput( sFileName2, Expand('AttrPutS( ''%sAttrVal%'', ''%sDim%'', ''%sEle%'', ''%sAttr%'' );') );
+                    # we won't need any tratment for non-string attributes
+                    sAttrValStrOut = sAttrVal;
+                EndIf;
+                If( ( sDim @<> sHier & sEleTyp @<> 'N' ) & sAttrTyp @= 'N' );
+                    AsciiOutput( sFileName2, Expand('ElementAttrPutN( %sAttrValStrOut%, ''%sDim%'', ''%sHier%'', ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                ElseIf( sDim @<> sHier & sEleTyp @<> 'N' );
+                    AsciiOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrValStrOut%'', ''%sDim%'', ''%sHier%'', ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                ElseIf( sEleTyp @= 'N' & sAttrTyp @= 'N' & DimIx( sDim, sEle ) = 0 );
+                    AsciiOutput( sFileName2, Expand('ElementAttrPutN( %sAttrValStrOut%, ''%sDim%'', ''%sHier%'', ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                ElseIf( sEleTyp @= 'N' & DimIx( sDim, sEle ) = 0 );
+                    AsciiOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrValStrOut%'', ''%sDim%'', ''%sHier%'', ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                ElseIf( sAttrTyp @= 'N' );
+                    AsciiOutput( sFileName2, Expand('AttrPutN( %sAttrValStrOut%, ''%sDim%'', ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                Else;
+                    AsciiOutput( sFileName2, Expand('AttrPutS( ''%sAttrValStrOut%'', ''%sDim%'', ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
                 EndIf;
             EndIf;
             nAttr = nAttr + 1;
@@ -602,7 +755,28 @@ If( pSub = 1 & DimensionExists( '}Subsets_' | sDim ) = 1 );
                 nEle    = 1;
                 While( nEle <= nEles );
                     sEle = SubsetGetElementName( vDim, sSub, nEle );
-                    AsciiOutput( sFileName2, Expand('SubsetElementInsert( ''%vDim%'', ''%sSub%'', ''%sEle%'', 0 );') );
+                    # Escape potential single apostrophes to avoid parsing errors in element names
+                    nChar = 1;
+                    nCount = 0;
+                    sEleStrOut = '';
+                    While( nChar <= LONG( sEle ) + 1 );
+                      If( nChar <= LONG( sEle ) );
+                        sChar = SUBST( sEle, nChar, 1 );
+                      Else;
+                        sChar = '';
+                      EndIf;
+                      If( sChar @= '''' );
+                        nCount = nCount + 1;
+                      ElseIf( nCount > 0 );
+                        If( MOD( nCount, 2 ) <> 0 );
+                          sEleStrOut = sEleStrOut | '''';
+                        EndIf;
+                        nCount = 0;
+                      EndIf;
+                      sEleStrOut = sEleStrOut | sChar;
+                      nChar = nChar + 1;
+                    End;
+                    AsciiOutput( sFileName2, Expand('SubsetElementInsert( ''%vDim%'', ''%sSub%'', ''%sEleStrOut%'', 0 );') );
                     nEle = nEle + 1;
                 End;
             EndIf;
