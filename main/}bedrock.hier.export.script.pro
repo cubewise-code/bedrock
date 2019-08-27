@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"rV\;>K1ClGNnLkQ?t3afeQcsoao`pGX]4yIF2ByZjgCFIr[Wc[5^GMY2:c7SC:KCBG8eb;dmsDwa]FKw8NvBvX;V7m_ThC?>>n@=OUSlG`kS0Hd6e<Szs00^Pj:ldVS^OFz7E:hZtsaxoU^8xP\Ww>dbLLsfRl7:`twN<q[NpDOC<oeM:n6G2Zt\8O<sACkysejqTphb"
+565,"qI4;`n?qix[[YoLwfa>JuVW_k1p`s;:aUF;LXrL[[?_MNozdrWakS<W?leH:u[zU\bp^k=;3Lg6Di@Lx;`t:gUMB[pYeln?;4E[hB^82KTYE4N23m4x^PisWBL?4JG;H5krrReoyvmhgqQ]Mvy[a:>CsFWQqL5HS7WHz2vs2Uq0]w6hJv?ey;kt8vyY>>vrRitZPfk]`"
 559,1
 928,0
 593,
@@ -25,50 +25,54 @@
 569,0
 592,0
 599,1000
-560,10
+560,11
 pLogOutput
 pDim
 pEle
 pDelim
 pTgtDir
+pTgtFile
 pTitleRecord
 pDimInfo
 pAttr
-pAttrVal
 pSub
-561,10
+pAttrVal
+561,11
 1
 2
 2
 2
 2
+2
 1
 1
 1
 1
 1
-590,10
+590,11
 pLogOutput,0
 pDim,""
 pEle,""
 pDelim,"&"
 pTgtDir,""
+pTgtFile,""
 pTitleRecord,1
 pDimInfo,1
 pAttr,1
-pAttrVal,1
 pSub,0
-637,10
+pAttrVal,1
+637,11
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"Required: Target Dimension or Hierarchy (as dim:hier), accepts wildcards (if = *, then all the dimensions)"
 pEle,"Optional: Target Element(s), accepts wildcards ( * will include ALL)"
 pDelim,"Optional: Delimiter character if list used for pDim, pHier or pEle"
 pTgtDir,"Optional: Target Directory Path (defaults to Error File Directory if blank)"
+pTgtFile,"Optional: Root file name without file extension. If blank ""bedrock_dimension_script"" will be used"
 pTitleRecord,"Required: Boolean 1 = Yes - Include header row"
 pDimInfo,"Optional: Include dimension info section (SortOrder, HierarchyProperties, etc.)"
 pAttr,"Optional: Include creation of attributes"
-pAttrVal,"Optional: Include attribute values (for selected elements in pEle)"
 pSub,"Optional: Include subset definitions"
+pAttrVal,"Optional: Include attribute values (for selected elements in pEle)"
 577,1
 vDim
 578,1
@@ -82,7 +86,7 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,195
+572,207
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -194,8 +198,20 @@ ElseIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @<> '\' );
 EndIf;
 
 # Validate export filename
-pTgtFile1       = 'bedrock_dimension_script_prolog.txt';
-pTgtFile2       = 'bedrock_dimension_script_epilog.txt';
+If( pTgtFile    @= '' );
+    pTgtFile1   = 'bedrock_dimension_script_prolog.txt';
+    pTgtFile2   = 'bedrock_dimension_script_epilog.txt';
+Else;
+    If( SubSt( pTgtFile, Long( pTgtFile ) - 4, 1 ) @= '.' );
+        pTgtFile = SubSt( pTgtFile, 1, Long( pTgtFile ) - 5 );
+    EndIf;
+    If( SubSt( pTgtFile, Long( pTgtFile ), 1 ) @= '_' );
+        pTgtFile = SubSt( pTgtFile, 1, Long( pTgtFile ) - 1 );
+    EndIf;
+    pTgtFile1   = pTgtFile | '_prolog.txt';
+    pTgtFile2   = pTgtFile | '_epilog.txt';
+
+EndIf;
 
 # Validate file delimiter & quote character
 If( pDelim @= '' );
@@ -283,7 +299,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,538
+574,536
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -502,9 +518,6 @@ If( pEle @<> '' );
     Else;
         SubsetCreatebyMDX( cTempSub, sMDX, vDim, 1 );
     EndIf;
-    If( pEle @= '*' );
-        SubsetIsAllSet( vDim, cTempSub, 1 );
-    EndIf;
     nMax = SubsetGetSize( vDim, cTempSub );
     If( nMax >= 1 );
         AsciiOutput( sFileName, '' );
@@ -589,7 +602,9 @@ If( pEle @<> '' );
                     nChar = nChar + 1;
                 End;
                 sWht = NumberToString( ElWeight( vDim, sPar, sEle ) );
-                AsciiOutput( sFileName, Expand('DimensionElementInsert( sDimHier, '''', ''%sParStrOut%'', ''C'' );') );
+                If( pEle @<> '*' );
+                    AsciiOutput( sFileName, Expand('DimensionElementInsert( sDimHier, '''', ''%sParStrOut%'', ''C'' );') );
+                EndIf;
                 AsciiOutput( sFileName, Expand('DimensionElementComponentAdd( sDimHier, ''%sParStrOut%'', ''%sEleStrOut%'', %sWht% );') );
                 nPar = nPar + 1;
             End;
@@ -758,22 +773,21 @@ If( pSub = 1 & DimensionExists( sDimSub ) = 1 );
             If( Scan( ':', sSub ) > 0 );
                 sSub    = SubSt( sSub, Scan( ':', sSub ) + 1, Long( sSub ) );
             EndIf;
-            AsciiOutput( sFileName2, Expand('sSub     = ''%sSub%'';') );
             sMDX        = SubsetMDXGet( vDim, sSub );
             # If MDX expression contains TM1SubsetBasis function then treat it as a static subset
             If( sMDX @<> '' & Scan( 'TM1SUBSETBASIS()', Upper( sMDX ) ) = 0 );
                 # create by MDX
-                AsciiOutput( sFileName2, 'If( SubsetExists( sDimHier, sSub ) = 0 );');
-                AsciiOutput( sFileName2, Expand('    SubsetCreatebyMDX( sSub, ''%sMDX%'', sDimHier, 0 );') );
+                AsciiOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
+                AsciiOutput( sFileName2, Expand('    SubsetCreatebyMDX( ''%sSub%'', ''%sMDX%'', sDimHier, 0 );') );
                 AsciiOutput( sFileName2, 'Else;' );
-                AsciiOutput( sFileName2, Expand('    SubsetMDXSet( sDimHier, sSub, ''%sMDX%'' );') );
+                AsciiOutput( sFileName2, Expand('    SubsetMDXSet( sDimHier, ''%sSub%'', ''%sMDX%'' );') );
                 AsciiOutput( sFileName2, 'EndIf;' );
             Else;
                 # loop members
-                AsciiOutput( sFileName2, 'If( SubsetExists( sDimHier, sSub ) = 0 );');
-                AsciiOutput( sFileName2, '    SubsetCreate( sDimHier, sSub );');
+                AsciiOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
+                AsciiOutput( sFileName2, Expand('    SubsetCreate( sDimHier, ''%sSub%'' );') );
                 AsciiOutput( sFileName2, 'Else;' );
-                AsciiOutput( sFileName2, '    SubsetDeleteAllElements( sDimHier, sSub );');
+                AsciiOutput( sFileName2, Expand('    SubsetDeleteAllElements( sDimHier, ''%sSub%'' );') );
                 AsciiOutput( sFileName2, 'EndIf;' );
                 nEles   = SubsetGetSize( vDim, sSub );
                 nEle    = 1;
@@ -800,7 +814,7 @@ If( pSub = 1 & DimensionExists( sDimSub ) = 1 );
                         sEleStrOut = sEleStrOut | sChar;
                         nChar = nChar + 1;
                     End;
-                    AsciiOutput( sFileName2, Expand('SubsetElementInsert( sDimHier, sSub, ''%sEleStrOut%'', 0 );') );
+                    AsciiOutput( sFileName2, Expand('SubsetElementInsert( sDimHier, ''%sSub%'', ''%sEleStrOut%'', 0 );') );
                     nEle = nEle + 1;
                 End;
             EndIf;
