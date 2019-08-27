@@ -283,7 +283,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,534
+574,538
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -501,6 +501,9 @@ If( pEle @<> '' );
         SubsetMDXSet( vDim, cTempSub, sMDX );
     Else;
         SubsetCreatebyMDX( cTempSub, sMDX, vDim, 1 );
+    EndIf;
+    If( pEle @= '*' );
+        SubsetIsAllSet( vDim, cTempSub, 1 );
     EndIf;
     nMax = SubsetGetSize( vDim, cTempSub );
     If( nMax >= 1 );
@@ -755,21 +758,22 @@ If( pSub = 1 & DimensionExists( sDimSub ) = 1 );
             If( Scan( ':', sSub ) > 0 );
                 sSub    = SubSt( sSub, Scan( ':', sSub ) + 1, Long( sSub ) );
             EndIf;
+            AsciiOutput( sFileName2, Expand('sSub     = ''%sSub%'';') );
             sMDX        = SubsetMDXGet( vDim, sSub );
             # If MDX expression contains TM1SubsetBasis function then treat it as a static subset
             If( sMDX @<> '' & Scan( 'TM1SUBSETBASIS()', Upper( sMDX ) ) = 0 );
                 # create by MDX
-                AsciiOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
-                AsciiOutput( sFileName2, Expand('    SubsetCreatebyMDX( ''%sSub%'', ''%sMDX%'', sDimHier, 0 );') );
+                AsciiOutput( sFileName2, 'If( SubsetExists( sDimHier, sSub ) = 0 );');
+                AsciiOutput( sFileName2, Expand('    SubsetCreatebyMDX( sSub, ''%sMDX%'', sDimHier, 0 );') );
                 AsciiOutput( sFileName2, 'Else;' );
-                AsciiOutput( sFileName2, Expand('    SubsetMDXSet( sDimHier, ''%sSub%'', ''%sMDX%'' );') );
+                AsciiOutput( sFileName2, Expand('    SubsetMDXSet( sDimHier, sSub, ''%sMDX%'' );') );
                 AsciiOutput( sFileName2, 'EndIf;' );
             Else;
                 # loop members
-                AsciiOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
-                AsciiOutput( sFileName2, Expand('    SubsetCreate( sDimHier, ''%sSub%'' );') );
+                AsciiOutput( sFileName2, 'If( SubsetExists( sDimHier, sSub ) = 0 );');
+                AsciiOutput( sFileName2, '    SubsetCreate( sDimHier, sSub );');
                 AsciiOutput( sFileName2, 'Else;' );
-                AsciiOutput( sFileName2, Expand('    SubsetDeleteAllElements( sDimHier, ''%sSub%'' );') );
+                AsciiOutput( sFileName2, '    SubsetDeleteAllElements( sDimHier, sSub );');
                 AsciiOutput( sFileName2, 'EndIf;' );
                 nEles   = SubsetGetSize( vDim, sSub );
                 nEle    = 1;
@@ -796,7 +800,7 @@ If( pSub = 1 & DimensionExists( sDimSub ) = 1 );
                         sEleStrOut = sEleStrOut | sChar;
                         nChar = nChar + 1;
                     End;
-                    AsciiOutput( sFileName2, Expand('SubsetElementInsert( sDimHier, ''%sSub%'', ''%sEleStrOut%'', 0 );') );
+                    AsciiOutput( sFileName2, Expand('SubsetElementInsert( sDimHier, sSub, ''%sEleStrOut%'', 0 );') );
                     nEle = nEle + 1;
                 End;
             EndIf;
