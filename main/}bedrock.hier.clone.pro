@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"vO8Q1I;Z8_6RH?UVJi1:PWaxNglz7sKQOr53=NK5iHs`@fQH1FsyqfFV^]KStu`oIVA_0BuSrHUiePi<Z]:E>L87n>Ni4aRF[y5p>\hD<AUI]Sr72Sl[OJeg2]f3\y9dhv]aUw`eU9lcYN19dW4\mlsz:i[f0A>>1OPEn>3PFYzo>2L]pQ\hTQ?RgN[5<SFku]<E0pwT"
+565,"aah@^qPQUG9CcUgxnusAGU^]=ExPihjYskfHx@4A56C4<1Nx4A`\@5dF;NgCtdKW]36LgSKcblfd<j^gLCubHqpCyT\B`ECP7bk2Jb0siO`BTDhtz9xbBk=_>t\ymgOtPGnZH=6B12mr]TdGmbRIp]:v16:lFuJL7mhx=l\9YDOeJ232Xs2htcGkRr\l3VddigH[]NNh"
 559,1
 928,0
 593,
@@ -70,7 +70,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,208
+572,217
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -195,12 +195,21 @@ Endif;
 
 pTgtHier = Trim(pTgtHier);
 
-
 IF(pTgtHier @= 'Leaves' );
   nErrors = 1;
   sMessage = 'Leaves is an invalid selection for Target Hierarchy: ' | pTgtDim |':'|pTgtHier;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
+
+If( DimensionExists( pTgtDim ) = 0 );
+    If( pUnwind >= 1 );
+        pUnwind = 2;
+    EndIf;
+ElseIf( HierarchyExists( pTgtDim, pTgtHier ) = 0 );
+    If( pUnwind >= 1 );
+        pUnwind = 2;
+    EndIf;
+EndIf;    
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
@@ -215,8 +224,8 @@ Else;
       ExecuteProcess('}bedrock.hier.unwind',
         'pLogOutput', pLogOutput,
         'pDim', pTgtDim,
-        'pHier', pTgtDim,
-        'pConsol', '',
+        'pHier', pTgtHier,
+        'pConsol', '*',
         'pRecursive', 1
         );
     ELSEIF(pUnwind = 2 );
@@ -341,7 +350,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
             sAttrVal = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
             
             If( sAttrVal @<> '' );
-                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, vEle, sAttrName ) = 1 );
+                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, pTgtHier:vEle, sAttrName ) = 1 );
                     If( sAttrType @= 'A' );
                         ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vEle, sAttrName, 1 );
                     Else;
@@ -352,7 +361,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
         Else;
             nAttrVal = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
             If( nAttrVal <> 0 );
-                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, vEle, sAttrName ) = 1 );
+                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, pTgtHier:vEle, sAttrName ) = 1 );
                     ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vEle, sAttrName );
                 EndIf;
             EndIf;  
