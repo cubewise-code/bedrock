@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"l1a=>lpM<bG\at??7KYRt09Jc:b2qj4nt<IfYB3h6k?m\9_4WLTR0]3DLYK@TKHomFAl4Q?cVvlY4sW[00XAu10wr>DZi^t6pS:HNKH0]L`TvqAFs2_]n`M;gSRdv\Z7aSel81?@Dqdr>1dt2WURP1QMFxzugFpd9?5Ybi9nmxt8^bMuHze3N?wF1D3rmVrRQRLvrH@M"
+565,"aaGMBpkZw?<CJ4EGfb7R57gN5cOk:oxtZ_YzJWF=5iobLhEzB``T`@rxrr^D]QW]`pQgWmps\dhbFVoaoSGCNYXAQ9ARX[]i`M4Q>7KE6zSDt0cOUKiJT]>Spwt4xS2^5B`9[t1p;xIDyWb:A6n_[>m^D]b1[yv>0P[nl7s]2M?IugMh@<=u63CuSUyj4wz90:16_Eqg"
 559,1
 928,0
 593,
@@ -69,12 +69,12 @@ EndIf;
 # Description:
 # This process save data to disk for the cubes provided in parameter.
 
-# Use case: Intended for Deveopment or production.
-#1/ This process would be used any time data for a specific cube need to be saved (i.e.: After a data loading or when user are entering data).
+# Use case: Intended for Development or production.
+#1/ This process would be used any time data for a specific cube need to be saved (i.e.: After a data loading to save a specific cube or or for manual entry cubes).
 
 # Note:
 # Naturally, a valid  cube name (pCube) is mandatory otherwise the process will abort. Wildcards and lists are acceptable.
-# This process will process feeders for a cube.
+# This process will save data for a cube.
 #EndRegion @DOC
 
 ##Global Variables
@@ -140,7 +140,7 @@ While( nDelimiterIndex <> 0 );
       # If it has then search the relevant Cube folder to find the matches
       If( Scan( '*', sCube ) = 0 );
         If( CubeExists( sCube ) = 1 ); 
-          CubeProcessFeeders( sCube );
+          CubeSaveData( sCube );
         Endif;
       Else;
         # Create subset of cubes using Wildcard
@@ -166,7 +166,7 @@ While( nDelimiterIndex <> 0 );
           sCurrCube = SubsetGetElementName( '}Cubes' , cTempSub, nCountCubes );
           # Validate cube name
           If( CubeExists( sCurrCube ) = 1 ); 
-            # Process Feeders
+            # Save data
             CubeSaveData( sCurrCube );
           Endif;
             nCountCubes = nCountCubes - 1;
