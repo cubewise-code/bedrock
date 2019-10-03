@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"j\niAJLLCGa;hA;GB<24KTbxJwtRgIg7OE]]rkt8WVtg<TN^AgIu0ZFwQOkBaH;=^gyLpb_zNyVHcxB2n:]Mb<bHY[lf@L\kbBU2ZNuhv3SEAnC8>@a[kwvu^Ukv4^\I;FsGT;J[6Z\zAR77XPQbnjorC`Ez?u3W0hAsSYlove\S\^B4xkbTg`tdPQF5^PNtz0:<ftwC"
+565,"u=Vr?^6>yA:pHWDs1bd<Pa@DO=Q>P[M`qkF6<ZI0HWTCIx>^kuXpIP9u7CULRfb<k4SS1kwkD0X:whc?a>]CuEEHyXByHV:I2wHz@cy?GXM:S[LexF3U_st7]r;okgf^MCSuXyTL6q?8[3[1VB8ks3[YwtEMZU\R8AbyN3IJUnUA2jaC=_DDFWxU7;q6cuC^wm=\yBZ["
 559,1
 928,0
 593,
@@ -66,7 +66,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,394
+572,397
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -235,12 +235,15 @@ If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & S
     Else;
         ### Remove direct children from the target consol ###
         If( ElementComponentCount( pDim, pHier, pConsol ) > 0 );
-            sEleNext = ElementName( pDim, pHier, ElementIndex( pDim, pHier, pConsol ) + 1 );
             If( pLogOutput = 1 );
                 LogOutput( 'INFO', Expand( 'Deleting all components from consolidation %pConsol% in hierarchy "%pHier%" of "%pDim%" dimension.' ) );
             EndIf;
-            HierarchyElementDelete( pDim, pHier, pConsol );
-            HierarchyElementInsert( pDim, pHier, sEleNext, pConsol, 'C' );
+            nComp = ElementComponentCount( pDim, pHier, pConsol );
+            While( nComp > 0 );
+                sComp = ElementComponent( pDim, pHier, pConsol, nComp );
+                HierarchyElementComponentDelete( pDim, pHier, pConsol, sComp );
+                nComp = nComp - 1;
+            End;
         EndIf;
         # No data source, straight to Epilog
         DataSourceType = 'NULL';
@@ -461,7 +464,7 @@ Else;
 EndIf;
 
 ### End Prolog ###
-573,27
+573,58
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -470,11 +473,16 @@ EndIf;
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
-## Check for errors in prolog ###
+### Check for errors in prolog ###
 If( nErrors <> 0 );
     ProcessBreak;
 EndIf;
 
+### If Leaf or already unwound then skip
+If( ElementComponentCount( pDim, pHier, vElement ) = 0 );
+    ItemSkip;
+EndIf;
+    
 ### Break all parent/child links below target consol ###
 If( pConsol @= '*' );
     sAttrVal = cAttrVal;
@@ -482,10 +490,36 @@ Else;
     sAttrVal = ElementAttrS( pDim, pHier, vElement, cHierAttr );
 EndIf;
 
-If( sAttrVal @= cAttrVal & ElementType( pDim, pHier, vElement ) @= 'C' & ElementComponentCount( pDim, pHier, vElement ) > 0 );
-    sEleNext = ElementName( pDim, pHier, ElementIndex( pDim, pHier, vElement ) + 1 );
-    HierarchyElementDelete( pDim, pHier, vElement );
-    HierarchyElementInsert( pDim, pHier, sEleNext, vElement, 'C' );
+If( sAttrVal @= cAttrVal );
+    bFastUnwind = 1;
+
+    # Cannot check nPars > 1 as due to ordering of elements processes some parents may have already been removed
+    nPars = ElementParentCount( pDim, pHier, vElement );
+    nPar = 1;
+    While( nPar <= nPars );
+        sPar = ElementParent( pDim, pHier, vElement, nPar );
+        If( ElementAttrS( pDim, pHier, sPar, cHierAttr ) @<> cAttrVal );
+            # Parent does not belong to unwinding intersection. Cannot delete C children, must unwind.
+            bFastUnwind = 0;
+        EndIf;
+        nPar = nPar + 1;
+    End;
+        
+    If( bFastUnwind = 1 );
+        # delete and recreate C element (Fast)
+        sEleNext = ElementName( pDim, pHier, ElementIndex( pDim, pHier, vElement ) + 1 );
+        HierarchyElementDelete( pDim, pHier, vElement );
+        HierarchyElementInsert( pDim, pHier, sEleNext, vElement, 'C' );
+    Else;
+        # unwind C element without deletion (Slow for consols with many children)
+        nComp = ElementComponentCount( pDim, pHier, vElement );
+        While( nComp > 0 );
+            sComp = ElementComponent( pDim, pHier, vElement, nComp );
+            HierarchyElementComponentDelete( pDim, pHier, vElement, sComp );
+            nComp = nComp - 1;
+        End;
+    EndIf;
+    
 EndIf;
 
 ### End Metadata ###
