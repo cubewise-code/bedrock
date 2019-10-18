@@ -40,7 +40,7 @@ pDelim,"&"
 637,3
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
-pDelim,"OPTIONAL: Delimiter"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
 578,0
 579,0
