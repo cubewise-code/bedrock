@@ -42,9 +42,9 @@ pHier,""
 pDelim,"&"
 637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"REQUIRED: Target Dimension"
-pHier,"OPTIONAL: Target Hierarchy (uses default hierarchy if left blank)"
-pDelim,"OPTIONAL: Delimiter character for dimension or hierarchy list (required if pDim or pHier parameters are used)"
+pDim,"REQUIRED: Target Dimension (accepts wildcards and delimited list)"
+pHier,"OPTIONAL: Target Hierarchy ((accepts wildcards and delimited list, uses default hierarchy if left blank)"
+pDelim,"OPTIONAL: Delimiter character for dimension or hierarchy list (default value if blank = '&')"
 577,0
 578,0
 579,0
