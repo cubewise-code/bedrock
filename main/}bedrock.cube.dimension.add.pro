@@ -61,10 +61,10 @@ pCube,"REQUIRED: Cube name"
 pDim,"REQUIRED: Dimension to be added"
 pDimIndex,"REQUIRED: Dimension number of the new dimension in the cube"
 pIncludeData,"OPTIONAL: If 1 then data is kept (copied through clone cube)"
-pEle,"Required if IncludeData flag =1: Element of new dimension where to store data"
+pEle,"REQUIRED: if IncludeData flag =1: Element of new dimension where to store data"
 pIncludeRules,"Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
-pCtrlObj,"Allow overwrite control cubes"
-pTemp,"REQUIRED: Delete the clone cube (1 = delete, 0 = not delete)"
+pCtrlObj,"OPTIONAL: Allow overwrite control cubes (default = 0)"
+pTemp,"OPTIONAL: Delete the clone cube (1 = delete, 0 = not delete)"
 577,0
 578,0
 579,0
