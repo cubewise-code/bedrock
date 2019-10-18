@@ -50,7 +50,7 @@ pSecurityRefresh,"Yes"
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pClient,"REQUIRED: Client Names Separated by Delimiter and accepts wildcards"
 pGroup,"REQUIRED: Group Names Separated by Delimiter and excepts wildcards"
-pDelim,"OPTIONAL: Delimiter"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 pAddOrRemove,"REQUIRED: Add or Remove"
 pSecurityRefresh,"REQUIRED: Refresh Security?"
 577,0
