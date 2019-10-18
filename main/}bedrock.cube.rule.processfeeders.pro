@@ -40,7 +40,7 @@ pDelim,"&"
 637,3
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Process feeders for this cube (Separated by Delimiter, Accepts Wild card)"
-pDelim,"OPTIONAL: Delimiter"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
 578,0
 579,0
