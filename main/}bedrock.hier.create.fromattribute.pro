@@ -207,6 +207,8 @@ ElseIF( Subst( pTopNode, Long( pTopNode )-7, 8 ) @= '<pAttr>'  );
     sTopNode = Subst( pTopNode, 1, Long( pTopNode )-8 )  | ' ' | pAttr;
 ElseIF( Scan( '<pAttr>', pTopNode ) >0 );
     sTopNode = Subst( pTopNode, 1, Scan( '<pAttr>', pTopNode )-1 ) | pAttr | Subst( pTopNode, Scan( '<pAttr>', pTopNode )+7,Long(pTopNode) );
+Else;	
+    sTopNode = pTopNode;
 EndIf;
 
 ##  Validate Unallocated node name
