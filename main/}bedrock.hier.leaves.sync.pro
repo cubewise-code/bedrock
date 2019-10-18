@@ -42,9 +42,9 @@ pHier,""
 pDelim,"&"
 637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
-pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
-pDelim,"OPTIONAL: Delimiter character"
+pDim,"REQUIRED: Dimension, accepts wildcards (all dimensions = *)"
+pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies = *)"
+pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
 577,1
 vDimHier
 578,1
