@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hDt1jEvWaD;lZ>3?n`cb?W>]M1UZ6T:knpPo0N1E]J5EFTgdngKZO6oqB8Dya72v6S6sxK^vH1\;l7YPalQDdxyHHX1fBC:P[Xjr;ElI[EoUkd54zosf5Uir0Jy_[3c^FWL]DGT5:`JS8YrC1[Y9sje8E@XFOP?FE]c8_d<C>19zutkN\hlwLG;z^cE=xGx=QO\@KFY^"
+565,"gUVg8qfacKfXJq7U`VH:N3QBrI`q\@<nT:u>52tcGlooNt`wl83:_CG^i0D6KvT\nJ[?cv\zJ81oyp>qKcqrf7uM81J8atBlO7`zpm?K_7JKFCwDz4rVES?rxocOB9DaXbjU4;NPuqe58@:Ux3C_wpEfRqi_i`^jj0<I`@aZouERfp6QVWsK>c5uDi]7Zt?\]n>Yb8g8"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pEleType,""
 pInsertionPoint,""
 pDelim,"&"
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: hierarchy (default value same named hierarchy as dimension), accepts wildcards (if = *, then all hierarchies)"
-pEle,"Required: element name, accepts delimited list"
-pEleType,"Optional: element type N S C (default value N)"
-pInsertionPoint,"Optional: insertion point (default value blank)"
-pDelim,"Optional: delimiter character for element list. (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: dimension name, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: hierarchy (default value same named hierarchy as dimension), accepts wildcards (if = *, then all hierarchies)"
+pEle,"REQUIRED: element name, accepts delimited list"
+pEleType,"OPTIONAL: element type N S C (default value N)"
+pInsertionPoint,"OPTIONAL: insertion point (default value blank)"
+pDelim,"OPTIONAL: delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0

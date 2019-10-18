@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xSk]E^cyi=r2r4ufNFHSAw4YarjE`Q@JWc]44MIwND8@L8ELx1@f\FrksBY67YGIevmAk02Vtb?M\P5cOMqLPSIrNLCX7f_Hh`LOigGybpk9SmgVMuabQkvJr_S9hGI:kI:pzV>ql0lrqhico8kDCrHJ5=5TL7CP;K=0Hi0rt0sLrgEDymGk79aSE7xe]p3IR><HIXJ["
+565,"s6GjM4sLkqhoNKa^>AvaBKUa\x85sqQrBkwX2QzVkT3v:FGvKv4opufmEg\<?LE3]0z2Xj1Lmj[8mOsuEGI9>5ns:IKOnFqH8pOlX3OM9`lFS7OJM83T>8BX_wuuURm:;<9ilLj:borcO_eqj?g=kM:khaARL7`_oLfR4kN=s==n1H\5dADB3=WjD\z<6=No6R0dr38R"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -62,17 +62,17 @@ pDelim,"&"
 pAlias,""
 pTemp,1
 637,11
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pAttr,"Optional: Attribute (Blank Equals All)"
-pAttrValue,"Optional: Attribute Value"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pAttr,"OPTIONAL: Attribute (Blank Equals All)"
+pAttrValue,"OPTIONAL: Attribute Value"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0

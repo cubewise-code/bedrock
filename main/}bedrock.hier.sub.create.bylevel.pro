@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"oNR;X\DVvX2uSDJat0TgXzqaDCYJTLeooJXcYs\G8UYo\vF^ILBgEualA@>i8mupgYHqNmrIhh0j^8R;<AOIxyxl[eSUU?tL:Gq:zK^w\6or8v?SzY_7@dG0?pOB5BygB2se5yGo6CsdYA<M>3wlIdRo<P7AAm4gWTB0lTNj1`L1ro<fgJvcpLVSg@9WT^rAVXl<DFjg"
+565,"yKMgcpi?JnxsPYvI?RJ[lIBL[aT;wEx?[h:;QdxbrZux;2G>JsH6y`J=@pGJt0ZiWfHsSI>Hxd3H9cysRVm;G[lRcwtsXU1Q]oeQ9lRJur;[cqLadP]^<bA[M5Qwr8J@LvAxOgc>[<?Yu[4O2tp49\di:3WEBMSQxolgWztBZDYN;`Dao\jj^OLrYl:WN[hSOc4WmV06"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pConvertStatic,1
 pAlias,""
 pTemp,1
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSort,"Optional: Sort the Subset"
-pConvertStatic,"Optional: Convert the Subset to Static"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSort,"OPTIONAL: Sort the Subset"
+pConvertStatic,"OPTIONAL: Convert the Subset to Static"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0

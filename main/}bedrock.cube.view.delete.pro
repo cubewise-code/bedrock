@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rR`QWvY`tLc1srjJLfa;BMHITo8pXtSpjZGkD;k=<nwZB?Lhvx2;fc`_<g<?vWL?n33R>evHCMh5G68=6aLr5lQaL@26J6l;RfELztD06JvoLh1@L\\Y5iaE?yJ9;bctMP0W>rObva_poOb4M[fKwVF:SVQlvhQY=;zo5EmFXxpNXEdH8sbed1GVqP\1nl]\5\:EV[>G"
+565,"c\RazahxgxHpgmLRK`91kQb34pF_g]QM9kGbJJd_WaS=\N=juN>oslZ=@_CRXaqwyT:f21aTS9=bJrZe[AlLA9EI9>kp[1s?m;`YxDmio[1Pj?vV]n::Ty[AuhGfP;pr_Tkd[iY]P7uPS8[;O?\>p^3e9gh=@F>_K8K??naMs:<_mi`6n`D58Ns[oQl9Pu7Fe;@U?nrW"
 559,1
 928,0
 593,
@@ -41,10 +41,10 @@ pCube,""
 pView,"}bedrock*"
 pDelim,"&"
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: List of Cubes Separated by Delimiter (For all cubes just the wildcard character alone i.e. *)"
-pView,"Required: List of Views Separated by Delimiter. Wildcards Permitted on View Names."
-pDelim,"Delimiter Character  (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: List of Cubes Separated by Delimiter (For all cubes just the wildcard character alone i.e. *)"
+pView,"REQUIRED: List of Views Separated by Delimiter. Wildcards Permitted on View Names."
+pDelim,"OPTIONAL: Delimiter Character  (default value if blank = '&')"
 577,0
 578,0
 579,0

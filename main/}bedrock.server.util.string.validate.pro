@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hcYhaAHIa]2Wj^ujAhh4xxo?Q=3scVSsgxnO<haNkTRv2XA\DD1LXfO]s31hHo2pz960etyYG;wjsPwz:?Z;oM2XVI[IR6_sZR=^6Et8`71?W[1a\iyG[ibEnL@Jfev;aL6yEmaFUHY]mT0sMmn:yzmGN\[t=Eg42?bs=aIl9ihG=\8JT0LYgGo8[OiD:z9gN5GfA@Yk"
+565,"sX5<C1o]:OG3=y27R^Ra@LA:STtaEHUG`FXSA^Hb1G=V=_I?;1Ic`y8io52\vu\ZPmuH0fxh2es47:OP;bX<N?jvRLHfhw@L_nM@?EFrexO^TqpH1n:g>t2a5;Ho[0WdULtW8VyJv[2mxYoxzRZQ?RdAorDM3?WnTsXcGAh8deer70iEiPoc9d:yAi`Gvf1DxAtSJ<XW"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -56,15 +56,15 @@ pDelim,"&"
 pSeperator,","
 pMode,3
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pInputString,"Required: Element name to validate and update if necessary"
-pUndesirableFileSystem,"Optional: Undesirable characters for file system (e.g. /|\>""<:?* )"
-pUndesirable1st,"Optional: Undesirable 1st characters (e.g. '+-[]@!{}% )"
-pChanges,"Optional: String showing what to change. Replaces with pReplaceIfNotFound if blank."
-pReplaceIfNotFound,"Optional: Replace ndesirable character with this if not specified in pChanges above (blank will delete)"
-pDelim,"Required: Delimiter between definitions"
-pSeperator,"Required: Seperator between current & desired"
-pMode,"Required: 1=Validate for File System only, 2=Validate for 1st only, 3=Validate Fully"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pInputString,"REQUIRED: Element name to validate and update if necessary"
+pUndesirableFileSystem,"OPTIONAL: Undesirable characters for file system (e.g. /|\>""<:?* )"
+pUndesirable1st,"OPTIONAL: Undesirable 1st characters (e.g. '+-[]@!{}% )"
+pChanges,"OPTIONAL: String showing what to change. Replaces with pReplaceIfNotFound if blank."
+pReplaceIfNotFound,"OPTIONAL: Replace ndesirable character with this if not specified in pChanges above (blank will delete)"
+pDelim,"REQUIRED: Delimiter between definitions"
+pSeperator,"REQUIRED: Seperator between current & desired"
+pMode,"REQUIRED: 1=Validate for File System only, 2=Validate for 1st only, 3=Validate Fully"
 577,0
 578,0
 579,0

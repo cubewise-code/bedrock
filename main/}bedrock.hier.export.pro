@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"f<pHUMaLwoUyQm5IhTW04]f^6wUz^Sz<jZGCWpkkYa]f4HGL8HKKLWlqj_M17xqY>8eO83B0bbtT?o\31hVKDCsuF38K=>Q>hp:Q_vrFPs617:ZtN8pzQT[lTQhh1@n7nxT`5eeMCXffQTGnUW`jsCbNUypG_>TfR<mC5isNI\rGO8=ARumgSj9xEJ8aU_Z:jIIQ8ufh"
+565,"dD@3aXtAK9G=[QwZGp[yC5TT6rw:3ZiQd\USc>=isEw]HC7K:dAPbhEK`DC^Z?VvM<_wiJ@zdUdR004FDsHmpo:udSK^R<u24qDtG^G9fKY>:FXQIyc;7f]T0Sx^iwRCwlFKDIH6duU<J][bKDKM5eata3UBc5PCGh>LbBBX^9hrU>FUk5]XNoE[tffvuKV\npE21wvS"
 559,1
 928,0
 593,
@@ -56,15 +56,15 @@ pDelim,","
 pQuote,""""
 pLegacy,0
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension"
-pHier,"Optional: Hierarchy (defaults to dimension name if blank)"
-pTgtDir,"Optional: Target Directory Path (defaults to Error File Directory)"
-pTgtFile,"Optional: Target File Name (defaults to Dimension Hierarchy_Export.csv if blank)"
-pTitleRecord,"Required: Boolean 1 = Yes - Include header row"
-pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
-pLegacy,"Required: Boolean 1 = Legacy format"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension"
+pHier,"OPTIONAL: Hierarchy (defaults to dimension name if blank)"
+pTgtDir,"OPTIONAL: Target Directory Path (defaults to Error File Directory)"
+pTgtFile,"OPTIONAL: Target File Name (defaults to Dimension Hierarchy_Export.csv if blank)"
+pTitleRecord,"REQUIRED: Boolean 1 = Yes - Include header row"
+pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
+pLegacy,"REQUIRED: Boolean 1 = Legacy format"
 577,1
 vEle
 578,1

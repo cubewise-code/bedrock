@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ez]2]af]0DIVfuBO=qy:`>=G40BssWU:]:HRT6L2Roq7q77kQvJPIz7bg?0jeH5lZZO[F;ruN`A>d2mibtSS`<M4R7GV@r:uRPZ3w718Hv7xXV`zG6xqHdQVl]n;RrVz9PPkJdyzoCP1Ul_d;5XUzahys0LDfr=K2Yj=Q582mmyh=?xWI14Y?iXBhW@QE@:dB[ad4y7_"
+565,"g[H8sIda9C:G]Y?M3uzUW7\NjdvY]3H2pt:LrWZTRtW2zp4Mmgs8i_K^ZZVnj8v_^HG5?qZUYE0uBfN^TOsS@is8?mNEpIoDLx9gmDnoxBoLuxar0Pu?>;=Ap0m\ZfDXzU3ba`L2]Oqa<[kC3a4AlMAen5VYW_i:hEzJDmadODaW=qTmYumx`aVH1C\:e]y7w=fG>T9V"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pMDXExpr,""
 pConvertToStatic,1
 pTemp,1
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pMDXExpr,"Required: Valid MDX Expression for Specified Dimension"
-pConvertToStatic,"Optional: Bolean: 1 = True (convert to static subset)"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pMDXExpr,"REQUIRED: Valid MDX Expression for Specified Dimension"
+pConvertToStatic,"OPTIONAL: Bolean: 1 = True (convert to static subset)"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0

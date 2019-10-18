@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"op4rW6wA2KX80@\yeN>zt4<oBfb34en`7We>;iH>x@FyEzMIL:>>R7GIjTQLR5RgOb~Z7Ib_nd16~E;<\JbZbu9P^LlfP[3E[d8m;G[nibUeGFsA_]T[1a9B2D;H_[r:dr>pLb8i?^srcdoFWS4]7iBKme@XmwNWKc5Dv31zM;uiYJ9c]mOgG[B\xVkapf:VGS2[h9i"
+565,"y>j3_]r34lpRa44;x_Bo=5B1uyZ8pwK{@=fWVPHYQAt?;OZyegmYBbqcXaTqm[2B5VKuzriiv;fa=|e6j@oj[g15ecFLpeLO`v5=mE^@FM]A\h@s1<3\ftbYC3D6JliPcR?08o\>3h}rz5eFxs5=EocC7Q>cSjfxra5iX2Aid<miy[uY6FdnGkqYNbsi|6;61DL@Y[R"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -35,8 +35,8 @@ pRun
 pLogOutput,0
 pRun,"Y"
 637,2
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pRun,"Optional: Do you want to delete Persistent Feeders? (Y or N)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pRun,"OPTIONAL: Do you want to delete Persistent Feeders? (Y or N)"
 577,0
 578,0
 579,0

@@ -4,7 +4,7 @@
 586,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 585,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 564,
-565,"i1:>sope0y0dcL3DEvtLBRY[wXs4bhaXsdAjrNh=iEck]Zr?^s7PAGz;ICmGZvdMmOcFZ2uM]HM4f`7nYMmr<?5qPs6SF2?AQQQ1}6;?QAzfK\E/k\BPR5Rc?Gkci;fviVAd{yKoBrUH}>\xRup9mVX]6VB2YG98skG7XIcLjyTv@Jma=GVllI]gQ@uZGdO+;>SrQ3AZ"
+565,"r@DZxop]<T0aq?^PLByMSSOHzo2wGoU\3<9;If8BIfYOMYBeIYP?IafCOAmg3Xb=luZFjxfKn4@dYmwhYNI5Lbcrx;1sLiYY5H`<}T;[1lBVFVG/kECxaiRHS\][kkjZ@XajK=6yQUXMM_3p2DG6MT1S1tG=2jZzNcCgpIk\5F=:JJ:d62A:3J}wT<0?@hO(;7_4nr2]"
 559,1
 928,0
 593,
@@ -38,9 +38,9 @@ pLogOutput,0
 pCube,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Process feeders for this cube (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Process feeders for this cube (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
 578,0
 579,0

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"cDxz3>\Qy;I3kxCc2`NMbB>qhDwlG_B~2HRl1MOW1v>qXZuUN;@\knVW8PiN@88ESSx}f@gzV`_Q>Ra4`@1hLlvVRKe3PSk4bMd~QYe^0vjLHHruyNF>OtfCxI]8SgD47=0HC`yp;5>E;Xt47buYv7Z_jLMP9Fx;>8Nt:OVQa>R@gh8LiLflvE>ob1i`US6OYDabVxjYcDxt3>\Qy;I3kxCc2`NMbB>qhDwlG_B>8HRl1MOW1v>qXZxUN;@\knVW8 _C@8hBSSx]a@gzV`o]>2d4`@1hLlvVRKu2PSk4bMd>YYe^0vjLHHB4uNF>OtfCxI]8smK47m6hM`yp;5>e6Xt48buYp7Z_jLMP9Fx;>8~u:O6]a>R@'k8LiLflvU0ob1i`US:OSDabVxjY"
+565,"rHn\3utj\u7e8yi^W6zWBO8v>Mag3qi}B85s3RrRMuYz3\efw^R2;lZnAUi>Wl8EA2Oq63Bz8nY1=PaA9=eSaMmz0hbC]a[8fXzuq23qKfNSEmvuiwaVG[JzibiePgDmq20BC[6T9>CM[Ae:WBv]6_a?5V5Ty1cLLdCd:Q^1EWs[kXDKjR<L6FN0PscAfS6BYc:yu`UqrHn\3utj\u7e8yi^W6tWBO8v>Mag3qi=H85s3RrRMuYz3\hfw^R2;lZnA%O;WlhBA2OQ13Bz8ni==0dA9=eSaMmz0hrB]a[8fXzUt23qKfNSEmF4ewaVG[Jzibie00@mqb6bM[6T9>CmVAe:^BvM2_a?5V5Ty1cLLdse:Q>=EWs[+[DKjR<L6V@0PscAfS:BSc:yu`Uq"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pCube,""
 pDim,""
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube to create cell security for"
-pDim,"Required: Map of dimensions to include in cell security as a array of 1:0 colon delimited e.g. ""1:0:0:1:0"""
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube to create cell security for"
+pDim,"REQUIRED: Map of dimensions to include in cell security as a array of 1:0 colon delimited e.g. ""1:0:0:1:0"""
 577,0
 578,0
 579,0

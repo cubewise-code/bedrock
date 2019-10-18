@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hvC4mu0ka4Psf2OJbapV<AYvP0iw?ODb`hLd=rA=d:_[ta9B@9y>7]lYx8Q0=Y46KHk\4EMZU3cMRoJ`CpG2zda6eU8>]:z^OPl72YKF\@x2?RoguOD8EjmJD5;;M9l61QMGo4vd;xbb[XrYl_h>f]_2xDwk[UI6;zHsEmpm6VbOIczbVc@m4;pV1<dFkF67Ss=P2pB<"
+565,"z??u>>3FsIu@;K<w4Y4fn:M[kLa;0YB><@xkj@pG70[fb=22LAGYixy3sAg4A9j6li\joClQ]SHszVULcN=d0yH=?4jUZE`Ps0[\\JY=aySS\Wl=@6v2Z;EN_kbfpFi;hvho`?Iww<94NTDAFko`1n;zjpQ]jPD<^tMI>N`=0s;@U\;hBgvUwPeUm55<z3F8?vd7J:3Y"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -41,10 +41,10 @@ pDim,""
 pHier,""
 pDelim,"&"
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: Hierarchy, accepts delimited list"
-pDelim,"Optional: delimiter character for element list. (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: Hierarchy, accepts delimited list"
+pDelim,"OPTIONAL: delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0

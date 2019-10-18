@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"t:qWBLM<]CRJ92=RqKzMadau9358<qqGNSX5n2i9n9Rr48@cMVA]:CMP155XNv52bSvYykUMC=ag>DnWbXj>MRO\1Pu`pDXTv<fe7=0q>7wiek;NO13:gRmAI7agW:Dkq]7LxM\WxM1_OBDcH7NnHt@bmTYi[8vwtF_F]NRTyN4Ejmp0S5OJvOzyZD1Zl4ITHAY?RbWY"
+565,"rv0jr9[xUZW;qkiLxda=GHvCc?6BIk5=hmjCv2]A\E2ncfzweX2oLAkylo<2fye2jr?gy2BPjs][hmVtXBCUDMe\=_UK5=c57B[rAmLJCh[rKv5mZ@D_`d>;csBsFEDjm`BD`LXubogcM^xkbEPdQ3P=A`xIi0j_I6zd4@eif0UZKP]_]kOKIa4ld5]:H]ISTs;JSH8X"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -41,10 +41,10 @@ pDim,""
 pHier,""
 pTemp,1
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0

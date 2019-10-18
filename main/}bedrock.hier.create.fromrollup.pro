@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"u9tVw@I426I3hY3j>6_h;aNfZDEFZwO0khCkNaCh=?Eg\rd2pc6SJVsx0`@RdRLb3rS^xxr:E=WuvN9<8WW026tOAFJ9F7bC1\B_exif9d;vvN5[u8Kw65dB9C8TSKWgjJg:gRykcbq<8CVCl<0lHyTC:Kwe7hP3cd[\YpmDO=nV9u7@\823<Ww\:l?\A>FQwcqotyYs"
+565,"mq[sIA4s`CWtuaxXw6YF40YD^[?``gK=OvL1sHK7J@nFdXOm0FWL[UIknE7pizq0dea9d[8r5zzr@\q@kySefWiwm<VJaT7uPhmfu:xdnt^mHR]^c\ll]n<MP\0_K]6m5en@Y9gwe?y[J6kdTxhy07>ht1DxLO=QAr`S5g9PPn<?^qg<V5W<um=h[9zNPS61l;wG=[pn"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -56,15 +56,15 @@ pAttr,1
 pUnwind,2
 pRemove,0
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Source Dimension"
-pSrcHier,"Optional: Source Hierarchy (blank = same name as source dimension)"
-pConsol,"Required: Cons element in source dim to create root element in target"
-pTgtDim,"Optional: Target Dimension (blank = same name as source dimension)"
-pTgtHier,"Optional: Target Hierarchy (blank = same name as target dimension)"
-pAttr,"Optional: Include Attributes? (Boolean 1=True)"
-pUnwind,"Optional: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pRemove,"Optional: Remove cons elements from source? (1 = Yes, 0 = No)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Source Dimension"
+pSrcHier,"OPTIONAL: Source Hierarchy (blank = same name as source dimension)"
+pConsol,"REQUIRED: Cons element in source dim to create root element in target"
+pTgtDim,"OPTIONAL: Target Dimension (blank = same name as source dimension)"
+pTgtHier,"OPTIONAL: Target Hierarchy (blank = same name as target dimension)"
+pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True)"
+pUnwind,"OPTIONAL: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
+pRemove,"OPTIONAL: Remove cons elements from source? (1 = Yes, 0 = No)"
 577,0
 578,0
 579,0

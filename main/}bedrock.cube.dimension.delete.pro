@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"gB6E=`faSw\Ntp=o3Xckrz1d6mC0@0JnQn2GuM51SycIj4ZHuQ><SNdE?[Y:c]3@ednqx48V?i4lzu7;4Sz=]l0]QMlUeoh[KzjVVy;Qi`T6X=Etx`<K1]>me6Oy][iV;G@dG46U3M:Va9:_7x:vlcCmMr3N_L[DVyn9^LIv5Wa?p\MJNyn\TQMDtm:HRH`\_2Bpma_7"
+565,"j9ntVYRGl<apX_=ql0YL5hYbJZNQR0>\i8bQNiWK44`JqA=LW<JC2BV54t;@?Nt6PmiU:27lXN;wZ2KATP5Gb:FT_<Db<YoNBkm7DqKIsW_`[==eVknT^ymk<5N?GM[tcrA6G`gWOcpags5Rt]_Y:ziu[8fWcn8Xk9JfL_esUVIZo<<4I]WhKuGmXbawQd4CD;sW\7UE"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pIncludeRules,2
 pCtrlObj,0
 pTemp,1
 637,7
-pLogOutput,"Required: Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube"
-pDim,"Required: Dimension to be deleted"
-pIncludeData,"Required: If 1 then data is kept (copied through clone cube)"
-pIncludeRules,"Required: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
-pCtrlObj,"Required: Allow overwrite control cubes"
-pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
+pLogOutput,"REQUIRED: Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube"
+pDim,"REQUIRED: Dimension to be deleted"
+pIncludeData,"REQUIRED: If 1 then data is kept (copied through clone cube)"
+pIncludeRules,"REQUIRED: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
+pCtrlObj,"REQUIRED: Allow overwrite control cubes"
+pTemp,"REQUIRED: Delete the clone cube (1 = delete, 0 = not delete)"
 577,0
 578,0
 579,0

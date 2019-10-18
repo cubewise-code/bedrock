@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"mFm3GJ\ijGEIha3ZaxjF<1@7jmPFtSf?A\iQ5C4boaNgn74VYo<sP3Wg2QbHCAZFr4H4IxXI3PG_7g1dGI?Qz>L?=`9^`Z9pb2\4UVZYxrMalQH\76Y4N_iq3A?\jnBYKqjnOz]2IzWale=G0cwrLwc^lxtw33q`l\RR^OttjyO_pWq<tk5Sk:<[ycd2o6_]Y>kzqlrc"
+565,"se:LpWMZM03R2DVKk<8yu[NX7Lv`[4mJzI;0>^8[<aP<Jv7Ze;D7t9OgJ=SQ8KfA;Oxbwm`[0>k?[H?YC;=Np];B1Xf{z<TSp2a5MLZd:3m=CruBnd^e8o5\O5j]^UOs^s:od]8VC7oK~Kw?pjE4}FdI@W9LT;FLyDjog:[44h;Z#_LJp:F:ecxaALH`SC4gLRZ=xpda"
 559,1
 928,0
 593,
@@ -53,14 +53,14 @@ pDelim,","
 pQuote,""""
 pLegacy,0
 637,8
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension"
-pHier,"Optional: Target Hierarchy (defaults to dimension name if blank)"
-pSrcDir,"Optional: Source Directory Path (defaults to Error File Directory)"
-pSrcFile,"Optional: Source File Name (defaults to 'Dimension Hierarchy _Export.csv' if blank)"
-pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
-pLegacy,"Required: Boolean 1 = Legacy format"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension"
+pHier,"OPTIONAL: Target Hierarchy (defaults to dimension name if blank)"
+pSrcDir,"OPTIONAL: Source Directory Path (defaults to Error File Directory)"
+pSrcFile,"OPTIONAL: Source File Name (defaults to 'Dimension Hierarchy _Export.csv' if blank)"
+pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
+pLegacy,"REQUIRED: Boolean 1 = Legacy format"
 577,6
 V1
 V2
@@ -505,7 +505,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0

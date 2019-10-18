@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"aah@^qPQUG9CcUgxnusAGU^]=ExPihjYskfHx@4A56C4<1Nx4A`\@5dF;NgCtdKW]36LgSKcblfd<j^gLCubHqpCyT\B`ECP7bk2Jb0siO`BTDhtz9xbBk=_>t\ymgOtPGnZH=6B12mr]TdGmbRIp]:v16:lFuJL7mhx=l\9YDOeJ232Xs2htcGkRr\l3VddigH[]NNh"
+565,"mJNVBo]@]\yu6ah7:p@2]MEFC`Lrze;IfF>`p0=U@duJl^W9<tPzTrxoj<]f<Rq\BY^ZXzlH^Mjq]>\CUFFg;cHV6UKekLClK>tAUkMku4G^\w5>w:@k9bS5muqHEQa8aaXFnm7O`IGb@dCrxB_S@qYfgGUQXuiBKtD>S;N3JGMV<>9pcw=[gjbPl:ndngY<_kP_TLpM"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -50,13 +50,13 @@ pTgtHier,""
 pAttr,0
 pUnwind,0
 637,7
-pLogOutput,"Optional: Write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Source Dimension"
-pSrcHier,"Required: Source Hierarchy"
-pTgtDim,"Required: Target Dimension (can be the same as source)"
-pTgtHier,"Optional: Target Hierarchy (will default to SrcHier_Clone if the dimensions are the same)"
-pAttr,"Optional: Include Attributes? (Boolean 1=True)"
-pUnwind,"Required:  Unwind? (0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements (Only relevant if target hierarchy exists) )"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Source Dimension"
+pSrcHier,"REQUIRED: Source Hierarchy"
+pTgtDim,"REQUIRED: Target Dimension (can be the same as source)"
+pTgtHier,"OPTIONAL: Target Hierarchy (will default to SrcHier_Clone if the dimensions are the same)"
+pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True)"
+pUnwind,"REQUIRED:  Unwind? (0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements (Only relevant if target hierarchy exists) )"
 577,1
 vEle
 578,1

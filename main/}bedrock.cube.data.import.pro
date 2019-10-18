@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"oNkkYUhuVAf8qowah_2_46PZPvxyG0@g@T\v@71jlr54mZpASPypc;D;:KU1ikjXmOqOEGy5Xz58wkcE_pPKOetpT1kEpb15gDRUWcv?8:wEfrkAfw[9XEI2H@xe\IAYp3l0?^z_cbgR]tto:c`xd:doKkXs[zGtifFFT[Yhg0tdRH`z9d<fgj8x2B[L3=j^fo@PPNE4"
+565,"fWcRFQaFHA?K5ZvoHCZKeB9Q_DiWGF4Xu7P^gMfCNGyBQ[1^_mgbLYK`Gdx6NvsHrUU_=yukS5l<Dhvk>\NV`C1dJxJOFEAzkCV0mBwvAFKLPG;Mr0xGP08KObQniF_xkFbDo?@<c:V<:348aj0?^GUENKUCgzQi2el8Ycs]l>z7Q_4LTgcv9F8Aa?kf]UVMvmkj5dv^"
 559,1
 928,0
 593,
@@ -68,18 +68,18 @@ pCumulate,0
 pCubeLogging,0
 pSandbox,""
 637,13
-pLogOutput,"Required: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Target Cube"
-pSrcDir,"Optional: Source Directory (will default to error log path)"
-pSrcFile,"Optional: Source File (will default to pCube_Export.csv )"
-pDim,"Optional: Dimension"
-pSrcEle,"Optional: Source Element ( Only required if a Dimension is used.)"
-pTgtEle,"Optional: Target Element (Only required if Dimension is used.)"
-pTitleRows,"Required: Number of Title Rows to Skip"
-pDelim,"Required: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Required: Quote (Accepts empty quote, exactly 3 digits = ASCII code)"
-pCumulate,"Required: Accumulate Amounts (0 = Overwrite values, 1 = Accumulate values)"
-pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Target Cube"
+pSrcDir,"OPTIONAL: Source Directory (will default to error log path)"
+pSrcFile,"OPTIONAL: Source File (will default to pCube_Export.csv )"
+pDim,"OPTIONAL: Dimension"
+pSrcEle,"OPTIONAL: Source Element ( Only required if a Dimension is used.)"
+pTgtEle,"OPTIONAL: Target Element (Only required if Dimension is used.)"
+pTitleRows,"REQUIRED: Number of Title Rows to Skip"
+pDelim,"REQUIRED: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
+pQuote,"REQUIRED: Quote (Accepts empty quote, exactly 3 digits = ASCII code)"
+pCumulate,"REQUIRED: Accumulate Amounts (0 = Overwrite values, 1 = Accumulate values)"
+pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 577,30
 v1

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"qu[8I=ni_6h0k]VZjaAK2<Pm`:SvCE\4JLUN8i]sZVgy3Mator=FSd@OT3d=6vg@QcCs>sTLl]I0[w=lScykKQTAJO;KDj=S_fULFG7tm6GVg<2Trx<oGoXk4oxK06KAa4RmIU4Ff65ts^=GpohbvIIu4XR=e;W>4=ZpXgzPY[m1Ah4tY0dQ7SsCk>8qM@Q2pDTa1Rox"
+565,"xOG?Q_]un8cUhIcm^ad<A_I_ajU9fph[4nmSB>i^^lpSCdY[dDf5x7@9p37?Md`NkGAC^uP1NWADp^XEbW]bmfmffgxDip[VXY@ipEJhX`t9WVCzt5Z\Ogjg;^DhWx3[Ya8Vm2>@L[U5YA=\<I`I^^yavVfRiAiUjztHyV6Z6vWiU1[n]0UNTpUhptX]7TS>KpzMt;Cr"
 559,1
 928,0
 593,
@@ -56,15 +56,15 @@ pIncludeRules,2
 pCtrlObj,0
 pTemp,1
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube name"
-pDim,"Required: Dimension to be added"
-pDimIndex,"Required: Dimension number of the new dimension in the cube"
-pIncludeData,"If 1 then data is kept (copied through clone cube)"
-pEle,"Required if IncludeData flag =1: Element of new dimension where to store data"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube name"
+pDim,"REQUIRED: Dimension to be added"
+pDimIndex,"REQUIRED: Dimension number of the new dimension in the cube"
+pIncludeData,"OPTIONAL: If 1 then data is kept (copied through clone cube)"
+pEle,"REQUIRED: if IncludeData flag =1: Element of new dimension where to store data"
 pIncludeRules,"Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
-pCtrlObj,"Allow overwrite control cubes"
-pTemp,"Delete the clone cube (1 = delete, 0 = not delete)"
+pCtrlObj,"OPTIONAL: Allow overwrite control cubes (default = 0)"
+pTemp,"OPTIONAL: Delete the clone cube (1 = delete, 0 = not delete)"
 577,0
 578,0
 579,0

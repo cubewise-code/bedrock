@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fbm@6rz\<izYj5tM^\23ZOHL7G`jiTE{rD1WuFIwcd4[^PeEa\oLVMTpOTi^BB85]]msvrLyUYUQ[\aR55NO7MgO1l`S_OX12HMt1xBCZYgQ\KpuIalEG5GLoU7?XgD8r>`Jc>neiw1DK:u:7r@^6UZ31X0<[zwyoDHdD^Y1_U0[eHYs2ouQmM~0HfPfJT6B97=erV;qfbm@6rt\<izYj5tM^\23ZOHL7G`jiTE;xD1WuFIwcd4[^PhEa\oLVMTpO$oWBBh2]]mSqrLyUYe][<dR55NO7MgO1lpR_OX12HMD:xBCZYgQ\K@4EalEG5GLoU7?8SI8rnfjm>neiw1dF:u:4r@N5UZ31X0<[zwyoDxeD^9=_U0[%KYs2ouQm]p0HfPfJT:B37=erV;q"
+565,"sk;K5OvJWLMBDP?Xqg6zlM6LNGl=_>hBd48wDeMyk\2UQ5TwXdFnI1OJ_i><B9EsJvvvghxliXAO_Apix04B0bFk5kSH6L`\I5pQRCI6Fz5eEwuiQkQVj1Cx4k>VgD8>:@GSldJ0eNCkDu4gx4QVcuD_eMPCvV_8yKdY3ZAZFGHgHFGZ<9gmK~P]4Ij\SVCY^95areysk;K5OvJWLMBDP?Xqg6tlM6LNGl=_>h?Hd48wDeMyk\2UQ8TwXdFnI1OJ/O?<BiBsJvVqghxlihMO?Dpix04B0bFk5{RH6L`\I5pRRCI6Fz5eEG4eQkQVj1Cx4k>fDO8>jFg]ldJ0eNcfDutax4qWcuD_eMPCvV_8y{eY3:MZFGH'KFGZ<9gm[pP]4Ij\SZCS^95arey"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pCube,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: List of Cubes (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter (Defaults to & if left blank.)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: List of Cubes (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter (Defaults to & if left blank.)"
 577,0
 578,0
 579,0

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"aazn4Lx:fnpS7mEyWS7Ks[ZM6?X7:uW7J2jk45^nkbx]Ui;@G[Ay9i6adgZ5F`a_EwiTI]\JK3Ouw2dRvNw7?grv99NRaSY6J\9i]mut=hSSuVQgV0RSYo4[k=NYE5=B0::y5u<85:iva`D8x8TN[Sklu35@=lwCeHo5o_O1_vQ]sI>6l<zkWf4CqBftBNvhXXioknDz"
+565,"yZr<9gwt9WREIEkD9tywil<bUaU>[PO3m8nopzIt5X4>bKx8aXi^62w6hb?9[sS>aM7G0Y@:31O^h;44brqWgPY>nu_kbPVWTFx[g39Qq^7@aF]@QcU]rMpzcmyK4rVRHNGHaC@F^xK:19t2Sw];kxtjL^PfAJ9czJC`7?CsFsljdv`A:<393qg3X3l360w9^3rojX[i"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -53,14 +53,14 @@ pTgtHier,""
 pTgtSub,""
 pTemp,1
 637,8
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Dimension where the subset exists"
-pSrcHier,"Optional: Source Hierarchy (blank = same as source)"
-pSrcSub,"Required: Source Subset"
-pTgtDim,"Optional: Target dimension (blank = same as source)"
-pTgtHier,"Optional: Target Hierarchy (blank = same as Target Dimension)"
-pTgtSub,"Required: Target Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Dimension where the subset exists"
+pSrcHier,"OPTIONAL: Source Hierarchy (blank = same as source)"
+pSrcSub,"REQUIRED: Source Subset"
+pTgtDim,"OPTIONAL: Target dimension (blank = same as source)"
+pTgtHier,"OPTIONAL: Target Hierarchy (blank = same as Target Dimension)"
+pTgtSub,"REQUIRED: Target Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,1
 vEle
 578,1

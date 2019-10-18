@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"zRm79ZS7bStPmaU>NMtM55?JxMabTz4mZCTZ0^Q8^;XGg7kLWToa9ky4LJ?bAkDoM>A?IpgIixGkfNT@ly<XHZ^C3`3VPyJIBa1I5^1nNSyG=ciFmKvT^p]ip9T]T]dJ7^PnL;9JZ:<]Cr\]`6LR9aw@8PL@WVdpuGuEbuLpq4yMP42mwXkB?MiF7b?0VgdX[KAhH9_y"
+565,"lEOXfGv]OXQDaVRBYZ6[IHmtr0R`SD521i0uxoiraBvoAc=G>VG]vB2k1bO?U=vzMCbn1h?8SBTRFltT2R6omOSj_cpK^<:1:KzD2;g7C=r9=vxBaM@l83az;r5L5Mww<JmVHN?46\O7^08r07U2Ey<lG_<a8wLb^@t^2Qg5_q[z]WAXlbz7uFUynSCduzZddFQhX>bM"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -35,8 +35,8 @@ pWaitSec
 pLogOutput,0
 pWaitSec,0
 637,2
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pWaitSec,"Required: Wait time in seconds"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pWaitSec,"REQUIRED: Wait time in seconds"
 577,0
 578,0
 579,0

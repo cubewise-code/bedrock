@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"u=Vr?^6>yA:pHWDs1bd<Pa@DO=Q>P[M`qkF6<ZI0HWTCIx>^kuXpIP9u7CULRfb<k4SS1kwkD0X:whc?a>]CuEEHyXByHV:I2wHz@cy?GXM:S[LexF3U_st7]r;okgf^MCSuXyTL6q?8[3[1VB8ks3[YwtEMZU\R8AbyN3IJUnUA2jaC=_DDFWxU7;q6cuC^wm=\yBZ["
+565,"dX[3a@W_PdA`UQu>GRShKHnhfLwJ@\t7DA^8p<A=KVg\?xJ<HIvWAHHAisaOI^Jqg0nFuxgp8Hv`t4[ARBQtoqt5Sd>dxGx>KO=^Sz65zWVBMkF<1j15w1qM<yd>;:g<7b>A0N4hxq98[w]yv2ZECzoeXy]S=1`>p9CWazFTE:Sw5lJ;f`d@`za[7srVnhCP1o9p<5=8"
 559,1
 928,0
 593,
@@ -47,12 +47,12 @@ pConsol,"*"
 pRecursive,0
 pDelim,"&"
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Target Dimension, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: Target Hierarchy (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
-pConsol,"Optional: Target Consolidation, accepts wildcards ( * will unwind ALL)"
-pRecursive,"Required: Boolean: 1 = True (break from node down not just direct children)"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Target Dimension, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: Target Hierarchy (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
+pConsol,"OPTIONAL: Target Consolidation, accepts wildcards ( * will unwind ALL)"
+pRecursive,"REQUIRED: Boolean: 1 = True (break from node down not just direct children)"
+pDelim,"OPTIONAL: delimiter character for element list (default value if blank = '&')"
 577,1
 vElement
 578,1

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"nKq`RCnezBHwzZa49faYY5L8R>`1KYCmHA\oJ_OSfURniVjsDPfQO:YyfV8b81J:45446?]ipgR5IwMABg4Acn^J<ODVDwtg1?W[iO97=31oj19Zg8k6H\>Gl0i<Nl>>aVd8N[f>KO<N>Kc3;nQFCE:K=4OHarelguImR7AV\ZDHwhFWOR]6TMte\\mQOp2\JBf6I<Ml"
+565,"tR<HaiHb?;XAAGT>IrRKaSk^k?wuPTY<jzwT>OU>9CzKHx4:CF?P;g^`R9]AL[BVTiWYbItCRlJ4q0ucDu]Taebk0\0a4v]zUi1]UHPMeXqq7F`2pJaOM`Nu_jmCBuBJtOgHPKDRM`SvtEyoLBOh`OSM;BEo3h3HeLlujke3mCoa^<kxMi=[po:7<_<5OGDjH7YBXc<]"
 559,1
 928,0
 593,
@@ -47,12 +47,12 @@ pErrorDays,21
 pBedrockDays,7
 pCSVDays,7
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pTgtDir,"Optional: Log file directory. (Blank = from TM1 configuration file)"
-pLogDays,"Required: The number of days to retain log Files"
-pErrorDays,"Required: The number of day to retain TM1 Error Logs"
-pBedrockDays,"Required: The number of days to retain Bedrock Debug Files"
-pCSVDays,"Required: The number of days to retain CSV files"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pTgtDir,"OPTIONAL: Log file directory. (Blank = from TM1 configuration file)"
+pLogDays,"REQUIRED: The number of days to retain log Files"
+pErrorDays,"REQUIRED: The number of day to retain TM1 Error Logs"
+pBedrockDays,"REQUIRED: The number of days to retain Bedrock Debug Files"
+pCSVDays,"REQUIRED: The number of days to retain CSV files"
 577,0
 578,0
 579,0

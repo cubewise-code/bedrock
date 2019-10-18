@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"dN@IaZD=a^IsbQ2SFgeFDCPbbZ\owByUEZ@F;X6`O6Yxoq\E\S7khkXXbz0TVT>OY?Io<k>^oDpDaSXV9=D?5A9=<B@HfQ2W1;^YSsxxSnphq3MdEO1rXpiuSml`5vnRa<NVmXWcQY[;9voWzWa0`KR6P4OnpBZnys8eYvkFs1HITzm;CZlLxUgzgVumKK_y;DTDZqet"
+565,"sN<>uTKiGFAx_E[QE6BaIgpHrG;7P<5VgRiB2:2v]HvsgNG6eq\YJ6HIqMcuBFqSmXqrrUThsGOI@@ZUng80VMmCJ`lw6jbhT9cTO6O5f7>9qN:ygbp\<8FIxVyf6mSUO5AEteOJuuso;F]BD0m54mWnn@lIc?kGfKo?39huY1oL`L;jlgih4C[mZquY\nk50;LMdo5?"
 559,1
 928,0
 593,
@@ -65,17 +65,17 @@ pCubeLogging,0
 pTemp,1
 pSandbox,""
 637,12
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name (wildcard * and/or cube1&cube2 list)"
-pView,"Optional: View name to be cleared (uses pFilter if pView not specified else clears entire cube)"
-pFilter,"Optional but ignored if view is specified: Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations"
-pFilterParallel,"Optional: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
-pParallelThreads,"Optional: Ignored if pFilterParallel is empty. Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
-pDimDelim,"Required: Delimiter for Cubes or Dimensions"
-pEleStartDelim,"Required: Delimiter for start of element list"
-pEleDelim,"Required: Delimiter between elements"
-pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
-pTemp,"Optional: Make Views and subsets Temporary (1=Temporary)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name (wildcard * and/or cube1 & cube2 list)"
+pView,"OPTIONAL: View name to be cleared (uses pFilter if pView not specified else clears entire cube)"
+pFilter,"Optional but ignored if view is specified: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations"
+pFilterParallel,"OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
+pParallelThreads,"OPTIONAL: Ignored if pFilterParallel is empty. Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
+pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
+pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
+pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
+pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pTemp,"OPTIONAL: Make Views and subsets Temporary (1=Temporary)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 577,0
 578,0

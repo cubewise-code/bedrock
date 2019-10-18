@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"j^CZmJ04uwaIQx9zaQJafPnZpQpDJR7_F8o39KZGJ\]4]5Lq?wz3cuGXuQt^rFiPskp@>ZQ0U0cz<l4>jr03\;]OZori7RASAtaML`[=5TKA?B`\DcNoA;TO5^mZynuSfABnD5CASf8t\RP>5Hc6g2@gFibXH_Z9kOpJQ;<xNllEACl81Awm:aYn>P5y=;Uq::3bQ2yD"
+565,"kZgYXnSpZ7SaY1>3]\pcDyhqMJqwOU9\oC@N1hwPc\t?r=3w]2b<z35?cNzwXCK?3kbqDxqe>0]dWeq[gsLZ^IK`m[\jH`rdwb?Isy:CJhA8LCSi1GcVI?Tht7IvYexS:Io8xaX=XuxHN_ewgPjbXi=oekjyzH2kOAQ@vtSWul9?zuod>D98AK8Pg5c_BVPxTT7hK5Xy"
 559,1
 928,0
 593,
@@ -95,18 +95,18 @@ pCubeLogging,0
 pSandbox,""
 pThreadMode,0
 637,22
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
 pSrcView,"OPTIONAL: Temporary view name for source"
 pTgtView,"OPTIONAL: Temporary view name for target"
-pFilter,"OPTIONAL: Filter Unmapped Dimensions using format: Year: 2006 + 2007 & Scenario: Actual + Budget etc"
+pFilter,"OPTIONAL: Filter Unmapped Dimensions using format: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget etc"
 pFilterParallel,"OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
 pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy:SourceElement->TargetElement & Dim2ToCopy:Source Element->TargetElement etc"
 pMappingDelim,"OPTIONAL: Delimiter between source element and target element in pEleMapping  (default value if blank = '->')"
-pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
-pEleStartDelim,"REQUIRED: Delimiter for start of element list  (default value if blank = '¦')"
-pEleDelim,"REQUIRED: Delimiter between elements (default value if blank = '+')"
+pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
+pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
+pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
 pFactor,"OPTIONAL: Multiply source value by factor (1 keeps the value as is). To modify existing values make the target element the same as the source with pZeroTarget = 0"
 pSuppressConsol,"OPTIONAL: Suppress Consolidated Cells (Skip = 1)"
 pSuppressRules,"OPTIONAL: Suppress Rules (Skip = 1)"

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"zRK1V03sBr1y:rTZ7Nw;YsRm1kaVy4ZXuzwrf1psCW=78T;L89GrxIE^j@eS^sswd8NVH=9tYK``xPEOA;e9LpAnF[eQE=VbHd:?t`NX1BdT]WPm:9F8WZo[Z<H\0E3I\VW]3[MAePb5fLd[_iKAiPcBtAzVlGg3f]G>=7VpW\>=RtUmM6\2;ApiFULD@L9Qx_algtlf"
+565,"aa3r;@S81kKMxc9[SJpTFK2HymS1cb;MNklbXSuL:K;V>;n3G?lO?]^8gC45SQKr1ejDE1]lybrFGhSMS1Nj8NBX7fxSZm1aw3=NlSVfHGTFm8bO_]G3`>D;3BFg^JVWTciU9EIZC`9DgK^uil@:^fFcGr^nUeSBK]SiMEC<nb<w9j^i>laVXXS;q1iJzuCwdDK8:5r0"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pAttr,0
 pUnwind,0
 pDelim,"&"
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Source Dimension"
-pTgtDim,"Optional: Target Dimension (will default to pSrcDim_clone If blank (or) is same as pSrcDim)"
-pHier,"Required: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
-pAttr,"Required: Include Attributes? (Boolean 1=True)"
-pUnwind,"Required: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Source Dimension"
+pTgtDim,"OPTIONAL: Target Dimension (will default to pSrcDim_clone If blank (or) is same as pSrcDim)"
+pHier,"REQUIRED: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
+pAttr,"REQUIRED: Include Attributes? (Boolean 1=True)"
+pUnwind,"REQUIRED: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
+pDelim,"OPTIONAL: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
 577,1
 vEle
 578,1

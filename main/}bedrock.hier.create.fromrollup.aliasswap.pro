@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"g0y^FA7aIdp_;ugVW:9x;OpI]ul;xTH<hZL?4Ns0hi=sOyun0uhAbrzWillq:W@Yw6VadGZd7;R\sIOaQyDq=vZ0@`UPwsX6J1uE=x<1woFBpAqqtX^RYoGm18UYLK_qq^6uZyHu7HK3ek:mJQo``dGgzNx38g;TV:[:IqTvauQGR40W@Wyvx4@DgnM9@`HalLldJHx>"
+565,"j^uv]3FQrAan6vS=oLHT<YjJ80q9c2w]Mgd<TZUmQnihWY3Sx^cto:\7=tN^CFP;ZhPenR<NRGJ\Tmkv5R;]usqG8Y8avr]iAnboYg7^5tyBA?9;RMRwC<as9p>?z^chwfv90=<[QA?=XaJ;BvQI6G99Ty:yrQVmlpS6lw<lQEXRd]w9jZwL9lsSg5I[K5U_gKsbHaDJ"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -59,16 +59,16 @@ pUnwind,2
 pRemove,0
 pAliasSwap,""
 637,10
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Source Dimension"
-pSrcHier,"Optional: Source Hierarchy (blank = same name as source dimension)"
-pConsol,"Required: Cons element in source dim to create root element in target"
-pTgtDim,"Optional: Target Dimension (blank = same name as source dimension)"
-pTgtHier,"Optional: Target Hierarchy (blank = same name as target dimension)"
-pAttr,"Optional: Include Attributes? (Boolean 1=True)"
-pUnwind,"Optional: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pRemove,"Optional: Remove cons elements from source? (1 = Yes, 0 = No)"
-pAliasSwap,"Required: Name of the attribute with names to be swapped"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Source Dimension"
+pSrcHier,"OPTIONAL: Source Hierarchy (blank = same name as source dimension)"
+pConsol,"REQUIRED: Cons element in source dim to create root element in target"
+pTgtDim,"OPTIONAL: Target Dimension (blank = same name as source dimension)"
+pTgtHier,"OPTIONAL: Target Hierarchy (blank = same name as target dimension)"
+pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True)"
+pUnwind,"OPTIONAL: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
+pRemove,"OPTIONAL: Remove cons elements from source? (1 = Yes, 0 = No)"
+pAliasSwap,"REQUIRED: Name of the attribute with names to be swapped"
 577,0
 578,0
 579,0

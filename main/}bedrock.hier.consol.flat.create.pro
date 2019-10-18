@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"ic0jsveZ3a8d4>BYl<6AwmaA85tX;QYOCAxxzMwzLy6<X?pGie\ja5zemTf=U8tOKJN1<xbyAS^rcp0h>jP>z5NT`9ADlq50esAQhd=x\<kcPm49O4[`OtEsw1n`^ZHWJT4MGRJRIKQBi]d5e9oXo0d@VGGlfXj9uLp3<x]e_GxjL=K>siCc7NMd^tZw^b9Rex;]v\G8"
+565,"y_cadL8wkQf^=WQ<v7F4hwzF;a23Wm0cKz9vGU9es52tOwYUVIQxzReTOc9wp18dHdX\wgSqIg<jM?B9NLXKB5Q5TV:i0RiiI_Y=\@JQypB@ZxCdBOAi]>o=ICpWLMQ;\>uAs^zMnK<S;2p<rn]KqrS?oLIeHwH^jh`@fAm=V>4FpCDb\la7A<Wje;>5C2Cl5FMiC:Ma"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -47,12 +47,12 @@ pSrcConsol,""
 pTgtConsol,""
 pWeight,1
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension"
-pHier,"Optional: Hierarchy (will default to dimension name if blank)"
-pSrcConsol,"Optional: Source consolidated element name"
-pTgtConsol,"Required: Target consolidated element name"
-pWeight,"Optional: Component Weight"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension"
+pHier,"OPTIONAL: Hierarchy (will default to dimension name if blank)"
+pSrcConsol,"OPTIONAL: Source consolidated element name"
+pTgtConsol,"REQUIRED: Target consolidated element name"
+pWeight,"OPTIONAL: Component Weight"
 577,1
 vElement
 578,1

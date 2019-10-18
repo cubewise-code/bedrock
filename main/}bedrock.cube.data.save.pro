@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aaGMBpkZw?<CJ4EGfb7R57gN5cOk:oxtZ_YzJWF=5iobLhEzB``T`@rxrr^D]QW]`pQgWmps\dhbFVoaoSGCNYXAQ9ARX[]i`M4Q>7KE6zSDt0cOUKiJT]>Spwt4xS2^5B`9[t1p;xIDyWb:A6n_[>m^D]b1[yv>0P[nl7s]2M?IugMh@<=u63CuSUyj4wz90:16_Eqg"
+565,"wWDKk?78cD@\pEWQRugKz6taD^cyq\;6ll3upxza=up6O_:jaJ@OxJxnu>uey^w`9Qw4>yJ3TmCB5L^5g?fU@^HaBpv93JHA;B8;[L:N6MgET5W\hhmOrkqRt;i`a:;Fp4Hx1VwQF3mDoIdOr5U;dt@Ly7D`bBh`5k;QOFiOGL93W^NDGRcF<:9ZH4RkY0v=TKA20cD>"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pCube,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Save data for this cube (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter"
+pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Save data for this cube (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter"
 577,0
 578,0
 579,0

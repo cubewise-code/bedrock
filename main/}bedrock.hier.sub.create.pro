@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"zxL5H8d?wfdilylVgvL4biXnS^a[3yMdMPW>9sqq9W>F:eE\wC[h;Un2Dp^bolSqkomKmhGK:^e>HDX9tr`m88Tm2j>@exqCul99\PGMH1kcp16gUG`uU=VG7GlHD`U_PT=ozUpmYfNv52a7LX\TX34>iq:?O4cuUYh]bVvCz`OROo<uBgnZ3AGgtLnJ3Fy2lFWT<58x"
+565,"q7y\Wr:w@OwbBnbljaOz1wS0pj6M;k2hEYy@u>nr^dQH;\?g`l`U7Cy?cp8jO?DmjxaVgkYyp<<<OcGoFxPGX7dJoizXF^=cVLcWSle:[\=:\Bjx=4u?=d_uw1jpcIcd@]97KjrSnFm<w3U`j`U?eBpX:T_5=88xkHg;FDbT:@RpWa@5QHYWZ89BVt@xX69hivTipTPy"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -71,20 +71,20 @@ pAddToSubset,0
 pAlias,""
 pTemp,1
 637,14
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pConsol,"Optional: Elements within Consolidated Element (Blank or * Equals All)"
-pAttr,"Optional: Attribute (Blank Equals All)"
-pAttrValue,"Optional: Attribute Value"
-pLevelFrom,"Optional: From Element Level"
-pLevelTo,"Optional: To Element Level"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pConsol,"OPTIONAL: Elements within Consolidated Element (Blank or * Equals All)"
+pAttr,"OPTIONAL: Attribute (Blank Equals All)"
+pAttrValue,"OPTIONAL: Attribute Value"
+pLevelFrom,"OPTIONAL: From Element Level"
+pLevelTo,"OPTIONAL: To Element Level"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,1
 vEle
 578,1

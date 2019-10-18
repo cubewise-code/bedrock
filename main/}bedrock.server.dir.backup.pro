@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"erUF0a^>F`rq\s;MJFGi4_z0gO<4R88s9vqCLzw4Qea97n6M<;3Q13tKyY>\fTB18]u0>xDBA@nJ<o^t=e5b7XE1YzLNHbL_]`JDo4vCxKZ>6gRd?ON71s<5dVNNerkV`zkxG;2MxA1LYul]BsS4bh7s^1Zk<P\Xt:phuXrvcNyZpg;OYk?W7yr0Z^`X]sXmfim1Ar>^"
+565,"k2JdJRpXkRRarC\F94AEy?Kc6verIob7eH@3RC7JHM7=k8mc9=7urQ[XQMI;vX6X@tfBQ\plpb>y`UYv<NhtFi[T2gMnbVkWy;MoI3HbTiQ_CfbkolP6t1SW_UvWz_VuESz@?]PE_EXa=:CCF9=7YGC?PVOp=KY]y3=RuJbPNRqI4=D;v7FMvW<\@2ORjWdlYi1xsIUZ"
 559,1
 928,0
 593,
@@ -38,9 +38,9 @@ pLogOutput,0
 pSrcDir,"."
 pTgtDir,""
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDir,"Required: Source Directory to Backup"
-pTgtDir,"Required: Destination Directory for Backup"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDir,"REQUIRED: Source Directory to Backup"
+pTgtDir,"REQUIRED: Destination Directory for Backup"
 577,0
 578,0
 579,0

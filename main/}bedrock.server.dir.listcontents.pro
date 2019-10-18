@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"d[YfaGU=tQo57R3pYi4r5k^sry4:2]w<dIK8>6_vyKdsqtjX_r]Oy:9MLCmQM1IYBTwYSkaH;UADMxIACLU@85=FFJgep>eo]?BQsi301An?>@Vl]]a1E[mcW:du^jkDPNA94AA@w]ht\BG;bNXaJC4t?;:]rV]XUyqOVDk7MClCZILw^8tb6>3GH<4?OuM>H3lj]vv8"
+565,"m0`fSxh\=_^38aHQbgp7GMCLRs6GYG5]R\k3ep\Qo7Rea2GqORmQkxxpdfke63>fOO5?;QL[Z:2V[o22a9fMnfiPl[ef_Pz=ffWWpAucz:iS[cOpG`8iP^_Pp7sy?R2ePjG<]t6nX7Sq7Vqf48n0`7ogR5@1sqGMvnxi0@JI=7=XB5ZXAySsV6FB1>QGCCUMVHD]Zh:f"
 559,1
 928,0
 593,
@@ -35,8 +35,8 @@ pSrcDir
 pLogOutput,0
 pSrcDir,""
 637,2
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDir,"Optional: Data Directory (Leave Blank to use TM1 Settings)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDir,"OPTIONAL: Data Directory (Leave Blank to use TM1 Settings)"
 577,0
 578,0
 579,0

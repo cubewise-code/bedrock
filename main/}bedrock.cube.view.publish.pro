@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"q<6X9_2z7=QbKW_W`aOvkXTBryOa;8YLVOeXO][c?mNAQ:Q]tKvUFVf9j8I75x>ERFtd;plh1rBDdwk=4Gyi\CXHHs?m`TNeJ3oySJjd_TI[:8M4HC0_<336JLMWB7tOLJ11wTphspgr@58YCuExs`EyrBLS=89OqSp1uCgCI4K[U7KPyMA;Xk:jJ7NeqIjXx2^nHtI:"
+565,"vo1eebWJeeCQv_4J?FF@69aca_4C47Y_DXRVAyPW1G5MVl>^XQ;N?AhB4M;FNJo1yHiBOIn_cwpzJJM`_tw:mxkLT?VSEf5i=pQjvGRIGG6T2QP0c0:1EUKgPaCn_thVhlp0Yccf75q[leAb;88[B\6[Mnplc?ZBtmHYY<cJ7Q:k_BI0Q5MHUhWPaWY1Z?b6rltD7w::"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pView,""
 pSubPublish,1
 pOverwrite,0
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: Private View Name"
-pSubPublish,"Optional: Publish Private Subsets? (Boolean 1=Yes)"
-pOverwrite,"Optional: Overwrite Existing Named View? (Boolean 1=Yes)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: Private View Name"
+pSubPublish,"OPTIONAL: Publish Private Subsets? (Boolean 1=Yes)"
+pOverwrite,"OPTIONAL: Overwrite Existing Named View? (Boolean 1=Yes)"
 577,0
 578,0
 579,0
