@@ -56,7 +56,7 @@ pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies except default an
 pTgtSubLeaves,"OPTIONAL: Name of target subset to store orphans in Leaves hierarchy"
 pIncludeNoParentElems,"OPTIONAL: Include elements that have no parent in any of matching hierarchies"
 pTgtSubNoParents,"OPTIONAL: Name of target subset to store elements that have no parent in any of matching hierarchies"
-pDelim,"OPTIONAL: Delimiter character"
+pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
 577,1
 vDim
 578,1
