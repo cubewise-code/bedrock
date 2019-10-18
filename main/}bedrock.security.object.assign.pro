@@ -56,7 +56,7 @@ pObjectType,"REQUIRED: Type of Object to Assign Security To (Application/Cube/Di
 pObject,"REQUIRED: List of Objects Separated by Delimiter"
 pSecurityLevel,"REQUIRED: Security Level (Read/Write/Admin/None)"
 pSecurityRefresh,"OPTIONAL: Refresh Security? (Default = No)"
-pDelim,"OPTIONAL: Delimiter"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
 578,0
 579,0
