@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"gK0Si[Dan3CYxMm\hRAtDFTLeWI;KQduWGj?7KOSQiu=yUIF1O3JeRjKouNi\]ak6TI?GjPyH82qc3e<nc_IqToF=blK1wo4ECms1gXryfdsNyW6zm5^DlThsbSyb5UeKm;cuhg3og@a[9nMtvIHCR^ccLiv6AeQvE6OwBNiGe:KthY@nByeE^swbhO:o@qq[8ZGXtfm"
+565,"kto0Rts7LziaHphD^i77U8b0rvyqf:XD=roVK3^>bboJZHqq0RTR0co>^1d^>?qXmRZhV;K41AY^A=Ye\s6_57I;mh\FQ=:GMnAA[h27SKULk2tb@hh<Pl@Ieatn5F`]Z6nImwzjg_M?3bjxV>ucUN=m?6WN92a:^Am;m6AEG<@NeBT32D]9?_7I9MgD3[DC9Np@\5Rm"
 559,1
 928,0
 593,
@@ -103,7 +103,8 @@ nProcessReturnCode= 0;
 cThisProcName     = GetProcessName();
 cTimeStamp        = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
-cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
+cTempSubDim       = cThisProcName |'_dims_'| cTimeStamp |'_'| cRandomInt;
+cTempSubHier      = cThisProcName |'_hiers_'| cTimeStamp |'_'| cRandomInt;
 cUserName         = TM1User();
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
@@ -190,18 +191,18 @@ While( nDimDelimiterIndex <> 0 );
     ENDIF;
 End;
  
-If( SubsetExists( '}Dimensions' , cTempSub ) = 1 );
+If( SubsetExists( '}Dimensions' , cTempSubDim ) = 1 );
     # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
-    SubsetMDXSet( '}Dimensions' , cTempSub, sMDX );
+    SubsetMDXSet( '}Dimensions' , cTempSubDim, sMDX );
 Else;
     # temp subset, therefore no need to destroy in epilog
-    SubsetCreatebyMDX( cTempSub, sMDX, '}Dimensions' , 1 );
+    SubsetCreatebyMDX( cTempSubDim, sMDX, '}Dimensions' , 1 );
 EndIf;
  
 # Loop through dimensions in subset created based on wildcard
-nCountDim = SubsetGetSize( '}Dimensions' , cTempSub );
+nCountDim = SubsetGetSize( '}Dimensions' , cTempSubDim );
 While( nCountDim >= 1 );
-    sDim = SubsetGetElementName( '}Dimensions' , cTempSub, nCountDim );
+    sDim = SubsetGetElementName( '}Dimensions' , cTempSubDim, nCountDim );
     # Validate dimension name
     If( DimensionExists(sDim) = 0 );
         nErrors = 1;
@@ -215,14 +216,13 @@ While( nCountDim >= 1 );
         # Loop through hierarchies in pHier
         If( Trim( pHier ) @= '' );
           ### Use main hierarchy for each dimension if pHier is empty
-          sHierarchies = sDim;
+          sHierarchies      = sDim;
         Else;
-          sHierarchies              = pHier;
+          sHierarchies      = pHier;
         EndIf;
         nDelimiterIndexA    = 1;
         sHierDim            = '}Dimensions';
-         
-        sMdxHier = '';
+        sMdxHier            = '';
         While( nDelimiterIndexA <> 0 );
  
             nDelimiterIndexA = Scan( pDelim, sHierarchies );
@@ -230,7 +230,7 @@ While( nCountDim >= 1 );
                 sHierarchy   = sHierarchies;
             Else;
                 sHierarchy   = Trim( SubSt( sHierarchies, 1, nDelimiterIndexA - 1 ) );
-                sHierarchies  = Trim( Subst( sHierarchies, nDelimiterIndexA + Long(pDelim), Long( sHierarchies ) ) );
+                sHierarchies = Trim( Subst( sHierarchies, nDelimiterIndexA + Long(pDelim), Long( sHierarchies ) ) );
             EndIf;
              
             ## If no wildcard specified and current hierarchy does not exist in dimension, create it
@@ -241,34 +241,34 @@ While( nCountDim >= 1 );
             EndIf;
  
             # Create subset of Hierarchies using Wildcard
-            If( sHierarchy @= sDim );
-                sHierExp = '"'| sHierarchy |'"';
+            If( sHierarchy  @= sDim );
+                sHierExp    = '"'| sHierarchy |'"';
             Else;
-                sHierExp = '"'|sDim|':'|sHierarchy|'"';
+                sHierExp    = '"'|sDim|':'|sHierarchy|'"';
             EndIf;
-            sMdxHierPart = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sHierDim| '])},'| sHierExp | ')}';
-            IF( sMdxHier @= ''); 
-              sMdxHier = sMdxHierPart; 
+            sMdxHierPart    = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sHierDim| '])},'| sHierExp | ')}';
+            IF( sMdxHier    @= ''); 
+              sMdxHier      = sMdxHierPart; 
             ELSE;
-              sMdxHier = sMdxHier | ' + ' | sMdxHierPart;
+              sMdxHier      = sMdxHier | ' + ' | sMdxHierPart;
             ENDIF;
         End;
-        IF(Trim(pHier) @= '*');
-          sMdxHier = '{ UNION ( ' | sMdxHier |' , {[}Dimensions].[' | sDim | ']} )}';
-        ENDIF;
+        If( Trim( pHier )   @= '*' );
+          sMdxHier          = '{ UNION ( ' | sMdxHier |' , {[}Dimensions].[' | sDim | ']} )}';
+        EndIf;
          
-        If( SubsetExists( sHierDim, cTempSub ) = 1 );
+        If( SubsetExists( sHierDim, cTempSubHier ) = 1 );
             # If a delimited list of attr names includes wildcards then we may have to re-use the subset multiple times
-            SubsetMDXSet( sHierDim, cTempSub, sMdxHier );
+            SubsetMDXSet( sHierDim, cTempSubHier, sMdxHier );
         Else;
             # temp subset, therefore no need to destroy in epilog
-            SubsetCreatebyMDX( cTempSub, sMdxHier, sHierDim, 1 );
+            SubsetCreatebyMDX( cTempSubHier, sMdxHier, sHierDim, 1 );
         EndIf;
      
         # Loop through subset of hierarchies created based on wildcard
-        nCountHier = SubsetGetSize( sHierDim, cTempSub );
+        nCountHier = SubsetGetSize( sHierDim, cTempSubHier );
         While( nCountHier >= 1 );
-            sCurrHier = SubsetGetElementName( sHierDim, cTempSub, nCountHier );
+            sCurrHier = SubsetGetElementName( sHierDim, cTempSubHier, nCountHier );
             sCurrHierName = Subst( sCurrHier, Scan(':', sCurrHier)+1, Long(sCurrHier) );
             # Validate hierarchy name in dimension
             If( Dimix( sHierDim , sCurrHier ) = 0 );
