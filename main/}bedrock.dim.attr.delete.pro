@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"cZla7EuA;qPzKwoGE;63RJzZ]]A`8C?`[I<hV9oEI;xRr_1WYa3ZwR5h9LZkX5Eiy?lD`y`y2Zlij8SBlOQ6q;_rxpBH1s0Q@CCUQmgvkE;jqP_VLkG>m1\eK4hkwI<lAFaeeGb<KZdkTnSSI49p^R00RTXtwG]Z[JVsWd4uY3PokH4pIC;lHbljXqwtH1]Pa5sGr?fk"
+565,"z]epk0JJH^v2H`VwzlpaV]nJXtagV?U;3VjI>Pk^9Z6wq^;7Oq;vy`:nQ>a1?^pn=Rdu\z9xZWcwaUzAu=HJEBHs0s<4FixP@2k?Pnw453A6jfHIy52B::gTy^5QPF>1c[PUcX^AHV2bV[t@xgA9\XZsDi3Bgpr`f\c:MfbRUlOh\thWfr:c1eJFcqOcbM0u?<jYG>I_"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pAttr,""
 pDelim,"&"
 pCtrlObj,0
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name, parameter accepts delimited list and wildcards(*)."
-pAttr,"Required: attribute name, parameter accepts delimited list and wildcards (* = ALL)."
-pDelim,"Optional: delimiter character for attribute list. (Defaults to & if blank)"
-pCtrlObj,"Required: Include control dimensions (1 = include, 0 = not include)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: dimension name, parameter accepts delimited list and wildcards(*)."
+pAttr,"REQUIRED: attribute name, parameter accepts delimited list and wildcards (* = ALL)."
+pDelim,"OPTIONAL: delimiter character for attribute list. (Defaults to & if blank)"
+pCtrlObj,"REQUIRED: Include control dimensions (1 = include, 0 = not include)"
 577,0
 578,0
 579,0

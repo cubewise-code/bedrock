@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"oQB_5T>Jxo_5lUTa4gavm4[n^^[8mv0tOpCskQu<ZFL<rIHRQ@y4gPT\tus9br_eeVO6Ff@8glYU0;T[eYVBMeUq<23@VCwEA@@zA6UR>\][kA@F[H75TFpOgP@Er3SVpP=]k:^SfcfftDbrNByPKOev`4?dPrFo3:MaGbbx3MxdaKqiC\B7rYCMsu3UUfwyrGerdSve"
+565,"bNaM]cZXiyWz3dFil2KVAn^ho<`W>II`icHXOQ40QLbU5_dCQ@@V`jfz]<rm8?2guIn]BXO>[?H;1]`8gJ_JGVd0@GDL^Lu@6Yhx=N>_uG4GnQY9_2cpU^Q[rro_nDPz0xqwuA1ZzfUF1?T9vplUAfH6RBvb=b`JUQ7Cys]]=\ewB<^wNR\QP_gsG5IBjlYj4FnMLCuw"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pHier,""
 pEle,""
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name"
-pHier,"Optional: hierarchy name (if blank then same named hierarchy as dimension is assumed)"
-pEle,"Optional: filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))"
-pDelim,"Optional: delimiter character for element list (default to '&' if blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (if blank then same named hierarchy as dimension is assumed)"
+pEle,"OPTIONAL: Filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))"
+pDelim,"OPTIONAL: Delimiter character for element list (default to '&' if blank)"
 577,0
 578,0
 579,0

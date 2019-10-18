@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"p_Osc5dsW?QVuH:Ga8z6C595l`Gmq:PYd>Hd?mYw;`X0gG<jf_JNTQBwFwM9@JP[PPOk6TE9B1LeraUa81koMWYkwfVuq5]mqw]xt;?T[;cO6`[jBKm_lPZP2[HFMpKYSeDFI5v:lJ_9_f5Y1ji4]w@7[s2bKK@uVbln08r^[OH[NoVtkMNmO[dU0Vn8tR<OgMm<yxbS"
+565,"g90<D1va_Wp8yi;BiJKYwVH:]\GBEqTy\[3:VSHkJ`nCQQzHKS6`s\;aDRqCLX91@<n@IhP1Z`9xt_wANtJ7I0r@tW6md=1kPOru5^=aQQnC0ZagDQI[9wGl[EWNH[qJn0UR[i=W8zbKMQj<4Yfe2oRzG?p@;f1gDW8lrY[[Q>Xj0WPsmkHl<UjflmAci\G`^L\_6f@C"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pDim,""
 pAlias,""
 637,3
-pLogOutput,"Required: True or False (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pAlias,"Required: Alias"
+pLogOutput,"REQUIRED: True or False (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pAlias,"REQUIRED: Alias"
 577,0
 578,0
 579,0

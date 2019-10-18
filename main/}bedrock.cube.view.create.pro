@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wDLN9LJ2S_4><E[ENV]6]5vaM^Jnr7z5FrvFL>solXsZ@a\JnI_zi_[C4Z<ItbA64:y<_jfC`WQz:bgyuNtxid3^[:@yFOfiPB`Sn\<hNqD99TSPYE\T[gIprT>8WqJQuYnP3;;mgUBc?Vj0NuV5b]Gnw;870bfM;cF7:7qrYc=MNf`v;bTR>IyjjiunKEd3I@SX<uy5"
+565,"fhmbJRahGdtkFHAZxV]Hwh8_sf>Qp7O:\5d>McbkUdjb3FDop?`cr1E9X>=BrZ30hA@fE4DNTmD@4dqAafuB7AkrJwWFFKk0[dH7AdRhy6<hqi83flQZV?LeK^P`cm@fsV\3ZvU;c3zvlUNy1sdCF[eHXXTfc8`BUtgynRukpuM4:Xb57Ui\n@p]Cf``21crI1FypOKq"
 559,1
 928,0
 593,
@@ -65,18 +65,18 @@ pEleDelim,"+"
 pTemp,1
 pSubN,0
 637,12
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: Name of the View"
-pFilter,"Optional: Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations"
-pSuppressZero,"Required: Suppress Zero Data (Skip = 1)"
-pSuppressConsol,"Required: Suppress Consolidations (Skip = 1)"
-pSuppressRules,"Required: Suppress Rules (Skip = 1)"
-pDimDelim,"Required: Delimiter for start of Dimension/Element set"
-pEleStartDelim,"Required: Delimiter for start of element list"
-pEleDelim,"Required: Delimiter between elements"
-pTemp,"Optional: Make View Temporary (1=Temporary)"
-pSubN,"Optional: Create N level subset for all dims not mentioned in pFilter"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: Name of the View"
+pFilter,"OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations"
+pSuppressZero,"REQUIRED: Suppress Zero Data (Skip = 1)"
+pSuppressConsol,"REQUIRED: Suppress Consolidations (Skip = 1)"
+pSuppressRules,"REQUIRED: Suppress Rules (Skip = 1)"
+pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
+pEleStartDelim,"REQUIRED: Delimiter for start of element list"
+pEleDelim,"REQUIRED: Delimiter between elements"
+pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 577,0
 578,0
 579,0

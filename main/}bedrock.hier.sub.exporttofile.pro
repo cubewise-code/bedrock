@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"t?wLe_8iL>C7m?Nl9tt8apRzFGM:EvGDkJ`\GE?OsqQVvUyF5tFSMBROokiC1IWLmr:k:0Krfs==Di@o4:ihMi;Z4:;:actzU`t73o1QsrmCOHnctlkAf6c1HpA@JUZ;V1;GLr4UXfEa@2CXbMdI[jgrZwiL;izTt`17nEi[KglQEEOeb<]@?u6@pb46=BC>uOv\hb[A"
+565,"utqM<2ooxY1kt6_bvzx6EaFYh0BtBgBCR7R<<YfTPZxY7?<98Ig1Z\DbLuTnD8;Q;B]@e5D@1rT]X>`MFvbX^]WbECN1z2vr0RLoxLB3yRN2GzJZ]wNsrF>8V:HJuG<=L`ROO@lxa<coq1UgIaBmjn<M3R;0e8UCs97\npDwGL17:YJ3i3YtMBbXysh24pwTH9c[Yj_g"
 559,1
 928,0
 593,
@@ -56,15 +56,15 @@ pTitleRecord,1
 pDelim,","
 pQuote,""""
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pTgtDir,"Required: Target Directory Path"
-pTgtFile,"Optional: Target File Name (Default Extension .csv)"
-pTitleRecord,"Optional: Boolean: 1 = Yes include header row"
-pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pTgtDir,"REQUIRED: Target Directory Path"
+pTgtFile,"OPTIONAL: Target File Name (Default Extension .csv)"
+pTitleRecord,"OPTIONAL: Boolean: 1 = Yes include header row"
+pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 577,1
 vElement
 578,1

@@ -4,7 +4,7 @@
 586,"Variables"
 585,"Variables"
 564,
-565,"v3yx@sZULMu`Oh0FFcRzWLyrPW?Q6=Rq0<JzE0y;`ICwuNZH7nm]>QX9pfT1OL6RU`LZ11YlrjA2uPHNP]H=XjiZB<UwC@=;q0]R?I1zUeH2Csq4FB9qm^gyaPOo1IVb2;@NEF41^|B?YbFc\=MQ<\r4c;f?BaEOcU;40qGyJmhI^pf<40MG{Ik0Og>rV3VwvDGn`\"
+565,"fkAdyuy71wuLqh:ucA<s\B:s2UgGQ6yrP<HM9?sSZ1sstMZhqS\LIfb9KnT1Kq129;5t:8?u`vfaFt5QWSq]d8?9p1DlzNV7b]t0}GMs[v[[RKHsaFFzNB`uQO4lOodnkj28pBCXv8G|bdzeV;F3mt6Z>PwgZzfL3GauTX:AvcZhaIthLMnPTFkD00cb>tf?vvofpB_="
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,All
 571,
@@ -44,11 +44,11 @@ pDims,""
 pRecreate,0
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pDims,"Required: Dim1+ Dim2 + Dim3 + Dim4 + Dim5"
-pRecreate,"Optional: If cube exists delete and recreate (Default=0)"
-pDelim,"Optional: Delimiter for Dimension list (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pDims,"REQUIRED: Dim1 & Dim2 & Dim3 & Dim4 & Dim5"
+pRecreate,"OPTIONAL: If cube exists delete and recreate (Default=0)"
+pDelim,"OPTIONAL: Delimiter for Dimension list (default value if blank = '&')"
 577,0
 578,0
 579,0

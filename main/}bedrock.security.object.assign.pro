@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rau9YQW08yQcx[A9l<ak^JjZv3orG8MLXws]CmJx\S<eOwebkcA1n:X4uWWmJi[x0>\yPUjOm<X`;bmsDSwPq[J>iWgVVT85?NSLuXwOaxbF<EY3tJg[_P`yuGRbl>f;O8;MJ6tihyD7r<JKmsn:fnol_gGP9HMllt9<o43OrOP[jPfbBe3SSwT4VB1iq:pf7Wj]bKHd"
+565,"mn4\`t2UqL3L_agi00]NhTCxlLuwMJXBLAnBEWV209:6`TPeYtZTr=6hfpSn2p8z2E>g6WrHcme^h;R4>AQu_>hk`kvWH<127fDTZe0r0nZZhHLCtIhcVc]P6EV0?lQJVG]Rly`v7mxt[s1ObejEU9IJljVpiG<\sWCKY2Cfgex60?:[ob=`dyuFAF<4DwUEdmoy\R`p"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pSecurityLevel,""
 pSecurityRefresh,"No"
 pDelim,"&"
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pGroup,"Required: List of Groups Separated by Delimiter"
-pObjectType,"Required: Type of Object to Assign Security To (Application/Cube/Dimension/Process/Chore)"
-pObject,"Required: List of Objects Separated by Delimiter"
-pSecurityLevel,"Required: Security Level (Read/Write/Admin/None)"
-pSecurityRefresh,"Refresh Security? (Default = No)"
-pDelim,"Optional: Delimiter"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pGroup,"REQUIRED: List of Groups Separated by Delimiter"
+pObjectType,"REQUIRED: Type of Object to Assign Security To (Application/Cube/Dimension/Process/Chore)"
+pObject,"REQUIRED: List of Objects Separated by Delimiter"
+pSecurityLevel,"REQUIRED: Security Level (Read/Write/Admin/None)"
+pSecurityRefresh,"OPTIONAL: Refresh Security? (Default = No)"
+pDelim,"OPTIONAL: Delimiter"
 577,0
 578,0
 579,0

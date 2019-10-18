@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hgGW_C6jaGg6Lx7HnXg3Vf<V5gMnH`5PoXU^Nl6]ZbFqlQC@jR91;zT[A5w7eFQCq36l5wz;OCUZmi3:3<Cxo>Wn??@:WMoH9i?tZZyO_2=HxP>MlZ;_rmr;]lYof2z[UI1]`Wi7yVyVF[Ma\1A_Usyqc`h=D8HgQ]btd991LsvKeyB;XHSB`^Io1_AnvukeQA[U51sD"
+565,"aauo@j`1CW6^z4WYcz[6FvSLZh8c]rZ57YA[27SMVLp3v:rmvCpLjX[?`jB8NV9rYX6b`LnX<x;VUSXwm<^t1\fpy;emQHP8XP>z5ma?L=Cktqk2=rqHRID_hH9CTztq]@gt2_XVKm6INFvPas`g8AOystU6vb^MfPxEBy7bkT?gZ4jhHFNuipCRqrgjG2sbWN@gK=H_"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pExclusions,""
 pDelim,"&"
 pTemp,1
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0

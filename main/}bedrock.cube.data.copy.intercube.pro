@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"wlCvz]wQwvHSHo_tqz50`K2a<lhgp^=g=0Eeq835BdLJqP3qPwtx<qwMdmDKvz42uHWp\QO9G?cs4RZIcn?zKWWEtLWxgAqrg<vc85aB@<1Y80DnwQRJ3VLx0JIqhaW_Y`^9zq^JjGb=11PwkkfO7`B9L<:HZDgaulDZ4H9`q3^qNQ<:GYfjT;gi?R9qimlG`RnhNaf^"
+565,"c6Ia;xWP=5U_7];PbYAYzNKrI^?m6qCohSN>X1JvMWIS:?OEhfUE6`<nuPTI;Zino>f>0KKfGWz21VUs0o_5;rxwEGUbZSAdSWd0FRtxvoO57_fPyKyk[GkRH5z=UOljEmsSlEetp7fCshm[d47KgwNjS4kR>e[wP:`^vJs592VZlF=CEpT>U9L0p:OwCvDF_yj;9tDj"
 559,1
 928,0
 593,
@@ -86,13 +86,13 @@ pCubeLogging,0
 pSandbox,""
 pThreadMode,0
 637,19
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
-pFilter,"OPTIONAL: Filter on source cube in format Year: 2006 + 2007 & Scenario: Actual + Budget. Blank for whole cube"
-pFilterParallel,"OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
+pFilter,"OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube"
+pFilterParallel,"OPTIONAL: Parallelization Filter: Month¦Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
 pTgtCube,"REQUIRED: Name of cube to copy the values to"
-pMappingToNewDims,"REQUIRED IF TARGET HAS DIMS NOT IN SOURCE: DimX:InputElementForDimX & DimY:InputElementForDimY (specify an N level element for each new dim)"
+pMappingToNewDims,"REQUIRED IF TARGET HAS DIMS NOT IN SOURCE: DimX¦InputElementForDimX & DimY¦InputElementForDimY (specify an N level element for each new dim)"
 pSuppressConsol,"OPTIONAL: Suppress Consolidations (Skip = 1) Only use 0 for strings"
 pSuppressRules,"OPTIONAL: Suppress Rules (Skip = 1)"
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True) Clears combination of pFilter and pMappingToNewDims"

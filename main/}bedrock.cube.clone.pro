@@ -4,7 +4,7 @@
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"lEz4MWW@f]>Uy7xQlR@bxH4Js6SVddu1VLCg:l0`qQ@KehIR:2I\4qiVD_u7S4xfChqJ1O@V9G:\WIu1:HFSK<25zHbTzzMaK@7]4vOFyG89jblH4zAzw>X@[dE^Bc<7seEbub?sf\SP6Yn7Zc3=LKmtQy:6UM4H0e]2B|:Krb7`DcHrebXtGR]mE:JFNVUP1]Voi9Z"
+565,"cY8yQlU[?Xx<I@ULBU47dVVcitve9FX?FoD2u8RiyE[[\ni[@xp;`hCGGSugdY|vGOaxZvuig1FZN[9aS\tksau_Y7HBZv]f0GK1]?NxDjxo4LclXIfSyu8Gk2VZ\2Z6QrEIblqU:L<S`ONaGFP6mRduxoos2SW3]LbmrF}ZvlMelTlH6ddxZMrniBt?CJf[@B\U1Gu`"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,Temp
 571,
@@ -65,12 +65,12 @@ pSuppressRules,1
 pTemp,1
 pCubeLogging,0
 637,12
-pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Source Cube"
 pTgtCube,"OPTIONAL: Target Cube to create/re-create (Source cube_clone if left blank)"
 pIncludeRules,"REQUIRED: Include cube rules? (Boolean Yes = 1)"
 pIncludeData,"REQUIRED: Include cube data? (Boolean Yes = 1)"
-pFilter,"OPTIONAL: Filter on source cube in format Year: 2006 + 2007 & Scenario: Actual + Budget. Blank for whole cube"
+pFilter,"OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube"
 pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list"
 pEleDelim,"OPTIONAL: Delimiter between elements"

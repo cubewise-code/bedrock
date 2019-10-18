@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"i?[xruPJ2a;:0l6UVNwO[EJrbUZfm_yp^0:JqvprVW5HPoONe^:Nj3z^@9re7qt:x3@GckXFn\j]=6GwVgoPy0hUZ6vxBl;um<n6[:aUSB:_`vMRrI?87_Rcm3tEt8Qsx>z68f86C]w[RD[p;ggnr_?nY\YL0J3QblWv9`hR3>_y1E]Wt9l@;LLcdQCBRA4c@EKJlR0a"
+565,"fsc6tJa=^Cw4icuDA6_ej9GJVxYs[D@>RiSsrw[e3ZJNTm=zU58CFN[iV69rl:xz\3qtClDNi]NnSuMhTY1?TpnfaCYjR8SGQPxrkN1dyOT=D\2tAZIawu9r>3[L[?UMIuO^4y]f:Mj5`Rs<vyXVzH<gxp>ZJGXbHmCL:9NdU6_]6DuYY`:9tGSvWJ0:c5kcOVcA[B_e"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pGroup,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pGroup,"Required: Groups (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character (Defaults to & if left blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pGroup,"REQUIRED: Groups (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 577,0
 578,0
 579,0

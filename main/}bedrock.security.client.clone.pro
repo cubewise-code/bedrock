@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"f>aw99a2]^Bk=ZclB\OGhq^RuKY:TEyfdCB2`D9tc9JMLiJD>pWtGKlxG>IX=Zs:cOIVIz4@mZnr[5pRy[U7eVc5D825@5@CG3\4^nolSJRd@5930xQy3Gs[bcOHzi5p?;9Hn>5QE9[EYHc3]i2dOLacsvVF_HO3e`HqoZz9_kVCCw:j2Y3CND3^@CJFvyS4NR4HuCaE"
+565,"p5fnu25kQTisO_xaaHdN2<C`MTx_C2X1nhEAi4Kh_F_4Fy`2E^=cpo6QOnS_cO3pM6u;nnQpuBRa]fMAlHsoc@9jbR9Bv7B_HdfXnHL6JNYe88g0JmC3paOUogfa^3\7@R0oHH1O;0;BijxJY:na;5OA?r<tIgtx[5EPIPt0OnQ_l3reZXyM@Cw3vVsbOKVtOpDD^;03"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pTgtClient,""
 pMode,"REPLACE"
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcClient,"Required: Source Client"
-pTgtClient,"Required: List of Target Clients Separated by Delimiter"
-pMode,"Optional: Mode REPLACE or ADD (default = REPLACE)"
-pDelim,"Optional: Delimiter (Use for a list of target users. Defaults to & if blank.)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcClient,"REQUIRED: Source Client"
+pTgtClient,"REQUIRED: List of Target Clients Separated by Delimiter"
+pMode,"OPTIONAL: Mode REPLACE or ADD (default = REPLACE)"
+pDelim,"OPTIONAL: Delimiter (Use for a list of target users. Defaults to & if blank.)"
 577,0
 578,0
 579,0

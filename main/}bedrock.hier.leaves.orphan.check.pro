@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"xTY_f_4iTmyxNXK7WnCk<FI0zqeSt?f2SsrGI^mRi^cVKk{9U=b=xT0rU~eAHzz9ZvnTGK;afnC_BPfuBKTYdMowlVcsOo?X7_v:tpUO`]rW>uaFApp88UotfW3Pr30G_vF_:f<JZ5]C3Pi9Pd6eM:hSDRwp57seCXGWmH626IuUrr1jLxzMmmEp@OIiCg1@OOG94OC>xTY_f_4iTmyxNXK7WnCk<FI0tqeSt?f2WsrGI^mRi^cVKKz9U=b=xT0rU>`GHzj>ZvnDEK;afnCWBPeuBKTYdMowlVcxOo?X7_vJzpUO`]rW>uqHCpp88UotfW3PBR2G_V@_9f<JZ5]36PiISd65B:hSDRwp57seCX7SmH6=6IuUrq1jLxzMmMNp@OIiCG<pIOG94OC>"
+565,"l4QXuqwF\:Vnzym]T8it?7W_DgjpnRj9smI@3Lt6YT]>4`[=In24jU[V7yeQZs}iGgu[G8XXUuC_6PvN<KUor;ds8<o3>u6l3vg9dU?rRsmZ0kbFQ[NCvFYmup3Ws3`@dtFZzt9JK8PA3pn00Kyi]HnMEj5HS^Ii`:FwH92Bq:Ap~2Z[c>7`ko5N6pkdzfqFYxLXwktl4QXuqwF\:Vntym]T8it?7W_DgjpnRj9wmI@3Lt6YT]>4@Z=In24jU[V79`RZsmnGguKE8XXUuCW6PuN<KUor;ds8<o8>u6l3vgIhU?rRsmZ0krHS[NCvFYmup3Wc<d@dT@Zyt9JK8P16pnp9Kyy_HnMEj5HS^Ii`:6sH92Mq:Ap~1Z[c>7`kO>N6pkdzF|vyYxLXwkt"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -50,13 +50,13 @@ pIncludeNoParentElems,0
 pTgtSubNoParents,"Bedrock - No Parents"
 pDelim,"&"
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
-pTgtSubLeaves,"Optional: Name of target subset to store orphans in Leaves hierarchy"
-pIncludeNoParentElems,"Optional: Include elements that have no parent in any of matching hierarchies"
-pTgtSubNoParents,"Optional: Name of target subset to store elements that have no parent in any of matching hierarchies"
-pDelim,"Optional: Delimiter character"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
+pTgtSubLeaves,"OPTIONAL: Name of target subset to store orphans in Leaves hierarchy"
+pIncludeNoParentElems,"OPTIONAL: Include elements that have no parent in any of matching hierarchies"
+pTgtSubNoParents,"OPTIONAL: Name of target subset to store elements that have no parent in any of matching hierarchies"
+pDelim,"OPTIONAL: Delimiter character"
 577,1
 vDim
 578,1

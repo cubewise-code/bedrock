@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"kiOmK<9ufEny7ZakDjVZVFFS:E6<l_dS@8h3>GDHs`=3]@_uBUFLI0cp7%[a1[zJ?aV_AZEvHfvT@xQBFs6ck_RwoHRARoWGE3;9}CRSOxRKkh`\WjcEp>9dLFq2j:]\A-[Cbh8:k]esYp2dY702=_bFb[gCO`foCI0GNLOi0R`j2i3v`=:7ZxPBIu`\qjaHclsG[<t9"
+565,"ayzP\w:QSolKcz@7sa=oJZak60nlBttUP3<?\g8ZzZ1s<Eojtt4YdqObt,[QPRq:U>sYqA]@Hpy4ZxAx]HGZzw7?G2_AykcqvZG:];to_jVC]qc\w:B<Q0etMYLAmjcHf {ORwjeSw>|yvyciBt9]we@nT0zMJ0Noj6Wg1MYs7OU0IPO550E^x@cq7Ajem1B32xm74CI"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -41,10 +41,10 @@ pDim,""
 pHier,""
 pDelim,"&"
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
-pDelim,"Optional: Delimiter character"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
+pDelim,"OPTIONAL: Delimiter character"
 577,1
 vDimHier
 578,1

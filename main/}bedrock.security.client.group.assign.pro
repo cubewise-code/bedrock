@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"w;6_UGhZRMZ843JUq?zbDq7a698Eo4]vT\[lrJS7DGt3KmF<wLT[[=NjUKF>i9uSR;whWUlQoCg?R[[VhH<zt^4>4bo5vUWl@MWRt<IzQ8WLP?I[v6eZWlz?j^vli7uwo;8it?\OP^A:]v4^bNI;?wMrzQUK=ks4YBjiPNdWctN1l1UT5ElD[_;tfME8FFdkeDjXS5m9"
+565,"nP;Z?7I`4`p9GIaTZPt3QPUO5nIvGXeH5LXOudaGTMxqoDXRRs>yHoFMVwh=MP?wzllnoEFJ^[a5hUW<jmHYFNd@drNUC8aDv2m=MYPVzwAOiBqro=OcKojTnbt=bSBLpA4]^_DiKSbbKw5D:3^bS<w7xp6vDV<lGykE28Ol6J]sCcX2=`P4Bj]tC@G9p=kQre0:C9N="
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -47,12 +47,12 @@ pDelim,"&"
 pAddOrRemove,"Add"
 pSecurityRefresh,"Yes"
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pClient,"Required: Client Names Separated by Delimiter and accepts wildcards"
-pGroup,"Required: Group Names Separated by Delimiter and excepts wildcards"
-pDelim,"Optional: Delimiter"
-pAddOrRemove,"Required: Add or Remove"
-pSecurityRefresh,"Required: Refresh Security?"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pClient,"REQUIRED: Client Names Separated by Delimiter and accepts wildcards"
+pGroup,"REQUIRED: Group Names Separated by Delimiter and excepts wildcards"
+pDelim,"OPTIONAL: Delimiter"
+pAddOrRemove,"REQUIRED: Add or Remove"
+pSecurityRefresh,"REQUIRED: Refresh Security?"
 577,0
 578,0
 579,0

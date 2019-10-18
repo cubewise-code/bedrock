@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"qI4;`n?qix[[YoLwfa>JuVW_k1p`s;:aUF;LXrL[[?_MNozdrWakS<W?leH:u[zU\bp^k=;3Lg6Di@Lx;`t:gUMB[pYeln?;4E[hB^82KTYE4N23m4x^PisWBL?4JG;H5krrReoyvmhgqQ]Mvy[a:>CsFWQqL5HS7WHz2vs2Uq0]w6hJv?ey;kt8vyY>>vrRitZPfk]`"
+565,"riz_sMKTT<bv_7u7Pwao[i^^eZQ6=g_rFO2uVUNXa8uLNytJ4Xo7U^YQcvY\ZwObS3b\wj5Gq_k[qoCckx6mj1djDvfV`ogRZ4kdS=:hZ_Kvmi_;y<Y=W?l1vGTgkSvrn0w<1:u]TvRV0iLFdiuba:8IYh3IDC2Tze@2LwnrQ;`kVf9S3?N?1E2zxw:z6Iv3L6gb7xA0"
 559,1
 928,0
 593,
@@ -62,17 +62,17 @@ pAttr,1
 pSub,0
 pAttrVal,1
 637,11
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Target Dimension or Hierarchy (as dim:hier), accepts wildcards (if = *, then all the dimensions)"
-pEle,"Optional: Target Element(s), accepts wildcards ( * will include ALL)"
-pDelim,"Optional: Delimiter character if list used for pDim, pHier or pEle"
-pTgtDir,"Optional: Target Directory Path (defaults to Error File Directory if blank)"
-pTgtFile,"Optional: Root file name without file extension. If blank ""bedrock_dimension_script"" will be used"
-pTitleRecord,"Required: Boolean 1 = Yes - Include header row"
-pDimInfo,"Optional: Include dimension info section (SortOrder, HierarchyProperties, etc.)"
-pAttr,"Optional: Include creation of attributes"
-pSub,"Optional: Include subset definitions"
-pAttrVal,"Optional: Include attribute values (for selected elements in pEle)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Target Dimension or Hierarchy (as dim:hier), accepts wildcards (if = *, then all the dimensions)"
+pEle,"OPTIONAL: Target Element(s), accepts wildcards ( * will include ALL)"
+pDelim,"OPTIONAL: Delimiter character if list used for pDim, pHier or pEle"
+pTgtDir,"OPTIONAL: Target Directory Path (defaults to Error File Directory if blank)"
+pTgtFile,"OPTIONAL: Root file name without file extension. If blank ""bedrock_dimension_script"" will be used"
+pTitleRecord,"REQUIRED: Boolean 1 = Yes - Include header row"
+pDimInfo,"OPTIONAL: Include dimension info section (SortOrder, HierarchyProperties, etc.)"
+pAttr,"OPTIONAL: Include creation of attributes"
+pSub,"OPTIONAL: Include subset definitions"
+pAttrVal,"OPTIONAL: Include attribute values (for selected elements in pEle)"
 577,1
 vDim
 578,1

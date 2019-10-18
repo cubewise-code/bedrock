@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"edE`;ay:_TQI4QzNA<CLKv];vQhzmh22^nN0?Wz2BQefu0Y=SZe1I\4`hVOx6UF0dyiOV0:F@Hb`ptQSYe3[Eo4Qo4HKu9\kDbyeMQK`LPW0MQS6z`d00pOfGyU\k7TuxOvxUCeTOegwRO;<7?rWtEE8G5oP^HHu\`;k1v``oxbO=;OUfKNvk9uhlUryuw<KxF4]eJbL"
+565,"qt^AOS3zx9y5ra\8vanYWKTZGwM[vp430lsEIp^[DOEneX2fDigvhaXVjXT2F\GEjlheFu_TCYj68MT^FnTIexSw30N2HFjDZ:=euGC]wfTkN03Y_p6es_7H9K7ph1f]KTMVs22?a]kfafJc>m8?1J675CL4Aw8ldacGpTkJ;ISyf`<b4N^pk4eOIx:REzF=sqp\r=`n"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pLevel,""
 pMessage,""
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pLevel,"Required: Severity of the message - INFO, DEBUG or ERROR"
-pMessage,"Required: Message to display in TM1 server Message Log"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pLevel,"REQUIRED: Severity of the message - INFO, DEBUG or ERROR"
+pMessage,"REQUIRED: Message to display in TM1 server Message Log"
 577,0
 578,0
 579,0

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"jASn6\NEmza0yC:pY^5iq^KucglvkS?nOkX]C5[C?_uu;b2P@D8Ft4IlKv[OY[F;@q>0kk@7KYp^iy8]9<<IatQ4s0V<jXqWb2JfK6o_]ujZcj525qF?0IlhY93e][U2Zoww7<TP]16DQk5puA3Y]HzHJ]u@Q>V]EpU:YY=q?m\U<TDIILv@CcnydvD<M9hgh3b`y5ZF"
+565,"y9S?>mXb2M=s7>Ybcj6SjJykOa[AZ8?`eW8^XGZ9`f\kXz?fOm@:wUK?e]0tJ_W;]LJN06A@kg1KNU^a<2gBpAdma_a5VS\zZoAL`Xs_7Ac2Ypq_LbFK8avGKwatC4N[Gd7OWfD<7hhBniy=B:^et6Qb\^a>QYN^wvhoZx;yL==9s9m48O<1UHh;92vi:PH0V4naMy1n"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -47,12 +47,12 @@ pPrevAttr,""
 pAttrType,""
 pDelim,"&"
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name, parameter accepts delimited list and wildcards"
-pAttr,"Required: attribute name, parameter accepts delimited list (separate with delimiter for multiple item e.g. Type&Active )"
-pPrevAttr,"Optional: insert position (previous attribute) (Defaults to blank)"
-pAttrType,"Optional: attribute type (e.g. A, S or N. If blank then assumed to be type=string)"
-pDelim,"Optional: delimiter character for attribute list. (Defaults to & if blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: dimension name, parameter accepts delimited list and wildcards"
+pAttr,"REQUIRED: attribute name, parameter accepts delimited list (separate with delimiter for multiple item e.g. Type&Active )"
+pPrevAttr,"OPTIONAL: insert position (previous attribute) (Defaults to blank)"
+pAttrType,"OPTIONAL: attribute type (e.g. A, S or N. If blank then assumed to be type=string)"
+pDelim,"OPTIONAL: delimiter character for attribute list. (Defaults to & if blank)"
 577,0
 578,0
 579,0

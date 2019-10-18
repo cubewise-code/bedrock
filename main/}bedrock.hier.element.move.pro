@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"oFlw^xkc\V2fTLgaUn2ZMN?>T3DoerdLUHJ^WDKNw2GXk^e0libud@Z]RzlQRwsi9LWumpoP93uXX[s7htuTb8btv[4nl;IgJ5KIZh5ZROJNsl=ik4R>`F:>9lu;_6LQU0^?lHK3^=EEl^QS6^B@DHDZ0^JA2jc_uJoqz[UZpu=GM^@Ktk<]J\Ns<[_k]2y\jmau7Ia3"
+565,"b5a7S7sb:P<HGLbq:zLjT`9KdGL3oeIYXO3:s>MoP3MH_;hpF6rRAaVz;>Uu<a\qIU]7L8F2kvP[<0IMSs<anWVu^f=Y::g\CRIf1oplVhOG8HL6yoHo3``c3z:ztRMmIF55JcZ8VuzHygYRhXj3gq]6E@fh]u]j_6wiBcSdHLulNCJd@pQ7LqWd@H>278G;^\ww_qMg"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pTgtConsol,""
 pMode,"Add"
 pWeight,1
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension Name"
-pHier,"Optional: Hierarchy Name"
-pEle,"Required: Element Name"
-pTgtConsol,"Required: Target Consolidation"
-pMode,"Required: Add or Remove Element from Hierarchy"
-pWeight,"Optional: Element Weight (for Add only)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension Name"
+pHier,"OPTIONAL: Hierarchy Name"
+pEle,"REQUIRED: Element Name"
+pTgtConsol,"REQUIRED: Target Consolidation"
+pMode,"REQUIRED: Add or Remove Element from Hierarchy"
+pWeight,"OPTIONAL: Element Weight (for Add only)"
 577,0
 578,0
 579,0

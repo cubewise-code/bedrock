@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 585,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 564,
-565,"w5Wlrvf_Fp^7`q4Q>>Xn?1ha3wT>ShE<kRa:[X?@RqEROo67rY5rGecBICy9v7InaBRKfzfH:M:Y9U>]xgCw5`>O\4@x3<x:T;yfHmxe_<Yv]P_CqSUSP3lrb@_dB2\L^][OvqtSR4LKHYINQkJ5nYeI8_CRECRhjc;cqm3v>9@cWpKlRHZ0a57IyC>a5Db5[SGe;hr1"
+565,"htTBe>B<aZxNGBD=G:w65Xus@y:rX@DL0fHYX65w\Kaq;TYPT[HFma3jCiP:tiv?cG?fgL8SM:=t7y::kz3CzCUx;iL6J^:0]9Tbeq@gheYn;uLzxC1n>9OuEkb@rV@KIaCzFGrn:L3]DURuicbsWbh\SJAnJvwa@5bmv;D0[MZ@O23Plcvbei=BNbS[NFo67m^rjgrl"
 559,1
 928,0
 593,
@@ -50,13 +50,13 @@ pTitleRows,1
 pDelim,","
 pQuote,""""
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name"
-pSrcDir,"Required: Source Directory"
-pSrcFile,"Required: Source File Name"
-pTitleRows,"Oprional: Number of Title Rows to Skip (default = 1)"
-pDelim,"Optional: File Delimiter Character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: Quote Character (Accepts empty quote, exactly 3 digits = ASCII code)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: dimension name"
+pSrcDir,"REQUIRED: Source Directory"
+pSrcFile,"REQUIRED: Source File Name"
+pTitleRows,"OPTIONAL: Number of Title Rows to Skip (default = 1)"
+pDelim,"OPTIONAL: File Delimiter Character (Default=comma, exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: Quote Character (Accepts empty quote, exactly 3 digits = ASCII code)"
 577,2
 vAttr
 vAttrType

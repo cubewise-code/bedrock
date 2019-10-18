@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"fSxuS;aGp??ygPK2@]3ht;cko8]<gcB>Vwg\SRf0;zeQEUyA3aWfuc^@TucVJmiBEN4R>2qgAu2qLVnTOphvHW[>DXf[w35eF9L[oAn9Rv19HT6TwH610[coBqPq=9>u==;;xo>q0\n68rSgtxsnews9q02J[T^:\_[KRC>4dYh7i?3jzbEyjTtu?Z]c0\jCbcUs=dlf"
+565,"lhY;;ksGmRv5as5[RA?2PV9DU93xhC6z^gzqiVDvMxx;oTp]uHr:dOPZ6<arh5jbIv91u?t;`m\j]V>aNg2j4;T7waEzs[fp`yu@EBMU1?f;EZh^WAZW^YT2^7;8`qHv>2j@@d]KlCR:tm5@jtw[\O4BojK:XGLY8NV_JLrt<f3LpyIMHT5Wy]71n^qalQ>I2[XF@6>?"
 559,1
 928,0
 593,
@@ -44,11 +44,11 @@ pView,""
 pMDXExpr,""
 pTemp,1
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: View Name"
-pMDXExpr,"Required: Valid MDX Expression"
-pTemp,"Optional: Make View Temporary (1=Temporary)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: View Name"
+pMDXExpr,"REQUIRED: Valid MDX Expression"
+pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 577,0
 578,0
 579,0

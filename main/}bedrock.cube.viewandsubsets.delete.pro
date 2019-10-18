@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"cqaak96]NiX6K[o6d4gI^vNf67TmUkhEJhfNqArAml_BW9DrCaA7F<tO6WKQY8_Xo[nks9sMiPmWih\V14ivpQBlophp38wp4dFX2jyj[t76GC?w229@``TDAxUlc[Sv3RSYwd4eD?>GDun<5dtvf^SCFjfDf5X]5l2>?PZNsrP@Q97[:Kt[Q[=I>4G9U;OMYJngPnrK"
+565,"dFy5aE:fOqjsg3bLK8E72=6FMGyrv2qjoS3UP2g45kY6`\[Ui0osH=LrtE<Dym^dX>NoxyJk<;CG?sJtaM^na;ggX1V8tSt`5o]BlFSeg^kG\Ylv=F]ubxD;Y1AZGX]302yF<5:lBVdzyICd6trLR:k?cfetzLJb_LIF0g4uoh[TSt<FjTxLWu_Z;NVDi[a`s^`QqVy="
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pView,""
 pSub,""
 pMode,1
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: View Name"
-pSub,"Optional: Subset Name (will default to pView if left blank)"
-pMode,"Required: Delete temporary view and Subset (0 = Delete View and Subsets indirectly 1 = Delete View and Subsets directly 2 = Delete View only )"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: View Name"
+pSub,"OPTIONAL: Subset Name (will default to pView if left blank)"
+pMode,"REQUIRED: Delete temporary view and Subset (0 = Delete View and Subsets indirectly 1 = Delete View and Subsets directly 2 = Delete View only )"
 577,0
 578,0
 579,0

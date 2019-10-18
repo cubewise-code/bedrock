@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ow]j]PEK^DSmuUKayp2@\pHuYfS0^Zwyomlrpb0iQnvjwWLRhglb`o;HXtXTKlhd=^iaa>Mtf9@YK9Zeu`CJYHkrPcUHpnkU4_eWuFJQvuS`hWcdh\od\Van_TM2rJPdRmWy\]wltc<K]lAabb;\PXUv2gPZBlW`GmPcWU;iM[[KOj?]IEc`Bh2`qs>22Xm>RWWN1a1["
+565,"lvVc0v50WaR4a4j@?BTD4FMv@J^bwbn@W8uwY\OzE5kHRKIG1QWfr9qTa@6f90MZ2jCjY\oK32w90qA6;O8l;V82e4k?Wp?3E8`jVGnirvCX^TD4NHacJfP:WwisPSM@QHml\;:clzf5_KxHGTYBgEj7aSdSe]C8dOEQtkg0lO:Mlv[2i8mQYyl>ChhDZ@rixS1RG<Sd"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pClient,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pClient,"Required: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
-pDelim,"Optional: Delimiter"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
+pDelim,"OPTIONAL: Delimiter"
 577,0
 578,0
 579,0

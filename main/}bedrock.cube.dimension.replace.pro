@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ynF1zzuUOolv[iGn1;6CtcWp:y[@;cbHaijZ>sPGAH]AqPi1OqCe5NFQEmjW7f<T72RZ1DI\n;w7mhh@UN<:ZR4BBdrjJ]A@O\d;]K8ab0nqj@62FqUOtUu:G0Z]hqVhvybw7;Q>7]pt9v4ggbC1mE=cozR0]V^Kt8@90dj2VDV_1vxbWJ80gLjYP7uGAAR:0XbT7\iz"
+565,"bNyhyy0hb<Dk1u6^_CR509usDBzJ1s[J1Bn=aL3bco9tN\YpdCGKensacgjghS8tJbcU1\cSfm75bXLi8Zhw^<nZFqZLbd_vSU8]E>V9w@L:i626N9^>G4oAAb`kA2u^s2x7j0OgP0qi8Tfg3]8]8zN@zI2Ed42T1JY55hb0mfo;Vio2DG@JGztZB]UeMb3p;b@<G_X"
 559,1
 928,0
 593,
@@ -56,15 +56,15 @@ pIncludeRules,0
 pCtrlObj,0
 pTemp,1
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube"
-pSrcDim,"Required: Dimension to be replaced"
-pTgtDim,"Required: Replacement Dimension"
-pIncludeData,"Required: If 1 then data is kept (copied through clone cube)"
-pEle,"Required: If pIncludeData =1: Element in target dimension to load data to"
-pIncludeRules,"Required: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
-pCtrlObj,"Required: Allow overwrite control cubes"
-pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube"
+pSrcDim,"REQUIRED: Dimension to be replaced"
+pTgtDim,"REQUIRED: Replacement Dimension"
+pIncludeData,"REQUIRED: If 1 then data is kept (copied through clone cube)"
+pEle,"REQUIRED: If pIncludeData =1: Element in target dimension to load data to"
+pIncludeRules,"REQUIRED: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
+pCtrlObj,"REQUIRED: Allow overwrite control cubes"
+pTemp,"REQUIRED: Delete the clone cube (1 = delete, 0 = not delete)"
 577,0
 578,0
 579,0

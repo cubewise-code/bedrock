@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"sc0RFBr\Le7s9mq8[^QaL8N1CWUgpS=XjdvvO[;OytI45?@`;;?3sp4_j0IKVCjsuSRNbikz5keK?mdFlmOT`gy@=Aq\=XfU70O=``MjTVaBDAmI>eigspYt`_eC@pGojV_EHLCfBQdC?<W1jf\8lHs[qHkeZhrCNu_M55CrJV]cDIh]OA=\<Ca@GyM;tH?kMLBmjqvp"
+565,"tqmulcplXWE?lfNc<5k6aN9Ge\_]V<HG7vnpoUGo[5GSB^EGzv]d3z_Vg?h7I@qZT2oL5<Hlx5a?BP0t2>;^ZEO:x^_r6I5yJMH0Yye`qQL[m5lI7ygMkBdObcPHqua5wqLIIy>^@A<xl^]xMumKGN[5AOu2SN=p3kh_zt;lZd9FNgcaa2d350E1Ozso1P:[MEy4Z35l"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -32,7 +32,7 @@ pLogOutput
 590,1
 pLogOutput,0
 637,1
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 577,0
 578,0
 579,0

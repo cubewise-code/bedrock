@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"lo_8x9`9SaQ@axgvmrv\Fty@W6ckaqrksUZsB9aZGQpHFUML1:F_kXRM:yT5<Taj90U6sPyJlNOXp=8M0V]n1ITssp9psR2B8XEsw9JSsuuc`v8yOS3`Y]hhJ41]aOd;MsQnRJLLe9PRJe4yMYW;G=MLQAAMY2RfDT4<2DY;bmh?dlp@LJ6t4sV[yXyu?xXEtYke=a`v"
+565,"l1EFaKMhTMFfav4W1ZMhfkKuXPgt<h6IxZCGCMp00G^ftQrjoVSnjFRfAQ8Nk:kZcVAzeZ]mVq>Ml4BT?0pDVH:]dK2LDKkwpX:en_RCNg`OZiMvhH=On4_6Hs5HPWH3ANj64qN]?dl1=JWk@NhwRAClvHiBgTPvuTbbpL=:_on]r7uStlO57D1WRXxu6?m;Aa^CATtv"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,}Export.All
@@ -44,11 +44,11 @@ pHier,"*"
 pFirst,1
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Optional: Dimension name or list? (accepts wildcards). Will process ALL if = *"
-pHier,"Optional: Hierarchy name or list? (accepts wildcards). Will process ALL if = *"
-pFirst,"Optional: 0 = Ignore 1st character requirements, 1 = Validate 1st character more stringently than other characters (e.g. for MDX no ""+"" as 1st character)"
-pDelim,"Optional: Delimiter for dimension list (If blank or not passed then ""&"" will be used as default list delimiter)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"OPTIONAL: Dimension name or list? (accepts wildcards). Will process ALL if = *"
+pHier,"OPTIONAL: Hierarchy name or list? (accepts wildcards). Will process ALL if = *"
+pFirst,"OPTIONAL: 0 = Ignore 1st character requirements, 1 = Validate 1st character more stringently than other characters (e.g. for MDX no ""+"" as 1st character)"
+pDelim,"OPTIONAL: Delimiter for dimension list (If blank or not passed then ""&"" will be used as default list delimiter)"
 577,1
 vDim
 578,1

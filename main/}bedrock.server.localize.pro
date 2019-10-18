@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"x<5lHpG]0[5DN8nf9Z90[wV9a5<]`Hf5lb^wz`sL7u1R``nK]Lna9suN?F>h4]e]=SLRvgoYPAm3_no?vD>k6[`ctlrcB]s8<u;iniSXvZ=dU4x_TDObgD43L1gkwU7Y>YsRk@1Bgb0m7sL@jt:XUN@8QEX76dgw6SVB=wD1?4aD=J0nt7Pz_:cOG^QQ;xW8yOzg6RXg"
+565,"rEhe`eE]R5dbjurNDRaPT]spc4]ut0hJ4s7^bOQBv[F96lINER[zwMrjxmjLSH8=HgDBKSYYl;ZLWBEBHamak<RDHc6Sb`P:F1A0Kbr8NT:lMtecu\>OuOdX3h>W]u><2ATZ0P?aZ=Zhid:7r]w:OQ]OV9Kq07v1\hathJ]r3s3Rhygf\n^V2Xs28p5dC5\mDDM]qb<n"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pDim,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension (Delimited list & wildcards (*) acceptable)"
-pDelim,"Required: delimiter character for dimension list. (Defaults to & if blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension (Delimited list & wildcards (*) acceptable)"
+pDelim,"REQUIRED: delimiter character for dimension list. (Defaults to & if blank)"
 577,0
 578,0
 579,0

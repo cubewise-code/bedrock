@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rDHbYxHBHqhyMBeROsatMzrSIH@TCIZGpYei]hBTKpZTh>7jSacMLdirPHywtd^p?P[Jh[OY32zm4wlV8==;EJzFp_rP\>dsXHxsH6v3g;QRgtKi3cCeF5CK9\7_WpA4u\m[axfOpe<LfMq`lcdJ^UgfnXv<3lUCS3o2jrS87SDUUe?Go8=j`g3UbdaAD>\t0M7:2;?w"
+565,"y8bZSSqz`I^?UTO6=7A2JayZhad=a`G;IKfn83[v<@8dv0KjC1oUsomw[r@?L@wnZRXmy@=vMC092ExpmHIUK@@GKWHl?9ZPMDZW7_VFq^VZs[B?25OQ[OH0MZgDiWa`h5YlaAnC`NpTwaSzD`2K;XZzmXGX0GwZ>7WD3HXkPBT_Y88BPZMnWQo0t<5XmrcWB9V5HfEM"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pHier,""
 pEle,""
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: hierarchy name (if blank then same named hierarchy as dimension is assumed), accepts wildcards (if = *, then all hierarchies)"
-pEle,"Optional: filter on elements (delimiter separated list of elements, accepts wildcards (if = *, then all the elements in hierarchy get deleted))"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: dimension name, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: hierarchy name (if blank then same named hierarchy as dimension is assumed), accepts wildcards (if = *, then all hierarchies)"
+pEle,"OPTIONAL: filter on elements (delimiter separated list of elements, accepts wildcards (if = *, then all the elements in hierarchy get deleted))"
+pDelim,"OPTIONAL: delimiter character for element list (required if pEle parameter is used)"
 577,0
 578,0
 579,0

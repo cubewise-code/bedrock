@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"f0:d`Ma1oCeWuUA1L60xNqPBAe@NurchVY;JgfgXakmxB?B3iVi_[?r;JLn9UadlThwD:ihdqF[dR<m[Kwo8nV_[WFVEGYv?:1Ah;mRN>s8IOA_WeuC[y6Y6nz60GN_@nTT4Oy^UzmcA756nbl3rneOYWn9dWEY9w?rPVT\88F4k`rW[PF<:R6ybKR6DGSSA[6n4WE7A"
+565,"eF7tVavAp;OVJZ_<KIos\5SA::;oMEipLtZ<<rwFcTTl]Rb9?PBS_=GdMR:gHhiu2ZyarnUs^nVjY]]MwR0OcGgWaeP]k=KeWMqRKb@^BF7v`MI]nXuDzjPA[EZOVOrM?:svYvVqTEHcgRTvdA4CMEp?`o;7C2mf90E<UjMnADZs5D[s7:X[2UuLFjK^K];gL:cq0lmh"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -47,12 +47,12 @@ pSub,"}Bedrock*"
 pDelim,"&"
 pMode,0
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Optional: Dimension name (if * then ALL dimensions )"
-pHier,"Optional: Hierarchy name (if * then ALL hierarchies for the specified dimensions)"
-pSub,"Required: Filter on subsets (delimiter separated list of subset names, accepts wildcards)"
-pDelim,"Optional: Delimiter character for subset list (required if pSub parameter is used)"
-pMode,"Optional: <=1 destroy subset, 2 delete all elements"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"OPTIONAL: Dimension name (if * then ALL dimensions )"
+pHier,"OPTIONAL: Hierarchy name (if * then ALL hierarchies for the specified dimensions)"
+pSub,"REQUIRED: Filter on subsets (delimiter separated list of subset names, accepts wildcards)"
+pDelim,"OPTIONAL: Delimiter character for subset list (required if pSub parameter is used)"
+pMode,"OPTIONAL: <=1 destroy subset, 2 delete all elements"
 577,0
 578,0
 579,0

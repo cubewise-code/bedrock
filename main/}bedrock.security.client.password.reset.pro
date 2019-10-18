@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"dSJ?a[bivc>git1\qg?r>aKP>HXyir9yj^P5QUr`WQ6>D9z7\NgYoMyiWboHI]KVza80J[tPWuG7QgtXm8YWvx^vvWb8Bt<rz^`n8FCzt]G8eqyWu^mcaoDbc3nm8C?5z:`AowMi4JLiGY2NScGOoxYhMWfJw\<ND4vQZ7^dQKivr65TMK<VR1m9jdlA9U`Ujy:Z0Vsq"
+565,"ywf[>0^W[RTn4uaz2Sf8dOM<1a^ulF;o0a:T7t^yjREe;T7r0dpYS3TCCT=46nox21LrCOlM6:SXDfDG\YNP;a;@FqlJJfqhybgtqu<tYJE;>B7mOrobyNHmhty5oy4<^qU9k:IB5:9`5VNeCNbCgqMfeZBvbGDx?0Jlmz7YJb1@cDRVVRt;8jqX?XIu3dkhSENNJI4L"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -41,10 +41,10 @@ pClient,""
 pPassword,""
 pDelim,"&"
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pClient,"Required: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
-pPassword,"Required: New Password"
-pDelim,"Optional: Delimiter character"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
+pPassword,"REQUIRED: New Password"
+pDelim,"OPTIONAL: Delimiter character"
 577,0
 578,0
 579,0
