@@ -52,7 +52,7 @@ pDim,"REQUIRED: Target Dimension, accepts wildcards (if = *, then all the dimens
 pHier,"OPTIONAL: Target Hierarchy (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
 pConsol,"OPTIONAL: Target Consolidation, accepts wildcards ( * will unwind ALL)"
 pRecursive,"REQUIRED: Boolean: 1 = True (break from node down not just direct children)"
-pDelim,"OPTIONAL: delimiter character for element list (required if pEle parameter is used)"
+pDelim,"OPTIONAL: delimiter character for element list (default value if blank = '&')"
 577,1
 vElement
 578,1
