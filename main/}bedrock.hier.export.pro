@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"dD@3aXtAK9G=[QwZGp[yC5TT6rw:3ZiQd\USc>=isEw]HC7K:dAPbhEK`DC^Z?VvM<_wiJ@zdUdR004FDsHmpo:udSK^R<u24qDtG^G9fKY>:FXQIyc;7f]T0Sx^iwRCwlFKDIH6duU<J][bKDKM5eata3UBc5PCGh>LbBBX^9hrU>FUk5]XNoE[tffvuKV\npE21wvS"
+565,"pK@uC<=\lKw:1\5raHtLls5wlTL1YAW87DL8vRu2eRzX0DLdysgSwc`5FMDuPG`p5jsg07PSgbO3[^3Cg:B^7DHhI;hLFgGUK;Lj0<VYE>]3;qv^X9pn9X`6q]qX`t=ZkueXkfIE<85epmsabLX[d4sYkZfConJMLaER^zKL?rs@21L[ZDuC?Gb^vs5;\RVy^D5<A5tp"
 559,1
 928,0
 593,
@@ -327,13 +327,13 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
     If( pLegacy = 1 );
             AsciiOutput( sFilename, 'Reserved' );
     EndIf;
-    AsciiOutput( sFilename, 'Reserved.' );
+    AsciiOutput( sFilename, 'Reserved' );
     
 ## Line 5 or 6: Header Information
     AsciiOutput( sFilename, 'Line_Type', 'Element', 'Value_1', 'Value_2', 'Value_3' );
 
 ### Attribute Information 
-    IF( DimensionExists( sAttrDimName ) = 1 );
+    If( DimensionExists( sAttrDimName ) = 1 );
         nIndex = 1;
         nLimit = DIMSIZ ( sAttrDimName );
         WHILE( nIndex <= nLimit );
@@ -342,9 +342,9 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
             AsciiOutput( sFilename, 'A', sElName, sElType );
             nIndex = nIndex + 1;
         END; 
-    ENDIF;
+    EndIf;
 #    AsciiOutput( sFilename, '' );
-ENDIF;
+EndIf;
 
 ### Element Information
 nElIndex        = ElementIndex( pDim, sHier, vEle );
