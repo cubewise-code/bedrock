@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"se:LpWMZM03R2DVKk<8yu[NX7Lv`[4mJzI;0>^8[<aP<Jv7Ze;D7t9OgJ=SQ8KfA;Oxbwm`[0>k?[H?YC;=Np];B1Xf{z<TSp2a5MLZd:3m=CruBnd^e8o5\O5j]^UOs^s:od]8VC7oK~Kw?pjE4}FdI@W9LT;FLyDjog:[44h;Z#_LJp:F:ecxaALH`SC4gLRZ=xpda"
+565,"yAK7H?;_h@ko^>cN?b<0t@5@pyAHLO7JJtiew?y_X8Tucrg0<U[KPbX;[5SAEOia3[roW^6PpsgOgK>qCEQ\9Q9]Hek3Y\k<^v?MbV^7FpcY\~BN7gN\j>19^J5UEV6?ujkD`?yOpjBNJB20e^>}3Zkf@DqpSo??Nh?gCTtdMsP'oDLFWR?Wo8zvVcgqFT`<f?JcY@C"
 559,1
 928,0
 593,
@@ -60,7 +60,7 @@ pSrcDir,"OPTIONAL: Source Directory Path (defaults to Error File Directory)"
 pSrcFile,"OPTIONAL: Source File Name (defaults to 'Dimension Hierarchy _Export.csv' if blank)"
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
-pLegacy,"REQUIRED: Boolean 1 = Legacy format"
+pLegacy,"OPTIONAL: 1 = Legacy format (bedrock v3) 0 or empty = new bedrock v4 format"
 577,6
 V1
 V2
@@ -104,7 +104,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,233
+572,237
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -142,8 +142,7 @@ EndIf;
 # 2. Quick replication of a large dimension.
 
 # Note:
-# Valid dimension name (pDim) and legacy export format (pLegacy) are mandatory otherwise the
-# process will abort.
+# Valid dimension name (pDim) is mandatory otherwise the process will abort.
 # If needed, custom delimiter might be used by specifying parameter pDelim value as either exactly one
 # character or as a 3-digit (decimal) ASCII code. For example to use TAB as a delimiter, use 009.
 
@@ -229,9 +228,14 @@ ElseIf( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @<> sOSDelim );
     pSrcDir     = pSrcDir | sOSDelim;
 EndIf;
 
+# Validate legacy file format
+If( pLegacy <> 1 );
+    pLegacy = 0;
+EndIf;
+
 # Validate export filename
 If( pSrcFile @= '' );
-  pSrcFile      = pDim | If( pLegacy = 1,'',' '|sHier ) | '_Export.csv';
+  pSrcFile      = pDim | If( pLegacy = 1, '', ' ' | sHier ) | '_Export.csv';
 ElseIf( Scan( '.', pSrcFile ) = 0 );
     # No file extension specified
     pSrcFile    = pSrcFile | '.csv';
@@ -338,7 +342,7 @@ DatasourceAsciiQuoteCharacter = pQuote;
 
 
 ##### End Prolog #####
-573,48
+573,70
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -361,22 +365,44 @@ Endif;
 ### Metadata Count
 nMetaCount = nMetaCount + 1;
 
-sVar2 = Subst( v2 , Scan( '-' , v2 )+1 , 99 );
-sVar3 = Subst( v3 , Scan( '-' , v3 )+1 , 99 );
-sVar4 = Subst( v4 , Scan( '-' , v4 )+1 , 99 );
-sVar5 = Subst( v5 , Scan( '-' , v5 )+1 , 99 );
+sVar1 = v1;
+sVar2 = v2;
+sVar3 = If( pLegacy = 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
+sVar4 = If( pLegacy = 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
+sVar5 = If( pLegacy = 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
+
+## Set Dimension Sort Order
+IF( v1 @= 'Sort parameters :' );
+    CELLPUTS( sVar2, cCubeS1 , sDim, 'SORTELEMENTSTYPE' );
+    CELLPUTS( sVar3, cCubeS1 , sDim, 'SORTCOMPONENTSTYPE' );
+    CELLPUTS( sVar4, cCubeS1 , sDim, 'SORTELEMENTSSENSE' );
+    CELLPUTS( sVar5, cCubeS1 , sDim, 'SORTCOMPONENTSSENSE' );
+    DimensionSortOrder( sDim, sVar3, sVar5, sVar2, sVar4 );
+ElseIF( pLegacy = 1 & nDataCount = 3 & ( sVar1 @= 'BYINPUT' % sVar1 @= 'BYNAME' % sVar1 @= 'BYHIERARCHY' % sVar1 @= 'BYLEVEL' ) );
+    CELLPUTS( sVar1, cCubeS1 , sDim, 'SORTELEMENTSTYPE' );
+    CELLPUTS( sVar2, cCubeS1 , sDim, 'SORTCOMPONENTSTYPE' );
+    CELLPUTS( sVar3, cCubeS1 , sDim, 'SORTELEMENTSSENSE' );
+    CELLPUTS( sVar4, cCubeS1 , sDim, 'SORTCOMPONENTSSENSE' );
+    DimensionSortOrder( sDim, sVar2, sVar4, sVar1, sVar3 );
+ENDIF;
 
 ### Build dimension
 IF( V1 @= 'A' );
+    # insert attributes
     ATTRINSERT( pDim, '', sVar2 , SUBST( sVar3, 2, 1 ) );
-    
-ELSEIF(V1 @= 'E' );
+    IF( pLogOutput = 1 );
+        sMessage    = Expand('Attribute %sVar2% created in %sDim% as type %sVar3%.');
+        LogOutput( 'INFO', Expand( cMsgErrorContent ) );  
+    ENDIF;
+ELSEIF( V1 @= 'E' );
+    # insert elements
     HierarchyElementInsert( pDim, sHier, '', sVar2 , sVar3 );
     IF( pLogOutput = 1 );
         sMessage    = Expand('Inserted element %sVar2% into %sDim% as type %sVar3%.');
         LogOutput( 'INFO', Expand( cMsgErrorContent ) );  
     ENDIF;
-ELSEIF(V1 @= 'P' );
+ELSEIF( V1 @= 'P' );
+    # create rollups
     HierarchyElementInsert( pDim, sHier, '', sVar3 , sVar4 );
     HierarchyElementComponentAdd( pDim, sHier, sVar3 , sVar2 , StringToNumber( sVar5 ) );
     IF( pLogOutput = 1 );
@@ -387,7 +413,7 @@ ELSEIF(V1 @= 'P' );
 
 ENDIF;
 
-574,58
+574,49
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -405,10 +431,10 @@ EndIf;
 nDataCount = nDataCount + 1;
 
 sVar1 = v1;
-sVar2 = Subst( v2 , Scan( '-' , v2 )+1 , 99 );
-sVar3 = Subst( v3 , Scan( '-' , v3 )+1 , 99 );
-sVar4 = Subst( v4 , Scan( '-' , v4 )+1 , 99 );
-sVar5 = Subst( v5 , Scan( '-' , v5 )+1 , 99 );
+sVar2 = v2;
+sVar3 = If( pLegacy = 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
+sVar4 = If( pLegacy = 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
+sVar5 = If( pLegacy = 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
 
 If( pDim @= sHier);
     sDim = pDim;
@@ -416,31 +442,22 @@ Else;
     sDim = pDim|':'|sHier;
 Endif;
 
-## Set Dimension Sort 
-IF( v1 @= 'Sort parameters :' );
-    CELLPUTS( sVar2, cCubeS1 , sDim, 'SORTELEMENTSTYPE' );
-    CELLPUTS( sVar3, cCubeS1 , sDim, 'SORTCOMPONENTSTYPE' );
-    CELLPUTS( sVar4, cCubeS1 , sDim, 'SORTELEMENTSSENSE' );
-    CELLPUTS( sVar5, cCubeS1 , sDim, 'SORTCOMPONENTSSENSE' );
-ElseIF( nDataCount = 3 );
-    CELLPUTS( sVar1, cCubeS1 , sDim, 'SORTELEMENTSTYPE' );
-    CELLPUTS( sVar2, cCubeS1 , sDim, 'SORTCOMPONENTSTYPE' );
-    CELLPUTS( sVar3, cCubeS1 , sDim, 'SORTELEMENTSSENSE' );
-    CELLPUTS( sVar4, cCubeS1 , sDim, 'SORTCOMPONENTSSENSE' );
-ENDIF;
-
-### Load Attributes ###
+### Load Attribute Values ###
 IF( V1 @= 'V' );
-    sAttrType =DTYPE( sAttrDimName , sVar3 );
+    sAttrType = DTYPE( sAttrDimName , sVar3 );
     IF ( pDim @<> sHier );
         IF( sAttrType @= 'AN' );
             ElementAttrPUTN( StringToNumber( sVar4 ), pDim, sHier, sVar2, sVar3 );
+        ELSEIF( sAttrType @= 'AA' );
+            ElementATTRPUTS( sVar4, pDim, sHier, sVar2, sVar3, 1 );
         ELSE;
             ElementATTRPUTS( sVar4, pDim, sHier, sVar2, sVar3 );
         ENDIF;
     ELSE;
         IF( sAttrType @= 'AN' );
             AttrPUTN( StringToNumber( sVar4 ), pDim, sVar2, sVar3 );
+        ELSEIF( sAttrType @= 'AA' );
+            ATTRPUTS( sVar4, pDim, sVar2, sVar3, 1 );
         ELSE;
             ATTRPUTS( sVar4, pDim, sVar2, sVar3 );
         ENDIF;        
