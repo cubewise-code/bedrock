@@ -94,6 +94,15 @@ EndIf;
 
 ### ExecuteCommand ###
 nWait = StringToNumber ( pWait );
+
+# Check if the pCommand parameter is enclosed in quotes and add if not
+sSubst = Subst ( pCommand, 1, 1 );
+If ( Subst ( pCommand, 1, 1 ) @<> '"' );
+  sCommand = Expand ( '"%pCommand%"' );
+Else;
+  sCommand = pCommand;
+EndIf;
+
 ExecuteCommand ( pCommand, nWait );
 
 573,2
