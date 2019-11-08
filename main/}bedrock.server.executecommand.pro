@@ -130,7 +130,7 @@ If( nErrors > 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
 Else;
-    sProcessAction = Expand( 'Process:%cThisProcName% successfully saved all cube data.' );
+    sProcessAction = Expand( 'Process:%cThisProcName% completed successfully.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
