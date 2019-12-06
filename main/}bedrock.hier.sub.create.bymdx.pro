@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"g[H8sIda9C:G]Y?M3uzUW7\NjdvY]3H2pt:LrWZTRtW2zp4Mmgs8i_K^ZZVnj8v_^HG5?qZUYE0uBfN^TOsS@is8?mNEpIoDLx9gmDnoxBoLuxar0Pu?>;=Ap0m\ZfDXzU3ba`L2]Oqa<[kC3a4AlMAen5VYW_i:hEzJDmadODaW=qTmYumx`aVH1C\:e]y7w=fG>T9V"
+565,"olG7<eZ[xr`m8Kfa@tpMxhAH?8vwAuc_p=QVP]nxovUeLp=@fjQ]5iyc2SM;<TQDNuOTYPo:yGoJgrxhLXOT3cjgJKcjdHrMJwzi1^sIwfSKF_B3QxqeE_KdHb7mE]a?kGNHdTnDslG7\YeB?c0SHtCbzpcuDm\\M2LP?U\s4YWb;mpbnpJKUSL]<b1gf17fJ\6EE^`J"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
 pDim
 pHier
@@ -33,7 +33,8 @@ pSub
 pMDXExpr
 pConvertToStatic
 pTemp
-561,7
+pAlias
+561,8
 1
 2
 2
@@ -41,7 +42,8 @@ pTemp
 2
 1
 1
-590,7
+2
+590,8
 pLogOutput,0
 pDim,""
 pHier,""
@@ -49,14 +51,16 @@ pSub,""
 pMDXExpr,""
 pConvertToStatic,1
 pTemp,1
-637,7
-pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"REQUIRED: Dimension name"
-pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"REQUIRED: Subset name"
-pMDXExpr,"REQUIRED: Valid MDX Expression for Specified Dimension"
-pConvertToStatic,"OPTIONAL: Bolean: 1 = True (convert to static subset)"
-pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
+pAlias,""
+637,8
+pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"Required: Dimension name"
+pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"Required: Subset name"
+pMDXExpr,"Required: Valid MDX Expression for Specified Dimension"
+pConvertToStatic,"Optional: Bolean: 1 = True (convert to static subset)"
+pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pAlias,"Optional: Set Alias for Subset"
 577,0
 578,0
 579,0
@@ -64,7 +68,7 @@ pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,137
+572,147
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -200,6 +204,16 @@ If( nErrors = 0 );
     EndIf;
   EndIf;
 EndIf;
+
+### Set Alias ###
+If(pAlias @<> '' );
+  If ( pDim @= sHier );
+    SubsetAliasSet( pDim, pSub, pAlias);
+  Else;
+    SubsetAliasSet( pDim | ':' | sHier, pSub, pAlias);
+  EndIf;
+EndIf;
+
 
 ### End Prolog ###
 573,5

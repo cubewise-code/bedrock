@@ -470,7 +470,7 @@ If( pAttr = 1 & DimensionExists( sDimAttr ) = 1 & Scan( sDim|pDelim, sAttrDone )
         AsciiOutput( sFileName, Expand('If( DimIx( sDimAttr, ''%sAttrStrOut%'' ) = 0 );') );
         AsciiOutput( sFileName, Expand('    AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
         AsciiOutput( sFileName, 'Else;' );
-        AsciiOutput( sFileName, Expand('    If( DType( sDimAttr, ''%sAttrStrOut%'' ) @<> ''%sAttrTyp%'' );') );
+        AsciiOutput( sFileName, Expand('    If( DType( sDimAttr, ''%sAttrStrOut%'' ) @<> ''A%sAttrTyp%'' );') );
         AsciiOutput( sFileName, Expand('        AttrDelete( sDim, ''%sAttrStrOut%'' );') );
         AsciiOutput( sFileName, Expand('        AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
         AsciiOutput( sFileName, '    EndIf;' );
