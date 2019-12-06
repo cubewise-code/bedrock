@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"riz_sMKTT<bv_7u7Pwao[i^^eZQ6=g_rFO2uVUNXa8uLNytJ4Xo7U^YQcvY\ZwObS3b\wj5Gq_k[qoCckx6mj1djDvfV`ogRZ4kdS=:hZ_Kvmi_;y<Y=W?l1vGTgkSvrn0w<1:u]TvRV0iLFdiuba:8IYh3IDC2Tze@2LwnrQ;`kVf9S3?N?1E2zxw:z6Iv3L6gb7xA0"
+565,"xlnCRcCmGitpQYqHI<TmgQRAap8y]E>tVh6A?MxGm=z\Mihzm_E9fIhieuKrx1]othtNfNznMD4^FLHPrPujNrBA9>mWYRQvYOL]8yAKbMBXIz<B>BXB<eEh6g@sktvf>BdMPVF8[lOThfTkFo;@@0]o]VqRrlCmH?PxbY]pNkfm8\vs<0a4XZpmm^RRt7RXH^7ViIke"
 559,1
 928,0
 593,
@@ -299,7 +299,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,536
+574,541
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -503,9 +503,14 @@ If( pEle @<> '' );
                 sEle = Trim( SubSt( sEles, 1, nEleDelimiterIndex - 1 ) );
                 sEles = Trim( Subst( sEles, nEleDelimiterIndex + Long( pDelim ), Long( sEles ) ) );
             EndIf;
-            # Create MDX for subset of eles using Wildcard Pattern filter (means pEle entry MUST use principal name)
-            sEleExp = '"'|sEle|'"';
-            sMdxPart = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [%sDim%].[%sHier%] ), %sEleExp% )}');
+            If( Scan( '*', sEle ) > 0 % Scan( '?', sEle ) > 0 );
+                # Create MDX for subset of eles using Wildcard Pattern filter (means pEle entry MUST use principal name)
+                sEleExp = '"'|sEle|'"';
+                sMdxPart = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [%sDim%].[%sHier%] ), %sEleExp% )}');
+            Else;
+                # Create MDX of single element and all descendants
+                sMDXPart = Expand('{TM1DRILLDOWNMEMBER( {[%sDim%].[%sHier%].[%sEle%]}, ALL, RECURSIVE )}');
+            EndIf;
             If( sMDX @= ''); 
                 sMDX = sMdxPart; 
             Else;
