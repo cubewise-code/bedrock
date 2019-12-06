@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"sN<>uTKiGFAx_E[QE6BaIgpHrG;7P<5VgRiB2:2v]HvsgNG6eq\YJ6HIqMcuBFqSmXqrrUThsGOI@@ZUng80VMmCJ`lw6jbhT9cTO6O5f7>9qN:ygbp\<8FIxVyf6mSUO5AEteOJuuso;F]BD0m54mWnn@lIc?kGfKo?39huY1oL`L;jlgih4C[mZquY\nk50;LMdo5?"
+565,"qZEEu@^wOX>zfr7d9aUJ?clB_TUgdMZtta8Kv8YQq=3C>iuk64?w7kbfkr8p=4hr>rQZwl61GYR>zZjqbY@SgAYT<pKKC<KNj>Z83bI`S:itpa[?w^?`rzSIG_T5^tE__TxBj6;Osg3n?bi\Hx]@rO=]J=CV6D725dhDIy@x`>kBrj=pal=@GI7BbgWCl?_9gX_3i=F8"
 559,1
 928,0
 593,
@@ -74,7 +74,7 @@ pParallelThreads,"OPTIONAL: Ignored if pFilterParallel is empty. Maximum number 
 pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
 pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
-pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pTemp,"OPTIONAL: Make Views and subsets Temporary (1=Temporary)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 577,0
@@ -84,7 +84,7 @@ pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid
 581,0
 582,0
 603,0
-572,454
+572,470
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -361,22 +361,30 @@ While( nCubeDelimiterIndex <> 0 );
 
             ### Zero Out View ###
             If ( nRes = ProcessExitNormal() );
-              sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-              CubeSetLogChanges( sCube, pCubeLogging);
+              If ( pCubeLogging <= 1 );
+                sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+                CubeSetLogChanges( sCube, pCubeLogging);
+              EndIf;
               ViewZeroOut( sCube, cView );
               sMessage = Expand( 'Succeeded in creating the %cView% view in the %sCube% cube and data has been cleared.' );
               LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
-              CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+              If ( pCubeLogging <= 1 );
+                CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+              EndIf;
             Else;
               nErrors = nErrors + 1;
               sMessage = Expand( 'Creating view by %sProc% has failed. Nothing has been cleared in the %sCube% cube.' );
               LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
             EndIf;
           Else;
-            sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-            CubeSetLogChanges( sCube, pCubeLogging);
+            If ( pCubeLogging <= 1 );
+              sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+              CubeSetLogChanges( sCube, pCubeLogging);
+            EndIf;
             ViewZeroOut( sCube, cView );
-            CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+            If ( pCubeLogging <= 1 );
+              CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+            EndIf;
           Endif;
         Endif;
       EndIf;
@@ -508,22 +516,30 @@ While( nCubeDelimiterIndex <> 0 );
   
               ### Zero Out View ###
               IF ( nRes = ProcessExitNormal() );
-                sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-                CubeSetLogChanges( sCube, pCubeLogging);
+                If ( pCubeLogging <= 1 );
+                  sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+                  CubeSetLogChanges( sCube, pCubeLogging);
+                EndIf;
                 ViewZeroOut( sCube, cView );
                 sMessage = Expand( 'Succeeded in creating the %cView% view in the %sCube% cube and data has been cleared.' );
                 LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
-                CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+                If ( pCubeLogging <= 1 );
+                  CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+                EndIf;
               ELSE;
                 nErrors = nErrors + 1;
                 sMessage = Expand( 'Creating view by %sProc% has failed. Nothing has been cleared in the %sCube% cube.' );
                 LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
               ENDIF;
             Else;
-              sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-              CubeSetLogChanges( sCube, pCubeLogging);
+              If ( pCubeLogging <= 1 );
+                sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+                CubeSetLogChanges( sCube, pCubeLogging);
+              EndIf;
               ViewZeroOut( sCube, cView );
-              CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+              If ( pCubeLogging <= 1 );
+                CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+              EndIf;
             Endif;
           EndIf;
         EndIf;
