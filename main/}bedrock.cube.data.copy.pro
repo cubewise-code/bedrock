@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"kZgYXnSpZ7SaY1>3]\pcDyhqMJqwOU9\oC@N1hwPc\t?r=3w]2b<z35?cNzwXCK?3kbqDxqe>0]dWeq[gsLZ^IK`m[\jH`rdwb?Isy:CJhA8LCSi1GcVI?Tht7IvYexS:Io8xaX=XuxHN_ewgPjbXi=oekjyzH2kOAQ@vtSWul9?zuod>D98AK8Pg5c_BVPxTT7hK5Xy"
+565,"kh=U=NIEf]EakS0iox=mRolTyJ_1rbuQb7pW^>u46TPP4Rk8u0W;TUFkGFh]myVMsRI<JpDu>f6ah5B]^GHXu5_UwzV:HRZJ=VdKCfei:yF@al_Uw6lrhq:P8_1WZVgM6oi7<B=N]K4p2\yTgnWU_BALQ8htQlLsRRDQ=zwTpz\ksG4;9<uELSX]^qOA:0Sop4QMLdFT"
 559,1
 928,0
 593,
@@ -114,7 +114,7 @@ pCumulate,"OPTIONAL: 1 = Add source to existing value in target (if zero out tar
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
 pZeroSource,"OPTIONAL: Zero out Source Element AFTER Copy? (Boolean 1=True)"
 pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"OPTIONAL: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 577,51
@@ -430,7 +430,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,797
+572,799
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1215,8 +1215,10 @@ Else;
         ProcessBreak;
   ENDIF;
   
-  sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
-  CubeSetLogChanges( pCube, pCubeLogging);
+  If ( pCubeLogging <= 1 );
+    sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
+    CubeSetLogChanges( pCube, pCubeLogging);
+  EndIf;
   ### Assign Datasource ###
   DataSourceType          = 'VIEW';
   DatasourceNameForServer = pCube;
@@ -1681,7 +1683,7 @@ ElseIf( nDimensionCount = 27 );
 
 
 ### End Data ###
-575,53
+575,55
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1717,7 +1719,9 @@ If( nThreadMode <> 0 );
   ENDIF;
 
 Else;
-  CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+  If ( pCubeLogging <= 1 );
+    CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+  EndIf;
 EndIf;
 
 ### Return code & final error message handling

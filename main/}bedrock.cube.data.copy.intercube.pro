@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"c6Ia;xWP=5U_7];PbYAYzNKrI^?m6qCohSN>X1JvMWIS:?OEhfUE6`<nuPTI;Zino>f>0KKfGWz21VUs0o_5;rxwEGUbZSAdSWd0FRtxvoO57_fPyKyk[GkRH5z=UOljEmsSlEetp7fCshm[d47KgwNjS4kR>e[wP:`^vJs592VZlF=CEpT>U9L0p:OwCvDF_yj;9tDj"
+565,"cr;aJYQ^HeXoNZj\3g[L\m9lG>QD6ukw1vY@=6FVmVe@PaqHY<;`^L6gjFzUQhP3OtdYHhZ^SR<5JTWdh]^>V:xXV3D\Pm18HCxQ[vGVszLTfKi33@YI5JeX;9=msW`nKJedJZ@<iu:hPCuuw;42T=l88DY\kIm`^?f`ql3iBqqex3TvZON0PAawDT30>NQI0ylF1U2["
 559,1
 928,0
 593,
@@ -102,7 +102,7 @@ pDimDelim,"OPTIONAL. Delimiter for start of Dimension/Element set"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list"
 pEleDelim,"OPTIONAL: Delimiter between elements"
 pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"OPTIONAL: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 577,29
@@ -286,7 +286,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1100
+572,1101
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1324,8 +1324,7 @@ Else;
           ProcessBreak;
       ENDIF;
   
-      sProc = '}bedrock.cube.data.clear';
-      nRet = ExecuteProcess( sProc,
+      nRet = ExecuteProcess( '}bedrock.cube.data.clear',
           'pLogOutput', pLogOutput,
           'pCube', pTgtCube,
           'pView', sTargetView,
@@ -1378,8 +1377,10 @@ Else;
   
   
   ### Assign Datasource ###
-  sCubeLogging = CellGetS('}CubeProperties', pTgtCube, 'LOGGING' );
-  CubeSetLogChanges( pTgtCube, pCubeLogging);
+  If ( pCubeLogging <= 1 );
+    sCubeLogging = CellGetS('}CubeProperties', pTgtCube, 'LOGGING' );
+    CubeSetLogChanges( pTgtCube, pCubeLogging);
+  EndIf;
   
   ### Assign Datasource ###
   DataSourceType          = 'VIEW';
@@ -1731,7 +1732,7 @@ sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);
 
 
 
-575,35
+575,41
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1740,14 +1741,20 @@ sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);
 If( pThreadMode <> 0 );
   ## Zero Source
   If( pZeroSource = 1 & nErrors = 0  );
-    sCubeLogging = CellGetS('}CubeProperties', pSrcCube, 'LOGGING' );
-    CubeSetLogChanges( pSrcCube, pCubeLogging);
+    If ( pCubeLogging <= 1 );
+      sCubeLogging = CellGetS('}CubeProperties', pSrcCube, 'LOGGING' );
+      CubeSetLogChanges( pSrcCube, pCubeLogging);
+    EndIf;
     ViewZeroOut( pSrcCube, sView );
-    CubeSetLogChanges( pSrcCube, IF(sCubeLogging@='YES',1,0) );
+    If ( pCubeLogging <= 1 );
+      CubeSetLogChanges( pSrcCube, IF(sCubeLogging@='YES',1,0) );
+    EndIf;
   EndIf;
 Else;
   ## Switch back logging on Tgt Cube
-  CubeSetLogChanges( pTgtCube, IF(sCubeLogging@='YES',1,0) );
+  If ( pCubeLogging <= 1 );
+    CubeSetLogChanges( pTgtCube, IF(sCubeLogging@='YES',1,0) );
+  EndIf;
 EndIf;    
 
 ### Return code & final error message handling
