@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"iHz_xghYQaEGmVlLkBxncH64LZV7OD40alRW]F1<CskY;[MLfkxNkjt[6o]DSa]FVC9GY=?G9NtYnOt0k9dXPhtNun:4Ce`kFLw9C9CkdRqkE<bssJD9pM0VJn0<2zE@myibw\HAZm1l0RZWVMRHAI4G^Yk=wflYDoN_8\ndjHSVhSJGzV3Dh:0_ER[KvbARW?Kb;YeD"
+565,"qDb5?gpFTJg;2M83hadav3=]<l<a9XPZBWoFI3RnR9fDtfhJejpREL_A7a^5IRNxyhhnNnwb0[3FSssKUQzMsPZ=:ef?DgwxQyqt_^]H]sAjVK<[iIV9nJKBLcCzrl<k<LRxF\oQdQ<PhTLS6nXeWXd4<9K`=ggEC]5H`;trTmDvhRJY6So4=eYu[<=r4M\Szo>HD9m7"
 559,1
 928,0
 593,
@@ -105,7 +105,7 @@ pSuppressZero,"OPTIONAL: Suppress Zero Values (1=Suppress)"
 pSuppressConsol,"OPTIONAL: Suppress Consolidated Values? (1=Suppress)"
 pSuppressRules,"OPTIONAL: Suppress Rule Values? (1=Suppress)"
 pZeroSource,"OPTIONAL: Zero Out view AFTER Copy? (Boolean 1=True)"
-pCubeLogging,"OPTIONAL: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pTemp,"OPTIONAL: Retain temporary view and Subset ( 0 = retain View and Subsets 1 = use temp objects)"
 pFilePath,"OPTIONAL: Export Directory (will default to error file path)"
 pFileName,"OPTIONAL: Export Filename (If Left Blank Defaults to cube_export.csv)"
@@ -1127,7 +1127,7 @@ ENDIF;
 AsciiOutput( cExportFile, Expand(sRow) );
 
 ### End Data ###
-575,34
+575,38
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1138,10 +1138,14 @@ AsciiOutput( cExportFile, Expand(sRow) );
 
 ### Delete source data ###
 If( pZeroSource = 1 & nErrors = 0 & nParallelRun = 0 );
-    sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
-    CubeSetLogChanges( pCube, pCubeLogging);
+    If ( pCubeLogging <= 1 );
+      sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
+      CubeSetLogChanges( pCube, pCubeLogging);
+    EndIf;
     ViewZeroOut( pCube, cView );
-    CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) ); 
+    If ( pCubeLogging <= 1 );
+      CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) ); 
+    EndIf;
 EndIf;
 
 ### Return code & final error message handling

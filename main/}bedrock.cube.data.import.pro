@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"fWcRFQaFHA?K5ZvoHCZKeB9Q_DiWGF4Xu7P^gMfCNGyBQ[1^_mgbLYK`Gdx6NvsHrUU_=yukS5l<Dhvk>\NV`C1dJxJOFEAzkCV0mBwvAFKLPG;Mr0xGP08KObQniF_xkFbDo?@<c:V<:348aj0?^GUENKUCgzQi2el8Ycs]l>z7Q_4LTgcv9F8Aa?kf]UVMvmkj5dv^"
+565,"om6znjN6E>J:zQ3aB<[dK<>MW`Y4<cje=IJAktz0NoaX6UNA?s5yU]m>X5\2_^;FH6awGErRSBWaj0nYoYr0a4?\RqV`?<<Qlqc;B[TXLRjtfKwNsGNCOJ@4LW;wPaS<M064cgYq:w[pA[y9UAZ;LcXW8T=Ck@g`7:oH8_CGlVx`Yj`Eze;Z_`dgqJaA9i\GkyUIycRq"
 559,1
 928,0
 593,
@@ -79,7 +79,7 @@ pTitleRows,"REQUIRED: Number of Title Rows to Skip"
 pDelim,"REQUIRED: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"REQUIRED: Quote (Accepts empty quote, exactly 3 digits = ASCII code)"
 pCumulate,"REQUIRED: Accumulate Amounts (0 = Overwrite values, 1 = Accumulate values)"
-pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 577,30
 v1
@@ -268,7 +268,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,325
+572,327
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -582,8 +582,10 @@ sDim26 = TabDim( pCube, 26 );
 sDim27 = TabDim( pCube, 27 );
 
 #CubeLogging
-sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
-CubeSetLogChanges( pCube, pCubeLogging);
+If ( pCubeLogging <= 1 );
+  sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
+  CubeSetLogChanges( pCube, pCubeLogging);
+EndIf;
 
 ### Assign Datasource ###
 DataSourceType                  = 'CHARACTERDELIMITED';
@@ -1079,7 +1081,7 @@ ElseIf( nDimensionCount = 27 );
 ## Increase Record count
 nRecordPostedCount = nRecordPostedCount + 1;
 ### End Data ###
-575,36
+575,38
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1089,7 +1091,9 @@ nRecordPostedCount = nRecordPostedCount + 1;
 ################################################################################################# 
 
 #Cube Logging
-CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+If ( pCubeLogging <= 1 );
+  CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+EndIf;
     
 ### If errors occurred terminate process with a major error status ###
 If( nErrors > 0 );

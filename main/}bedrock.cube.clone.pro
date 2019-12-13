@@ -4,7 +4,7 @@
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"cY8yQlU[?Xx<I@ULBU47dVVcitve9FX?FoD2u8RiyE[[\ni[@xp;`hCGGSugdY|vGOaxZvuig1FZN[9aS\tksau_Y7HBZv]f0GK1]?NxDjxo4LclXIfSyu8Gk2VZ\2Z6QrEIblqU:L<S`ONaGFP6mRduxoos2SW3]LbmrF}ZvlMelTlH6ddxZMrniBt?CJf[@B\U1Gu`"
+565,"biygQyNLrIp^^4n0F3]@@55wO3r^lS=264Al_0E>J25JIkinTruTO_y5=PuGeVr6<L^vj7S:XGJzA]iQjHCwy6]zLcG2TOTQ>7g<M2ZQaGhhvnolX5g;9\M0R7mTW2L_RyeKBx3Sdr1ZPX6mG?l0m9mQZ[Drf=vKSHiMDO~:4s@amTMJ1NffwDBk=KVb\EVW0WBN@a5o"
 559,1
 928,0
 593,
@@ -76,7 +76,7 @@ pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if
 pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
 pSuppressRules,"REQUIRED: Skip rule values? (1=skip)"
 pTemp,"REQUIRED: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 577,28
 v1
 v2
