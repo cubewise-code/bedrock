@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"om6znjN6E>J:zQ3aB<[dK<>MW`Y4<cje=IJAktz0NoaX6UNA?s5yU]m>X5\2_^;FH6awGErRSBWaj0nYoYr0a4?\RqV`?<<Qlqc;B[TXLRjtfKwNsGNCOJ@4LW;wPaS<M064cgYq:w[pA[y9UAZ;LcXW8T=Ck@g`7:oH8_CGlVx`Yj`Eze;Z_`dgqJaA9i\GkyUIycRq"
+565,"sq7JXQXj>WjW3l97c3`a8C^z;J`f<l7?YLke:mvNk<NZMaLFmuCK1IVa6qDiuGmlbn3t_J6=vYAfn8?>U=EtDISRL_g>upiKcqSkC@4zic;c1Vf@[cWdRjL8VrUsip[JTV[PS3P\5D>tpVx9QFwPRAz;Qb;`9?SDv7He9m[HCISDKMq_usiZkfSI;VBxL5x0:zHBq2_u"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,2
 592,0
 599,1000
-560,13
+560,18
 pLogOutput
 pCube
 pSrcDir
@@ -39,7 +39,12 @@ pQuote
 pCumulate
 pCubeLogging
 pSandbox
-561,13
+pZeroFilter
+pMappingToNewDims
+pDimDelim
+pEleStartDelim
+pEleDelim
+561,18
 1
 2
 2
@@ -53,7 +58,12 @@ pSandbox
 1
 1
 2
-590,13
+1
+2
+2
+2
+2
+590,18
 pLogOutput,0
 pCube,""
 pSrcDir,""
@@ -67,7 +77,12 @@ pQuote,""""
 pCumulate,0
 pCubeLogging,0
 pSandbox,""
-637,13
+pZeroFilter,0
+pMappingToNewDims,""
+pDimDelim,"&"
+pEleStartDelim,"¦"
+pEleDelim,"+"
+637,18
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Target Cube"
 pSrcDir,"OPTIONAL: Source Directory (will default to error log path)"
@@ -81,6 +96,11 @@ pQuote,"REQUIRED: Quote (Accepts empty quote, exactly 3 digits = ASCII code)"
 pCumulate,"REQUIRED: Accumulate Amounts (0 = Overwrite values, 1 = Accumulate values)"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
+pZeroFilter,"OPTIONAL: Source file includes Zero out filter (0=No filter line in source file, 1=Ignore filter line, 2=Perform ZeroOut using filter line)"
+pMappingToNewDims,"REQUIRED IF TARGET HAS DIMS NOT IN SOURCE: DimX¦InputElementForDimX & DimY¦InputElementForDimY (specify an N level element for each new dim)"
+pDimDelim,"OPTIONAL. Delimiter for start of Dimension/Element set"
+pEleStartDelim,"OPTIONAL: Delimiter for start of element list"
+pEleDelim,"OPTIONAL: Delimiter between elements"
 577,30
 v1
 v2
@@ -268,7 +288,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,327
+572,975
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -320,10 +340,13 @@ cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pCube:%pCube%, pDim:%pDim%, pSrcEle:%pSrcEle%, pTgtEle:%pTgtEle%, pTitleRows:%pTitleRows%, pDelim:%pDelim%, pQuote:%pQuote%, pCumulate:%pCumulate%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%';   
+cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pCube:%pCube%, pDim:%pDim%, pSrcEle:%pSrcEle%, pTgtEle:%pTgtEle%, pTitleRows:%pTitleRows%, pDelim:%pDelim%, pQuote:%pQuote%, pCumulate:%pCumulate%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pZeroFilter:%pZeroFilter%, pMappingToNewDims:%pMappingToNewDims%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%.';   
 cLenASCIICode = 3;
 
 pDelimiter        = TRIM(pDelim);
+sDelimDim           = TRIM(pDimDelim);
+sElementStartDelim  = TRIM(pElEStartDelim);
+sDelimElem          = TRIM(pEleDelim);
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -541,6 +564,18 @@ ELSEIf( nDimensionIndex = 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ENDIF;
 
+        ## Default filter delimiters
+        If( pDimDelim     @= '' );
+            pDimDelim     = '&';
+        EndIf;
+        If( pEleStartDelim@= '' );
+            pEleStartDelim= '¦';
+        EndIf;
+        If( pEleDelim     @= '' );
+            pEleDelim     = '+';
+        EndIf;
+        
+
 If( nDimensionCount > 27 );
   sMessage = 'Cube has too many dimensions: ' | pCube | ' max 27 dimensions.';
   nErrors = nErrors + 1;
@@ -581,6 +616,639 @@ sDim25 = TabDim( pCube, 25 );
 sDim26 = TabDim( pCube, 26 );
 sDim27 = TabDim( pCube, 27 );
 
+### Placeholders for mappped dimensions
+nMappedDim1 = 0;
+nMappedDim2 = 0;
+nMappedDim3 = 0;
+nMappedDim4 = 0;
+nMappedDim5 = 0;
+nMappedDim6 = 0;
+nMappedDim7 = 0;
+nMappedDim8 = 0;
+nMappedDim9 = 0;
+nMappedDim10 = 0;
+nMappedDim11 = 0;
+nMappedDim12 = 0;
+nMappedDim13 = 0;
+nMappedDim14 = 0;
+nMappedDim15 = 0;
+nMappedDim16 = 0;
+nMappedDim17 = 0;
+nMappedDim18 = 0;
+nMappedDim19 = 0;
+nMappedDim20 = 0;
+nMappedDim21 = 0;
+nMappedDim22 = 0;
+nMappedDim23 = 0;
+nMappedDim24 = 0;
+nMappedDim25 = 0;
+nMappedDim26 = 0;
+nMappedDim27 = 0;
+
+sMappedV1 = '';
+sMappedV2 = '';
+sMappedV3 = '';
+sMappedV4 = '';
+sMappedV5 = '';
+sMappedV6 = '';
+sMappedV7 = '';
+sMappedV8 = '';
+sMappedV9 = '';
+sMappedV10 = '';
+sMappedV11 = '';
+sMappedV12 = '';
+sMappedV13 = '';
+sMappedV14 = '';
+sMappedV15 = '';
+sMappedV16 = '';
+sMappedV17 = '';
+sMappedV18 = '';
+sMappedV19 = '';
+sMappedV20 = '';
+sMappedV21 = '';
+sMappedV22 = '';
+sMappedV23 = '';
+sMappedV24 = '';
+sMappedV25 = '';
+sMappedV26 = '';
+sMappedV27 = '';
+sMappedV28 = '';
+
+### Placeholders for new dimensions
+nNewDim1 = 0;
+nNewDim2 = 0;
+nNewDim3 = 0;
+nNewDim4 = 0;
+nNewDim5 = 0;
+nNewDim6 = 0;
+nNewDim7 = 0;
+nNewDim8 = 0;
+nNewDim9 = 0;
+nNewDim10 = 0;
+nNewDim11 = 0;
+nNewDim12 = 0;
+nNewDim13 = 0;
+nNewDim14 = 0;
+nNewDim15 = 0;
+nNewDim16 = 0;
+nNewDim17 = 0;
+nNewDim18 = 0;
+nNewDim19 = 0;
+nNewDim20 = 0;
+nNewDim21 = 0;
+nNewDim22 = 0;
+nNewDim23 = 0;
+nNewDim24 = 0;
+nNewDim25 = 0;
+nNewDim26 = 0;
+nNewDim27 = 0;
+
+sNewV1 = '';
+sNewV2 = '';
+sNewV3 = '';
+sNewV4 = '';
+sNewV5 = '';
+sNewV6 = '';
+sNewV7 = '';
+sNewV8 = '';
+sNewV9 = '';
+sNewV10 = '';
+sNewV11 = '';
+sNewV12 = '';
+sNewV13 = '';
+sNewV14 = '';
+sNewV15 = '';
+sNewV16 = '';
+sNewV17 = '';
+sNewV18 = '';
+sNewV19 = '';
+sNewV20 = '';
+sNewV21 = '';
+sNewV22 = '';
+sNewV23 = '';
+sNewV24 = '';
+sNewV25 = '';
+sNewV26 = '';
+sNewV27 = '';
+
+###########################################
+### SPLIT MAPPING TO NEW DIMS PARAMETER ###
+###########################################
+
+nTargetCubeDimensionCount   = nDimensionCount;
+
+sElementMapping = TRIM( pMappingToNewDims );
+nChar = 1;
+nCharCount = LONG( sElementMapping );
+
+sTargetFilter = '';
+sWord = '';
+sLastDelim = '';
+nIndex = 1;
+
+# Add a trailing element delimiter so that the last element is picked up
+If( nCharCount > 0 );
+  sElementMapping = sElementMapping | sDelimDim;
+  nCharCount = nCharCount + LONG(sDelimDim);
+EndIf;
+
+WHILE (nChar <= nCharCount);
+    sChar = SUBST( sElementMapping, nChar, 1);
+
+    # Used for delimiters, required for multiple character delimiters
+    sDelim = '';
+    nAddExtra = 0;
+
+    # Ignore spaces
+    IF (TRIM(sChar) @<> '' );
+
+      ### Dimension Name ###
+
+      # If the delimiter is more than 1 character peek ahead the same amount
+      # Ignore the first character
+      sDelim = sChar;
+      nCount = LONG(sElementStartDelim) - 1;
+      If( nCount > 0 & nChar + nCount <= nCharCount );
+        # Add the extra characters
+        sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
+        # Move to the end of the delimter
+        nAddExtra = nCount;
+      EndIf;
+
+      If( sDelim @= sElementStartDelim );
+
+        sChar = sDelim;
+
+        If( sLastDelim @<> '' & sLastDelim @<> sDelimDim );
+            sMessage = 'In pMappingToNewDims the name of a dimension must follow a dimension delimiter (' | sDelimDim | ')';
+            nErrors = nErrors + 1;
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            #ProcessError();
+        EndIf;
+
+        # Found a dimension
+        sDimension = sWord;
+
+        If( DimensionExists( sDimension ) = 0 );
+            # The dimension does not exist in the model. Cancel process
+            sMessage = 'In pMappingToNewDims - Dimension: ' | sDimension | ' does not exist';
+            nErrors = nErrors + 1;
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            #ProcessError();
+        EndIf;
+        
+        ### Determine the dimension is a member of the cube ###
+        nMapCount = 1;
+        nMapDimensionIndex = 0;
+        While( TabDim( pCube, nMapCount ) @<> '' );
+            sMapCubeDimName = TabDim( pCube, nMapCount );
+            If( sDimension @= sMapCubeDimName );
+                nMapDimensionIndex = nMapCount;
+            EndIf;
+            nMapCount = nMapCount + 1;
+        End;
+
+        If( nMapDimensionIndex = 0 );
+            # The dimension does not exist in the cube. Cancel process
+            sMessage = 'Dimension: ' | sDimension | ' is not a member of: '| pCube | ' cube.';
+            nErrors = nErrors + 1;
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            ProcessBreak;
+        EndIf;
+
+        # Find the index of the dimension is in the Target cube
+        nTargetIndexCounter = 1;
+
+        WHILE(nTargetIndexCounter <= nTargetCubeDimensionCount );
+          sNthDimension = TabDim( pCube, nTargetIndexCounter );
+
+          If(sDimension @= sNthDimension);
+            nTargetIndex = nTargetIndexCounter;
+            nTargetIndexCounter = 1000;
+          EndIf;
+
+          nTargetIndexCounter = nTargetIndexCounter + 1;
+        END;
+        
+        #Add to the Target filter
+        IF(sTargetFilter@='');
+          sTargetFilter=sDimension;          
+        Else;
+          sTargetFilter=sTargetFilter|sDelimDim|sDimension;
+        Endif;  
+          
+        sLastDelim = sChar;
+        # Clear the word
+        sWord = '';
+
+      Else;
+
+        # Reset extra chars
+        nAddExtra = 0;
+
+        ### Check both dim delimiter and element delimiter ###
+        nIsDelimiter = 0;
+
+        ## Check dimension delimiter first
+        # If the delimiter is more than 1 character peek ahead the same amount
+        # Ignore the first character
+        sDelim = sChar;
+        nCount = LONG(sDelimDim) - 1;
+        If( nCount > 0 & nChar + nCount <= nCharCount );
+          # Add the extra characters
+          sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
+          # Move to the end of the delimter
+          nAddExtra = nCount;
+        EndIf;
+
+        If( sDelim @= sDelimDim );
+          nIsDelimiter = 1;
+          sChar = sDelim;
+        EndIf;
+
+        If ( nIsDelimiter = 1 );
+
+          If( sLastDelim @= '' % sLastDelim @= sDelimDim );
+            sMessage = 'In pMappingToNewDims - an element delimiter must follow a dimension name: ' |  sChar | ' (' | NumberToString(nChar) | ')';
+            nErrors = nErrors + 1;
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            #ProcessError();
+          EndIf;
+
+          # an element has been found
+          sElement = sWord;
+
+          If( DIMIX( sDimension, sElement ) = 0 );
+              # The element does not exist in the dimension. Cancel process
+              sMessage = 'In pMappingToNewDims - Element: ' | sElement | ' in dimension ' | sDimension | ' does not exist';
+              nErrors = nErrors + 1;
+              LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+              #ProcessError();
+          EndIf;
+
+          # Allow consolidations only if pSuppressConsol is set to 0
+
+          If ( DTYPE( sDimension, sElement) @= 'C' );
+            sMessage = Expand( 'In pMappingToNewDims - Target element: %sElement% for dimension %sDimension% is consolidated' );
+            nErrors = nErrors + 1;
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            #ProcessError();
+          Endif;  
+          
+
+          # Add the element to the source or target depending on whether it's the first or the second element
+          # Get principal name
+          # in case source element and this element are using different aliases
+
+          sElement = DimensionElementPrincipalName(sDimension,sElement);
+
+          ### Update the variable for InputElement Target Dim ######################################
+          If(nTargetIndex = 1);
+            nNewDim1 = 1;
+            sNewV1 = sElement;
+          ElseIf(nTargetIndex = 2);
+            nNewDim2 = 1;
+            sNewV2 = sElement;
+          ElseIf(nTargetIndex = 3);
+            nNewDim3 = 1;
+            sNewV3 = sElement;
+          ElseIf(nTargetIndex = 4);
+            nNewDim4 = 1;
+            sNewV4 = sElement;
+          ElseIf(nTargetIndex = 5);
+            nNewDim5 = 1;
+            sNewV5 = sElement;
+          ElseIf(nTargetIndex = 6);
+            nNewDim6 = 1;
+            sNewV6 = sElement;
+          ElseIf(nTargetIndex = 7);
+            nNewDim7 = 1;
+            sNewV7 = sElement;
+          ElseIf(nTargetIndex = 8);
+            nNewDim8 = 1;
+            sNewV8 = sElement;
+          ElseIf(nTargetIndex = 9);
+            nNewDim9 = 1;
+            sNewV9 = sElement;
+          ElseIf(nTargetIndex = 10);
+            nNewDim10 = 1;
+            sNewV10 = sElement;
+          ElseIf(nTargetIndex = 11);
+            nNewDim11 = 1;
+            sNewV11 = sElement;
+          ElseIf(nTargetIndex = 12);
+            nNewDim12 = 1;
+            sNewV12 = sElement;
+          ElseIf(nTargetIndex = 13);
+            nNewDim13 = 1;
+            sNewV13 = sElement;
+          ElseIf(nTargetIndex = 14);
+            nNewDim14 = 1;
+            sNewV14 = sElement;
+          ElseIf(nTargetIndex = 15);
+            nNewDim15 = 1;
+            sNewV15 = sElement;
+          ElseIf(nTargetIndex = 16);
+            nNewDim16 = 1;
+            sNewV16 = sElement;
+          ElseIf(nTargetIndex = 17);
+            nNewDim17 = 1;
+            sNewV17 = sElement;
+          ElseIf(nTargetIndex = 18);
+            nNewDim18 = 1;
+            sNewV18 = sElement;
+          ElseIf(nTargetIndex = 19);
+            nNewDim19 = 1;
+            sNewV19 = sElement;
+          ElseIf(nTargetIndex = 20);
+            nNewDim20 = 1;
+            sNewV20 = sElement;
+          ElseIf(nTargetIndex = 21);
+            nNewDim21 = 1;
+            sNewV21 = sElement;
+          ElseIf(nTargetIndex = 22);
+            nNewDim22 = 1;
+            sNewV22 = sElement;
+          ElseIf(nTargetIndex = 23);
+            nNewDim23 = 1;
+            sNewV23 = sElement;
+          ElseIf(nTargetIndex = 24);
+            nNewDim24 = 1;
+            sNewV24 = sElement;
+          ElseIf(nTargetIndex = 25);
+            nNewDim25 = 1;
+            sNewV25 = sElement;
+          ElseIf(nTargetIndex = 26);
+            nNewDim26 = 1;
+            sNewV26 = sElement;
+          ElseIf(nTargetIndex = 27);
+            nNewDim27 = 1;
+            sNewV27 = sElement;
+          EndIf;
+
+          #Add to the Target filter - no need to manage element separators, since just one target element is possible in mapping
+          sTargetFilter=sTargetFilter|sDelimElem|sElement;
+          
+          # Clear the word
+          sWord = '';
+          sLastDelim = sChar;
+ 
+        Else;
+          sWord = sWord | sChar;
+        EndIf;
+
+      EndIf;
+
+    EndIf;
+
+    nChar = nChar + nAddExtra + 1;
+
+END;
+
+
+###########################################
+#Region ### MAPPING Target DIMENSIONS #####
+###########################################
+
+## Source index starting from 2, since first columns holds the export cube name
+nSourceIndex = 2;
+nTargetIndex = 1;
+WHILE(TabDim( pCube, nTargetIndex ) @<> '');
+  sTargetDim = TabDim( pCube, nTargetIndex );
+  
+  If(nTargetIndex = 1);
+    If( nNewDim1 = 0 );
+      nMappedDim1 = 1;
+      sMappedV1  = 'V' | NumberToString(nSourceIndex);
+      nSourceIndex = nSourceIndex + 1;
+    Else;
+      
+    EndIf;
+  ElseIf(nTargetIndex = 2 & nNewDim2 = 0);
+    nMappedDim2 = 1;
+    sMappedV2  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 3 & nNewDim3 = 0);
+    nMappedDim3 = 1;
+    sMappedV3  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 4 & nNewDim4 = 0);
+    nMappedDim4 = 1;
+    sMappedV4  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 5 & nNewDim5 = 0);
+    nMappedDim5 = 1;
+    sMappedV5  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 6 & nNewDim6 = 0);
+    nMappedDim6 = 1;
+    sMappedV6  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 7 & nNewDim7 = 0);
+    If( nNewDim7 = 0 );
+      nMappedDim7 = 1;
+      sMappedV7  = 'V' | NumberToString(nSourceIndex);
+      nSourceIndex = nSourceIndex + 1;
+    Else;
+      
+    EndIf;
+  ElseIf(nTargetIndex = 8 & nNewDim8 = 0);
+    nMappedDim8 = 1;
+    sMappedV8  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 9 & nNewDim9 = 0);
+    nMappedDim9 = 1;
+    sMappedV9  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 10 & nNewDim10 = 0);
+    nMappedDim10 = 1;
+    sMappedV10  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 11 & nNewDim11 = 0);
+    nMappedDim11 = 1;
+    sMappedV11  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 12);
+    nMappedDim12 = 1;
+    sMappedV12  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 13);
+    nMappedDim13 = 1;
+    sMappedV13  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 14);
+    nMappedDim14 = 1;
+    sMappedV14  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 15);
+    nMappedDim15 = 1;
+    sMappedV15  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 16);
+    nMappedDim16 = 1;
+    sMappedV16  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 17);
+    nMappedDim17 = 1;
+    sMappedV17  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 18);
+    nMappedDim18 = 1;
+    sMappedV18  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 19);
+    nMappedDim19 = 1;
+    sMappedV19  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 20);
+    nMappedDim20 = 1;
+    sMappedV20  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 21);
+    nMappedDim21 = 1;
+    sMappedV21  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 22);
+    nMappedDim22 = 1;
+    sMappedV22  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 23);
+    nMappedDim23 = 1;
+    sMappedV23  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 24);
+    nMappedDim24 = 1;
+    sMappedV24  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 25);
+    nMappedDim25 = 1;
+    sMappedV25  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 26);
+    nMappedDim26 = 1;
+    sMappedV26  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 27);
+    nMappedDim27 = 1;
+    sMappedV27  = 'V' | NumberToString(nSourceIndex);
+  EndIf;
+
+  nTargetIndex = nTargetIndex + 1;
+
+END;
+
+# The last variable in the data source holds the values
+# which need to be mapped to the last variable in the target
+
+If(nTargetIndex = 1 & nNewDim1 = 0);
+  nMappedDim1 = 1;
+  sMappedV1  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 2 & nNewDim2 = 0);
+  nMappedDim2 = 1;
+  sMappedV2  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 3 & nNewDim3 = 0);
+  nMappedDim3 = 1;
+  sMappedV3  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 4 & nNewDim4 = 0);
+  nMappedDim4 = 1;
+  sMappedV4  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 5 & nNewDim5 = 0);
+  nMappedDim5 = 1;
+  sMappedV5  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 6 & nNewDim6 = 0);
+  nMappedDim6 = 1;
+  sMappedV6  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 7 & nNewDim7 = 0);
+  nMappedDim7 = 1;
+  sMappedV7  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 8 & nNewDim8 = 0);
+  nMappedDim8 = 1;
+  sMappedV8  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 9 & nNewDim9 = 0);
+  nMappedDim9 = 1;
+  sMappedV9  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 10 & nNewDim10 = 0);
+  nMappedDim10 = 1;
+  sMappedV10  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 11 & nNewDim11 = 0);
+  nMappedDim11 = 1;
+  sMappedV11  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
+ElseIf(nTargetIndex = 12);
+  nMappedDim12 = 1;
+  sMappedV12  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 13);
+  nMappedDim13 = 1;
+  sMappedV13  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 14);
+  nMappedDim14 = 1;
+  sMappedV14  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 15);
+  nMappedDim15 = 1;
+  sMappedV15  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 16);
+  nMappedDim16 = 1;
+  sMappedV16  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 17);
+  nMappedDim17 = 1;
+  sMappedV17  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 18);
+  nMappedDim18 = 1;
+  sMappedV18  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 19);
+  nMappedDim19 = 1;
+  sMappedV19  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 20);
+  nMappedDim20 = 1;
+  sMappedV20  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 21);
+  nMappedDim21 = 1;
+  sMappedV21  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 22);
+  nMappedDim22 = 1;
+  sMappedV22  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 23);
+  nMappedDim23 = 1;
+  sMappedV23  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 24);
+  nMappedDim24 = 1;
+  sMappedV24  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 25);
+  nMappedDim25 = 1;
+  sMappedV25  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 26);
+  nMappedDim26 = 1;
+  sMappedV26  = 'V' | NumberToString(nSourceIndex);
+ElseIf(nTargetIndex = 27);
+  nMappedDim27 = 1;
+  sMappedV27  = 'V' | NumberToString(nSourceIndex);
+
+# a cube with 27 dimensions uses V28 to hold the values
+ElseIf(nTargetIndex = 28);
+  nMappedDim28 = 1;
+  sMapped28  = 'V' | NumberToString(nSourceIndex);
+EndIf;
+
+
+# Check that an input element or variable has been specified for all dimensions in the target cube
+
+nIndexInTarget = 1;
+WHILE(nIndexInTarget <= nTargetCubeDimensionCount);
+      
+      sMapped   = Expand('%nMappedDim'| NumberToString(nIndexInTarget) |'%'); 
+      sMapped   = Subst( sMapped , Scan( '.' , sMapped )-1 , 99);
+      nMapped   = StringToNumber( Trim( sMapped ) );
+      sNew      = Expand('%nNewDim'| NumberToString(nIndexInTarget) |'%'); 
+      sNew      = Subst( sNew , Scan( '.' , sNew )-1 , 99);
+      nNew      = StringToNumber( Trim( sNew ) );
+      
+      If(nMapped = 0 & nNew = 0 );
+            # there's no input element and this dimension is not in the source
+            nErrors         = nErrors + 1;
+            sTargetDimName  = TabDim( pCube,  nIndexInTarget );
+            sMessage        = 'Dimension ' | sTargetDimName | ' is missing an input element in pMappingToNewDims';
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            ProcessBreak();
+       EndIf;
+       
+       nIndexInTarget = nIndexInTarget + 1;
+END;
+
 #CubeLogging
 If ( pCubeLogging <= 1 );
   sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
@@ -601,7 +1269,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,479
+574,794
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -618,43 +1286,358 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 ## Increase Record count
 nRecordProcessedCount = nRecordProcessedCount + 1;
 
+### Zero out Target view using filter in the 1st record of the data source, if requested
+If( nRecordProcessedCount = 1 );
+  If( pZeroFilter = 2 );
+    sImportedFilter = v2;
+    sImportedDelimDim = v3;
+    sImportedElementStartDelim = v4;
+    sImportedDelimElem = v5;
+    ### Check delimiters are the same
+    IF(sElementMapping @<> '' & (sDelimDim @<> sImportedDelimDim % sElementStartDelim @<> sImportedElementStartDelim % sDelimElem @<> sImportedDelimElem));
+        sMessage = 'Error zeroing out target slice corresponding to the filter plus new mapped dimensions: delimiters in source file do not match with the ones in parameters.';
+        nErrors = nErrors + 1;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ProcessBreak;
+    ENDIF;
+    
+    ### Check filter in source file and validate its dimensions
+    
+    ### Split filter and create subsets ###
+    sFilter = TRIM( sImportedFilter );
+    nChar = 1;
+    nCharCount = LONG( sFilter );
+    sWord = '';
+    sLastDelim = '';
+    nIndex = 1;
+    # Add a trailing element delimiter so that the last element is picked up
+    If( nCharCount > 0 );
+      sFilter = sFilter | sDelimElem;
+      nCharCount = nCharCount + LONG(sDelimElem);
+    EndIf;
+    
+    WHILE (nChar <= nCharCount);
+        sChar = SUBST( sFilter, nChar, 1);
+    
+        # Used for delimiters, required for multiple character delimiters
+        sDelim = '';
+        nAddExtra = 0;
+    
+        # Ignore spaces
+        IF (TRIM(sChar) @<> '' );
+    
+          ### Dimension Name ###
+    
+          # If the delimiter is more than 1 character peek ahead the same amount
+          # Ignore the first character
+          sDelim = sChar;
+          nCount = LONG(sElementStartDelim) - 1;
+          If( nCount > 0 & nChar + nCount <= nCharCount );
+            # Add the extra characters
+            sDelim = sDelim | SUBST( sFilter, nChar + 1, nCount);
+            # Move to the end of the delimter
+            nAddExtra = nCount;
+          EndIf;
+    
+          If( sDelim @= sElementStartDelim );
+    
+            sChar = sDelim;
+    
+            If( sLastDelim @<> '' & sLastDelim @<> sDelimDim );
+                sMessage = 'The name of a dimension must follow a dimension delimiter (' | sDelimDim | ')';
+                nErrors = nErrors + 1;
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            EndIf;
+    
+            sDimension = sWord;
+            
+            If( DimensionExists( sDimension ) = 0 );
+                # The dimension does not exist in the model. Cancel process
+                sMessage = 'Dimension: ' | sDimension | ' does not exist';
+                nErrors = nErrors + 1;
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            EndIf;
+    
+            ### Determine the dimension is a member of the cube ###
+            nCount = 1;
+            nDimensionIndex = 0;
+            While( TabDim( pCube, nCount ) @<> '' );
+                sCubeDimName = TabDim( pCube, nCount );
+                If( sDimension @= sCubeDimName );
+                    nDimensionIndex = nCount;
+                EndIf;
+                nCount = nCount + 1;
+            End;
+    
+            If( nDimensionIndex = 0 );
+                # The dimension does not exist in the cube. Cancel process
+                sMessage = 'Dimension: ' | sDimension | ' is not a member of: '| pCube | ' cube.';
+                nErrors = nErrors + 1;
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+            EndIf;
+    
+
+    
+            nIndex = 1;
+            sLastDelim = sChar;
+            # Clear the word
+            sWord = '';
+          Else;
+    
+            # Reset extra chars
+            nAddExtra = 0;
+    
+            ### Check both both dim delimiter and element delimiter ###
+            nIsDelimiter = 0;
+    
+            ## Check dimension delimiter first
+            # If the delimiter is more than 1 character peek ahead the same amount
+            # Ignore the first character
+            sDelim = sChar;
+            nCount = LONG(sDelimDim) - 1;
+            If( nCount > 0 & nChar + nCount <= nCharCount );
+              # Add the extra characters
+              sDelim = sDelim | SUBST( sFilter, nChar + 1, nCount);
+              # Move to the end of the delimter
+              nAddExtra = nCount;
+            EndIf;
+    
+            If( sDelim @= sDelimDim );
+              nIsDelimiter = 1;
+              sChar = sDelim;
+            Else;
+              # Reset extra chars
+              nAddExtra = 0;
+    
+              ## Check element delimiter
+    
+              # If the delimiter is more than 1 character peek ahead the same amount
+              # Ignore the first character
+              sDelim = sChar;
+              nCount = LONG(sDelimElem) - 1;
+              If( nCount > 0 & nChar + nCount <= nCharCount );
+                # Add the extra characters
+                sDelim = sDelim | SUBST( sFilter, nChar + 1, nCount);
+                # Move to the end of the delimter
+                nAddExtra = nCount;
+              EndIf;
+    
+              If( sDelim @= sDelimElem );
+                nIsDelimiter = 1;
+                sChar = sDelim;
+              Else;
+                # Reset extra chars
+                nAddExtra = 0;
+              EndIf;
+    
+            EndIf;
+    
+            If ( nIsDelimiter = 1 );
+    
+              If( sLastDelim @= '' % sLastDelim @= sDelimDim );
+                sMessage = 'An element delimiter must follow a dimension name: ' |  sChar | ' (' | NumberToString(nChar) | ')';
+                nErrors = nErrors + 1;
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                #ProcessError();
+              EndIf;
+    
+              sElement = sWord;
+    
+              If( DIMIX( sDimension, sElement ) = 0 );
+                  # The element does not exist in the dimension. Cancel process
+                  sMessage = 'Element: ' | sElement | ' in dimension ' | sDimension | ' does not exist';
+                  nErrors = nErrors + 1;
+                  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                  #ProcessError();
+              EndIf;
+    
+              nIndex = nIndex + 1;
+              sLastDelim = sChar;
+    
+              # Clear the word
+              sWord = '';
+            Else;
+              sWord = sWord | sChar;
+            EndIf;
+    
+          EndIf;
+    
+        EndIf;
+    
+        nChar = nChar + nAddExtra + 1;
+    END;
+
+    ### Check for errors before continuing
+    If( nErrors <> 0 );
+      ProcessBreak;
+    EndIf;
+    
+    IF( sTargetFilter @= '' );
+      sTargetFilter = sImportedFilter;
+    Else;
+      sTargetFilter = sTargetFilter | sDelimDim | sImportedFilter;
+    EndIf;
+    ### Determine target dimension substitution in data clear filter
+    IF( pDimension @<>'');
+      IF( sTargetFilter @= '' );
+        sTargetFilter = pDimension | sElementStartDelim | sTargetElement;
+      Else;
+        ### Remove spaces from the string
+        sTargetFilter = UPPER( sTargetFilter );
+        nSPIndex = SCAN( ' ', sTargetFilter );
+        While ( nSPIndex <> 0);
+          sTargetFilter = DELET( sTargetFilter, nSPIndex, 1 );
+          nSPIndex = SCAN( ' ', sTargetFilter );
+        End;
+        sRemoveString = UPPER( sDelimDim | pDimension | sElementStartDelim | pSrcEle );
+        nRemoveIndex = SCAN( sRemoveString, sTargetFilter );
+        If( nRemoveIndex <> 0 );
+          sTargetFilter = DELET( sTargetFilter, nRemoveIndex, Long(sRemoveString) );
+        EndIf;
+        sRemoveString2 = UPPER( pDimension | sElementStartDelim | pSrcEle | sDelimDim );
+        nRemoveIndex = SCAN( sRemoveString2, sTargetFilter );
+        If( nRemoveIndex <> 0 );
+          sTargetFilter = DELET( sTargetFilter, nRemoveIndex, Long(sRemoveString2) );
+        EndIf;
+        sRemoveString3 = UPPER( sDelimDim | pDimension | sElementStartDelim | sSourceElement );
+        nRemoveIndex = SCAN( sRemoveString3, sTargetFilter );
+        If( nRemoveIndex <> 0 );
+          sTargetFilter = DELET( sTargetFilter, nRemoveIndex, Long(sRemoveString3) );
+        EndIf;
+        sRemoveString4 = UPPER( pDimension | sElementStartDelim | sSourceElement | sDelimDim );
+        nRemoveIndex = SCAN( sRemoveString4, sTargetFilter );
+        If( nRemoveIndex <> 0 );
+          sTargetFilter = DELET( sTargetFilter, nRemoveIndex, Long(sRemoveString4) );
+        EndIf;
+      
+        sTargetFilter = sTargetFilter | sDelimDim | pDimension | sElementStartDelim | sTargetElement;
+      EndIf;
+    Endif;
+    
+    nRet = ExecuteProcess('}bedrock.cube.data.clear',
+       'pLogOutput', pLogOutput,
+       'pCube', pCube,
+       'pView', '',
+       'pFilter', sTargetFilter,
+       'pFilterParallel', '',
+       'pParallelThreads', 0,
+       'pDimDelim', sImportedDelimDim,
+       'pEleStartDelim', sImportedElementStartDelim,
+       'pEleDelim', sImportedDelimElem,
+       'pCubeLogging', pCubeLogging,
+       'pTemp', 1,
+       'pSandbox', pSandbox
+      );
+  
+    IF(nRet <> 0);
+        sMessage = 'Error zeroing out target slice corresponding to the filter.';
+        nErrors = nErrors + 1;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ProcessBreak;
+    ENDIF;
+  ENDIF;
+  IF( pZeroFilter > 0 );
+    ItemSkip;
+  ENDIF;
+Endif;
+
 ### Determine target dimension SubStitution ###
 IF( pDimension @<>'');
   
   IF(sSourceElement@<>Expand('%v'|numbertostring(nDimensionIndex+1)|'%'));
-   itemskip;
-  Endif; 
+   # leave variable as is
+  Else; 
   
-  v2 = IF(nDimensionIndex = 1, sTargetElement, v2);
-  v3 = IF(nDimensionIndex = 2, sTargetElement, v3);
-  v4 = IF(nDimensionIndex = 3, sTargetElement, v4);
-  v5 = IF(nDimensionIndex = 4, sTargetElement, v5);
-  v6 = IF(nDimensionIndex = 5, sTargetElement, v6);
-  v7 = IF(nDimensionIndex = 6, sTargetElement, v7);
-  v8 = IF(nDimensionIndex = 7, sTargetElement, v8);
-  v9 = IF(nDimensionIndex = 8, sTargetElement, v9);
-  v10 = IF(nDimensionIndex = 9, sTargetElement, v10);
-  v11 = IF(nDimensionIndex = 10, sTargetElement, v11);
-  v12 = IF(nDimensionIndex = 11, sTargetElement, v12);
-  v13 = IF(nDimensionIndex = 12, sTargetElement, v13);
-  v14 = IF(nDimensionIndex = 13, sTargetElement, v14);
-  v15 = IF(nDimensionIndex = 14, sTargetElement, v15);
-  v16 = IF(nDimensionIndex = 15, sTargetElement, v16);
-  v17 = IF(nDimensionIndex = 16, sTargetElement, v17);
-  v18 = IF(nDimensionIndex = 17, sTargetElement, v18);
-  v19 = IF(nDimensionIndex = 18, sTargetElement, v19);
-  v20 = IF(nDimensionIndex = 19, sTargetElement, v20);
-  v21 = IF(nDimensionIndex = 20, sTargetElement, v21);
-  v22 = IF(nDimensionIndex = 21, sTargetElement, v22);
-  v23 = IF(nDimensionIndex = 22, sTargetElement, v23);
-  v24 = IF(nDimensionIndex = 23, sTargetElement, v24);
-  v25 = IF(nDimensionIndex = 24, sTargetElement, v25);
-  v26 = IF(nDimensionIndex = 25, sTargetElement, v26);
-  v27 = IF(nDimensionIndex = 26, sTargetElement, v27);
+    v2 = IF(nDimensionIndex = 1, sTargetElement, v2);
+    v3 = IF(nDimensionIndex = 2, sTargetElement, v3);
+    v4 = IF(nDimensionIndex = 3, sTargetElement, v4);
+    v5 = IF(nDimensionIndex = 4, sTargetElement, v5);
+    v6 = IF(nDimensionIndex = 5, sTargetElement, v6);
+    v7 = IF(nDimensionIndex = 6, sTargetElement, v7);
+    v8 = IF(nDimensionIndex = 7, sTargetElement, v8);
+    v9 = IF(nDimensionIndex = 8, sTargetElement, v9);
+    v10 = IF(nDimensionIndex = 9, sTargetElement, v10);
+    v11 = IF(nDimensionIndex = 10, sTargetElement, v11);
+    v12 = IF(nDimensionIndex = 11, sTargetElement, v12);
+    v13 = IF(nDimensionIndex = 12, sTargetElement, v13);
+    v14 = IF(nDimensionIndex = 13, sTargetElement, v14);
+    v15 = IF(nDimensionIndex = 14, sTargetElement, v15);
+    v16 = IF(nDimensionIndex = 15, sTargetElement, v16);
+    v17 = IF(nDimensionIndex = 16, sTargetElement, v17);
+    v18 = IF(nDimensionIndex = 17, sTargetElement, v18);
+    v19 = IF(nDimensionIndex = 18, sTargetElement, v19);
+    v20 = IF(nDimensionIndex = 19, sTargetElement, v20);
+    v21 = IF(nDimensionIndex = 20, sTargetElement, v21);
+    v22 = IF(nDimensionIndex = 21, sTargetElement, v22);
+    v23 = IF(nDimensionIndex = 22, sTargetElement, v23);
+    v24 = IF(nDimensionIndex = 23, sTargetElement, v24);
+    v25 = IF(nDimensionIndex = 24, sTargetElement, v25);
+    v26 = IF(nDimensionIndex = 25, sTargetElement, v26);
+    v27 = IF(nDimensionIndex = 26, sTargetElement, v27);
+  EndIf;
 
 Endif;
- 
 
+### Determine dimension Mapping SubStitution ###
+sV2 =IF(nMappedDim1=1,  Expand('%'|sMappedV1|'%'), IF(nNewDim1=1, sNewV1,V1));
+sV3 =IF(nMappedDim2=1,  Expand('%'|sMappedV2|'%'), IF(nNewDim2=1, sNewV2,V2));
+sV4 =IF(nMappedDim3=1,  Expand('%'|sMappedV3|'%'), IF(nNewDim3=1, sNewV3,V3));
+sV5 =IF(nMappedDim4=1,  Expand('%'|sMappedV4|'%'), IF(nNewDim4=1, sNewV4,V4));
+sV6 =IF(nMappedDim5=1,  Expand('%'|sMappedV5|'%'), IF(nNewDim5=1, sNewV5,V5));
+sV7 =IF(nMappedDim6=1,  Expand('%'|sMappedV6|'%'), IF(nNewDim6=1, sNewV6,V6));
+sV8 =IF(nMappedDim7=1,  Expand('%'|sMappedV7|'%'), IF(nNewDim7=1, sNewV7,V7));
+sV9 =IF(nMappedDim8=1,  Expand('%'|sMappedV8|'%'), IF(nNewDim8=1, sNewV8,V8));
+sV10 =IF(nMappedDim9=1,  Expand('%'|sMappedV9|'%'), IF(nNewDim9=1, sNewV9,V9));
+sV11=IF(nMappedDim10=1, Expand('%'|sMappedV10|'%'),IF(nNewDim10=1,sNewV10,V10));
+sV12=IF(nMappedDim11=1, Expand('%'|sMappedV11|'%'),IF(nNewDim11=1,sNewV11,V11));
+sV13=IF(nMappedDim12=1, Expand('%'|sMappedV12|'%'),IF(nNewDim12=1,sNewV12,V12));  
+sV14=IF(nMappedDim13=1, Expand('%'|sMappedV13|'%'),IF(nNewDim13=1,sNewV13,V13));  
+sV15=IF(nMappedDim14=1, Expand('%'|sMappedV14|'%'),IF(nNewDim14=1,sNewV14,V14));   
+sV16=IF(nMappedDim15=1, Expand('%'|sMappedV15|'%'),IF(nNewDim15=1,sNewV15,V15));  
+sV17=IF(nMappedDim16=1, Expand('%'|sMappedV16|'%'),IF(nNewDim16=1,sNewV16,V16));  
+sV18=IF(nMappedDim17=1, Expand('%'|sMappedV17|'%'),IF(nNewDim17=1,sNewV17,V17));  
+sV19=IF(nMappedDim18=1, Expand('%'|sMappedV18|'%'),IF(nNewDim18=1,sNewV18,V18));  
+sV20=IF(nMappedDim19=1, Expand('%'|sMappedV19|'%'),IF(nNewDim19=1,sNewV19,V19));  
+sV21=IF(nMappedDim20=1, Expand('%'|sMappedV20|'%'),IF(nNewDim20=1,sNewV20,V20));  
+sV22=IF(nMappedDim21=1, Expand('%'|sMappedV21|'%'),IF(nNewDim21=1,sNewV21,V21));  
+sV23=IF(nMappedDim22=1, Expand('%'|sMappedV22|'%'),IF(nNewDim22=1,sNewV22,V22));  
+sV24=IF(nMappedDim23=1, Expand('%'|sMappedV23|'%'),IF(nNewDim23=1,sNewV23,V23));  
+sV25=IF(nMappedDim24=1, Expand('%'|sMappedV24|'%'),IF(nNewDim24=1,sNewV24,V24));  
+sV26=IF(nMappedDim25=1, Expand('%'|sMappedV25|'%'),IF(nNewDim25=1,sNewV25,V25));  
+sV27=IF(nMappedDim26=1, Expand('%'|sMappedV26|'%'),IF(nNewDim26=1,sNewV26,V26));  
+sV28=IF(nMappedDim27=1, Expand('%'|sMappedV27|'%'),IF(nNewDim27=1,sNewV27,V27));
+sV29=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);  
+  
+V1 = V1;
+V2 = sV2; 
+V3 = sV3; 
+V4 = sV4; 
+V5 = sV5; 
+V6 = sV6; 
+V7 = sV7; 
+V8 = sV8; 
+V9 = sV9; 
+V10= sV10;
+V11= sV11;
+V12= sV12;
+V13= sV13;
+V14= sV14;
+V15= sV15;
+V16= sV16;
+V17= sV17;
+V18= sV18;
+V19= sV19;
+V20= sV20;
+V21= sV21;
+V22= sV22;
+V23= sV23;
+V24= sV24;
+V25= sV25;
+V26= sV26;
+V27= sV27;
+V28= sV28;
+V29= sV29;
+ 
 ### Write data from source file to target cube ###
 
 If( nDimensionCount = 2 );

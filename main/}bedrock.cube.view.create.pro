@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fhmbJRahGdtkFHAZxV]Hwh8_sf>Qp7O:\5d>McbkUdjb3FDop?`cr1E9X>=BrZ30hA@fE4DNTmD@4dqAafuB7AkrJwWFFKk0[dH7AdRhy6<hqi83flQZV?LeK^P`cm@fsV\3ZvU;c3zvlUNy1sdCF[eHXXTfc8`BUtgynRukpuM4:Xb57Ui\n@p]Cf``21crI1FypOKq"
+565,"kl8=In:dh4Aa\AsJ@=90SYZ^<CeJKNcIelmVj?9]xH6kFpMT=lEk:zn2kpeBMgudw5qplRv[7S5\6qdI<QK=a4bXjV_O>ySe1BaHSpD\b=HXY^KoAsty_>7L^36UfiI62y\0hVM28Ytybd5x8`5\9oJM]Fi<^g8qe<yn`4f<[aL0cE2vnwzd_LQ\=WU2Z[MNM3=DFy[8"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,12
+560,13
 pLogOutput
 pCube
 pView
@@ -38,7 +38,8 @@ pEleStartDelim
 pEleDelim
 pTemp
 pSubN
-561,12
+pSuppressConsolStrings
+561,13
 1
 2
 2
@@ -51,7 +52,8 @@ pSubN
 2
 1
 1
-590,12
+1
+590,13
 pLogOutput,0
 pCube,""
 pView,""
@@ -64,7 +66,8 @@ pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSubN,0
-637,12
+pSuppressConsolStrings,0
+637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pView,"REQUIRED: Name of the View"
@@ -77,6 +80,7 @@ pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
 pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
+pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
 577,0
 578,0
 579,0
@@ -84,7 +88,7 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,403
+572,409
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -142,7 +146,7 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoLevel     =  'INFO';
 cMsgInfoContent   = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%.' ;  
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSuppressConsolStrings:%pSuppressConsolStrings%.' ;  
 
 
 sSubset           = pView;
@@ -236,6 +240,7 @@ EndIf;
 ViewExtractSkipCalcsSet( pCube, pView, pSuppressConsol );
 ViewExtractSkipZeroesSet( pCube, pView, pSuppressZero );
 ViewExtractSkipRuleValuesSet( pCube, pView, pSuppressRules );
+ViewExtractSkipConsolidatedStringsSet( pCube, pView, pSuppressConsolStrings );
 
 
 ### Split filter and create subsets ###
@@ -410,6 +415,11 @@ WHILE (nChar <= nCharCount);
                   EndIf;
                   n = n + 1;
               END;
+              
+              # Add the consolidated element to the subset as well to export strings, if necessary
+              If ( pSuppressConsolStrings = 0 );
+                SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+              EndIf;
 
           Else;
               # Add the element to the subset

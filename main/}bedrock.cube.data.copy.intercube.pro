@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"cr;aJYQ^HeXoNZj\3g[L\m9lG>QD6ukw1vY@=6FVmVe@PaqHY<;`^L6gjFzUQhP3OtdYHhZ^SR<5JTWdh]^>V:xXV3D\Pm18HCxQ[vGVszLTfKi33@YI5JeX;9=msW`nKJedJZ@<iu:hPCuuw;42T=l88DY\kIm`^?f`ql3iBqqex3TvZON0PAawDT30>NQI0ylF1U2["
+565,"z^P_wx_lBcrWNOaBRBAF@c1N^DajST5?7dc\Ra6ou0z;3NW1Oj0k?jNWSnG>vKJ[>uH2rqrl;i0Q]fW]L[<y]R9w4x\LD<o4g2amaK><2ODVVc4yI8Nr;Lp`9;o4j7=ftc@VDtnr<moYq0]Ys`wmJ<rx_31h^p]>qF67Yg4B?tQ@?Ik0]1elb?aFf=HMm?_pSt]Mniwy"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,19
+560,20
 pLogOutput
 pSrcCube
 pFilter
@@ -45,7 +45,8 @@ pTemp
 pCubeLogging
 pSandbox
 pThreadMode
-561,19
+pCopyDataViaFile
+561,20
 1
 2
 2
@@ -65,7 +66,8 @@ pThreadMode
 1
 2
 1
-590,19
+1
+590,20
 pLogOutput,0
 pSrcCube,""
 pFilter,""
@@ -85,7 +87,8 @@ pTemp,1
 pCubeLogging,0
 pSandbox,""
 pThreadMode,0
-637,19
+pCopyDataViaFile,0
+637,20
 pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
 pFilter,"OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube"
@@ -105,6 +108,7 @@ pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
+pCopyDataViaFile,"OPTIONAL: Copy via file export and import. Reduces locks (1 = Yes)"
 577,29
 V1
 V2
@@ -286,7 +290,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1101
+572,1352
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -361,11 +365,17 @@ cTimeStamp          = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = '%cThisProcName% : %sMessage% : %cUserName%';
+cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcCube:%pSrcCube%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pTgtCube:%pTgtCube%, pMappingToNewDims:%pMappingToNewDims%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pFactor:%pFactor%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pThreadMode:%pThreadMode%, pCopyDataViaFile:%pCopyDataViaFile%.'; 
 
 sDelimDim           = TRIM(pDimDelim);
 sElementStartDelim  = TRIM(pElEStartDelim);
 sDelimElem          = TRIM(pEleDelim);
 nErrors             = 0;
+
+## LogOutput parameters
+IF( pLogoutput = 1 );
+    LogOutput('INFO', Expand( cLogInfo ) );   
+ENDIF;
 
 # Make sure pFactor not zero
 nFactor             = If( pFactor = 0, 1, pFactor );
@@ -374,6 +384,23 @@ sView               = cThisProcName | cTimeStamp | cRandomInt;
 sSubset             = sView;
 sTargetView         = 'Target '| sView;
 sTargetSubset       = sTargetView;
+
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
+## File location for indirect data copy
+cDir    = '..' | sOSDelim;
+cFileName = pSrcCube | cTimeStamp | cRandomInt | '.csv';
+cFile   = cDir | cFileName;
+cTitleRows = 1;
+cDelimiter = ',';
+cQuote = '"';
 
 #Region ## Check Parameters ###
 
@@ -609,87 +636,173 @@ While( TabDim( pSrcCube, nSourceIndex ) @<> '' );
     WHILE(TabDim( pTgtCube, nTargetIndex ) @<> '');
       sTargetDim = TabDim( pTgtCube, nTargetIndex );
       If(sSourceDim @= sTargetDim);
-          If(nTargetIndex = 1);
-            nMappedDim1 = 1;
-            sMappedV1  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 2);
-            nMappedDim2 = 1;
-            sMappedV2  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 3);
-            nMappedDim3 = 1;
-            sMappedV3  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 4);
-            nMappedDim4 = 1;
-            sMappedV4  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 5);
-            nMappedDim5 = 1;
-            sMappedV5  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 6);
-            nMappedDim6 = 1;
-            sMappedV6  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 7);
-            nMappedDim7 = 1;
-            sMappedV7  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 8);
-            nMappedDim8 = 1;
-            sMappedV8  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 9);
-            nMappedDim9 = 1;
-            sMappedV9  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 10);
-            nMappedDim10 = 1;
-            sMappedV10  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 11);
-            nMappedDim11 = 1;
-            sMappedV11  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 12);
-            nMappedDim12 = 1;
-            sMappedV12  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 13);
-            nMappedDim13 = 1;
-            sMappedV13  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 14);
-            nMappedDim14 = 1;
-            sMappedV14  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 15);
-            nMappedDim15 = 1;
-            sMappedV15  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 16);
-            nMappedDim16 = 1;
-            sMappedV16  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 17);
-            nMappedDim17 = 1;
-            sMappedV17  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 18);
-            nMappedDim18 = 1;
-            sMappedV18  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 19);
-            nMappedDim19 = 1;
-            sMappedV19  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 20);
-            nMappedDim20 = 1;
-            sMappedV20  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 21);
-            nMappedDim21 = 1;
-            sMappedV21  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 22);
-            nMappedDim22 = 1;
-            sMappedV22  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 23);
-            nMappedDim23 = 1;
-            sMappedV23  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 24);
-            nMappedDim24 = 1;
-            sMappedV24  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 25);
-            nMappedDim25 = 1;
-            sMappedV25  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 26);
-            nMappedDim26 = 1;
-            sMappedV26  = 'V' | NumberToString(nSourceIndex);
-          ElseIf(nTargetIndex = 27);
-            nMappedDim27 = 1;
-            sMappedV27  = 'V' | NumberToString(nSourceIndex);
+          If( pCopyDataViaFile = 0 );
+            If(nTargetIndex = 1);
+              nMappedDim1 = 1;
+              sMappedV1  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 2);
+              nMappedDim2 = 1;
+              sMappedV2  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 3);
+              nMappedDim3 = 1;
+              sMappedV3  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 4);
+              nMappedDim4 = 1;
+              sMappedV4  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 5);
+              nMappedDim5 = 1;
+              sMappedV5  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 6);
+              nMappedDim6 = 1;
+              sMappedV6  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 7);
+              nMappedDim7 = 1;
+              sMappedV7  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 8);
+              nMappedDim8 = 1;
+              sMappedV8  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 9);
+              nMappedDim9 = 1;
+              sMappedV9  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 10);
+              nMappedDim10 = 1;
+              sMappedV10  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 11);
+              nMappedDim11 = 1;
+              sMappedV11  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 12);
+              nMappedDim12 = 1;
+              sMappedV12  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 13);
+              nMappedDim13 = 1;
+              sMappedV13  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 14);
+              nMappedDim14 = 1;
+              sMappedV14  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 15);
+              nMappedDim15 = 1;
+              sMappedV15  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 16);
+              nMappedDim16 = 1;
+              sMappedV16  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 17);
+              nMappedDim17 = 1;
+              sMappedV17  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 18);
+              nMappedDim18 = 1;
+              sMappedV18  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 19);
+              nMappedDim19 = 1;
+              sMappedV19  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 20);
+              nMappedDim20 = 1;
+              sMappedV20  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 21);
+              nMappedDim21 = 1;
+              sMappedV21  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 22);
+              nMappedDim22 = 1;
+              sMappedV22  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 23);
+              nMappedDim23 = 1;
+              sMappedV23  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 24);
+              nMappedDim24 = 1;
+              sMappedV24  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 25);
+              nMappedDim25 = 1;
+              sMappedV25  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 26);
+              nMappedDim26 = 1;
+              sMappedV26  = 'V' | NumberToString(nSourceIndex);
+            ElseIf(nTargetIndex = 27);
+              nMappedDim27 = 1;
+              sMappedV27  = 'V' | NumberToString(nSourceIndex);
+            EndIf;
+          ElseIf( pCopyDataViaFile = 1 );
+            ## If using source file first variable holds tha cube name, so all the other ones have the index increased by 1
+            If(nTargetIndex = 1);
+              nMappedDim1 = 1;
+              sMappedV1  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 2);
+              nMappedDim2 = 1;
+              sMappedV2  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 3);
+              nMappedDim3 = 1;
+              sMappedV3  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 4);
+              nMappedDim4 = 1;
+              sMappedV4  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 5);
+              nMappedDim5 = 1;
+              sMappedV5  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 6);
+              nMappedDim6 = 1;
+              sMappedV6  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 7);
+              nMappedDim7 = 1;
+              sMappedV7  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 8);
+              nMappedDim8 = 1;
+              sMappedV8  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 9);
+              nMappedDim9 = 1;
+              sMappedV9  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 10);
+              nMappedDim10 = 1;
+              sMappedV10  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 11);
+              nMappedDim11 = 1;
+              sMappedV11  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 12);
+              nMappedDim12 = 1;
+              sMappedV12  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 13);
+              nMappedDim13 = 1;
+              sMappedV13  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 14);
+              nMappedDim14 = 1;
+              sMappedV14  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 15);
+              nMappedDim15 = 1;
+              sMappedV15  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 16);
+              nMappedDim16 = 1;
+              sMappedV16  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 17);
+              nMappedDim17 = 1;
+              sMappedV17  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 18);
+              nMappedDim18 = 1;
+              sMappedV18  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 19);
+              nMappedDim19 = 1;
+              sMappedV19  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 20);
+              nMappedDim20 = 1;
+              sMappedV20  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 21);
+              nMappedDim21 = 1;
+              sMappedV21  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 22);
+              nMappedDim22 = 1;
+              sMappedV22  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 23);
+              nMappedDim23 = 1;
+              sMappedV23  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 24);
+              nMappedDim24 = 1;
+              sMappedV24  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 25);
+              nMappedDim25 = 1;
+              sMappedV25  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 26);
+              nMappedDim26 = 1;
+              sMappedV26  = 'V' | NumberToString(nSourceIndex + 1);
+            ElseIf(nTargetIndex = 27);
+              nMappedDim27 = 1;
+              sMappedV27  = 'V' | NumberToString(nSourceIndex + 1);
+            EndIf;
           EndIf;
 
       EndIf;
@@ -705,92 +818,182 @@ END;
 # The last variable in the data source holds the values
 # which need to be mapped to the last variable in the target
 
-If(nTargetIndex = 1);
-  nMappedDim1 = 1;
-  sMappedV1  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 2);
-  nMappedDim2 = 1;
-  sMappedV2  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 3);
-  nMappedDim3 = 1;
-  sMappedV3  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 4);
-  nMappedDim4 = 1;
-  sMappedV4  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 5);
-  nMappedDim5 = 1;
-  sMappedV5  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 6);
-  nMappedDim6 = 1;
-  sMappedV6  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 7);
-  nMappedDim7 = 1;
-  sMappedV7  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 8);
-  nMappedDim8 = 1;
-  sMappedV8  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 9);
-  nMappedDim9 = 1;
-  sMappedV9  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 10);
-  nMappedDim10 = 1;
-  sMappedV10  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 11);
-  nMappedDim11 = 1;
-  sMappedV11  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 12);
-  nMappedDim12 = 1;
-  sMappedV12  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 13);
-  nMappedDim13 = 1;
-  sMappedV13  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 14);
-  nMappedDim14 = 1;
-  sMappedV14  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 15);
-  nMappedDim15 = 1;
-  sMappedV15  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 16);
-  nMappedDim16 = 1;
-  sMappedV16  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 17);
-  nMappedDim17 = 1;
-  sMappedV17  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 18);
-  nMappedDim18 = 1;
-  sMappedV18  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 19);
-  nMappedDim19 = 1;
-  sMappedV19  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 20);
-  nMappedDim20 = 1;
-  sMappedV20  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 21);
-  nMappedDim21 = 1;
-  sMappedV21  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 22);
-  nMappedDim22 = 1;
-  sMappedV22  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 23);
-  nMappedDim23 = 1;
-  sMappedV23  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 24);
-  nMappedDim24 = 1;
-  sMappedV24  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 25);
-  nMappedDim25 = 1;
-  sMappedV25  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 26);
-  nMappedDim26 = 1;
-  sMappedV26  = 'V' | NumberToString(nSourceIndex);
-ElseIf(nTargetIndex = 27);
-  nMappedDim27 = 1;
-  sMappedV27  = 'V' | NumberToString(nSourceIndex);
-
-# a cube with 27 dimensions uses V28 to hold the values
-ElseIf(nTargetIndex = 28);
-  nMappedDim28 = 1;
-  sMapped28  = 'V' | NumberToString(nSourceIndex);
+If( pCopyDataViaFile = 0 );
+  If(nTargetIndex = 1);
+    nMappedDim1 = 1;
+    sMappedV1  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 2);
+    nMappedDim2 = 1;
+    sMappedV2  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 3);
+    nMappedDim3 = 1;
+    sMappedV3  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 4);
+    nMappedDim4 = 1;
+    sMappedV4  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 5);
+    nMappedDim5 = 1;
+    sMappedV5  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 6);
+    nMappedDim6 = 1;
+    sMappedV6  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 7);
+    nMappedDim7 = 1;
+    sMappedV7  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 8);
+    nMappedDim8 = 1;
+    sMappedV8  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 9);
+    nMappedDim9 = 1;
+    sMappedV9  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 10);
+    nMappedDim10 = 1;
+    sMappedV10  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 11);
+    nMappedDim11 = 1;
+    sMappedV11  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 12);
+    nMappedDim12 = 1;
+    sMappedV12  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 13);
+    nMappedDim13 = 1;
+    sMappedV13  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 14);
+    nMappedDim14 = 1;
+    sMappedV14  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 15);
+    nMappedDim15 = 1;
+    sMappedV15  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 16);
+    nMappedDim16 = 1;
+    sMappedV16  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 17);
+    nMappedDim17 = 1;
+    sMappedV17  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 18);
+    nMappedDim18 = 1;
+    sMappedV18  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 19);
+    nMappedDim19 = 1;
+    sMappedV19  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 20);
+    nMappedDim20 = 1;
+    sMappedV20  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 21);
+    nMappedDim21 = 1;
+    sMappedV21  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 22);
+    nMappedDim22 = 1;
+    sMappedV22  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 23);
+    nMappedDim23 = 1;
+    sMappedV23  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 24);
+    nMappedDim24 = 1;
+    sMappedV24  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 25);
+    nMappedDim25 = 1;
+    sMappedV25  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 26);
+    nMappedDim26 = 1;
+    sMappedV26  = 'V' | NumberToString(nSourceIndex);
+  ElseIf(nTargetIndex = 27);
+    nMappedDim27 = 1;
+    sMappedV27  = 'V' | NumberToString(nSourceIndex);
+  
+  # a cube with 27 dimensions uses V28 to hold the values
+  ElseIf(nTargetIndex = 28);
+    nMappedDim28 = 1;
+    sMapped28  = 'V' | NumberToString(nSourceIndex);
+  EndIf;
+ElseIf( pCopyDataViaFile = 1 );
+  If(nTargetIndex = 1);
+    nMappedDim1 = 1;
+    sMappedV1  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 2);
+    nMappedDim2 = 1;
+    sMappedV2  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 3);
+    nMappedDim3 = 1;
+    sMappedV3  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 4);
+    nMappedDim4 = 1;
+    sMappedV4  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 5);
+    nMappedDim5 = 1;
+    sMappedV5  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 6);
+    nMappedDim6 = 1;
+    sMappedV6  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 7);
+    nMappedDim7 = 1;
+    sMappedV7  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 8);
+    nMappedDim8 = 1;
+    sMappedV8  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 9);
+    nMappedDim9 = 1;
+    sMappedV9  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 10);
+    nMappedDim10 = 1;
+    sMappedV10  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 11);
+    nMappedDim11 = 1;
+    sMappedV11  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 12);
+    nMappedDim12 = 1;
+    sMappedV12  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 13);
+    nMappedDim13 = 1;
+    sMappedV13  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 14);
+    nMappedDim14 = 1;
+    sMappedV14  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 15);
+    nMappedDim15 = 1;
+    sMappedV15  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 16);
+    nMappedDim16 = 1;
+    sMappedV16  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 17);
+    nMappedDim17 = 1;
+    sMappedV17  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 18);
+    nMappedDim18 = 1;
+    sMappedV18  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 19);
+    nMappedDim19 = 1;
+    sMappedV19  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 20);
+    nMappedDim20 = 1;
+    sMappedV20  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 21);
+    nMappedDim21 = 1;
+    sMappedV21  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 22);
+    nMappedDim22 = 1;
+    sMappedV22  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 23);
+    nMappedDim23 = 1;
+    sMappedV23  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 24);
+    nMappedDim24 = 1;
+    sMappedV24  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 25);
+    nMappedDim25 = 1;
+    sMappedV25  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 26);
+    nMappedDim26 = 1;
+    sMappedV26  = 'V' | NumberToString(nSourceIndex + 1);
+  ElseIf(nTargetIndex = 27);
+    nMappedDim27 = 1;
+    sMappedV27  = 'V' | NumberToString(nSourceIndex + 1);
+  
+  # a cube with 27 dimensions uses V29 to hold the values if export file is used as source
+  ElseIf(nTargetIndex = 28);
+    nMappedDim28 = 1;
+    sMapped28  = 'V' | NumberToString(nSourceIndex + 1);
+  EndIf;
 EndIf;
 #EndRegion
 
@@ -1192,6 +1395,7 @@ WHILE (nChar <= nCharCount);
             nAddExtra = nCount;
           EndIf;
 
+          #If( sDelim @= sDelimDim );
           If( sDelim @= sDelimElem );
             nIsDelimiter = 1;
             sChar = sDelim;
@@ -1346,33 +1550,75 @@ Else;
   
   Endif;
   
-  ### Create View of Source ###
-  IF(pSuppressConsol = 0);
-    nSubN=1;
-  else;
-    nSubN=0;
-  Endif;  
+  If( pCopyDataViaFile = 0 );
+    ### Create View of Source ###
+    IF(pSuppressConsol = 0);
+      nSubN=1;
+    else;
+      nSubN=0;
+    Endif;  
+    
+    nRet = ExecuteProcess('}bedrock.cube.view.create',
+      'pLogOutput', pLogOutput,
+      'pCube', pSrcCube,
+      'pView', sView,
+      'pFilter', pFilter,
+      'pSuppressZero', 1,
+      'pSuppressConsol', pSuppressConsol,
+      'pSuppressRules', pSuppressRules,
+      'pDimDelim', pDimDelim,
+      'pEleStartDelim', pEleStartDelim,
+      'pEleDelim', pEleDelim ,
+      'pTemp', pTemp,
+      'pSubN', nSubN
+      );
+    
+    IF(nRet <> 0);
+          sMessage = 'Error creating the view from the filter.';
+          nErrors = nErrors + 1;
+          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+          ProcessBreak;
+    ENDIF;
   
-  nRet = ExecuteProcess('}bedrock.cube.view.create',
-    'pLogOutput', pLogOutput,
-    'pCube', pSrcCube,
-    'pView', sView,
-    'pFilter', pFilter,
-    'pSuppressZero', 1,
-    'pSuppressConsol', pSuppressConsol,
-    'pSuppressRules', pSuppressRules,
-    'pDimDelim', pDimDelim,
-    'pEleStartDelim', pEleStartDelim,
-    'pEleDelim', pEleDelim ,
-    'pTemp', pTemp,
-    'pSubN', nSubN
-    );
-  
-  IF(nRet <> 0);
-        sMessage = 'Error creating the view from the filter.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+  ElseIf( pCopyDataViaFile = 1 );
+    ### Export to File in case of Copy Data Via File ###
+    IF(pSuppressConsol = 0);
+      nSubN=1;
+    else;
+      nSubN=0;
+    Endif;  
+    
+    nRet = ExecuteProcess('}bedrock.cube.data.export',
+       'pLogoutput', pLogOutput,
+       'pCube', pSrcCube,
+       'pView', sView,
+       'pFilter', pFilter,
+       'pFilterParallel', '',
+       'pParallelThreads', 0,
+       'pDimDelim', pDimDelim,
+       'pEleStartDelim', pEleStartDelim,
+       'pEleDelim', pEleDelim,
+       'pSuppressZero', 1,
+       'pSuppressConsol', pSuppressConsol,
+       'pSuppressRules', pSuppressRules,
+       'pZeroSource', 0,
+       'pCubeLogging', pCubeLogging,
+       'pTemp', pTemp,
+       'pFilePath', cDir,
+       'pFileName', cFileName,
+       'pDelim', cDelimiter,
+       'pQuote', cQuote,
+       'pTitleRecord', cTitleRows,
+       'pSandbox', pSandbox,
+       'pIncludeFilter', 0
+      );
+    
+    IF(nRet <> 0);
+          sMessage = 'Error exporting data to file.';
+          nErrors = nErrors + 1;
+          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+          ProcessBreak;
+    ENDIF;
   ENDIF;
   
   
@@ -1383,56 +1629,94 @@ Else;
   EndIf;
   
   ### Assign Datasource ###
-  DataSourceType          = 'VIEW';
-  DatasourceNameForServer = pSrcCube;
-  DatasourceNameForClient = pSrcCube;
-  DatasourceCubeView      = sView;
+  If( pCopyDataViaFile = 0 );
+    DataSourceType          = 'VIEW';
+    DatasourceNameForServer = pSrcCube;
+    DatasourceNameForClient = pSrcCube;
+    DatasourceCubeView      = sView;
+  ElseIf( pCopyDataViaFile = 1 );
+    DataSourceType                  = 'CHARACTERDELIMITED';
+    DatasourceNameForServer         = cFile;
+    DatasourceNameForClient         = cFile;
+    DatasourceASCIIHeaderRecords    = cTitleRows;
+    DatasourceASCIIDelimiter        = cDelimiter;
+    DatasourceASCIIQuoteCharacter   = cQuote;
+  EndIf;
 EndIf;
 573,3
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,339
+574,368
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-
-# The exapand function gives the value of the variable passed to it
-# So if the say the third dimension in the source cube is the first dimension in the target cube
-# the string variable Source Variable for Target varialbe V1 is set on the prolog to V3 (see Mapped part)
-# which means Expand(%V3%) gives the value of V3
-# and Target sV1 will equal V3
-
-sV1 =IF(nMappedDim1=1,  Expand('%'|sMappedV1|'%'), IF(nNewDim1=1, sNewV1,V1));
-sV2 =IF(nMappedDim2=1,  Expand('%'|sMappedV2|'%'), IF(nNewDim2=1, sNewV2,V2));
-sV3 =IF(nMappedDim3=1,  Expand('%'|sMappedV3|'%'), IF(nNewDim3=1, sNewV3,V3));
-sV4 =IF(nMappedDim4=1,  Expand('%'|sMappedV4|'%'), IF(nNewDim4=1, sNewV4,V4));
-sV5 =IF(nMappedDim5=1,  Expand('%'|sMappedV5|'%'), IF(nNewDim5=1, sNewV5,V5));
-sV6 =IF(nMappedDim6=1,  Expand('%'|sMappedV6|'%'), IF(nNewDim6=1, sNewV6,V6));
-sV7 =IF(nMappedDim7=1,  Expand('%'|sMappedV7|'%'), IF(nNewDim7=1, sNewV7,V7));
-sV8 =IF(nMappedDim8=1,  Expand('%'|sMappedV8|'%'), IF(nNewDim8=1, sNewV8,V8));
-sV9 =IF(nMappedDim9=1,  Expand('%'|sMappedV9|'%'), IF(nNewDim9=1, sNewV9,V9));
-sV10=IF(nMappedDim10=1, Expand('%'|sMappedV10|'%'),IF(nNewDim10=1,sNewV10,V10));
-sV11=IF(nMappedDim11=1, Expand('%'|sMappedV11|'%'),IF(nNewDim11=1,sNewV11,V11));
-sV12=IF(nMappedDim12=1, Expand('%'|sMappedV12|'%'),IF(nNewDim12=1,sNewV12,V12));  
-sV13=IF(nMappedDim13=1, Expand('%'|sMappedV13|'%'),IF(nNewDim13=1,sNewV13,V13));  
-sV14=IF(nMappedDim14=1, Expand('%'|sMappedV14|'%'),IF(nNewDim14=1,sNewV14,V14));   
-sV15=IF(nMappedDim15=1, Expand('%'|sMappedV15|'%'),IF(nNewDim15=1,sNewV15,V15));  
-sV16=IF(nMappedDim16=1, Expand('%'|sMappedV16|'%'),IF(nNewDim16=1,sNewV16,V16));  
-sV17=IF(nMappedDim17=1, Expand('%'|sMappedV17|'%'),IF(nNewDim17=1,sNewV17,V17));  
-sV18=IF(nMappedDim18=1, Expand('%'|sMappedV18|'%'),IF(nNewDim18=1,sNewV18,V18));  
-sV19=IF(nMappedDim19=1, Expand('%'|sMappedV19|'%'),IF(nNewDim19=1,sNewV19,V19));  
-sV20=IF(nMappedDim20=1, Expand('%'|sMappedV20|'%'),IF(nNewDim20=1,sNewV20,V20));  
-sV21=IF(nMappedDim21=1, Expand('%'|sMappedV21|'%'),IF(nNewDim21=1,sNewV21,V21));  
-sV22=IF(nMappedDim22=1, Expand('%'|sMappedV22|'%'),IF(nNewDim22=1,sNewV22,V22));  
-sV23=IF(nMappedDim23=1, Expand('%'|sMappedV23|'%'),IF(nNewDim23=1,sNewV23,V23));  
-sV24=IF(nMappedDim24=1, Expand('%'|sMappedV24|'%'),IF(nNewDim24=1,sNewV24,V24));  
-sV25=IF(nMappedDim25=1, Expand('%'|sMappedV25|'%'),IF(nNewDim25=1,sNewV25,V25));  
-sV26=IF(nMappedDim26=1, Expand('%'|sMappedV26|'%'),IF(nNewDim26=1,sNewV26,V26));  
-sV27=IF(nMappedDim27=1, Expand('%'|sMappedV27|'%'),IF(nNewDim27=1,sNewV27,V27));
-sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);  
-  
+  # The exapand function gives the value of the variable passed to it
+  # So if the say the third dimension in the source cube is the first dimension in the target cube
+  # the string variable Source Variable for Target varialbe V1 is set on the prolog to V3 (see Mapped part)
+  # which means Expand(%V3%) gives the value of V3
+  # and Target sV1 will equal V3
+If( pCopyDataViaFile = 0 );  
+  sV1 =IF(nMappedDim1=1,  Expand('%'|sMappedV1|'%'), IF(nNewDim1=1, sNewV1,V1));
+  sV2 =IF(nMappedDim2=1,  Expand('%'|sMappedV2|'%'), IF(nNewDim2=1, sNewV2,V2));
+  sV3 =IF(nMappedDim3=1,  Expand('%'|sMappedV3|'%'), IF(nNewDim3=1, sNewV3,V3));
+  sV4 =IF(nMappedDim4=1,  Expand('%'|sMappedV4|'%'), IF(nNewDim4=1, sNewV4,V4));
+  sV5 =IF(nMappedDim5=1,  Expand('%'|sMappedV5|'%'), IF(nNewDim5=1, sNewV5,V5));
+  sV6 =IF(nMappedDim6=1,  Expand('%'|sMappedV6|'%'), IF(nNewDim6=1, sNewV6,V6));
+  sV7 =IF(nMappedDim7=1,  Expand('%'|sMappedV7|'%'), IF(nNewDim7=1, sNewV7,V7));
+  sV8 =IF(nMappedDim8=1,  Expand('%'|sMappedV8|'%'), IF(nNewDim8=1, sNewV8,V8));
+  sV9 =IF(nMappedDim9=1,  Expand('%'|sMappedV9|'%'), IF(nNewDim9=1, sNewV9,V9));
+  sV10=IF(nMappedDim10=1, Expand('%'|sMappedV10|'%'),IF(nNewDim10=1,sNewV10,V10));
+  sV11=IF(nMappedDim11=1, Expand('%'|sMappedV11|'%'),IF(nNewDim11=1,sNewV11,V11));
+  sV12=IF(nMappedDim12=1, Expand('%'|sMappedV12|'%'),IF(nNewDim12=1,sNewV12,V12));  
+  sV13=IF(nMappedDim13=1, Expand('%'|sMappedV13|'%'),IF(nNewDim13=1,sNewV13,V13));  
+  sV14=IF(nMappedDim14=1, Expand('%'|sMappedV14|'%'),IF(nNewDim14=1,sNewV14,V14));   
+  sV15=IF(nMappedDim15=1, Expand('%'|sMappedV15|'%'),IF(nNewDim15=1,sNewV15,V15));  
+  sV16=IF(nMappedDim16=1, Expand('%'|sMappedV16|'%'),IF(nNewDim16=1,sNewV16,V16));  
+  sV17=IF(nMappedDim17=1, Expand('%'|sMappedV17|'%'),IF(nNewDim17=1,sNewV17,V17));  
+  sV18=IF(nMappedDim18=1, Expand('%'|sMappedV18|'%'),IF(nNewDim18=1,sNewV18,V18));  
+  sV19=IF(nMappedDim19=1, Expand('%'|sMappedV19|'%'),IF(nNewDim19=1,sNewV19,V19));  
+  sV20=IF(nMappedDim20=1, Expand('%'|sMappedV20|'%'),IF(nNewDim20=1,sNewV20,V20));  
+  sV21=IF(nMappedDim21=1, Expand('%'|sMappedV21|'%'),IF(nNewDim21=1,sNewV21,V21));  
+  sV22=IF(nMappedDim22=1, Expand('%'|sMappedV22|'%'),IF(nNewDim22=1,sNewV22,V22));  
+  sV23=IF(nMappedDim23=1, Expand('%'|sMappedV23|'%'),IF(nNewDim23=1,sNewV23,V23));  
+  sV24=IF(nMappedDim24=1, Expand('%'|sMappedV24|'%'),IF(nNewDim24=1,sNewV24,V24));  
+  sV25=IF(nMappedDim25=1, Expand('%'|sMappedV25|'%'),IF(nNewDim25=1,sNewV25,V25));  
+  sV26=IF(nMappedDim26=1, Expand('%'|sMappedV26|'%'),IF(nNewDim26=1,sNewV26,V26));  
+  sV27=IF(nMappedDim27=1, Expand('%'|sMappedV27|'%'),IF(nNewDim27=1,sNewV27,V27));
+  sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);  
+ElseIf( pCopyDataViaFile = 1 );
+  sV1 =IF(nMappedDim1=1,  Expand('%'|sMappedV1|'%'), IF(nNewDim1=1, sNewV1,V2));
+  sV2 =IF(nMappedDim2=1,  Expand('%'|sMappedV2|'%'), IF(nNewDim2=1, sNewV2,V3));
+  sV3 =IF(nMappedDim3=1,  Expand('%'|sMappedV3|'%'), IF(nNewDim3=1, sNewV3,V4));
+  sV4 =IF(nMappedDim4=1,  Expand('%'|sMappedV4|'%'), IF(nNewDim4=1, sNewV4,V5));
+  sV5 =IF(nMappedDim5=1,  Expand('%'|sMappedV5|'%'), IF(nNewDim5=1, sNewV5,V6));
+  sV6 =IF(nMappedDim6=1,  Expand('%'|sMappedV6|'%'), IF(nNewDim6=1, sNewV6,V7));
+  sV7 =IF(nMappedDim7=1,  Expand('%'|sMappedV7|'%'), IF(nNewDim7=1, sNewV7,V8));
+  sV8 =IF(nMappedDim8=1,  Expand('%'|sMappedV8|'%'), IF(nNewDim8=1, sNewV8,V9));
+  sV9 =IF(nMappedDim9=1,  Expand('%'|sMappedV9|'%'), IF(nNewDim9=1, sNewV9,V10));
+  sV10=IF(nMappedDim10=1, Expand('%'|sMappedV10|'%'),IF(nNewDim10=1,sNewV10,V11));
+  sV11=IF(nMappedDim11=1, Expand('%'|sMappedV11|'%'),IF(nNewDim11=1,sNewV11,V12));
+  sV12=IF(nMappedDim12=1, Expand('%'|sMappedV12|'%'),IF(nNewDim12=1,sNewV12,V13));  
+  sV13=IF(nMappedDim13=1, Expand('%'|sMappedV13|'%'),IF(nNewDim13=1,sNewV13,V14));  
+  sV14=IF(nMappedDim14=1, Expand('%'|sMappedV14|'%'),IF(nNewDim14=1,sNewV14,V15));   
+  sV15=IF(nMappedDim15=1, Expand('%'|sMappedV15|'%'),IF(nNewDim15=1,sNewV15,V16));  
+  sV16=IF(nMappedDim16=1, Expand('%'|sMappedV16|'%'),IF(nNewDim16=1,sNewV16,V17));  
+  sV17=IF(nMappedDim17=1, Expand('%'|sMappedV17|'%'),IF(nNewDim17=1,sNewV17,V18));  
+  sV18=IF(nMappedDim18=1, Expand('%'|sMappedV18|'%'),IF(nNewDim18=1,sNewV18,V19));  
+  sV19=IF(nMappedDim19=1, Expand('%'|sMappedV19|'%'),IF(nNewDim19=1,sNewV19,V20));  
+  sV20=IF(nMappedDim20=1, Expand('%'|sMappedV20|'%'),IF(nNewDim20=1,sNewV20,V21));  
+  sV21=IF(nMappedDim21=1, Expand('%'|sMappedV21|'%'),IF(nNewDim21=1,sNewV21,V22));  
+  sV22=IF(nMappedDim22=1, Expand('%'|sMappedV22|'%'),IF(nNewDim22=1,sNewV22,V23));  
+  sV23=IF(nMappedDim23=1, Expand('%'|sMappedV23|'%'),IF(nNewDim23=1,sNewV23,V24));  
+  sV24=IF(nMappedDim24=1, Expand('%'|sMappedV24|'%'),IF(nNewDim24=1,sNewV24,V25));  
+  sV25=IF(nMappedDim25=1, Expand('%'|sMappedV25|'%'),IF(nNewDim25=1,sNewV25,V26));  
+  sV26=IF(nMappedDim26=1, Expand('%'|sMappedV26|'%'),IF(nNewDim26=1,sNewV26,V27));  
+  sV27=IF(nMappedDim27=1, Expand('%'|sMappedV27|'%'),IF(nNewDim27=1,sNewV27,V28));
+  sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V29);
+EndIf;
+    
 ################################################################################################# ########################
 ### Write data from source file to target cube ###########################################################
 
@@ -1728,11 +2012,11 @@ sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);
     EndIf;     
   
   EndIf;
+ 
 
 
 
-
-575,41
+575,47
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1755,7 +2039,13 @@ Else;
   If ( pCubeLogging <= 1 );
     CubeSetLogChanges( pTgtCube, IF(sCubeLogging@='YES',1,0) );
   EndIf;
-EndIf;    
+EndIf;
+
+### Delete export file if used
+If( pCopyDataViaFile = 1 );
+  TM1RunCmd = 'CMD.EXE /C "DEL ' | cFile | '"';
+  EXECUTECOMMAND ( TM1RunCmd , 0 );
+EndIf;
 
 ### Return code & final error message handling
 If( nErrors > 0 );
