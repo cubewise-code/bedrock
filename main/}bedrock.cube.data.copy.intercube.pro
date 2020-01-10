@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"z^P_wx_lBcrWNOaBRBAF@c1N^DajST5?7dc\Ra6ou0z;3NW1Oj0k?jNWSnG>vKJ[>uH2rqrl;i0Q]fW]L[<y]R9w4x\LD<o4g2amaK><2ODVVc4yI8Nr;Lp`9;o4j7=ftc@VDtnr<moYq0]Ys`wmJ<rx_31h^p]>qF67Yg4B?tQ@?Ik0]1elb?aFf=HMm?_pSt]Mniwy"
+565,"kj]r51cCpCoaj;esDbf;\oHll]wJB;Kv0c2flr3CeDkD;RNx9mTjLP4U_r<ZbB5;?knX`GJ<K>YZrR?ihF4jqeMBsm_g9RQmWz7TyUnbzQynznOq_PpO0[=yii8[u:bwv`W8Sr]WZ5:brCtAZKXFFt`M:syhbdRg5HH_bW4O3Q=lJ\izw]Rf3V]OJD8dMv6G3hAV=RNs"
 559,1
 928,0
 593,
@@ -290,7 +290,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1352
+572,1351
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1395,7 +1395,6 @@ WHILE (nChar <= nCharCount);
             nAddExtra = nCount;
           EndIf;
 
-          #If( sDelim @= sDelimDim );
           If( sDelim @= sDelimElem );
             nIsDelimiter = 1;
             sChar = sDelim;
