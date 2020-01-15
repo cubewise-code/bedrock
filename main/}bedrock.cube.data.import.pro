@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"sq7JXQXj>WjW3l97c3`a8C^z;J`f<l7?YLke:mvNk<NZMaLFmuCK1IVa6qDiuGmlbn3t_J6=vYAfn8?>U=EtDISRL_g>upiKcqSkC@4zic;c1Vf@[cWdRjL8VrUsip[JTV[PS3P\5D>tpVx9QFwPRAz;Qb;`9?SDv7He9m[HCISDKMq_usiZkfSI;VBxL5x0:zHBq2_u"
+565,"mm]EP5LEb9ECxaHW<:fR:\<=t^FmcmT6ghZ5N`tOoS>qV:?gTVekpRzn5]0nsvgtt1F2r:FLWB1NrEhq>Ca2hNO^SFLy1D\zp]n4u04RS=En@jJZg9?szhgX9^Wkt3sA5hijGjB4vvzU88OR5AOu]GX>B[hqLH9d4oqss:2eq=6a?`g8ebmY9n\U\78X;NMkGtO:pQWI"
 559,1
 928,0
 593,
@@ -288,7 +288,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,975
+572,902
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -318,6 +318,7 @@ EndIf;
 
 # Note:
 # Naturally, a valid target cube name (pCube) is mandatory otherwise the process will abort.
+# Element mapping for new dimensions (pMappingToNewDims ) is also required when the target cube has more dimensions than the source, otherwise the process will abort.
 # The default input path is the same as the error file path if not specified.
 # If the file name is left blank, the process will look for a file called pCube_Export.csv.
 
@@ -325,6 +326,16 @@ EndIf;
 # The assumed file format is as per standard CMA export:
 # - v1 specIfies cube name, subsequent fields specify cube address ( individual element names ).
 # - vN specIfies cell data value to load. With provision for files with header rows.
+# Format of filter row for Zero out:
+# - v1 specifies source cube name
+# - v2 must be equal to "Filter".
+# - v3 specifies the filter to be used to zero out. Please note if target cube has additional dimensions this is the final filter used if pMappingToNewDims is not speficied. All the elements in additional dimensions will be cleaned 
+# - v4 specifies the dimension delimiter used in filter
+# - v5 specifies the element start delimiter used in filter
+# - v6 specifies the element delimiter used in filter
+# Note about the Zero out:
+# if pMappingToNewDims parameter is specified, it will be concatenated to the filter in the file to restict the cube slice to be zeroed out. Similarly, if pDim is specified the source element is substituted with the targed one, sould it be in the filter string
+# in both cases the delimiters in the source file must match the delimiters passed in parameters of this process.
 #EndRegion @DOC
 
 ### Global Variables
@@ -544,12 +555,12 @@ EndIf;
 
 ### Determine number of dims in target cube ###
 nCount = 1;
-nDimensionIndex = 0;
+nSubstututeDimensionIndex = 0;
 While( 
 TabDim( pCube, nCount ) @<> '' );
   sDimension = TabDim( pCube, nCount );
   If( sDimension @= pDimension );
-    nDimensionIndex = nCount;
+    nSubstututeDimensionIndex = nCount;
   EndIf;
   nCount = nCount + 1;
 End;
@@ -558,7 +569,7 @@ nDimensionCount = nCount - 1;
 ## Validate the dimension is part of the cube.
 IF( pDimension @= '');
   ## CONTINUE;
-ELSEIf( nDimensionIndex = 0 );
+ELSEIf( nSubstututeDimensionIndex = 0 );
     sMessage = 'Specified dimension: ' | pDimension | ' is not a component of the cube: ' | pCube;
     nErrors = nErrors + 1;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -616,120 +627,36 @@ sDim25 = TabDim( pCube, 25 );
 sDim26 = TabDim( pCube, 26 );
 sDim27 = TabDim( pCube, 27 );
 
-### Placeholders for mappped dimensions
-nMappedDim1 = 0;
-nMappedDim2 = 0;
-nMappedDim3 = 0;
-nMappedDim4 = 0;
-nMappedDim5 = 0;
-nMappedDim6 = 0;
-nMappedDim7 = 0;
-nMappedDim8 = 0;
-nMappedDim9 = 0;
-nMappedDim10 = 0;
-nMappedDim11 = 0;
-nMappedDim12 = 0;
-nMappedDim13 = 0;
-nMappedDim14 = 0;
-nMappedDim15 = 0;
-nMappedDim16 = 0;
-nMappedDim17 = 0;
-nMappedDim18 = 0;
-nMappedDim19 = 0;
-nMappedDim20 = 0;
-nMappedDim21 = 0;
-nMappedDim22 = 0;
-nMappedDim23 = 0;
-nMappedDim24 = 0;
-nMappedDim25 = 0;
-nMappedDim26 = 0;
-nMappedDim27 = 0;
+### Placeholders for mappped dimensions and for new dimensions
 
-sMappedV1 = '';
-sMappedV2 = '';
-sMappedV3 = '';
-sMappedV4 = '';
-sMappedV5 = '';
-sMappedV6 = '';
-sMappedV7 = '';
-sMappedV8 = '';
-sMappedV9 = '';
-sMappedV10 = '';
-sMappedV11 = '';
-sMappedV12 = '';
-sMappedV13 = '';
-sMappedV14 = '';
-sMappedV15 = '';
-sMappedV16 = '';
-sMappedV17 = '';
-sMappedV18 = '';
-sMappedV19 = '';
-sMappedV20 = '';
-sMappedV21 = '';
-sMappedV22 = '';
-sMappedV23 = '';
-sMappedV24 = '';
-sMappedV25 = '';
-sMappedV26 = '';
-sMappedV27 = '';
-sMappedV28 = '';
-
-### Placeholders for new dimensions
-nNewDim1 = 0;
-nNewDim2 = 0;
-nNewDim3 = 0;
-nNewDim4 = 0;
-nNewDim5 = 0;
-nNewDim6 = 0;
-nNewDim7 = 0;
-nNewDim8 = 0;
-nNewDim9 = 0;
-nNewDim10 = 0;
-nNewDim11 = 0;
-nNewDim12 = 0;
-nNewDim13 = 0;
-nNewDim14 = 0;
-nNewDim15 = 0;
-nNewDim16 = 0;
-nNewDim17 = 0;
-nNewDim18 = 0;
-nNewDim19 = 0;
-nNewDim20 = 0;
-nNewDim21 = 0;
-nNewDim22 = 0;
-nNewDim23 = 0;
-nNewDim24 = 0;
-nNewDim25 = 0;
-nNewDim26 = 0;
-nNewDim27 = 0;
-
-sNewV1 = '';
-sNewV2 = '';
-sNewV3 = '';
-sNewV4 = '';
-sNewV5 = '';
-sNewV6 = '';
-sNewV7 = '';
-sNewV8 = '';
-sNewV9 = '';
-sNewV10 = '';
-sNewV11 = '';
-sNewV12 = '';
-sNewV13 = '';
-sNewV14 = '';
-sNewV15 = '';
-sNewV16 = '';
-sNewV17 = '';
-sNewV18 = '';
-sNewV19 = '';
-sNewV20 = '';
-sNewV21 = '';
-sNewV22 = '';
-sNewV23 = '';
-sNewV24 = '';
-sNewV25 = '';
-sNewV26 = '';
-sNewV27 = '';
+nMappedDim1 = 0;	sMappedV1 = '';		nNewDim1 = 0;	  sNewV1 = '';
+nMappedDim2 = 0;	sMappedV2 = '';		nNewDim2 = 0;	  sNewV2 = '';
+nMappedDim3 = 0;	sMappedV3 = '';		nNewDim3 = 0;	  sNewV3 = '';
+nMappedDim4 = 0;	sMappedV4 = '';		nNewDim4 = 0;	  sNewV4 = '';
+nMappedDim5 = 0;	sMappedV5 = '';		nNewDim5 = 0;	  sNewV5 = '';
+nMappedDim6 = 0;	sMappedV6 = '';		nNewDim6 = 0;	  sNewV6 = '';
+nMappedDim7 = 0;	sMappedV7 = '';		nNewDim7 = 0;	  sNewV7 = '';
+nMappedDim8 = 0;	sMappedV8 = '';		nNewDim8 = 0;	  sNewV8 = '';
+nMappedDim9 = 0;	sMappedV9 = '';		nNewDim9 = 0;	  sNewV9 = '';
+nMappedDim10 = 0;	sMappedV10 = '';	nNewDim10 = 0;	sNewV10 = '';
+nMappedDim11 = 0;	sMappedV11 = '';	nNewDim11 = 0;	sNewV11 = '';
+nMappedDim12 = 0;	sMappedV12 = '';	nNewDim12 = 0;	sNewV12 = '';
+nMappedDim13 = 0;	sMappedV13 = '';	nNewDim13 = 0;	sNewV13 = '';
+nMappedDim14 = 0;	sMappedV14 = '';	nNewDim14 = 0;	sNewV14 = '';
+nMappedDim15 = 0;	sMappedV15 = '';	nNewDim15 = 0;	sNewV15 = '';
+nMappedDim16 = 0;	sMappedV16 = '';	nNewDim16 = 0;	sNewV16 = '';
+nMappedDim17 = 0;	sMappedV17 = '';	nNewDim17 = 0;	sNewV17 = '';
+nMappedDim18 = 0;	sMappedV18 = '';	nNewDim18 = 0;	sNewV18 = '';
+nMappedDim19 = 0;	sMappedV19 = '';	nNewDim19 = 0;	sNewV19 = '';
+nMappedDim20 = 0;	sMappedV20 = '';	nNewDim20 = 0;	sNewV20 = '';
+nMappedDim21 = 0;	sMappedV21 = '';	nNewDim21 = 0;	sNewV21 = '';
+nMappedDim22 = 0;	sMappedV22 = '';	nNewDim22 = 0;	sNewV22 = '';
+nMappedDim23 = 0;	sMappedV23 = '';	nNewDim23 = 0;	sNewV23 = '';
+nMappedDim24 = 0;	sMappedV24 = '';	nNewDim24 = 0;	sNewV24 = '';
+nMappedDim25 = 0;	sMappedV25 = '';	nNewDim25 = 0;	sNewV25 = '';
+nMappedDim26 = 0;	sMappedV26 = '';	nNewDim26 = 0;	sNewV26 = '';
+nMappedDim27 = 0;	sMappedV27 = '';	nNewDim27 = 0;	sNewV27 = '';
+                  sMappedV28 = '';
 
 ###########################################
 ### SPLIT MAPPING TO NEW DIMS PARAMETER ###
@@ -987,7 +914,7 @@ WHILE (nChar <= nCharCount);
           EndIf;
 
           #Add to the Target filter - no need to manage element separators, since just one target element is possible in mapping
-          sTargetFilter=sTargetFilter|sDelimElem|sElement;
+          sTargetFilter=sTargetFilter|sElementStartDelim|sElement;
           
           # Clear the word
           sWord = '';
@@ -1269,7 +1196,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,794
+574,800
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1289,12 +1216,20 @@ nRecordProcessedCount = nRecordProcessedCount + 1;
 ### Zero out Target view using filter in the 1st record of the data source, if requested
 If( nRecordProcessedCount = 1 );
   If( pZeroFilter = 2 );
-    sImportedFilter = v2;
-    sImportedDelimDim = v3;
-    sImportedElementStartDelim = v4;
-    sImportedDelimElem = v5;
-    ### Check delimiters are the same
-    IF(sElementMapping @<> '' & (sDelimDim @<> sImportedDelimDim % sElementStartDelim @<> sImportedElementStartDelim % sDelimElem @<> sImportedDelimElem));
+    sRowIsFilter = v2;
+    sImportedFilter = v3;
+    sImportedDelimDim = v4;
+    sImportedElementStartDelim = v5;
+    sImportedDelimElem = v6;
+    ### Check Filter row
+    IF(sRowIsFilter @<> 'Filter');
+        sMessage = 'Filter row in source file not having the expected format.';
+        nErrors = nErrors + 1;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ProcessBreak;
+    ENDIF;
+    ### Check delimiters are the same when using any mapping. This because filter from the file and mappings form the params will be concatenated / substituted
+    IF((sElementMapping @<> '' % pDimension @<>'') & (sDelimDim @<> sImportedDelimDim % sElementStartDelim @<> sImportedElementStartDelim % sDelimElem @<> sImportedDelimElem));
         sMessage = 'Error zeroing out target slice corresponding to the filter plus new mapped dimensions: delimiters in source file do not match with the ones in parameters.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -1302,8 +1237,6 @@ If( nRecordProcessedCount = 1 );
     ENDIF;
     
     ### Check filter in source file and validate its dimensions
-    
-    ### Split filter and create subsets ###
     sFilter = TRIM( sImportedFilter );
     nChar = 1;
     nCharCount = LONG( sFilter );
@@ -1482,7 +1415,7 @@ If( nRecordProcessedCount = 1 );
       IF( sTargetFilter @= '' );
         sTargetFilter = pDimension | sElementStartDelim | sTargetElement;
       Else;
-        ### Remove spaces from the string
+        ### Remove spaces from the string, then remove source element from the filter if present
         sTargetFilter = UPPER( sTargetFilter );
         nSPIndex = SCAN( ' ', sTargetFilter );
         While ( nSPIndex <> 0);
@@ -1509,7 +1442,7 @@ If( nRecordProcessedCount = 1 );
         If( nRemoveIndex <> 0 );
           sTargetFilter = DELET( sTargetFilter, nRemoveIndex, Long(sRemoveString4) );
         EndIf;
-      
+        ## Add target element to the filter
         sTargetFilter = sTargetFilter | sDelimDim | pDimension | sElementStartDelim | sTargetElement;
       EndIf;
     Endif;
@@ -1544,36 +1477,36 @@ Endif;
 ### Determine target dimension SubStitution ###
 IF( pDimension @<>'');
   
-  IF(sSourceElement@<>Expand('%v'|numbertostring(nDimensionIndex+1)|'%'));
+  IF(sSourceElement@<>Expand('%v'|numbertostring(nSubstututeDimensionIndex+1)|'%'));
    # leave variable as is
   Else; 
   
-    v2 = IF(nDimensionIndex = 1, sTargetElement, v2);
-    v3 = IF(nDimensionIndex = 2, sTargetElement, v3);
-    v4 = IF(nDimensionIndex = 3, sTargetElement, v4);
-    v5 = IF(nDimensionIndex = 4, sTargetElement, v5);
-    v6 = IF(nDimensionIndex = 5, sTargetElement, v6);
-    v7 = IF(nDimensionIndex = 6, sTargetElement, v7);
-    v8 = IF(nDimensionIndex = 7, sTargetElement, v8);
-    v9 = IF(nDimensionIndex = 8, sTargetElement, v9);
-    v10 = IF(nDimensionIndex = 9, sTargetElement, v10);
-    v11 = IF(nDimensionIndex = 10, sTargetElement, v11);
-    v12 = IF(nDimensionIndex = 11, sTargetElement, v12);
-    v13 = IF(nDimensionIndex = 12, sTargetElement, v13);
-    v14 = IF(nDimensionIndex = 13, sTargetElement, v14);
-    v15 = IF(nDimensionIndex = 14, sTargetElement, v15);
-    v16 = IF(nDimensionIndex = 15, sTargetElement, v16);
-    v17 = IF(nDimensionIndex = 16, sTargetElement, v17);
-    v18 = IF(nDimensionIndex = 17, sTargetElement, v18);
-    v19 = IF(nDimensionIndex = 18, sTargetElement, v19);
-    v20 = IF(nDimensionIndex = 19, sTargetElement, v20);
-    v21 = IF(nDimensionIndex = 20, sTargetElement, v21);
-    v22 = IF(nDimensionIndex = 21, sTargetElement, v22);
-    v23 = IF(nDimensionIndex = 22, sTargetElement, v23);
-    v24 = IF(nDimensionIndex = 23, sTargetElement, v24);
-    v25 = IF(nDimensionIndex = 24, sTargetElement, v25);
-    v26 = IF(nDimensionIndex = 25, sTargetElement, v26);
-    v27 = IF(nDimensionIndex = 26, sTargetElement, v27);
+    v2 = IF(nSubstututeDimensionIndex = 1, sTargetElement, v2);
+    v3 = IF(nSubstututeDimensionIndex = 2, sTargetElement, v3);
+    v4 = IF(nSubstututeDimensionIndex = 3, sTargetElement, v4);
+    v5 = IF(nSubstututeDimensionIndex = 4, sTargetElement, v5);
+    v6 = IF(nSubstututeDimensionIndex = 5, sTargetElement, v6);
+    v7 = IF(nSubstututeDimensionIndex = 6, sTargetElement, v7);
+    v8 = IF(nSubstututeDimensionIndex = 7, sTargetElement, v8);
+    v9 = IF(nSubstututeDimensionIndex = 8, sTargetElement, v9);
+    v10 = IF(nSubstututeDimensionIndex = 9, sTargetElement, v10);
+    v11 = IF(nSubstututeDimensionIndex = 10, sTargetElement, v11);
+    v12 = IF(nSubstututeDimensionIndex = 11, sTargetElement, v12);
+    v13 = IF(nSubstututeDimensionIndex = 12, sTargetElement, v13);
+    v14 = IF(nSubstututeDimensionIndex = 13, sTargetElement, v14);
+    v15 = IF(nSubstututeDimensionIndex = 14, sTargetElement, v15);
+    v16 = IF(nSubstututeDimensionIndex = 15, sTargetElement, v16);
+    v17 = IF(nSubstututeDimensionIndex = 16, sTargetElement, v17);
+    v18 = IF(nSubstututeDimensionIndex = 17, sTargetElement, v18);
+    v19 = IF(nSubstututeDimensionIndex = 18, sTargetElement, v19);
+    v20 = IF(nSubstututeDimensionIndex = 19, sTargetElement, v20);
+    v21 = IF(nSubstututeDimensionIndex = 20, sTargetElement, v21);
+    v22 = IF(nSubstututeDimensionIndex = 21, sTargetElement, v22);
+    v23 = IF(nSubstututeDimensionIndex = 22, sTargetElement, v23);
+    v24 = IF(nSubstututeDimensionIndex = 23, sTargetElement, v24);
+    v25 = IF(nSubstututeDimensionIndex = 24, sTargetElement, v25);
+    v26 = IF(nSubstututeDimensionIndex = 25, sTargetElement, v26);
+    v27 = IF(nSubstututeDimensionIndex = 26, sTargetElement, v27);
   EndIf;
 
 Endif;

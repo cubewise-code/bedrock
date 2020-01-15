@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"rLuZodm@M1@AsDh7S[aR89TfUJ\TBTuC6Vh]i<Z:RLSeApU6is`I9@BWQ4W2t^=ACX<]gOyFy^mCHuyz:]@KGAYN87DIJ1sAHji63VJ`cTGn>6a[?Sv5zM6bmthrVzxK_jpsgsV1kId8UjtNg6<seNZY<jOZjJo9mLH[_6KJe8rdAgzDe4Qo^R4mux6:C^_;\E0KWm>2"
+565,"bSaWD7yL`lR\UCiqTbOblDeltwc5PkMhm=IC<3AOf[5RbrJr];BM5;u]>]]=9=`sZ2WP[RFLgAIvlMz[guWDsXc4vLzw3YjK?3T0_XdI\FeExn[7?T1oPJWDfg8m^>GA6fDmBLygbEdjg3KY]CLGF_3?tv;3H6:rx^eZxzG_zJ8WTZ\AnnAuk_Btw8nS><HEd<0o?Fc="
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,23
+560,22
 pLogoutput
 pCube
 pView
@@ -47,9 +47,8 @@ pDelim
 pQuote
 pTitleRecord
 pSandbox
-pIncludeFilter
 pSuppressConsolStrings
-561,23
+561,22
 1
 2
 2
@@ -72,8 +71,7 @@ pSuppressConsolStrings
 1
 2
 1
-1
-590,23
+590,22
 pLogoutput,0
 pCube,""
 pView,""
@@ -95,9 +93,8 @@ pDelim,","
 pQuote,""""
 pTitleRecord,1
 pSandbox,""
-pIncludeFilter,0
 pSuppressConsolStrings,0
-637,23
+637,22
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
 pView,"OPTIONAL: Temporary view name"
@@ -117,10 +114,9 @@ pFilePath,"OPTIONAL: Export Directory (will default to error file path)"
 pFileName,"OPTIONAL: Export Filename (If Left Blank Defaults to cube_export.csv)"
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
-pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, Default=1)"
+pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
-pIncludeFilter,"OPTIONAL: Include Filter Record in Export File? (Boolean 0=false, 1=true, Default=0)"
-pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
+pSuppressConsolStrings,"OPTIONAL: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
 577,101
 V1
 V2
@@ -734,7 +730,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,545
+572,363
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -787,6 +783,7 @@ EndIf;
 ##Global Variables
 StringGlobalVariable('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
+StringGlobalVariable('sBedrockViewCreateParsedFilter');
 
 ### Constants ###
 cThisProcName     = GetProcessName();
@@ -795,7 +792,7 @@ cTimeStamp        = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pIncludeFilter:%pIncludeFilter%, pSuppressConsolStrings:%pSuppressConsolStrings%.'; 
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%.'; 
 cDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 cLenASCIICode     = 3;
 
@@ -966,191 +963,6 @@ Else;
     SetUseActiveSandboxProperty( 0 );
 EndIf;
 
-### Check and validate Filter
-sTrimFilter = TRIM( pFilter );
-sTargetFilter = '';
-nChar = 1;
-nCharCount = LONG( sTrimFilter );
-sWord = '';
-sLastDelim = '';
-nIndex = 1;
-# Add a trailing element delimiter so that the last element is picked up
-If( nCharCount > 0 );
-  sTrimFilter = sTrimFilter | sDelimElem;
-  nCharCount = nCharCount + LONG(sDelimElem);
-EndIf;
-
-WHILE (nChar <= nCharCount);
-    sChar = SUBST( sTrimFilter, nChar, 1);
-
-    # Used for delimiters, required for multiple character delimiters
-    sDelim = '';
-    nAddExtra = 0;
-
-    # Ignore spaces
-    IF (TRIM(sChar) @<> '' );
-
-      ### Dimension Name ###
-
-      # If the delimiter is more than 1 character peek ahead the same amount
-      # Ignore the first character
-      sDelim = sChar;
-      nCount = LONG(sElementStartDelim) - 1;
-      If( nCount > 0 & nChar + nCount <= nCharCount );
-        # Add the extra characters
-        sDelim = sDelim | SUBST( sTrimFilter, nChar + 1, nCount);
-        # Move to the end of the delimter
-        nAddExtra = nCount;
-      EndIf;
-
-      If( sDelim @= sElementStartDelim );
-
-        sChar = sDelim;
-
-        If( sLastDelim @<> '' & sLastDelim @<> sDelimDim );
-            sMessage = 'The name of a dimension must follow a dimension delimiter (' | sDelimDim | ')';
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        EndIf;
-
-        sDimension = sWord;
-        nOneDimEleAdded = 0;
-        
-        If( DimensionExists( sDimension ) = 0 );
-            # The dimension does not exist in the model. Cancel process
-            sMessage = 'Dimension: ' | sDimension | ' does not exist';
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        EndIf;
-
-        ### Determine the dimension is a member of the cube ###
-        nCount = 1;
-        nDimensionIndex = 0;
-        While( TabDim( pCube, nCount ) @<> '' );
-            sCubeDimName = TabDim( pCube, nCount );
-            If( sDimension @= sCubeDimName );
-                nDimensionIndex = nCount;
-            EndIf;
-            nCount = nCount + 1;
-        End;
-
-        If( nDimensionIndex = 0 );
-            # The dimension does not exist in the cube. Cancel process
-            sMessage = 'Dimension: ' | sDimension | ' is not a member of: '| pCube | 'cube.';
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        EndIf;
-        #Add to the Target filter
-        IF(sTargetFilter@='');
-          sTargetFilter=sDimension;          
-        Else;
-          sTargetFilter=sTargetFilter|sDelimDim|sDimension;
-        Endif;  
-
-        nIndex = 1;
-        sLastDelim = sChar;
-        # Clear the word
-        sWord = '';
-      Else;
-
-        # Reset extra chars
-        nAddExtra = 0;
-
-        ### Check both both dim delimiter and element delimiter ###
-        nIsDelimiter = 0;
-
-        ## Check dimension delimiter first
-        # If the delimiter is more than 1 character peek ahead the same amount
-        # Ignore the first character
-        sDelim = sChar;
-        nCount = LONG(sDelimDim) - 1;
-        If( nCount > 0 & nChar + nCount <= nCharCount );
-          # Add the extra characters
-          sDelim = sDelim | SUBST( sTrimFilter, nChar + 1, nCount);
-          # Move to the end of the delimter
-          nAddExtra = nCount;
-        EndIf;
-
-        If( sDelim @= sDelimDim );
-          nIsDelimiter = 1;
-          sChar = sDelim;
-        Else;
-          # Reset extra chars
-          nAddExtra = 0;
-
-          ## Check element delimiter
-
-          # If the delimiter is more than 1 character peek ahead the same amount
-          # Ignore the first character
-          sDelim = sChar;
-          nCount = LONG(sDelimElem) - 1;
-          If( nCount > 0 & nChar + nCount <= nCharCount );
-            # Add the extra characters
-            sDelim = sDelim | SUBST( sTrimFilter, nChar + 1, nCount);
-            # Move to the end of the delimter
-            nAddExtra = nCount;
-          EndIf;
-
-          If( sDelim @= sDelimElem );
-            nIsDelimiter = 1;
-            sChar = sDelim;
-          Else;
-            # Reset extra chars
-            nAddExtra = 0;
-          EndIf;
-
-        EndIf;
-
-        If ( nIsDelimiter = 1 );
-
-          If( sLastDelim @= '' % sLastDelim @= sDelimDim );
-            sMessage = 'An element delimiter must follow a dimension name: ' |  sChar | ' (' | NumberToString(nChar) | ')';
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
-          EndIf;
-
-          sElement = sWord;
-
-          If( DIMIX( sDimension, sElement ) = 0 );
-              # The element does not exist in the dimension. Cancel process
-              sMessage = 'Element: ' | sElement | ' in dimension ' | sDimension | ' does not exist';
-              nErrors = nErrors + 1;
-              LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-              #ProcessError();
-          EndIf;
-          # Add the element to the source or target depending on whether it's the first or the second element
-          # Get principal name
-          # in case source element and this element are using different aliases
-
-          sElement = DimensionElementPrincipalName(sDimension,sElement);
-
-          #Add to the Target filter
-          If( nOneDimEleAdded = 0 );
-            sTargetFilter=sTargetFilter|pEleStartDelim|sElement;
-            nOneDimEleAdded = nOneDimEleAdded + 1;
-          Else;
-            sTargetFilter=sTargetFilter|sDelimElem|sElement;
-          EndIf;
-
-          nIndex = nIndex + 1;
-          sLastDelim = sChar;
-
-          # Clear the word
-          sWord = '';
-        Else;
-          sWord = sWord | sChar;
-        EndIf;
-
-      EndIf;
-
-    EndIf;
-
-    nChar = nChar + nAddExtra + 1;
-
-END;
-pFilter = sTargetFilter;
-
 # Jump to Epilog if any errors so far
 IF ( nErrors > 0 );
     DataSourceType = 'NULL';
@@ -1199,7 +1011,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
         	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
         	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-        	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox
+        	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
         );
     	  nThreadElCounter = 0;
     	  sFilter = '';
@@ -1216,7 +1028,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
     	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
     	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-    	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox
+    	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
     );
   ENDIF;
   DataSourceType = 'NULL';
@@ -1228,7 +1040,6 @@ Else;
   nCount = 1;
   nDimensionIndex = 0;
   sTitle = '%pQuote%Cube%pQuote%';
-  sFilterRow = '%pQuote%%pCube%%pQuote%%pFieldDelim%%pQuote%%pFilter%%pQuote%%pFieldDelim%%pQuote%%pDimDelim%%pQuote%%pFieldDelim%%pQuote%%pEleStartDelim%%pQuote%%pFieldDelim%%pQuote%%pEleDelim%%pQuote%';
   sRow = '%pQuote%%pCube%%pQuote%';
   While( TabDim( pCube, nCount ) @<> '' );
       sDimension = TabDim( pCube, nCount );
@@ -1269,6 +1080,9 @@ Else;
       ProcessBreak();
   ENDIF;
   
+  sParsedFilter = sBedrockViewCreateParsedFilter;
+  sFilterRow = '%pQuote%%pCube%%pQuote%%pFieldDelim%%pQuote%Filter%pQuote%%pFieldDelim%%pQuote%%sParsedFilter%%pQuote%%pFieldDelim%%pQuote%%pDimDelim%%pQuote%%pFieldDelim%%pQuote%%pEleStartDelim%%pQuote%%pFieldDelim%%pQuote%%pEleDelim%%pQuote%';
+  
   # Assign Datasource 
   DataSourceType          = 'VIEW';
   DatasourceNameForServer = pCube;
@@ -1298,12 +1112,12 @@ EndIf;
 nDataCount = nDataCount + 1;
 
 # Output the title string
-IF( nDataCount = 1 & pTitleRecord = 1 );
+IF( nDataCount = 1 & pTitleRecord >= 1 );
     AsciiOutput( cExportFile, Expand(sTitle) );
 Endif; 
 
 ### Export filter into the 1st record of the file, it will be used from import process to zero out the corresponding slice, if specified
-IF( nDataCount = 1 & pIncludeFilter = 1 );
+IF( nDataCount = 1 & pTitleRecord = 2 );
     AsciiOutput( cExportFile, Expand(sFilterRow) );
 Endif;
     

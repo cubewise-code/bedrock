@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"kj]r51cCpCoaj;esDbf;\oHll]wJB;Kv0c2flr3CeDkD;RNx9mTjLP4U_r<ZbB5;?knX`GJ<K>YZrR?ihF4jqeMBsm_g9RQmWz7TyUnbzQynznOq_PpO0[=yii8[u:bwv`W8Sr]WZ5:brCtAZKXFFt`M:syhbdRg5HH_bW4O3Q=lJ\izw]Rf3V]OJD8dMv6G3hAV=RNs"
+565,"t@i5cc53IvFPmz_h1Qi2a@S4o]g`t=oI8<1yf9IEnvg\b0q]x3S7XFpbpWG0su@A8ZTinI57bl;^mTOfVslI7JwPvo`T?tPX2R[89\P>pe]IS:wPsE>_yuFLdXFb7I7eqP6o?N`G5uqYM0CzXhxz;ZpcZi^\:80EH5qoYtO[TDa_gR7CU5yb4=\>N\?\Rj@C3Fz=janq"
 559,1
 928,0
 593,
@@ -44,8 +44,8 @@ pEleDelim
 pTemp
 pCubeLogging
 pSandbox
+pFile
 pThreadMode
-pCopyDataViaFile
 561,20
 1
 2
@@ -86,8 +86,8 @@ pEleDelim,"+"
 pTemp,1
 pCubeLogging,0
 pSandbox,""
+pFile,0
 pThreadMode,0
-pCopyDataViaFile,0
 637,20
 pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
@@ -107,8 +107,8 @@ pEleDelim,"OPTIONAL: Delimiter between elements"
 pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
+pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
-pCopyDataViaFile,"OPTIONAL: Copy via file export and import. Reduces locks (1 = Yes)"
 577,29
 V1
 V2
@@ -290,7 +290,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1351
+572,1350
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -365,7 +365,7 @@ cTimeStamp          = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcCube:%pSrcCube%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pTgtCube:%pTgtCube%, pMappingToNewDims:%pMappingToNewDims%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pFactor:%pFactor%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pThreadMode:%pThreadMode%, pCopyDataViaFile:%pCopyDataViaFile%.'; 
+cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcCube:%pSrcCube%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pTgtCube:%pTgtCube%, pMappingToNewDims:%pMappingToNewDims%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pFactor:%pFactor%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%, pThreadMode:%pThreadMode%.'; 
 
 sDelimDim           = TRIM(pDimDelim);
 sElementStartDelim  = TRIM(pElEStartDelim);
@@ -395,7 +395,7 @@ Else;
 EndIf;
 
 ## File location for indirect data copy
-cDir    = '..' | sOSDelim;
+cDir    = '.' | sOSDelim;
 cFileName = pSrcCube | cTimeStamp | cRandomInt | '.csv';
 cFile   = cDir | cFileName;
 cTitleRows = 1;
@@ -636,7 +636,7 @@ While( TabDim( pSrcCube, nSourceIndex ) @<> '' );
     WHILE(TabDim( pTgtCube, nTargetIndex ) @<> '');
       sTargetDim = TabDim( pTgtCube, nTargetIndex );
       If(sSourceDim @= sTargetDim);
-          If( pCopyDataViaFile = 0 );
+          If( pFile = 0 );
             If(nTargetIndex = 1);
               nMappedDim1 = 1;
               sMappedV1  = 'V' | NumberToString(nSourceIndex);
@@ -719,7 +719,7 @@ While( TabDim( pSrcCube, nSourceIndex ) @<> '' );
               nMappedDim27 = 1;
               sMappedV27  = 'V' | NumberToString(nSourceIndex);
             EndIf;
-          ElseIf( pCopyDataViaFile = 1 );
+          ElseIf( pFile > 0 );
             ## If using source file first variable holds tha cube name, so all the other ones have the index increased by 1
             If(nTargetIndex = 1);
               nMappedDim1 = 1;
@@ -818,7 +818,7 @@ END;
 # The last variable in the data source holds the values
 # which need to be mapped to the last variable in the target
 
-If( pCopyDataViaFile = 0 );
+If( pFile = 0 );
   If(nTargetIndex = 1);
     nMappedDim1 = 1;
     sMappedV1  = 'V' | NumberToString(nSourceIndex);
@@ -906,7 +906,7 @@ If( pCopyDataViaFile = 0 );
     nMappedDim28 = 1;
     sMapped28  = 'V' | NumberToString(nSourceIndex);
   EndIf;
-ElseIf( pCopyDataViaFile = 1 );
+ElseIf( pFile > 0 );
   If(nTargetIndex = 1);
     nMappedDim1 = 1;
     sMappedV1  = 'V' | NumberToString(nSourceIndex + 1);
@@ -1485,7 +1485,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         	'pSrcCube', pSrcCube, 'pFilter', sFilter, 'pFilterParallel', '', 'pTgtCube', pTgtCube, 'pMappingToNewDims', pMappingToNewDims,
         	'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
           'pFactor', pFactor, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-          'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
+          'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
         );
     	  nThreadElCounter = 0;
     	  sFilter = '';
@@ -1497,7 +1497,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pSrcCube', pSrcCube, 'pFilter', sFilter, 'pFilterParallel', '', 'pTgtCube', pTgtCube, 'pMappingToNewDims', pMappingToNewDims,
     	'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
       'pFactor', pFactor, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-      'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
+      'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
     );
   ENDIF;      
   DataSourceType = 'NULL';
@@ -1549,7 +1549,7 @@ Else;
   
   Endif;
   
-  If( pCopyDataViaFile = 0 );
+  If( pFile = 0 );
     ### Create View of Source ###
     IF(pSuppressConsol = 0);
       nSubN=1;
@@ -1579,7 +1579,7 @@ Else;
           ProcessBreak;
     ENDIF;
   
-  ElseIf( pCopyDataViaFile = 1 );
+  ElseIf( pFile > 0 );
     ### Export to File in case of Copy Data Via File ###
     IF(pSuppressConsol = 0);
       nSubN=1;
@@ -1608,8 +1608,7 @@ Else;
        'pDelim', cDelimiter,
        'pQuote', cQuote,
        'pTitleRecord', cTitleRows,
-       'pSandbox', pSandbox,
-       'pIncludeFilter', 0
+       'pSandbox', pSandbox
       );
     
     IF(nRet <> 0);
@@ -1628,12 +1627,12 @@ Else;
   EndIf;
   
   ### Assign Datasource ###
-  If( pCopyDataViaFile = 0 );
+  If( pFile = 0 );
     DataSourceType          = 'VIEW';
     DatasourceNameForServer = pSrcCube;
     DatasourceNameForClient = pSrcCube;
     DatasourceCubeView      = sView;
-  ElseIf( pCopyDataViaFile = 1 );
+  ElseIf( pFile > 0 );
     DataSourceType                  = 'CHARACTERDELIMITED';
     DatasourceNameForServer         = cFile;
     DatasourceNameForClient         = cFile;
@@ -1656,7 +1655,7 @@ EndIf;
   # the string variable Source Variable for Target varialbe V1 is set on the prolog to V3 (see Mapped part)
   # which means Expand(%V3%) gives the value of V3
   # and Target sV1 will equal V3
-If( pCopyDataViaFile = 0 );  
+If( pFile = 0 );  
   sV1 =IF(nMappedDim1=1,  Expand('%'|sMappedV1|'%'), IF(nNewDim1=1, sNewV1,V1));
   sV2 =IF(nMappedDim2=1,  Expand('%'|sMappedV2|'%'), IF(nNewDim2=1, sNewV2,V2));
   sV3 =IF(nMappedDim3=1,  Expand('%'|sMappedV3|'%'), IF(nNewDim3=1, sNewV3,V3));
@@ -1685,7 +1684,7 @@ If( pCopyDataViaFile = 0 );
   sV26=IF(nMappedDim26=1, Expand('%'|sMappedV26|'%'),IF(nNewDim26=1,sNewV26,V26));  
   sV27=IF(nMappedDim27=1, Expand('%'|sMappedV27|'%'),IF(nNewDim27=1,sNewV27,V27));
   sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V28);  
-ElseIf( pCopyDataViaFile = 1 );
+ElseIf( pFile > 0 );
   sV1 =IF(nMappedDim1=1,  Expand('%'|sMappedV1|'%'), IF(nNewDim1=1, sNewV1,V2));
   sV2 =IF(nMappedDim2=1,  Expand('%'|sMappedV2|'%'), IF(nNewDim2=1, sNewV2,V3));
   sV3 =IF(nMappedDim3=1,  Expand('%'|sMappedV3|'%'), IF(nNewDim3=1, sNewV3,V4));
@@ -2041,8 +2040,8 @@ Else;
 EndIf;
 
 ### Delete export file if used
-If( pCopyDataViaFile = 1 );
-  TM1RunCmd = 'CMD.EXE /C "DEL ' | cFile | '"';
+If( pFile = 1 );
+  TM1RunCmd = 'CMD.EXE /C "DEL "' | cFile | '" "';
   EXECUTECOMMAND ( TM1RunCmd , 0 );
 EndIf;
 
