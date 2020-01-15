@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"qDb5?gpFTJg;2M83hadav3=]<l<a9XPZBWoFI3RnR9fDtfhJejpREL_A7a^5IRNxyhhnNnwb0[3FSssKUQzMsPZ=:ef?DgwxQyqt_^]H]sAjVK<[iIV9nJKBLcCzrl<k<LRxF\oQdQ<PhTLS6nXeWXd4<9K`=ggEC]5H`;trTmDvhRJY6So4=eYu[<=r4M\Szo>HD9m7"
+565,"bSaWD7yL`lR\UCiqTbOblDeltwc5PkMhm=IC<3AOf[5RbrJr];BM5;u]>]]=9=`sZ2WP[RFLgAIvlMz[guWDsXc4vLzw3YjK?3T0_XdI\FeExn[7?T1oPJWDfg8m^>GA6fDmBLygbEdjg3KY]CLGF_3?tv;3H6:rx^eZxzG_zJ8WTZ\AnnAuk_Btw8nS><HEd<0o?Fc="
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,21
+560,22
 pLogoutput
 pCube
 pView
@@ -47,7 +47,8 @@ pDelim
 pQuote
 pTitleRecord
 pSandbox
-561,21
+pSuppressConsolStrings
+561,22
 1
 2
 2
@@ -69,7 +70,8 @@ pSandbox
 2
 1
 2
-590,21
+1
+590,22
 pLogoutput,0
 pCube,""
 pView,""
@@ -91,7 +93,8 @@ pDelim,","
 pQuote,""""
 pTitleRecord,1
 pSandbox,""
-637,21
+pSuppressConsolStrings,0
+637,22
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
 pView,"OPTIONAL: Temporary view name"
@@ -111,8 +114,9 @@ pFilePath,"OPTIONAL: Export Directory (will default to error file path)"
 pFileName,"OPTIONAL: Export Filename (If Left Blank Defaults to cube_export.csv)"
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
-pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, Default=1)"
+pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
+pSuppressConsolStrings,"OPTIONAL: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
 577,101
 V1
 V2
@@ -726,7 +730,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,355
+572,363
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -779,6 +783,7 @@ EndIf;
 ##Global Variables
 StringGlobalVariable('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
+StringGlobalVariable('sBedrockViewCreateParsedFilter');
 
 ### Constants ###
 cThisProcName     = GetProcessName();
@@ -787,7 +792,7 @@ cTimeStamp        = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%'; 
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%.'; 
 cDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 cLenASCIICode     = 3;
 
@@ -808,6 +813,9 @@ EndIf;
 If( pEleDelim     @= '' );
     pEleDelim     = '+';
 EndIf;
+sDelimDim = pDimDelim;
+sElementStartDelim = pEleStartDelim;
+sDelimelem = pEleDelim;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -1003,7 +1011,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
         	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
         	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-        	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox
+        	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
         );
     	  nThreadElCounter = 0;
     	  sFilter = '';
@@ -1020,7 +1028,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
     	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
     	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-    	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox
+    	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
     );
   ENDIF;
   DataSourceType = 'NULL';
@@ -1061,7 +1069,8 @@ Else;
           'pDimDelim', pDimDelim,
           'pEleStartDelim', pEleStartDelim,
           'pEleDelim', pEleDelim ,
-          'pTemp', pTemp
+          'pTemp', pTemp,
+          'pSuppressConsolStrings', pSuppressConsolStrings
           );
   
   IF( nRet <> ProcessExitNormal() );
@@ -1070,6 +1079,9 @@ Else;
       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
       ProcessBreak();
   ENDIF;
+  
+  sParsedFilter = sBedrockViewCreateParsedFilter;
+  sFilterRow = '%pQuote%%pCube%%pQuote%%pFieldDelim%%pQuote%Filter%pQuote%%pFieldDelim%%pQuote%%sParsedFilter%%pQuote%%pFieldDelim%%pQuote%%pDimDelim%%pQuote%%pFieldDelim%%pQuote%%pEleStartDelim%%pQuote%%pFieldDelim%%pQuote%%pEleDelim%%pQuote%';
   
   # Assign Datasource 
   DataSourceType          = 'VIEW';
@@ -1087,7 +1099,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,39
+574,44
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1100,9 +1112,14 @@ EndIf;
 nDataCount = nDataCount + 1;
 
 # Output the title string
-IF( nDataCount = 1 & pTitleRecord = 1 );
+IF( nDataCount = 1 & pTitleRecord >= 1 );
     AsciiOutput( cExportFile, Expand(sTitle) );
 Endif; 
+
+### Export filter into the 1st record of the file, it will be used from import process to zero out the corresponding slice, if specified
+IF( nDataCount = 1 & pTitleRecord = 2 );
+    AsciiOutput( cExportFile, Expand(sFilterRow) );
+Endif;
     
 ### Export data from source version to file ###
 

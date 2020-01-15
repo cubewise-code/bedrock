@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fhmbJRahGdtkFHAZxV]Hwh8_sf>Qp7O:\5d>McbkUdjb3FDop?`cr1E9X>=BrZ30hA@fE4DNTmD@4dqAafuB7AkrJwWFFKk0[dH7AdRhy6<hqi83flQZV?LeK^P`cm@fsV\3ZvU;c3zvlUNy1sdCF[eHXXTfc8`BUtgynRukpuM4:Xb57Ui\n@p]Cf``21crI1FypOKq"
+565,"ri:9J=sJls^D@INVe@ay0V=_]zi3Ch6fyuWWJ1ILT2_rByaVt450MDKBKHf6cd[=:_C;N;ROAwnZbAb;RrMcm]h1q4N<<TeU]iV\4zLD:iKRBHYAzRZWB=ChMYlMvdV[5@`w[]Fj\OJ_0`l^rP`aX=DLJcOIQC=e]2T9u_^?jDn_=Gp35bYS[V>:MLVNYx\tJnvsd3Ao"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,12
+560,13
 pLogOutput
 pCube
 pView
@@ -38,7 +38,8 @@ pEleStartDelim
 pEleDelim
 pTemp
 pSubN
-561,12
+pSuppressConsolStrings
+561,13
 1
 2
 2
@@ -51,7 +52,8 @@ pSubN
 2
 1
 1
-590,12
+1
+590,13
 pLogOutput,0
 pCube,""
 pView,""
@@ -64,7 +66,8 @@ pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSubN,0
-637,12
+pSuppressConsolStrings,0
+637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pView,"REQUIRED: Name of the View"
@@ -77,6 +80,7 @@ pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
 pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
+pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
 577,0
 578,0
 579,0
@@ -84,7 +88,7 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,403
+572,429
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -92,7 +96,7 @@ If( 1 = 0 );
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pTemp', 1, 'pSubN', 0
+    	'pTemp', 1, 'pSubN', 0, 'pSuppressConsolStrings', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -127,6 +131,7 @@ EndIf;
 ### Global Variables
 StringGlobalVariable ('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
+StringGlobalVariable('sBedrockViewCreateParsedFilter');
 sProcessReturnCode = '';
 nProcessReturnCode = 0;
 
@@ -142,7 +147,7 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoLevel     =  'INFO';
 cMsgInfoContent   = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%.' ;  
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSuppressConsolStrings:%pSuppressConsolStrings%.' ;  
 
 
 sSubset           = pView;
@@ -236,10 +241,12 @@ EndIf;
 ViewExtractSkipCalcsSet( pCube, pView, pSuppressConsol );
 ViewExtractSkipZeroesSet( pCube, pView, pSuppressZero );
 ViewExtractSkipRuleValuesSet( pCube, pView, pSuppressRules );
+ViewExtractSkipConsolidatedStringsSet( pCube, pView, pSuppressConsolStrings );
 
 
 ### Split filter and create subsets ###
 sFilter = TRIM( pFilter );
+sParsedFilter = '';
 nChar = 1;
 nCharCount = LONG( sFilter );
 sWord = '';
@@ -285,6 +292,7 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         sDimension = sWord;
+        nOneDimEleAdded = 0;
         
         If( DimensionExists( sDimension ) = 0 );
             # The dimension does not exist in the model. Cancel process
@@ -320,6 +328,13 @@ WHILE (nChar <= nCharCount);
 
         # Attach to the view
         ViewSubsetAssign( pCube, pView, sDimension, sSubset );
+        
+        #Add to the Parsed filter
+        IF(sParsedFilter@='');
+          sParsedFilter=sDimension;          
+        Else;
+          sParsedFilter=sParsedFilter|sDelimDim|sDimension;
+        Endif;  
 
         nIndex = 1;
         sLastDelim = sChar;
@@ -393,7 +408,8 @@ WHILE (nChar <= nCharCount);
               LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
               #ProcessError();
           EndIf;
-
+          
+          sElement = DimensionElementPrincipalName(sDimension,sElement);
 
           If ( pSuppressConsol = 1 & DTYPE( sDimension, sElement) @= 'C'  );
               # Add all N level elements to the subset
@@ -410,10 +426,23 @@ WHILE (nChar <= nCharCount);
                   EndIf;
                   n = n + 1;
               END;
+              
+              # Add the consolidated element to the subset as well to export strings, if necessary
+              If ( pSuppressConsolStrings = 0 );
+                SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+              EndIf;
 
           Else;
               # Add the element to the subset
               SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+          EndIf;
+          
+          #Add to the Parsed filter
+          If( nOneDimEleAdded = 0 );
+            sParsedFilter=sParsedFilter|pEleStartDelim|sElement;
+            nOneDimEleAdded = nOneDimEleAdded + 1;
+          Else;
+            sParsedFilter=sParsedFilter|sDelimElem|sElement;
           EndIf;
 
           nIndex = nIndex + 1;
@@ -432,6 +461,7 @@ WHILE (nChar <= nCharCount);
     nChar = nChar + nAddExtra + 1;
 
 END;
+sBedrockViewCreateParsedFilter = sParsedFilter;
 
 # creating N level subset for all dim not included in pFilter 
 # useful when suppress consolidation is not on
@@ -557,7 +587,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0
