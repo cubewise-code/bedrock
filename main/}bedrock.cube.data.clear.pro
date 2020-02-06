@@ -178,7 +178,7 @@ If( Trim( pFilter ) @<> '' );
 EndIf;   
 
 # Validate cubelogging parameter
-If( pCubeLogging <> 0 & pCubeLogging <> 1);
+If( pCubeLogging <> 0 & pCubeLogging <> 1 & pCubeLogging <> 2);
   sMessage = 'The cube logging parameter incorrect';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
