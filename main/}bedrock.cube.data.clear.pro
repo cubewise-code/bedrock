@@ -345,7 +345,7 @@ While( nCubeDelimiterIndex <> 0 );
 
             ### Create View using filter (temp view, therefore no need to destroy) ###
             sProc = '}bedrock.cube.view.create';
-            nRes = ExecuteProcess( sProc,
+            nRet = ExecuteProcess( sProc,
                     'pLogOutput', pLogOutput,
                     'pCube', sCube,
                     'pView', cView,
@@ -360,7 +360,7 @@ While( nCubeDelimiterIndex <> 0 );
                     );
 
             ### Zero Out View ###
-            If ( nRes = ProcessExitNormal() );
+            If ( nRet = ProcessExitNormal() );
               If ( pCubeLogging <= 1 );
                 sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
                 CubeSetLogChanges( sCube, pCubeLogging);
@@ -500,7 +500,7 @@ While( nCubeDelimiterIndex <> 0 );
   
               ### Create View using filter (temp view, therefore no need to destroy) ###
               sProc = '}bedrock.cube.view.create';
-              nRes = ExecuteProcess( sProc,
+              nRet = ExecuteProcess( sProc,
                   'pLogOutput', pLogOutput,
                   'pCube', sCube,
                   'pView', cView,
@@ -515,7 +515,7 @@ While( nCubeDelimiterIndex <> 0 );
                   );
   
               ### Zero Out View ###
-              IF ( nRes = ProcessExitNormal() );
+              IF ( nRet = ProcessExitNormal() );
                 If ( pCubeLogging <= 1 );
                   sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
                   CubeSetLogChanges( sCube, pCubeLogging);
