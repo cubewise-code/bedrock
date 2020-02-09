@@ -216,7 +216,9 @@ EndIf;
 If( ViewExists( pCube, pView ) = 1 );
     ### Reset View ###
     sMessage = 'Resetting view ' | pView | ' on cube ' | pCube;
-    LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    IF ( pLogoutput = 1 );
+       LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    EndIf
     nCount = 1;
     While( TabDim( pCube, nCount ) @<> '' );
         sCubeDimName = TabDim( pCube, nCount );
@@ -234,7 +236,9 @@ If( ViewExists( pCube, pView ) = 1 );
 Else;
     ### Create View ###
     sMessage = Expand('Creating view %pView% in cube %pCube%');
-    LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    IF ( pLogoutput = 1 );
+       LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    EndIf;
     ViewCreate( pCube, pView, pTemp );
 EndIf;
 
@@ -415,8 +419,9 @@ WHILE (nChar <= nCharCount);
               # Add all N level elements to the subset
               # Loop through all elements and check if it is an ancestor
               sMessage = 'Element ' | sElement | ' is consolidated' ;
-              LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
-              
+              IF ( pLogoutput = 1 );
+                LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+              EndIf;
               nElCount = DIMSIZ ( sDimension );
               n = 1;
               WHILE ( n <= nElCount );
