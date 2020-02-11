@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"bSaWD7yL`lR\UCiqTbOblDeltwc5PkMhm=IC<3AOf[5RbrJr];BM5;u]>]]=9=`sZ2WP[RFLgAIvlMz[guWDsXc4vLzw3YjK?3T0_XdI\FeExn[7?T1oPJWDfg8m^>GA6fDmBLygbEdjg3KY]CLGF_3?tv;3H6:rx^eZxzG_zJ8WTZ\AnnAuk_Btw8nS><HEd<0o?Fc="
+565,"gXrYhbda^qSfVkI1I5pglecSC:?j4U:]Ljz<T=cGyg;Fl?ZuZg<6mFcCT:j0McgFEzEdqu[BaD=YuLgK3^YKvl7Tarq\nM9JnZR9<aPPZleqRtG=f_>5ZfqiEBoDef_yh39qz2n5]GDb@\ANc@@fu^[LljeO3RDSf0FjXKV8zoz`ghYT5W\BkS8?XS>L1jh>Ce;aJtqC"
 559,1
 928,0
 593,
@@ -1099,7 +1099,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,44
+574,47
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1122,6 +1122,9 @@ IF( nDataCount = 1 & pTitleRecord = 2 );
 Endif;
     
 ### Export data from source version to file ###
+If( value_is_string = 0 );
+    sValue = NumberToString( nValue );
+EndIf;
 
 # Selects the correct AsciiOutput formula depending upon the number of dimensions in the cube
 IF(SCAN( CHAR( 10 ), sValue ) > 0 );
