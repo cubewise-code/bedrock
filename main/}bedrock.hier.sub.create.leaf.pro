@@ -136,7 +136,7 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-nReturncode = 
+nRet = 
 ExecuteProcess( '}bedrock.hier.sub.create', 'pLogOutput', pLogOutput,
     'pDim', pDim, 'pHier',pHier, 'pSub', pSub,
     'pLevelFrom', 0, 'pLevelTo', 0,
