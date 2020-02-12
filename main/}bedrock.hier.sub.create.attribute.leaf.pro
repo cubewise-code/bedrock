@@ -137,7 +137,7 @@ IF ( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
 
-nReturnCode = ExecuteProcess('}bedrock.hier.sub.create',
+nRet = ExecuteProcess('}bedrock.hier.sub.create',
                               'pDim', pDim,
                               'pHier', pHier,
                               'pSub', pSub,
