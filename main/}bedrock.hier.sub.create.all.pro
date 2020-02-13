@@ -134,7 +134,7 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-nReturncode = ExecuteProcess('}bedrock.hier.sub.create',
+nRet = ExecuteProcess('}bedrock.hier.sub.create',
                               'pDim', pDim,
                               'pHier',pHier,
                               'pSub', pSub,
@@ -145,7 +145,7 @@ nReturncode = ExecuteProcess('}bedrock.hier.sub.create',
                               'pTemp', pTemp
                             );
 
-If(nReturncode <> 0);
+If(nRet <> 0);
  nErrors = 1;
  sMessage = 'Subset create process has errors';
  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
