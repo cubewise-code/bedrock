@@ -537,16 +537,6 @@ ElseIf( Long( pDelimiter ) > 1 );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-## Validate quote character
-If( pQuote @= '' );
-  sMessage = 'Error: The quote charecter is blank.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( Long( pQuote ) > 1 );
-  sMessage = 'Invalid string qualIfier: ' | pQuote | ' quote character must be single character.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
