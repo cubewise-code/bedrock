@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"mJNVBo]@]\yu6ah7:p@2]MEFC`Lrze;IfF>`p0=U@duJl^W9<tPzTrxoj<]f<Rq\BY^ZXzlH^Mjq]>\CUFFg;cHV6UKekLClK>tAUkMku4G^\w5>w:@k9bS5muqHEQa8aaXFnm7O`IGb@dCrxB_S@qYfgGUQXuiBKtD>S;N3JGMV<>9pcw=[gjbPl:ndngY<_kP_TLpM"
+565,"i6u^w\l:ja`UUnVu\:ESQEuNvKg1TiPBU;PIeqUcQ:X9J<>ZBXnqtwsNcvIH4ZZy\\wQC8z7rQ_A[kScb>^e:sCAH@l3os:BwO@_1:w2BOLDhv=cNv:gKCm51goU5J2OnWS?C=bWkeUFk6;V]iQJue;kTv^J\QdsSfEB:g_]2b7QA@pjTU8^bRcz[>RrNUgEGqcko`1C"
 559,1
 928,0
 593,
@@ -70,7 +70,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,217
+572,221
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -119,6 +119,8 @@ cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = '%cThisProcName% : %sMessage% : %cUserName%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pAttr:%pAttr%, pUnwind:%pUnwind%.';
+cLangDim          = '}Cultures';
+nNumLang          = DimSiz( cLangDim );
 
 nProcessSameNamedHier = 0;
 sEpilogTgtHier = '';
@@ -221,7 +223,7 @@ If( HierarchyExists( pTgtDim, pTgtHier) = 0 );
     HierarchyCreate( pTgtDim, pTgtHier );
 Else;
     IF(pUnwind = 1 );
-      ExecuteProcess('}bedrock.hier.unwind',
+      nRet = ExecuteProcess('}bedrock.hier.unwind',
         'pLogOutput', pLogOutput,
         'pDim', pTgtDim,
         'pHier', pTgtHier,
@@ -269,8 +271,10 @@ DatasourceDimensionSubset   = 'ALL';
 
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 
-sAttrDim = '}ElementAttributes_' | pSrcDim;
-sAttrTragetDim = '}ElementAttributes_' | pTgtDim;
+sAttrDim        = '}ElementAttributes_' | pSrcDim;
+sAttrLoc        = '}LocalizedElementAttributes_' | pSrcDim;
+sAttrTragetDim  = '}ElementAttributes_' | pTgtDim;
+sAttrLocTarget  = '}LocalizedElementAttributes_' | pTgtDim;
 
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
   nNumAttrs = DimSiz( sAttrDim );
@@ -320,7 +324,7 @@ IF( sElType @= 'C' & ElementComponentCount( pSrcDim, pSrcHier, vEle  ) > 0 );
 EndIf;
 
 ### End MetaData ###
-574,51
+574,86
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -341,9 +345,9 @@ EndIf;
 
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 
-    nCount = 1;
-    While( nCount <= nNumAttrs );
-        sAttrName = DimNm( sAttrDim, nCount );
+    nAttr = 1;
+    While( nAttr <= nNumAttrs );
+        sAttrName = DimNm( sAttrDim, nAttr );
         sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
         
         If( sAttrType @= 'S' % sAttrType @= 'A' );
@@ -366,7 +370,42 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
                 EndIf;
             EndIf;  
         EndIf;
-        nCount = nCount + 1;
+        # check for localized attributes
+        If( CubeExists( sAttrLoc ) = 1 );
+            nLang = 1;
+            While( nLang <= nNumLang );
+                sLang       = DimNm( cLangDim, nLang );
+                If( sAttrType @= 'A' % sAttrType @= 'S' );
+                    sAttrVal    = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
+                    sAttrValLoc = ElementAttrSL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
+                    If( sAttrValLoc @= sAttrVal ); sAttrValLoc = ''; EndIf;
+                Else;
+                    nAttrVal    = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
+                    nAttrValLoc = ElementAttrNL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
+                EndIf;
+                If( CubeExists( sAttrLocTarget ) = 0 );
+                    If( sAttrType @= 'A' );
+                        ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
+                    ElseIf( sAttrType @= 'N' );
+                        ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                    Else;
+                        ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                    EndIf;
+                ElseIf(CubeExists( sAttrLocTarget ) = 1 );
+                    If( CellIsUpdateable( sAttrLocTarget, pTgtHier:vEle, sLang, sAttrName ) = 1 );
+                        If( sAttrType @= 'A' );
+                            ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
+                        ElseIf( sAttrType @= 'N' );
+                            ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                        Else;
+                            ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                        EndIf;
+                    EndIf;
+                EndIf;
+                nLang   = nLang + 1;
+            End;
+        EndIf;
+        nAttr = nAttr + 1;
     End;
 
 EndIf;
@@ -396,7 +435,7 @@ EndIf;
   
 ### If a new dimension has been created, call the process recursively to clone the alternate hierarchy, after the same named hierarchy has been processed
 If( nProcessSameNamedHier = 1 );
-  EXECUTEPROCESS('}bedrock.hier.clone',
+  nRet = EXECUTEPROCESS('}bedrock.hier.clone',
     'pLogOutput', pLogOutput,
     'pSrcDim', pSrcDim,
     'pSrcHier',pSrcHier,
