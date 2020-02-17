@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ri:9J=sJls^D@INVe@ay0V=_]zi3Ch6fyuWWJ1ILT2_rByaVt450MDKBKHf6cd[=:_C;N;ROAwnZbAb;RrMcm]h1q4N<<TeU]iV\4zLD:iKRBHYAzRZWB=ChMYlMvdV[5@`w[]Fj\OJ_0`l^rP`aX=DLJcOIQC=e]2T9u_^?jDn_=Gp35bYS[V>:MLVNYx\tJnvsd3Ao"
+565,"myk=GKcG3CauSaG:>To6WI>_Vqbpbo7IWFR3TG^MI`he9rDR?_;L8LvI\FDnzqp14wV_UUA`Nm=>NoOaF\Q;<enNfD]WmLRS=3EDPFwPd>_uOk@L3xDc1SU>_FgA0P_Xu<WwY5l3XFqjA@5jbmOe9g6s7o\C]pc:3[9ESn_isLvXrQkdR\_rrnv7jU0adtrg9=b_wVaI"
 559,1
 928,0
 593,
@@ -88,7 +88,7 @@ pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) 
 581,0
 582,0
 603,0
-572,429
+572,433
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -218,7 +218,7 @@ If( ViewExists( pCube, pView ) = 1 );
     sMessage = 'Resetting view ' | pView | ' on cube ' | pCube;
     IF ( pLogoutput = 1 );
        LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
-    EndIf
+    EndIf;
     nCount = 1;
     While( TabDim( pCube, nCount ) @<> '' );
         sCubeDimName = TabDim( pCube, nCount );
@@ -471,58 +471,57 @@ sBedrockViewCreateParsedFilter = sParsedFilter;
 # creating N level subset for all dim not included in pFilter 
 # useful when suppress consolidation is not on
 If(pSubN = 1);
-  
+    
     nCountDimC = 1;
     While( TabDim( pCube, nCountDimC ) @<> '' );
-    sDimC = TabDim( pCube, nCountDimC );
-    sDimString = sDimC;
-  
-    # filters created by other bedrock processes skip spaces from dim names and between separators
-    While(Scan(' ',sDimString)>0);
-      sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
-    End; 
-    sTFilter = sFilter;
-    While(Scan(' ',sTFilter)>0);
-      sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
+        sDimC = TabDim( pCube, nCountDimC );
+        sDimString = sDimC;
+        
+        # filters created by other bedrock processes skip spaces from dim names and between separators
+        While(Scan(' ',sDimString)>0);
+            sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
+        End; 
+        sTFilter = sFilter;
+        While(Scan(' ',sTFilter)>0);
+            sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
+        End;
+        
+        # to make sure that the name of the dim is not part of the name of another dim
+        If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
+            sProc   = '}bedrock.hier.sub.create';
+            nRet    = ExecuteProcess( sProc,
+                'pLogOutput', pLogOutput,
+                'pDim', sDimC,
+                'pHier', '',
+                'pSub', sSubset,
+                'pConsol', '',
+                'pAttr', '',
+                'pAttrValue', '',
+                'pLevelFrom', 0,
+                'pLevelTo', 0,
+                'pExclusions', '',
+                'pDelim', pEleDelim,
+                'pAddToSubset', 0,
+                'pAlias', '',
+                'pTemp', pTemp
+            );
+            
+            IF(nRet <> 0);
+                sMessage = 'Error creating the view from the filter.';
+                nErrors = nErrors + 1;
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                ProcessBreak;
+            ENDIF;
+            
+            ViewSubsetAssign( pCube, pView, sDimC, sSubset );
+        
+        EndIf;
+        
+        nCountDimC = nCountDimC + 1;
     End;
+
+  EndIf;  
   
-    # to make sure that the name of the dim is not part of the name of another dim
-    If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
-      sProc   = '}bedrock.hier.sub.create';
-      nRet    = ExecuteProcess( sProc,
-      'pLogOutput', pLogOutput,
-      'pDim', sDimC,
-      'pHier', '',
-      'pSub', sSubset,
-      'pConsol', '',
-      'pAttr', '',
-      'pAttrValue', '',
-      'pLevelFrom', 0,
-      'pLevelTo', 0,
-      'pExclusions', '',
-      'pDelim', pEleDelim,
-      'pAddToSubset', 0,
-      'pAlias', '',
-      'pTemp', pTemp
-      );
-
-    IF(nRet <> 0);
-        sMessage = 'Error creating the view from the filter.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
-    ENDIF;
-    
-    ViewSubsetAssign( pCube, pView, sDimC, sSubset );
-
-    Endif;
-
-    nCountDimC = nCountDimC + 1;
-    End;
-
-  Endif;  
-
-
 573,4
 
 #****Begin: Generated Statements***
