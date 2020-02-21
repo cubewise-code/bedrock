@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"myk=GKcG3CauSaG:>To6WI>_Vqbpbo7IWFR3TG^MI`he9rDR?_;L8LvI\FDnzqp14wV_UUA`Nm=>NoOaF\Q;<enNfD]WmLRS=3EDPFwPd>_uOk@L3xDc1SU>_FgA0P_Xu<WwY5l3XFqjA@5jbmOe9g6s7o\C]pc:3[9ESn_isLvXrQkdR\_rrnv7jU0adtrg9=b_wVaI"
+565,"hXUWl:oiavHS?35wWtk_dw[^7f[e?BIDYk4Twu<Wl^aSfY6S^CxHJqmFFZTgC]J:Slubg4rV:RzKk2ZF3NQ>DKYkiyIEbUILxw^7XCDB4dDAKz0]F7MITZgsc6<EhK3W0JWIxGfnu7gcbPKHwop9y7]rbxfg;fb[u:TrUFC1^M<pq53rZp8vlvgkjejZFe9Yqpgsultf"
 559,1
 928,0
 593,
@@ -66,7 +66,7 @@ pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSubN,0
-pSuppressConsolStrings,0
+pSuppressConsolStrings,-1
 637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
@@ -80,7 +80,7 @@ pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
 pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
-pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
+pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1, Include = 0) (Default [Skip] = -1 for backward compatibility)"
 577,0
 578,0
 579,0
@@ -88,7 +88,7 @@ pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) 
 581,0
 582,0
 603,0
-572,433
+572,435
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -245,8 +245,10 @@ EndIf;
 ViewExtractSkipCalcsSet( pCube, pView, pSuppressConsol );
 ViewExtractSkipZeroesSet( pCube, pView, pSuppressZero );
 ViewExtractSkipRuleValuesSet( pCube, pView, pSuppressRules );
-ViewExtractSkipConsolidatedStringsSet( pCube, pView, pSuppressConsolStrings );
-
+# Fix of issue #141, https://github.com/cubewise-code/bedrock/issues/141
+If( pSuppressConsolStrings <> -1 );
+    ViewExtractSkipConsolidatedStringsSet( pCube, pView, pSuppressConsolStrings );
+EndIf;
 
 ### Split filter and create subsets ###
 sFilter = TRIM( pFilter );
