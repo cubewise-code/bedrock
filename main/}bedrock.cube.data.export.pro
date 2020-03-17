@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"gXrYhbda^qSfVkI1I5pglecSC:?j4U:]Ljz<T=cGyg;Fl?ZuZg<6mFcCT:j0McgFEzEdqu[BaD=YuLgK3^YKvl7Tarq\nM9JnZR9<aPPZleqRtG=f_>5ZfqiEBoDef_yh39qz2n5]GDb@\ANc@@fu^[LljeO3RDSf0FjXKV8zoz`ghYT5W\BkS8?XS>L1jh>Ce;aJtqC"
+565,"xQfVAyM1Wia8\L\<ZXy@g?f`anYnCi8pw3nlvx2`a5J0\P^wEGcvo0Ccb7gxw=>CNn_phEerw@G]CXXoTV_rdr:6=wb0gk@`_j<5kQyJBANztI\AJ5<z2@;185SAzGZP<bCdklW8dzarCrvQ7]khRZUKC`laTX1v9KZsKhuVvoDFpCbm]l:a59QZa:ape:98WRO^46qG"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,22
+560,23
 pLogoutput
 pCube
 pView
@@ -38,6 +38,7 @@ pEleDelim
 pSuppressZero
 pSuppressConsol
 pSuppressRules
+pSuppressConsolStrings
 pZeroSource
 pCubeLogging
 pTemp
@@ -47,8 +48,8 @@ pDelim
 pQuote
 pTitleRecord
 pSandbox
-pSuppressConsolStrings
-561,22
+pSubN
+561,23
 1
 2
 2
@@ -64,6 +65,7 @@ pSuppressConsolStrings
 1
 1
 1
+1
 2
 2
 2
@@ -71,7 +73,7 @@ pSuppressConsolStrings
 1
 2
 1
-590,22
+590,23
 pLogoutput,0
 pCube,""
 pView,""
@@ -84,6 +86,7 @@ pEleDelim,"+"
 pSuppressZero,1
 pSuppressConsol,1
 pSuppressRules,1
+pSuppressConsolStrings,0
 pZeroSource,0
 pCubeLogging,0
 pTemp,1
@@ -93,8 +96,8 @@ pDelim,","
 pQuote,""""
 pTitleRecord,1
 pSandbox,""
-pSuppressConsolStrings,0
-637,22
+pSubN,0
+637,23
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
 pView,"OPTIONAL: Temporary view name"
@@ -107,6 +110,7 @@ pEleDelim,"OPTIONAL: Delimiter between elements  (default value if blank = '+')"
 pSuppressZero,"OPTIONAL: Suppress Zero Values (1=Suppress)"
 pSuppressConsol,"OPTIONAL: Suppress Consolidated Values? (1=Suppress)"
 pSuppressRules,"OPTIONAL: Suppress Rule Values? (1=Suppress)"
+pSuppressConsolStrings,"OPTIONAL: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
 pZeroSource,"OPTIONAL: Zero Out view AFTER Copy? (Boolean 1=True)"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pTemp,"OPTIONAL: Retain temporary view and Subset ( 0 = retain View and Subsets 1 = use temp objects)"
@@ -116,7 +120,7 @@ pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digi
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
-pSuppressConsolStrings,"OPTIONAL: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 577,101
 V1
 V2
@@ -730,7 +734,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,363
+572,364
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -738,10 +742,10 @@ If( 1 = 0 );
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
     	'pZeroSource', 0, 'pCubeLogging', 0, 'pTemp', 1,
     	'pFilePath', '', 'pFileName', '',
-    	'pDelim', ',', 'pQuote', '"', 'pTitleRecord', 1, 'pSandbox', pSandbox
+    	'pDelim', ',', 'pQuote', '"', 'pTitleRecord', 1, 'pSandbox', pSandbox, 'pSubN', pSubN
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -1066,11 +1070,12 @@ Else;
           'pSuppressZero', pSuppressZero,
           'pSuppressConsol', pSuppressConsol,
           'pSuppressRules', pSuppressRules,
+          'pSuppressConsolStrings', pSuppressConsolStrings,
           'pDimDelim', pDimDelim,
           'pEleStartDelim', pEleStartDelim,
-          'pEleDelim', pEleDelim ,
+          'pEleDelim', pEleDelim,
           'pTemp', pTemp,
-          'pSuppressConsolStrings', pSuppressConsolStrings
+          'pSubN', pSubN
           );
   
   IF( nRet <> ProcessExitNormal() );

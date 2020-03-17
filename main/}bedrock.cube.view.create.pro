@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hXUWl:oiavHS?35wWtk_dw[^7f[e?BIDYk4Twu<Wl^aSfY6S^CxHJqmFFZTgC]J:Slubg4rV:RzKk2ZF3NQ>DKYkiyIEbUILxw^7XCDB4dDAKz0]F7MITZgsc6<EhK3W0JWIxGfnu7gcbPKHwop9y7]rbxfg;fb[u:TrUFC1^M<pq53rZp8vlvgkjejZFe9Yqpgsultf"
+565,"tQBNmULn9yWjy<7JpWF0aYqw2N]K?EGPnO]tHpY8SRHOl]wJW]MeCz8?2u9Aw=QGQoZrXWtwNaRR`?1<JYT0wB8p5RGw9BUOq_F@?z=GoX82S2gbbOvL2^Snv`dZxrhR>9BY8DKB9gYExaJDw4<pRDFLL5L]N>WeGw=sHFHe;`s?\P<dOmnbml4aXpe@gXSJ8qtgk8U`"
 559,1
 928,0
 593,
@@ -33,12 +33,12 @@ pFilter
 pSuppressZero
 pSuppressConsol
 pSuppressRules
+pSuppressConsolStrings
 pDimDelim
 pEleStartDelim
 pEleDelim
 pTemp
 pSubN
-pSuppressConsolStrings
 561,13
 1
 2
@@ -47,10 +47,10 @@ pSuppressConsolStrings
 1
 1
 1
-2
-2
-2
 1
+2
+2
+2
 1
 1
 590,13
@@ -61,12 +61,12 @@ pFilter,""
 pSuppressZero,1
 pSuppressConsol,1
 pSuppressRules,1
+pSuppressConsolStrings,0
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSubN,0
-pSuppressConsolStrings,-1
 637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
@@ -75,12 +75,12 @@ pFilter,"OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Org
 pSuppressZero,"REQUIRED: Suppress Zero Data (Skip = 1)"
 pSuppressConsol,"REQUIRED: Suppress Consolidations (Skip = 1)"
 pSuppressRules,"REQUIRED: Suppress Rules (Skip = 1)"
+pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
 pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
 pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
 pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
-pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1, Include = 0) (Default [Skip] = -1 for backward compatibility)"
 577,0
 578,0
 579,0
@@ -88,15 +88,15 @@ pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1, 
 581,0
 582,0
 603,0
-572,435
+572,434
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.view.create', 'pLogOutput', pLogOutput,
     	'pCube', '', 'pView', '', 'pFilter', '',
-    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pTemp', 1, 'pSubN', 0, 'pSuppressConsolStrings', 0
+    	'pTemp', 1, 'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -523,7 +523,6 @@ If(pSubN = 1);
     End;
 
   EndIf;  
-  
 573,4
 
 #****Begin: Generated Statements***

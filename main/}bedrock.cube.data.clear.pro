@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"qZEEu@^wOX>zfr7d9aUJ?clB_TUgdMZtta8Kv8YQq=3C>iuk64?w7kbfkr8p=4hr>rQZwl61GYR>zZjqbY@SgAYT<pKKC<KNj>Z83bI`S:itpa[?w^?`rzSIG_T5^tE__TxBj6;Osg3n?bi\Hx]@rO=]J=CV6D725dhDIy@x`>kBrj=pal=@GI7BbgWCl?_9gX_3i=F8"
+565,"y^H1WI4T3PaTOqOfTjSou6[Ola^?NqW05jURc[<k7I<3qor5Yz`wj2I4`_gQU<ZacxkGH=[yIBvjvFVj7wEwyLFJG9fZ;fyS_jspdHhk@gW>oQ5k4tjarL\lE=xL>?HVdj=2>kiTsrTS>J:B7sWs8Fi:3BX;F7JX=h2Z6^3DlO7iDB^hbBVAf1V0X=F8P069OX906>\K"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,12
+560,13
 pLogOutput
 pCube
 pView
@@ -38,7 +38,8 @@ pEleDelim
 pCubeLogging
 pTemp
 pSandbox
-561,12
+pSubN
+561,13
 1
 2
 2
@@ -51,7 +52,8 @@ pSandbox
 1
 1
 2
-590,12
+1
+590,13
 pLogOutput,0
 pCube,""
 pView,""
@@ -64,7 +66,8 @@ pEleDelim,"+"
 pCubeLogging,0
 pTemp,1
 pSandbox,""
-637,12
+pSubN,0
+637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name (wildcard * and/or cube1 & cube2 list)"
 pView,"OPTIONAL: View name to be cleared (uses pFilter if pView not specified else clears entire cube)"
@@ -77,6 +80,7 @@ pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pTemp,"OPTIONAL: Make Views and subsets Temporary (1=Temporary)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 577,0
 578,0
 579,0
@@ -84,7 +88,7 @@ pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid
 581,0
 582,0
 603,0
-572,470
+572,472
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -92,7 +96,7 @@ If( 1 = 0 );
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pCubeLogging', 0, 'pTemp', 1, 'pSandbox', pSandbox
+    	'pCubeLogging', 0, 'pTemp', 1, 'pSandbox', pSandbox, 'pSubN', 0
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -356,7 +360,8 @@ While( nCubeDelimiterIndex <> 0 );
                     'pDimDelim', pDimDelim,
                     'pEleStartDelim', pEleStartDelim,
                     'pEleDelim', pEleDelim,
-                    'pTemp', pTemp
+                    'pTemp', pTemp,
+                    'pSubN', pSubN
                     );
 
             ### Zero Out View ###
@@ -511,7 +516,8 @@ While( nCubeDelimiterIndex <> 0 );
                   'pDimDelim', pDimDelim,
                   'pEleStartDelim', pEleStartDelim,
                   'pEleDelim', pEleDelim,
-                  'pTemp', pTemp
+                  'pTemp', pTemp,
+                  'pSubN', pSubN
                   );
   
               ### Zero Out View ###
