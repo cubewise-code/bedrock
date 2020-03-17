@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"bAauhBA1pRUyo1aUe[ty3xrE2VrNYUWgp=Nz_\_j=kPeI^q6<qmH4:0\Y@mO6WJTA\b0cVZv=Tww]A>ClAJcu]=3V\Rz=6tbRg4XZM7thySTcd6@ITaBsCS\rtOtje5n;Oa8SKxTA_pqm6pLn[X7GjNi`Oxbk4kTcpNic6U7[JYpmmsz@m5i9Avlh2Tj1NxPx3^YRlBK"
+565,"zPSGLs34LWhiTbOj[WC2VQu_>`aV1HIO1sGV7VY:ReI3fRhALIN7MdaTUMn0_K_mf_`czJ7vbUrTa;zqxs<li>h8Tl6=YK<SeT`;FQKWjvRVIQTwmVXj4f^iP\?8<CIZhiRL8K;RER@^lWWlnSrcUna=b@6RQ:y\aUbpiTG4PWqmMfF7JI[lF24VNBeSGx2NachPfwC9"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,23
+560,24
 pLogOutput
 pCube
 pSrcView
@@ -48,8 +48,9 @@ pTemp
 pCubeLogging
 pSandbox
 pFile
+pSubN
 pThreadMode
-561,23
+561,24
 1
 2
 2
@@ -73,7 +74,8 @@ pThreadMode
 2
 1
 1
-590,23
+1
+590,24
 pLogOutput,0
 pCube,""
 pSrcView,""
@@ -96,8 +98,9 @@ pTemp,1
 pCubeLogging,0
 pSandbox,""
 pFile,0
+pSubN,0
 pThreadMode,0
-637,23
+637,24
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
 pSrcView,"OPTIONAL: Temporary view name for source"
@@ -120,6 +123,7 @@ pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 577,51
 V1
@@ -434,7 +438,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,865
+572,864
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -445,7 +449,7 @@ If( 1 = 0 );
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
     	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pCumulate', 0,
     	'pZeroTarget', 1, 'pZeroSource', 0,
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0, 'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -722,7 +726,6 @@ sDelimDim           = TRIM( pDimDelim );
 sFilter             = TRIM( pFilter);
 sTargetFilter       = '';
 nSuppressConsol     = pSuppressConsol;
-nSubN               = 0;
 nChar               = 1;
 nCharCount          = LONG( sElementMapping );
 
@@ -921,7 +924,7 @@ If( nCharCount > 0 );
                 If( pSuppressConsol <> 1 );
                   nSuppressConsol = 0;
                 EndIf;
-                nSubN = 1;
+                pSubN = 1;
               Else;
                 sMessage = Expand( 'Target element: %sElement% for dimension %sDimension% is consolidated' );
                 nErrors = nErrors + 1;
@@ -1233,7 +1236,7 @@ Else;
       'pEleStartDelim', pEleStartDelim,
       'pEleDelim', pEleDelim ,
       'pTemp', pTemp,
-      'pSubN', nSubN
+      'pSubN', pSubN
       );
       
     IF(nRet <> 0);

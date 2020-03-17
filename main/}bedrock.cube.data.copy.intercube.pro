@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"t@i5cc53IvFPmz_h1Qi2a@S4o]g`t=oI8<1yf9IEnvg\b0q]x3S7XFpbpWG0su@A8ZTinI57bl;^mTOfVslI7JwPvo`T?tPX2R[89\P>pe]IS:wPsE>_yuFLdXFb7I7eqP6o?N`G5uqYM0CzXhxz;ZpcZi^\:80EH5qoYtO[TDa_gR7CU5yb4=\>N\?\Rj@C3Fz=janq"
+565,"jaRzvc4[91ajCHf_`1Bp0xZPC\oWDLq[tJA9zd1?1jCHg3pbh8bkA7e]xNosnS;`pNka;zm5uQSemtj28N<_0SgM@`mX6;2E@znErX7uAXF>kl<iWd3_E5Kf[:PEJFrz1upSXVb\`;T^IWKj>uAz563H>5cu>W9jP=s1jSkxW0J;hJR7XJp?CY1p<U=s9LA^z=Je^wm9"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,20
+560,21
 pLogOutput
 pSrcCube
 pFilter
@@ -45,8 +45,9 @@ pTemp
 pCubeLogging
 pSandbox
 pFile
+pSubN
 pThreadMode
-561,20
+561,21
 1
 2
 2
@@ -67,7 +68,8 @@ pThreadMode
 2
 1
 1
-590,20
+1
+590,21
 pLogOutput,0
 pSrcCube,""
 pFilter,""
@@ -87,8 +89,9 @@ pTemp,1
 pCubeLogging,0
 pSandbox,""
 pFile,0
+pSubN,0
 pThreadMode,0
-637,20
+637,21
 pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
 pFilter,"OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube"
@@ -108,6 +111,7 @@ pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 577,29
 V1
@@ -290,7 +294,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1350
+572,1351
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -302,7 +306,7 @@ If( 1 = 0 );
     	'pZeroTarget', 1, 'pZeroSource', 0,
     	'pFactor', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', pSandbox
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', pSandbox, 'pSubN', 0
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -1552,9 +1556,9 @@ Else;
   If( pFile = 0 );
     ### Create View of Source ###
     IF(pSuppressConsol = 0);
-      nSubN=1;
+      pSubN=1;
     else;
-      nSubN=0;
+      pSubN=0;
     Endif;  
     
     nRet = ExecuteProcess('}bedrock.cube.view.create',
@@ -1569,7 +1573,7 @@ Else;
       'pEleStartDelim', pEleStartDelim,
       'pEleDelim', pEleDelim ,
       'pTemp', pTemp,
-      'pSubN', nSubN
+      'pSubN', pSubN
       );
     
     IF(nRet <> 0);
@@ -1582,9 +1586,9 @@ Else;
   ElseIf( pFile > 0 );
     ### Export to File in case of Copy Data Via File ###
     IF(pSuppressConsol = 0);
-      nSubN=1;
+      pSubN=1;
     else;
-      nSubN=0;
+      pSubN=0;
     Endif;  
     
     nRet = ExecuteProcess('}bedrock.cube.data.export',
@@ -1608,7 +1612,8 @@ Else;
        'pDelim', cDelimiter,
        'pQuote', cQuote,
        'pTitleRecord', cTitleRows,
-       'pSandbox', pSandbox
+       'pSandbox', pSandbox,
+       'pSubN', pSubN
       );
     
     IF(nRet <> 0);
