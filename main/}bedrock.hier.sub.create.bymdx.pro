@@ -75,7 +75,7 @@ If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.bymdx', 'pLogOutput', pLogOutput,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pMDXExpr', '',
-    	'pConvertToStatic', 1, 'pTemp', 1
+    	'pConvertToStatic', 1, 'pTemp', 1, 'pAlias', ''
 	);
 EndIf;
 #EndRegion CallThisProcess
