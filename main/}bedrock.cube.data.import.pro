@@ -288,7 +288,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,902
+572,903
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -296,7 +296,8 @@ If( 1 = 0 );
     	'pCube', '', 'pSrcDir', '', 'pSrcFile', '',
     	'pDim', '', 'pSrcEle', '', 'pTgtEle', '',
     	'pTitleRows', 1, 'pDelim', ',', 'pQuote', '"',
-    	'pCumulate', 0, 'pCubeLogging', 0, 'pSandbox', pSandbox
+    	'pCumulate', 0, 'pCubeLogging', 0, 'pSandbox', pSandbox, 'pZeroFilter', 0, 
+    	'pMappingToNewDims','', 'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+'
     );
 EndIf;
 #EndRegion CallThisProcess
