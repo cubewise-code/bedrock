@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.copy"
 562,"VIEW"
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"zPSGLs34LWhiTbOj[WC2VQu_>`aV1HIO1sGV7VY:ReI3fRhALIN7MdaTUMn0_K_mf_`czJ7vbUrTa;zqxs<li>h8Tl6=YK<SeT`;FQKWjvRVIQTwmVXj4f^iP\?8<CIZhiRL8K;RER@^lWWlnSrcUna=b@6RQ:y\aUbpiTG4PWqmMfF7JI[lF24VNBeSGx2NachPfwC9"
+565,"fJSfOMaqx]yuTi79XCX9Y4AmUUt@NJmfv[VKG1eHJ?5R?KfM1?:;5=>OU?i8WUp5n`UcPs2t@Zfl9u1ky3fm\Q2hIx397qn8N8lZCnCP_Choyd9Vn1hXnUuNlCYtvA[r9\?Ei2>:BsAY4:eHee\[hC7t^<qQwBjXQWJS7@I_mm<DGEv_YEJqfv;BLfxWD;atJcAZg_kC"
 559,1
 928,0
 593,
@@ -108,7 +108,7 @@ pTgtView,"OPTIONAL: Temporary view name for target"
 pFilter,"OPTIONAL: Filter Unmapped Dimensions using format: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget etc"
 pFilterParallel,"OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
-pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy:SourceElement->TargetElement & Dim2ToCopy:Source Element->TargetElement etc"
+pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy¦SourceElement->TargetElement & Dim2ToCopy¦Source Element->TargetElement etc"
 pMappingDelim,"OPTIONAL: Delimiter between source element and target element in pEleMapping  (default value if blank = '->')"
 pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
@@ -438,7 +438,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,864
+572,873
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1287,15 +1287,24 @@ Else;
           ProcessBreak;
     ENDIF;
     
-  
-    ### Assign Datasource ###
-    DataSourceType                  = 'CHARACTERDELIMITED';
-    DatasourceNameForServer         = cFile;
-    DatasourceNameForClient         = cFile;
-    DatasourceASCIIHeaderRecords    = cTitleRows;
-    DatasourceASCIIDelimiter        = cDelimiter;
-    DatasourceASCIIQuoteCharacter   = cQuote;
+    If(FileExists(cFile) = 0);
+      # If the file does not exist, it means that nothing got exported, so there is nothing to import
+      If( pLogoutput = 1 );
+        LogOutput('INFO', Expand( 'Process:%cThisProcName% is skipping import as export file %cFile% was not found.' ) );     
+      EndIf;
+      DataSourceType = 'NULL';
+    Else;
+      ### Assign Datasource ###
+      DataSourceType                  = 'CHARACTERDELIMITED';
+      DatasourceNameForServer         = cFile;
+      DatasourceNameForClient         = cFile;
+      DatasourceASCIIHeaderRecords    = cTitleRows;
+      DatasourceASCIIDelimiter        = cDelimiter;
+      DatasourceASCIIQuoteCharacter   = cQuote;
+    EndIf;
+    
     nThreadMode = 1;
+  
   EndIf;
 
 EndIf;
