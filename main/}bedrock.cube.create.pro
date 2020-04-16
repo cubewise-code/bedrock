@@ -4,7 +4,7 @@
 586,"Variables"
 585,"Variables"
 564,
-565,"bnyHO3ewBjezbMV96PCYhYjQf0qV\i0zpX20\4OGj7g=WCzkPerw6Fmi]oTqqK32pF5y:_mWZ1jAave^7yynO1@iKdB<7p;>^aE0m5e8uN6?:gFsAD]HM]z\vgX_M]h?ar?@UJ;b5<2pThVEo2Md0733@BcSoJy_j5J46Q`X:Tgy:QKzrlkJ[I8ySo]r69VTxuNOxs"
+565,"fkAdyuy71wuLqh:ucA<s\B:s2UgGQ6yrP<HM9?sSZ1sstMZhqS\LIfb9KnT1Kq129;5t:8?u`vfaFt5QWSq]d8?9p1DlzNV7b]t0}GMs[v[[RKHsaFFzNB`uQO4lOodnkj28pBCXv8G|bdzeV;F3mt6Z>PwgZzfL3GauTX:AvcZhaIthLMnPTFkD00cb>tf?vvofpB_="
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,All
 571,
@@ -44,11 +44,11 @@ pDims,""
 pRecreate,0
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pDims,"Required: Dim1+ Dim2 + Dim3 + Dim4 + Dim5"
-pRecreate,"Optional: If cube exists delete and recreate (Default=0)"
-pDelim,"Optional: Delimiter for Dimension list (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pDims,"REQUIRED: Dim1 & Dim2 & Dim3 & Dim4 & Dim5"
+pRecreate,"OPTIONAL: If cube exists delete and recreate (Default=0)"
+pDelim,"OPTIONAL: Delimiter for Dimension list (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -56,7 +56,16 @@ pDelim,"Optional: Delimiter for Dimension list (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,639
+572,648
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.create', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pDims', '',
+    	'pRecreate', 0, 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

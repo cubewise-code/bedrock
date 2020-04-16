@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"eQ\PeaUCDYZtd0zMaF;nKUv`J_@s1`1F2ISQMH7eEa:kSd0ea_AIU8DIyVMrB4`lM4>zwEqm40ZqVt^w1n^r[zfHmyRc]nMakrNnSD=l_Zwcv]n1n4812tt]PMY9]d>][87UpCE=lbD;bPfLRikkS\b@F:ILL\@PK:NfLi[9s2eEJapc`1`^lO[y<[>tt]N]j9MRUbJb"
+565,"mn4\`t2UqL3L_agi00]NhTCxlLuwMJXBLAnBEWV209:6`TPeYtZTr=6hfpSn2p8z2E>g6WrHcme^h;R4>AQu_>hk`kvWH<127fDTZe0r0nZZhHLCtIhcVc]P6EV0?lQJVG]Rly`v7mxt[s1ObejEU9IJljVpiG<\sWCKY2Cfgex60?:[ob=`dyuFAF<4DwUEdmoy\R`p"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pSecurityLevel,""
 pSecurityRefresh,"No"
 pDelim,"&"
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pGroup,"Required: List of Groups Separated by Delimiter"
-pObjectType,"Required: Type of Object to Assign Security To (Application/Cube/Dimension/Process/Chore)"
-pObject,"Required: List of Objects Separated by Delimiter"
-pSecurityLevel,"Required: Security Level (Read/Write/Admin/None)"
-pSecurityRefresh,"Refresh Security? (Default = No)"
-pDelim,"Optional: Delimiter"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pGroup,"REQUIRED: List of Groups Separated by Delimiter"
+pObjectType,"REQUIRED: Type of Object to Assign Security To (Application/Cube/Dimension/Process/Chore)"
+pObject,"REQUIRED: List of Objects Separated by Delimiter"
+pSecurityLevel,"REQUIRED: Security Level (Read/Write/Admin/None)"
+pSecurityRefresh,"OPTIONAL: Refresh Security? (Default = No)"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -64,7 +64,16 @@ pDelim,"Optional: Delimiter"
 581,0
 582,0
 603,0
-572,311
+572,320
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.object.assign', 'pLogOutput', pLogOutput,
+    	'pGroup', '', 'pObjectType', '', 'pObject', '',
+    	'pSecurityLevel', '', 'pSecurityRefresh', 'No', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

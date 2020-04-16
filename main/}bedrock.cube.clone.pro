@@ -4,7 +4,7 @@
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"vL_:oX2[FbH2kq31CNJtasy@ceiZvz9;6;?T\7gqc8CT?liIN6U^VlLsdSuGp;wVu<R|ZST^aXH:2\9aXoMG>9A<9QOBuPTyPg1=m;>Rq2lgs<hl8P>lVj7<Y<<eYbfJ8x5ARr7Qy4V^PWzfw^Y:=?=q]PHe8r=82Ll=waqjnE;dedql@EeWlKb4u09B=FF]0c=Qipr3"
+565,"biygQyNLrIp^^4n0F3]@@55wO3r^lS=264Al_0E>J25JIkinTruTO_y5=PuGeVr6<L^vj7S:XGJzA]iQjHCwy6]zLcG2TOTQ>7g<M2ZQaGhhvnolX5g;9\M0R7mTW2L_RyeKBx3Sdr1ZPX6mG?l0m9mQZ[Drf=vKSHiMDO~:4s@amTMJ1NffwDBk=KVb\EVW0WBN@a5o"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,Temp
 571,
@@ -65,18 +65,18 @@ pSuppressRules,1
 pTemp,1
 pCubeLogging,0
 637,12
-pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Source Cube"
 pTgtCube,"OPTIONAL: Target Cube to create/re-create (Source cube_clone if left blank)"
 pIncludeRules,"REQUIRED: Include cube rules? (Boolean Yes = 1)"
 pIncludeData,"REQUIRED: Include cube data? (Boolean Yes = 1)"
-pFilter,"OPTIONAL: Filter on source cube in format Year: 2006 + 2007 & Scenario: Actual + Budget. Blank for whole cube"
-pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set"
-pEleStartDelim,"OPTIONAL: Delimiter for start of element list"
-pEleDelim,"OPTIONAL: Delimiter between elements"
+pFilter,"OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube"
+pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
+pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
+pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
 pSuppressRules,"REQUIRED: Skip rule values? (1=skip)"
 pTemp,"REQUIRED: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 577,28
 v1
 v2
@@ -252,7 +252,19 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,156
+572,168
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.clone', 'pLogOutput', pLogOutput,
+    	'pSrcCube' ,'', 'pTgtCube', '',
+    	'pIncludeRules', 1, 'pIncludeData', 0,
+    	'pFilter', '',
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pSuppressRules', 1, 'pTemp', 1, 'pCubeLogging', 0
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

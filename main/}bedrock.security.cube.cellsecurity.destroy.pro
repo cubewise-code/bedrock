@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fhFOlIzCHsxAXU6Q]WfvdTzf[PR[ai1{bXNUn0i7E`2C9WU6:Jj0x2K5L_iNQs4uhN]t6VXNgMPAc[QwYk]Xg^7;dykcp1\que7|AF@DeDpw81zuiG0^PB<>aeqAUgdKh:@FS^x=FzkJk29:708PV:fC8WrcuE26?ROT8KPa\kRMh8?G^2Y2]O^yrz^t`QVFY2GOi_7IfhFOlItCHsxAXU6Q]WfvdTzf[PR[ai1;hXNUn0i7E`2C9WX6:Jj0x2K5L/?LQsdrhN]T1VXNgM`Mc;TwYk]Xg^7;dy{bp1\que7\@F@DeDpw81J4eG0^PB<>aeqAew`KhjFf]^x=Fzkjf29j108pY:fC8WrcuE26?RU8K0m\kRM(;?G^2Y2]_Pyrz^t`QZFS2GOi_7I"
+565,"sk;K5OvJWLMBDP?Xqg6zlM6LNGl=_>hBd48wDeMyk\2UQ5TwXdFnI1OJ_i><B9EsJvvvghxliXAO_Apix04B0bFk5kSH6L`\I5pQRCI6Fz5eEwuiQkQVj1Cx4k>VgD8>:@GSldJ0eNCkDu4gx4QVcuD_eMPCvV_8yKdY3ZAZFGHgHFGZ<9gmK~P]4Ij\SVCY^95areysk;K5OvJWLMBDP?Xqg6tlM6LNGl=_>h?Hd48wDeMyk\2UQ8TwXdFnI1OJ/O?<BiBsJvVqghxlihMO?Dpix04B0bFk5{RH6L`\I5pRRCI6Fz5eEG4eQkQVj1Cx4k>fDO8>jFg]ldJ0eNcfDutax4qWcuD_eMPCvV_8y{eY3:MZFGH'KFGZ<9gm[pP]4Ij\SZCS^95arey"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pCube,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: List of Cubes (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter (Defaults to & if left blank.)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: List of Cubes (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter (Defaults to & if left blank.)"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pDelim,"Optional: Delimiter (Defaults to & if left blank.)"
 581,0
 582,0
 603,0
-572,121
+572,129
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.cube.cellsecurity.destroy', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

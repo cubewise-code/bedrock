@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fxXhkpafbrG43W=MC3KLy?XhgLlv>xpt<HBzu?HvhP2Gy`Bh<BwAm[D3`wL@bS0nl;Bb4P7Cw_Ahe@6?h@ZLKxGn_fK>2Uc72BcOn6\xJdoU\Xuax@QXdeSUiVOGRq:zpGW8Cs:l:7Jd\ExE;FUe@ucRoeDU<T4G3ilRR6Ojlw:fPxDLMTZb?z47tsjA;AWB[R=b[D16"
+565,"y9S?>mXb2M=s7>Ybcj6SjJykOa[AZ8?`eW8^XGZ9`f\kXz?fOm@:wUK?e]0tJ_W;]LJN06A@kg1KNU^a<2gBpAdma_a5VS\zZoAL`Xs_7Ac2Ypq_LbFK8avGKwatC4N[Gd7OWfD<7hhBniy=B:^et6Qb\^a>QYN^wvhoZx;yL==9s9m48O<1UHh;92vi:PH0V4naMy1n"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -47,12 +47,12 @@ pPrevAttr,""
 pAttrType,""
 pDelim,"&"
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name, parameter accepts delimited list and wildcards"
-pAttr,"Required: attribute name, parameter accepts delimited list (separate with delimiter for multiple item e.g. Type&Active )"
-pPrevAttr,"Optional: insert position (previous attribute) (Defaults to blank)"
-pAttrType,"Optional: attribute type (e.g. A, S or N. If blank then assumed to be type=string)"
-pDelim,"Optional: delimiter character for attribute list. (Defaults to & if blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: dimension name, parameter accepts delimited list and wildcards"
+pAttr,"REQUIRED: attribute name, parameter accepts delimited list (separate with delimiter for multiple item e.g. Type&Active )"
+pPrevAttr,"OPTIONAL: insert position (previous attribute) (Defaults to blank)"
+pAttrType,"OPTIONAL: attribute type (e.g. A, S or N. If blank then assumed to be type=string)"
+pDelim,"OPTIONAL: delimiter character for attribute list. (Defaults to & if blank)"
 577,0
 578,0
 579,0
@@ -60,7 +60,17 @@ pDelim,"Optional: delimiter character for attribute list. (Defaults to & if blan
 581,0
 582,0
 603,0
-572,191
+572,201
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.attr.create', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pAttr', '',
+    	'pPrevAttr', '', 'pAttrType', '',
+    	'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

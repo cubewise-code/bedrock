@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"l@lZI2wBud6]auwmgnXsUpMbCoiHS<;9Jv66=<yc1eeQ8rNXtjt3t:J`YCEObh3qQ<?4cWW6y83HRfvBHMv4w0xr2PxTZnQj3[bLI57]xRzD_HVEPYBHd4dSA[2Bqt;_AEO^_n[8p9Jv9;>CY5>=ku]R31wSxFiJ7[`PnOa46wh`IZ]PET[[oonnjXp;qD2iZ]JFUWWs"
+565,"p5fnu25kQTisO_xaaHdN2<C`MTx_C2X1nhEAi4Kh_F_4Fy`2E^=cpo6QOnS_cO3pM6u;nnQpuBRa]fMAlHsoc@9jbR9Bv7B_HdfXnHL6JNYe88g0JmC3paOUogfa^3\7@R0oHH1O;0;BijxJY:na;5OA?r<tIgtx[5EPIPt0OnQ_l3reZXyM@Cw3vVsbOKVtOpDD^;03"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pTgtClient,""
 pMode,"REPLACE"
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcClient,"Required: Source Client"
-pTgtClient,"Required: List of Target Clients Separated by Delimiter"
-pMode,"Optional: Mode REPLACE or ADD (default = REPLACE)"
-pDelim,"Optional: Delimiter (Use for a list of target users. Defaults to & if blank.)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcClient,"REQUIRED: Source Client"
+pTgtClient,"REQUIRED: List of Target Clients Separated by Delimiter"
+pMode,"OPTIONAL: Mode REPLACE or ADD (default = REPLACE)"
+pDelim,"OPTIONAL: Delimiter (Use for a list of target users. Defaults to & if blank.)"
 577,0
 578,0
 579,0
@@ -56,7 +56,16 @@ pDelim,"Optional: Delimiter (Use for a list of target users. Defaults to & if bl
 581,0
 582,0
 603,0
-572,112
+572,121
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.client.clone', 'pLogOutput', pLogOutput,
+    	'pSrcClient', '', 'pTgtClient', '',
+    	'pMode', 'REPLACE', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

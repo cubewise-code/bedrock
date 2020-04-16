@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"odC0cYUPE?ADICHa_bzBT0HWj\Re8^^4zkv;GyFmQR=cwk\@7h?NRnljbaOv[32JG7ByuhiCRQJmqZKVaOeU<jOrQ0DguTtvmN`ebhhlBns8W5KDaGJxI=4X9ZWNdW`PduhOF]WbFCKrJucj2p>bIMkKP7r7wYM5en=vyJ0=AlooGG^j7T@`0`1B><IB>DzQfDyDPB2J"
+565,"gly0p[carp=BzcXK;9cZtxV>quHYZSt1;`nmwUegFKiRJ\odwA85ylGCmjwvky;6\lXfvA^^ReVF^lN^hVPD\UUvj`IQ[BRfM5VAnZH4=t0g:ae_0xYuOGqLmUq\Q?xluGByn?qkFP0v`CgHU8W1e2DkeiPEQXt^^L55dW]IT`9815em0uiM`sW_b\LiX0mtU6kG3;sc"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -56,15 +56,15 @@ pDelim,"&"
 pAlias,""
 pTemp,1
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0
@@ -72,7 +72,18 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,68
+572,79
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.all', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pAddToSubset', 0, 'pExclusions', '',
+    	'pDelim', '&', 'pAlias', '',
+    	'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -123,7 +134,7 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-nReturncode = ExecuteProcess('}bedrock.hier.sub.create',
+nRet = ExecuteProcess('}bedrock.hier.sub.create',
                               'pDim', pDim,
                               'pHier',pHier,
                               'pSub', pSub,
@@ -134,7 +145,7 @@ nReturncode = ExecuteProcess('}bedrock.hier.sub.create',
                               'pTemp', pTemp
                             );
 
-If(nReturncode <> 0);
+If(nRet <> 0);
  nErrors = 1;
  sMessage = 'Subset create process has errors';
  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );

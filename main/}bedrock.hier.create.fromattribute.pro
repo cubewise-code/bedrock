@@ -4,7 +4,7 @@
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-565,"hR44[B=<aAN?hokC4R;39TPZ@5^i4K;g2skW]2Jz77wW:3Hpr7;hp^pyyvsz>l9PiPh1ihSa41fl8@GFZF@HH1q@27=7;f=SjRRc@ZWT31hpnefu\;QR1lieFFuD>Hp7;yNXtsx<AEnjrcP<Mak83hzD?THrn6=[RDK7mH_\Ab9Ub5C5d4aPwZlt]Ryzaox^dKk1oP9c"
+565,"wDIP0A^cp^WvjxX8t=FR@1hah2eYw7;?5wyka`XPfh^p3KWf>7LqehaG]@4kPUL2UnMcxxc<bXPQV;=PTCuGKA6?wZPcN?1b6eN=LaarV:@wsR2?xjgm=En24MFLm=xN>dxkJI;=;phb2RC`^67YDy[L?y;`3ou^D<hv>XSRQt6WnD8q1BgGrPzcMMEOD``mFH`NNTkI"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,Temp
 571,
@@ -48,7 +48,7 @@ pUnallocated
 1
 2
 590,10
-pLogOutput,1
+pLogOutput,0
 pDim,""
 pSrcHier,""
 pTgtHier,""
@@ -59,16 +59,16 @@ pSuffix,""
 pSkipBlank,0
 pUnallocated,"Undefined <pAttr>"
 637,10
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension"
-pSrcHier,"Optional: Source Hierarchy, If not specified takes the default Hierarchy"
-pTgtHier,"Optional: Target Hierarchy, If not specified, takes the same name as attribute."
-pAttr,"Required: Attribute"
-pTopNode,"Optional: The name of the Target Hierarchy top element (will default to 'All ' attribute name )"
-pPrefix,"Optional: Prefix before the attribute value"
-pSuffix,"Optional: Suffix after the attribute value"
-pSkipBlank,"Optional: To manage empty attribute: 0= Skip,  1=Send to unallocated node (by default blank attribute values are skipped)"
-pUnallocated,"Optional: Naming convention for rollup if attribute is empty (eg. Unallocated <pAttr>, No <pAttr>, Undefined <pAttr>)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension"
+pSrcHier,"OPTIONAL: Source Hierarchy, If not specified takes the default Hierarchy"
+pTgtHier,"OPTIONAL: Target Hierarchy, If not specified, takes the same name as attribute."
+pAttr,"REQUIRED: Attribute"
+pTopNode,"OPTIONAL: The name of the Target Hierarchy top element (will default to 'All ' attribute name )"
+pPrefix,"OPTIONAL: Prefix before the attribute value"
+pSuffix,"OPTIONAL: Suffix after the attribute value"
+pSkipBlank,"OPTIONAL: To manage empty attribute: 0= Skip,  1=Send to unallocated node (by default blank attribute values are skipped)"
+pUnallocated,"OPTIONAL: Naming convention for rollup if attribute is empty (eg. Unallocated <pAttr>, No <pAttr>, Undefined <pAttr>)"
 577,3
 vEle
 vAttr
@@ -94,7 +94,17 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,178
+572,188
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create.fromattribute', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pSrcHier', '', 'pTgtHier', '', 'pAttr', '',
+    	'pTopNode', 'Total <pAttr>', 'pPrefix', '', 'pSuffix', '',
+    	'pSkipBlank', 0, 'pUnallocated', 'Undefined <pAttr>'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -197,6 +207,8 @@ ElseIF( Subst( pTopNode, Long( pTopNode )-7, 8 ) @= '<pAttr>'  );
     sTopNode = Subst( pTopNode, 1, Long( pTopNode )-8 )  | ' ' | pAttr;
 ElseIF( Scan( '<pAttr>', pTopNode ) >0 );
     sTopNode = Subst( pTopNode, 1, Scan( '<pAttr>', pTopNode )-1 ) | pAttr | Subst( pTopNode, Scan( '<pAttr>', pTopNode )+7,Long(pTopNode) );
+Else;	
+    sTopNode = pTopNode;
 EndIf;
 
 ##  Validate Unallocated node name

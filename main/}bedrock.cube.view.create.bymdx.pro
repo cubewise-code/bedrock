@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"juGFHa\i0va?379H;@2DQugirjq_Nb@Bk\rV^77vsLUGcPH>QR@>>C4KkGeFLu:nGp6h80ZgKfs4J2dvznEG9C`7OfIDd^4p>P\vFag\ENpzoRB^r^^YLHjJX2kW^Ky=6AIuY_DzCW\CVQBJ1cTxk_lBW5f4ZKtkjyabpRF>EtkKdcWAzrekXQSW`YwM4RY[HL6_tV<x"
+565,"lhY;;ksGmRv5as5[RA?2PV9DU93xhC6z^gzqiVDvMxx;oTp]uHr:dOPZ6<arh5jbIv91u?t;`m\j]V>aNg2j4;T7waEzs[fp`yu@EBMU1?f;EZh^WAZW^YT2^7;8`qHv>2j@@d]KlCR:tm5@jtw[\O4BojK:XGLY8NV_JLrt<f3LpyIMHT5Wy]71n^qalQ>I2[XF@6>?"
 559,1
 928,0
 593,
@@ -44,11 +44,11 @@ pView,""
 pMDXExpr,""
 pTemp,1
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: View Name"
-pMDXExpr,"Required: Valid MDX Expression"
-pTemp,"Optional: Make View Temporary (1=Temporary)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: View Name"
+pMDXExpr,"REQUIRED: Valid MDX Expression"
+pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 577,0
 578,0
 579,0
@@ -56,7 +56,17 @@ pTemp,"Optional: Make View Temporary (1=Temporary)"
 581,0
 582,0
 603,0
-572,104
+572,114
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.create.bymdx', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '',
+    	'pMDXExpr', '',
+    	'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

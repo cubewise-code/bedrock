@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"h>bmv^pGaaWq7;dG=vwN\Tt:x7B1HVXk1^doR>3ZQ13s?yv2Y<F:g[K[zpk]l_d82qny^j1yzEh@pq^a>j<HUs;nFZ3x@A]f4oA90?PBmLc<\5GcViZuG2\i;ou:KGhIrU3tatGKVos;7_RTiYwXeXNUymW5u@]NTzplx3yNks2smJymNE8kvF<NH5Yvm>:^PsS8Hpr?"
+565,"q7y\Wr:w@OwbBnbljaOz1wS0pj6M;k2hEYy@u>nr^dQH;\?g`l`U7Cy?cp8jO?DmjxaVgkYyp<<<OcGoFxPGX7dJoizXF^=cVLcWSle:[\=:\Bjx=4u?=d_uw1jpcIcd@]97KjrSnFm<w3U`j`U?eBpX:T_5=88xkHg;FDbT:@RpWa@5QHYWZ89BVt@xX69hivTipTPy"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -71,20 +71,20 @@ pAddToSubset,0
 pAlias,""
 pTemp,1
 637,14
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pConsol,"Optional: Elements within Consolidated Element (Blank or * Equals All)"
-pAttr,"Optional: Attribute (Blank Equals All)"
-pAttrValue,"Optional: Attribute Value"
-pLevelFrom,"Optional: From Element Level"
-pLevelTo,"Optional: To Element Level"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pConsol,"OPTIONAL: Elements within Consolidated Element (Blank or * Equals All)"
+pAttr,"OPTIONAL: Attribute (Blank Equals All)"
+pAttrValue,"OPTIONAL: Attribute Value"
+pLevelFrom,"OPTIONAL: From Element Level"
+pLevelTo,"OPTIONAL: To Element Level"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,1
 vEle
 578,1
@@ -98,7 +98,20 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,210
+572,223
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pConsol', '*', 'pAttr', '', 'pAttrValue', '',
+    	'pLevelFrom', 0, 'pLevelTo', 999,
+    	'pExclusions', '', 'pDelim', '&',
+    	'pAddToSubset', 0, 'pAlias', '',
+    	'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

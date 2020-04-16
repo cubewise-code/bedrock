@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ed4WWa>0aTqG8<1=Xn1I^icIC<zw?;yAxD0Hge9?BzIFSG=dNEP71kK7S3H96\X4As@YZ]l`[oCVugU57RO<RfVWfx9G_sj585J_eD_XZXy=113:2MBj]GD3MgVtKyGpbHTWLl4lU7srF\IAPfA:Z0]]Hx3T<XnFlC^K4V8r3hSzL2hGIr><lVnM;Hm988Gxefnz6RJ0"
+565,"k2JdJRpXkRRarC\F94AEy?Kc6verIob7eH@3RC7JHM7=k8mc9=7urQ[XQMI;vX6X@tfBQ\plpb>y`UYv<NhtFi[T2gMnbVkWy;MoI3HbTiQ_CfbkolP6t1SW_UvWz_VuESz@?]PE_EXa=:CCF9=7YGC?PVOp=KY]y3=RuJbPNRqI4=D;v7FMvW<\@2ORjWdlYi1xsIUZ"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pSrcDir,"."
 pTgtDir,""
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDir,"Required: Source Directory to Backup"
-pTgtDir,"Required: Destination Directory for Backup"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDir,"REQUIRED: Source Directory to Backup"
+pTgtDir,"REQUIRED: Destination Directory for Backup"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pTgtDir,"Required: Destination Directory for Backup"
 581,0
 582,0
 603,0
-572,115
+572,138
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.dir.backup', 'pLogOutput', pLogOutput,
+    	'pSrcDir', '.', 'pTgtDir', ''
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -96,11 +104,20 @@ nErrors             = 0;
 pSrcDir             = Trim( pSrcDir );
 pTgtDir             = Trim( pTgtDir );
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Remove trailing \ from directory names if present
-If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= '\' );
+If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= sOSDelim );
     pSrcDir         = SubSt( pSrcDir, 1, Long( pSrcDir ) - 1 );
 EndIf;
-If( SubSt( pTgtDir, Long( pTgtDir ),1 ) @= '\' );
+If( SubSt( pTgtDir, Long( pTgtDir ),1 ) @= sOSDelim );
     pTgtDir         = SubSt( pTgtDir, 1, Long( pTgtDir ) - 1 );
 EndIf;
 
@@ -141,8 +158,10 @@ DatasourceASCIIQuoteCharacter='';
 
 ### Create Make Directory Batch File
 sFileName           = 'Bedrock.MkDir.bat' ;
-sBackupDir          = pTgtDir | '\TM1Backup_' | cTimeStamp;
-ASCIIOUTPUT( sFileName, 'md "' | sBackupDir |'"' );
+sBackupDir          = pTgtDir | sOSDelim | 'TM1Backup_' | cTimeStamp;
+If(sOS @= 'Windows');
+  ASCIIOUTPUT( sFileName, 'md "' | sBackupDir |'"' );
+EndIf;
 
 ### Create Exclude File ###
 sFileName = 'Excludes.txt';
@@ -155,9 +174,13 @@ ASCIIOUTPUT( sFileName, '.feeders');
 
 ### Create Batch File ###
 sFileName = 'Bedrock.Server.DataDir.Backup.bat';
-sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c /s /e /y /exclude:Excludes.txt';
-ASCIIOUTPUT( sFileName, '@ECHO OFF');
-ASCIIOUTPUT( sFileName, sText );
+If(sOS @= 'Windows');
+  sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c /s /e /y /exclude:Excludes.txt';
+  ASCIIOUTPUT( sFileName, '@ECHO OFF');
+  ASCIIOUTPUT( sFileName, sText );
+Else;
+  sText = 'rsync -rt --exclude-from=excludes.txt "' | pSrcDir | '" "' | sBackupDir |'"';
+EndIf;
 
 
 sMessage = 'Command Line: ' | sText;
@@ -174,7 +197,7 @@ LogOutput('INFO', sMessage );
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,52
+575,60
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -184,7 +207,11 @@ LogOutput('INFO', sMessage );
 ################################################################################################# 
 
 # Create backup directory
-ExecuteCommand ( 'Bedrock.MkDir.bat ', 1 );
+If(sOS @= 'Windows');
+  ExecuteCommand ( 'Bedrock.MkDir.bat', 1 );
+Else;
+  ExecuteCommand ( 'mkdir "' | sBackupDir |'"', 1);
+EndIf;
 # Ensure backup directory created else abort
 If( FileExists( sBackupDir ) = 0 );
     nErrors = 1;
@@ -197,15 +224,19 @@ ELSE;
 EndIf;
 
 ### Copy Data Dir to Backup ###
-ExecuteCommand ( 'Bedrock.Server.DataDir.Backup.bat', 1 );
+If(sOS @= 'Windows');
+  ExecuteCommand ( 'Bedrock.Server.DataDir.Backup.bat', 1 );
+Else;
+  ExecuteCommand ( sText, 1 );
+EndIf;
 
 ### Delete temporary files ###
 sFileName = 'Bedrock.Server.DataDir.Backup.bat' ;
-ASCIIDelete( sFileName );
+ASCIIDelete( LOWER(sFileName) );
 sFileName = 'Bedrock.MkDir.bat';
-ASCIIDelete( sFileName );
+ASCIIDelete( LOWER(sFileName) );
 sFileName = 'Excludes.txt';
-ASCIIDelete( sFileName );
+ASCIIDelete( LOWER(sFileName) );
 
 sMessage = 'Temporary files deleted.';
 LogOutput('INFO', sMessage ); 

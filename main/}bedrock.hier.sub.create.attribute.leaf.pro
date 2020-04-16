@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lszlwH6snozWaTMTy=Vj^pKrDE[>y6]xUs7c=8OuH<azlYqcrlom=g2imdbeLXrmGI8X78xB@73InW1lrn=O]Kg\G4:6jxki4GE?4Bs[f`8VM=crt<62tA0C\h\A_a11UctZJozl78Y6up\U6jex@Q?lHzqb?\M4J[sCQ]N0<Afn;_<_Uh6sFLoj>a]aT`RGVUj9K8\H"
+565,"s6GjM4sLkqhoNKa^>AvaBKUa\x85sqQrBkwX2QzVkT3v:FGvKv4opufmEg\<?LE3]0z2Xj1Lmj[8mOsuEGI9>5ns:IKOnFqH8pOlX3OM9`lFS7OJM83T>8BX_wuuURm:;<9ilLj:borcO_eqj?g=kM:khaARL7`_oLfR4kN=s==n1H\5dADB3=WjD\z<6=No6R0dr38R"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -62,17 +62,17 @@ pDelim,"&"
 pAlias,""
 pTemp,1
 637,11
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pAttr,"Optional: Attribute (Blank Equals All)"
-pAttrValue,"Optional: Attribute Value"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pAttr,"OPTIONAL: Attribute (Blank Equals All)"
+pAttrValue,"OPTIONAL: Attribute Value"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0
@@ -80,7 +80,18 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,62
+572,73
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.attribute.leaf', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pAttr', '', 'pAttrValue', '',
+    	'pAddToSubset', 0, 'pExclusions', '',
+    	'pDelim', '&', 'pAlias', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -126,7 +137,7 @@ IF ( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
 
-nReturnCode = ExecuteProcess('}bedrock.hier.sub.create',
+nRet = ExecuteProcess('}bedrock.hier.sub.create',
                               'pDim', pDim,
                               'pHier', pHier,
                               'pSub', pSub,

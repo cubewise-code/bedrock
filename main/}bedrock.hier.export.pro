@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"ei8KEaNlNYYz4yorAtexsL<N4fqU8msf94Fa]tP4p4:p^1p21RJ4HE2SEWrE6D;b@S8YxhOMB_U<Dj:Enf0C2aSuNjTJ=In1z\Ub3u0?oo9urES^z16@cRc]E:3RjH;EpDrR1lNnVtkL5UKA9Jl351fT<aM\eWyjCmT><c73CDoqlBId24OavuDir`xCVNvB<10A@8lP"
+565,"pK@uC<=\lKw:1\5raHtLls5wlTL1YAW87DL8vRu2eRzX0DLdysgSwc`5FMDuPG`p5jsg07PSgbO3[^3Cg:B^7DHhI;hLFgGUK;Lj0<VYE>]3;qv^X9pn9X`6q]qX`t=ZkueXkfIE<85epmsabLX[d4sYkZfConJMLaER^zKL?rs@21L[ZDuC?Gb^vs5;\RVy^D5<A5tp"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -56,15 +56,15 @@ pDelim,","
 pQuote,""""
 pLegacy,0
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension"
-pHier,"Optional: Hierarchy (defaults to dimension name if blank)"
-pTgtDir,"Optional: Target Directory Path (defaults to Error File Directory)"
-pTgtFile,"Optional: Target File Name (defaults to Dimension Hierarchy_Export.csv if blank)"
-pTitleRecord,"Required: Boolean 1 = Yes - Include header row"
-pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
-pLegacy,"Required: Boolean 1 = Legacy format"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension"
+pHier,"OPTIONAL: Hierarchy (defaults to dimension name if blank)"
+pTgtDir,"OPTIONAL: Target Directory Path (defaults to Error File Directory)"
+pTgtFile,"OPTIONAL: Target File Name (defaults to Dimension Hierarchy_Export.csv if blank)"
+pTitleRecord,"REQUIRED: Boolean 1 = Yes - Include header row"
+pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
+pLegacy,"REQUIRED: Boolean 1 = Legacy format"
 577,1
 vEle
 578,1
@@ -78,7 +78,18 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,187
+572,207
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.export', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '',
+    	'pTgtDir', '', 'pTgtFile', '',
+    	'pTitleRecord', 1, 'pDelim', ',', 'pQuote', '"',
+    	'pLegacy', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -181,6 +192,15 @@ If( HierarchyExists( pDim, sHier ) = 0 );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Validate export path
 If( Trim( pTgtDir ) @= '' );
     pTgtDir     = GetProcessErrorFileDirectory;
@@ -190,8 +210,8 @@ ElseIf( FileExists( pTgtDir ) = 0 );
     nErrors     = 1;
     sMessage    = 'Invalid export path specified. Folder does not exist.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @<> '\' );
-    pTgtDir     = pTgtDir | '\';
+ElseIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @<> sOSDelim );
+    pTgtDir     = pTgtDir | sOSDelim;
 EndIf;
 
 # Validate export filename
@@ -307,13 +327,13 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
     If( pLegacy = 1 );
             AsciiOutput( sFilename, 'Reserved' );
     EndIf;
-    AsciiOutput( sFilename, 'Reserved.' );
+    AsciiOutput( sFilename, 'Reserved' );
     
 ## Line 5 or 6: Header Information
     AsciiOutput( sFilename, 'Line_Type', 'Element', 'Value_1', 'Value_2', 'Value_3' );
 
 ### Attribute Information 
-    IF( DimensionExists( sAttrDimName ) = 1 );
+    If( DimensionExists( sAttrDimName ) = 1 );
         nIndex = 1;
         nLimit = DIMSIZ ( sAttrDimName );
         WHILE( nIndex <= nLimit );
@@ -322,9 +342,9 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
             AsciiOutput( sFilename, 'A', sElName, sElType );
             nIndex = nIndex + 1;
         END; 
-    ENDIF;
+    EndIf;
 #    AsciiOutput( sFilename, '' );
-ENDIF;
+EndIf;
 
 ### Element Information
 nElIndex        = ElementIndex( pDim, sHier, vEle );

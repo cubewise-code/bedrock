@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"bQaSydTy?5iXY3UQjf_l`B;shX:d9R9v``2^@9Y\5euWRP06eaXCxOcq=q<uHn7m\JOak8lwECgtG[0ZCazexNc:`9YzEXjROLFYGZT5]jLo1JGKhACjQ<>ne3oF49X=@V?tbo=UQs6oV2r^?MEa]5^97lzKQSKB\7]X\d]7IWN\XLR9maKBrQ0V4ScqywJ^vprpxpv2"
+565,"fsc6tJa=^Cw4icuDA6_ej9GJVxYs[D@>RiSsrw[e3ZJNTm=zU58CFN[iV69rl:xz\3qtClDNi]NnSuMhTY1?TpnfaCYjR8SGQPxrkN1dyOT=D\2tAZIawu9r>3[L[?UMIuO^4y]f:Mj5`Rs<vyXVzH<gxp>ZJGXbHmCL:9NdU6_]6DuYY`:9tGSvWJ0:c5kcOVcA[B_e"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pGroup,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pGroup,"Required: Groups (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character (Defaults to & if left blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pGroup,"REQUIRED: Groups (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pDelim,"Optional: Delimiter character (Defaults to & if left blank)"
 581,0
 582,0
 603,0
-572,188
+572,196
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.group.delete', 'pLogOutput', pLogOutput,
+	    'pGroup', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

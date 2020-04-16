@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hri6is`Zan1ZN1BYYAyl`bQlIR<@>vR`4?@wjFgMY4HMf]lHr3L04B?LO00yW[BxSr97:[Ef;oChrKraG4vcL[`_KWq0a[BFkd?LE8OLu<yZI9RGXZVtl`bcuMjAiU8VQN^c[OnwYpggOs1mrQ\2:5SF7loq8ynNl;FE[dghs`skEiz2OoK^C1n1o=GPC4LWnGtnjz@a"
+565,"ywf[>0^W[RTn4uaz2Sf8dOM<1a^ulF;o0a:T7t^yjREe;T7r0dpYS3TCCT=46nox21LrCOlM6:SXDfDG\YNP;a;@FqlJJfqhybgtqu<tYJE;>B7mOrobyNHmhty5oy4<^qU9k:IB5:9`5VNeCNbCgqMfeZBvbGDx?0Jlmz7YJb1@cDRVVRt;8jqX?XIu3dkhSENNJI4L"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -41,10 +41,10 @@ pClient,""
 pPassword,""
 pDelim,"&"
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pClient,"Required: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
-pPassword,"Required: New Password"
-pDelim,"Optional: Delimiter character"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
+pPassword,"REQUIRED: New Password"
+pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -52,7 +52,15 @@ pDelim,"Optional: Delimiter character"
 581,0
 582,0
 603,0
-572,179
+572,187
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.client.password.reset', 'pLogOutput', pLogOutput,
+	    'pClient', '', 'pPassword', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

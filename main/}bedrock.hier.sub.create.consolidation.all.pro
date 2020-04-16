@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fNmt=caCO=GcQaFo::y0ZLy_uQj6^<n=R>`z]\]LpoXhpl@9MDwkdTeY9?qxhtlQo[i2=O_T08qOh=EpIC]_rhn>]jMBY`;1NZX`GBm>P@A@vnq6yIZ\wTs9AykgHQ<X^_5n;[e;TEkPTE6t1L@\xf16]miwP91Yxl?llapJ2t^zNEx7NmdeuLYRoT=WT<1543zUmjU5"
+565,"shbVeBBSeD>yl@p`BIla7k^\Twm>Sfn4?evqXi@WUaeh?s[R7`@ZQmzPZSpGbjB`7?>47viIX>n0y]olZXbhWE]GbT`PVke=zZ6^J6Y9QQnFynEoL`?OFUbCcWc4UddGFxSahGbvBGlHtWHmHmE6AA_tI8_>K=JXqgW525=185N>s?:yN:HZ^;QLJ`tQo]j6z6XLheI9"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -59,16 +59,16 @@ pDelim,"&"
 pAlias,""
 pTemp,1
 637,10
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pConsol,"Optional: Consolidated Element  (Blank Equals All)"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pConsol,"OPTIONAL: Consolidated Element  (Blank Equals All)"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0
@@ -76,7 +76,17 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,75
+572,78
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.consolidation.all', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '', 'pConsol', '',
+    	'pAddToSubset', 0, 'pExclusions', '',
+    	'pDelim', '&', 'pAlias', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -128,24 +138,17 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-nReturnCode = ExecuteProcess('}bedrock.hier.sub.create',
-                              'pLogOutput', pLogOutput,
-                              'pDim', pDim,
-                              'pHier',pHier,
-                              'pSub', pSub,
-                              'pConsol', pConsol,
-                              'pAttr', '',
-                              'pAttrValue', '',
-                              'pLevelFrom', 0,
-                              'pLevelTo', 99,
-                              'pExclusions', pExclusions,
-                              'pDelim', pDelim,
-                              'pAddToSubset', pAddToSubset,
-                              'pAlias', pAlias,
-                              'pTemp', pTemp
-                            );
+nRet = 
+ExecuteProcess( '}bedrock.hier.sub.create', 'pLogOutput', pLogOutput,
+    'pDim', pDim, 'pHier', pHier, 'pSub', pSub, 'pConsol', pConsol,
+    'pAttr', '', 'pAttrValue', '',
+    'pLevelFrom', 0, 'pLevelTo', 999,
+    'pExclusions', pExclusions, 'pDelim', pDelim,
+    'pAddToSubset', pAddToSubset,
+    'pAlias', pAlias, 'pTemp', pTemp
+);
                             
-IF ( nReturnCode <> ProcessExitNormal() );
+IF ( nRet <> ProcessExitNormal() );
   sMessage = cMsgErrorShell;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
   ProcessError();

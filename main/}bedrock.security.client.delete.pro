@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"kyJgfF^4jfRa4LQ>c4<uV:zv_HA_cwzXtKJ`jy:_usKH:Pw4GrPT:cFoi1uOj3jAwpXQ=:5O]Bd^@b5HtvLmj><xnlEMk=Q1fMZgS=xfX69D1kKJ]>fPnk7xg_8pmgTC[2Z;7O1Hg4AvNEqvg;IMHCNIofHAKfm_8OAeIm7XoHU_E=8dt\f;;Q\7]`0B7:LwJIf;guWS"
+565,"lvVc0v50WaR4a4j@?BTD4FMv@J^bwbn@W8uwY\OzE5kHRKIG1QWfr9qTa@6f90MZ2jCjY\oK32w90qA6;O8l;V82e4k?Wp?3E8`jVGnirvCX^TD4NHacJfP:WwisPSM@QHml\;:clzf5_KxHGTYBgEj7aSdSe]C8dOEQtkg0lO:Mlv[2i8mQYyl>ChhDZ@rixS1RG<Sd"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pClient,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pClient,"Required: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
-pDelim,"Optional: Delimiter"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pDelim,"Optional: Delimiter"
 581,0
 582,0
 603,0
-572,185
+572,193
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+	ExecuteProcess( '}bedrock.security.client.delete', 'pLogOutput', pLogOutput,
+	    'pClient', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

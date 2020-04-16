@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"xWhFYY?4aYW3?@]MdpKAQ7y\aVVrBCf<WamsfCd^=wkLx_t2l^8e<Sk;4j_Sy]3OKxd5XNESM>3>^iW_hLa9clll7XcqUtBNyxbVl]h@dvOE@dXh06A5OhfKm][TJ34Je]c`]LVk^h@JP8cRwduZ6bF[1]@Jm6Mc8lvZxVL?GpdR;?SjQC\[=QkUjbbrbbxUduxGM:Y["
+565,"bKaN7Nm[a\@3q6\GdrkYN@LssyLMEY^JlURjrlL5ZLZWlKtD=LpJWa;jHsG3h]x9=^w0GRIX7IQEEgn@T?xDo<M>pYz2n@jGhuV]=F8f`93x_oCNSlyueAyP8sdL`48nZOu5YJaL7Y5aX4Kxh=s]woVSvz1FX83]aJ72H`lF6<2xl\CrXKr3=XD@;qWRhKTC\q]J8=O]"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -50,13 +50,13 @@ pAttr,0
 pUnwind,0
 pDelim,"&"
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Source Dimension"
-pTgtDim,"Optional: Target Dimension (will default to pSrcDim_clone If blank (or) is same as pSrcDim)"
-pHier,"Required: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
-pAttr,"Required: Include Attributes? (Boolean 1=True)"
-pUnwind,"Required: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Source Dimension"
+pTgtDim,"OPTIONAL: Target Dimension (will default to pSrcDim_clone If blank (or) is same as pSrcDim)"
+pHier,"REQUIRED: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
+pAttr,"REQUIRED: Include Attributes? (Boolean 1=True)"
+pUnwind,"REQUIRED: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
+pDelim,"OPTIONAL: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
 577,1
 vEle
 578,1
@@ -70,7 +70,16 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,159
+572,172
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.clone', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pTgtDim', '', 'pHier', '*',
+    	'pAttr', 0, 'pUnwind', 0, 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -106,6 +115,8 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = '%cThisProcName% : %sMessage% : %cUserName%';
 cMsgInfoContent   = 'User:%cUserName% Process:%cThisProcName% Message:%sMessage%';
 cLogInfo          = '***Parameters for Process:%cThisProcName% for pSrcDim:%pSrcDim%, pTgtDim:%pTgtDim%, pHier:%pHier%, pAttr:%pAttr%, pUnwind:%pUnwind%, pDelim:%pDelim%.';
+cLangDim          = '}Cultures';
+nNumLang          = DimSiz( cLangDim );
 
 ## LogOutput parameters
 IF ( pLogoutput = 1 );
@@ -165,11 +176,11 @@ If(DimensionExists( pTgtDim ) = 0 );
     DimensionCreate( pTgtDim );
 Else;
     IF(pUnwind = 1 );
-       ExecuteProcess('}bedrock.hier.unwind',
+       nRet = ExecuteProcess('}bedrock.hier.unwind',
         'pLogOutput', pLogOutput,
         'pDim', pTgtDim,
         'pHier', pTgtDim,
-        'pConsol', '',
+        'pConsol', '*',
         'pRecursive', 1
         );
     ELSEIF(pUnwind = 2 );
@@ -208,8 +219,10 @@ DatasourceDimensionSubset = 'ALL';
 
 ### Replicate Attributes ###
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
-sAttrDim = '}ElementAttributes_' | pSrcDim;
-sAttrTragetDim = '}ElementAttributes_' | pTgtDim;
+sAttrDim        = '}ElementAttributes_' | pSrcDim;
+sAttrLoc        = '}LocalizedElementAttributes_' | pSrcDim;
+sAttrTargetDim  = '}ElementAttributes_' | pTgtDim;
+sAttrLocTarget  = '}LocalizedElementAttributes_' | pTgtDim;
 
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
   nNumAttrs = DimSiz( sAttrDim );
@@ -218,9 +231,9 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
     sAttrName = DimNm( sAttrDim, nCount );
     sAttrType = SubSt(DType( sAttrDim, sAttrName ), 2, 1 );
       
-      If ( DimensionExists( sAttrTragetDim ) = 0);
+      If ( DimensionExists( sAttrTargetDim ) = 0);
          AttrInsert(pTgtDim,'',sAttrName,sAttrType );
-       ElseIF(DimIx(sAttrTragetDim, sAttrName) = 0);
+       ElseIF(DimIx(sAttrTargetDim, sAttrName) = 0);
          AttrInsert(pTgtDim,'',sAttrName,sAttrType );
       Endif;
         
@@ -261,7 +274,7 @@ IF( sElType @= 'C' & ElCompN( pSrcDim, vEle ) > 0 );
 EndIf;
 
 ### End MetaData ###
-574,47
+574,86
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -282,11 +295,11 @@ EndIf;
 
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 
-    nCount = 1;
-    While( nCount <= nNumAttrs );
-        sAttrName = DimNm( sAttrDim, nCount );
+    nAttr = 1;
+    While( nAttr <= nNumAttrs );
+        sAttrName = DimNm( sAttrDim, nAttr );
         sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
-        If( CellIsUpdateable( sAttrDim, vEle, sAttrName ) = 1 );
+        If( CellIsUpdateable( sAttrTargetDim, vEle, sAttrName ) = 1 );
             If( sAttrType @= 'S' % sAttrType @= 'A' );
                 sAttrVal = AttrS( pSrcDim, vEle, sAttrName );
                 If( sAttrVal @<> '' );
@@ -303,7 +316,46 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
                 EndIf;
             EndIf;
         EndIf;
-        nCount = nCount + 1;
+        # check for localized attributes
+        If( CubeExists( sAttrLoc ) = 1 );
+            nLang = 1;
+            While( nLang <= nNumLang );
+                sLang       = DimNm( cLangDim, nLang );
+                If( sAttrType @= 'A' % sAttrType @= 'S' );
+                    sAttrVal    = AttrS( pSrcDim, vEle, sAttrName );
+                    sAttrValLoc = AttrSL( pSrcDim, vEle, sAttrName, sLang );
+                    If( sAttrValLoc @= sAttrVal ); sAttrValLoc = ''; EndIf;
+                Else;
+                    nAttrVal    = AttrN( pSrcDim, vEle, sAttrName );
+                    nAttrValLoc = AttrNL( pSrcDim, vEle, sAttrName, sLang );
+                EndIf;
+                If( CubeExists( sAttrLocTarget ) = 0 );
+                    If( sAttrType @= 'A' );
+                        AttrPutS( sAttrValLoc, pTgtDim, vEle, sAttrName, sLang, 1 );
+                    ElseIf( sAttrType @= 'N' );
+                        If( nAttrValLoc <> nAttrVal );
+                            AttrPutN( nAttrValLoc, pTgtDim, vEle, sAttrName, sLang );
+                        EndIf;
+                    Else;
+                        AttrPutS( sAttrValLoc, pTgtDim, vEle, sAttrName, sLang );
+                    EndIf;
+                ElseIf( CubeExists( sAttrLocTarget ) = 1 );
+                    If( CellIsUpdateable( sAttrLocTarget, vEle, sLang, sAttrName ) = 1 );
+                        If( sAttrType @= 'A' );
+                            AttrPutS( sAttrValLoc, pTgtDim, vEle, sAttrName, sLang, 1 );
+                        ElseIf( sAttrType @= 'N' );
+                            If( nAttrValLoc <> nAttrVal );
+                                AttrPutN( nAttrValLoc, pTgtDim, vEle, sAttrName, sLang );
+                            EndIf;
+                        Else;
+                            AttrPutS( sAttrValLoc, pTgtDim, vEle, sAttrName, sLang );
+                        EndIf;
+                    EndIf;
+                EndIf;
+                nLang   = nLang + 1;
+            End;
+        EndIf;
+        nAttr = nAttr + 1;
     End;
 
 EndIf;
@@ -346,7 +398,7 @@ If( pHier @= '*' );
         If(nElestart > 1);
           vSourceHierarchy = SUBST(sEle,nElestart,nElength);
          If ( vSourceHierarchy @<> 'Leaves');
-             EXECUTEPROCESS('}bedrock.hier.clone',
+             nRet = EXECUTEPROCESS('}bedrock.hier.clone',
                'pSrcDim', sDim,
                'pSrcHier', vSourceHierarchy,
                'pTgtDim', pTgtDim,
@@ -377,7 +429,7 @@ ElseIf( Scan( '*', pHier )=0 &  Scan( '?', pHier )=0 & Scan( pDelim, pHier )=0 &
         sMessage = Expand( 'Hierarchy "%sCurrHierName%" in Dimension "%sDim%" being processed....' );
         LogOutput( 'INFO', Expand( cMsgInfoContent ) );
       EndIf;
-      EXECUTEPROCESS('}bedrock.hier.clone',
+      nRet = EXECUTEPROCESS('}bedrock.hier.clone',
        'pSrcDim', sDim,
        'pSrcHier', sCurrHierName,
        'pTgtDim', pTgtDim,
@@ -418,7 +470,7 @@ ElseIf( Scan( '*', pHier )=0 &  Scan( '?', pHier )=0 & Trim( pHier ) @<> '' );
             sMessage = Expand( 'Hierarchy "%sCurrHierName%" in Dimension "%sDim%" being processed....' );
             LogOutput( 'INFO', Expand( cMsgInfoContent ) );
           EndIf;
-          EXECUTEPROCESS('}bedrock.hier.clone',
+          nRet = EXECUTEPROCESS('}bedrock.hier.clone',
            'pSrcDim', sDim,
            'pSrcHier', sCurrHierName,
            'pTgtDim', pTgtDim,
@@ -483,7 +535,7 @@ ElseIf( Trim( pHier ) @<> '' );
             sMessage = Expand( 'Hierarchy "%sCurrHierName%" in Dimension "%sDim%" being processed....' );
             LogOutput( 'INFO', Expand( cMsgInfoContent ) );
           EndIf;
-          EXECUTEPROCESS('}bedrock.hier.clone',
+          nRet = EXECUTEPROCESS('}bedrock.hier.clone',
            'pSrcDim', sDim,
            'pSrcHier', sCurrHierName,
            'pTgtDim', pTgtDim,

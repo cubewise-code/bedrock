@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"iz4hKCG[ZyxjXmcdg]R[zOcaK838cW?T`hzkE3m5E40w<E?bib`_HSyc^""[qBYvJrduUQt@_0OwtcvaSQ9Sl>Onm_>Wql\7w`pP0]ZbJw>wsBoe\7YEfy`L:<9\5`JVm`#{DBH89RcbxY;6fY^4==mf1Z`^_jASV6P8gBQ@YYaW\:yO0B;oSRq`K85lV]daCcL0>ublK"
+565,"ayzP\w:QSolKcz@7sa=oJZak60nlBttUP3<?\g8ZzZ1s<Eojtt4YdqObt,[QPRq:U>sYqA]@Hpy4ZxAx]HGZzw7?G2_AykcqvZG:];to_jVC]qc\w:B<Q0etMYLAmjcHf {ORwjeSw>|yvyciBt9]we@nT0zMJ0Noj6Wg1MYs7OU0IPO550E^x@cq7Ajem1B32xm74CI"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -41,10 +41,10 @@ pDim,""
 pHier,""
 pDelim,"&"
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
-pDelim,"Optional: Delimiter character"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension, accepts wildcards (all dimensions = *)"
+pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies = *)"
+pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
 577,1
 vDimHier
 578,1
@@ -58,7 +58,16 @@ vDimHier
 582,1
 VarType=32ColType=827
 603,0
-572,148
+572,157
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.leaves.sync', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pHier', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 

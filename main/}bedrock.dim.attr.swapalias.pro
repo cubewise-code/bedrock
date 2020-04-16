@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"m\k^jd?6bzjKeaf@\LNFzNfV`YXbDi[6R\pNaI:BVz^NN\3wBL=7RY9:TueK]nLd\pQcRqvNHWv8<_PaaE2qyj>Vr7eL2@[m5gPBt]Vuo2;mbxm2vXGuYJlig<Dz^:IIYjEHkT;?wRF<tYD]cYVLr^ga[]rSN6`oV5pgRQkZEdoY\G?]xmJME_T0QVl?;gzKdjiyknE^"
+565,"g90<D1va_Wp8yi;BiJKYwVH:]\GBEqTy\[3:VSHkJ`nCQQzHKS6`s\;aDRqCLX91@<n@IhP1Z`9xt_wANtJ7I0r@tW6md=1kPOru5^=aQQnC0ZagDQI[9wGl[EWNH[qJn0UR[i=W8zbKMQj<4Yfe2oRzG?p@;f1gDW8lrY[[Q>Xj0WPsmkHl<UjflmAci\G`^L\_6f@C"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pDim,""
 pAlias,""
 637,3
-pLogOutput,"Required: True or False (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pAlias,"Required: Alias"
+pLogOutput,"REQUIRED: True or False (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pAlias,"REQUIRED: Alias"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pAlias,"Required: Alias"
 581,0
 582,0
 603,0
-572,101
+572,109
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.dim.attr.swapalias', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pAlias', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"eooxXzRMKP6JuZ3sX;i1@[b_YKVtbsp13wxL2k;SZAn?xhkFvZg=qviK5pe1;q~IBFPV7rhY>4B?UZV7:KD;HI8P?Yl35fB2PQ4;42FOBYUg:`aF1NvdijO<a^Op30By|F]zHvcE_fGCtA8`dv`=1IWqerqgzA0hABWYn2b1dZ^ybAv`tzB@bep<lJ=LeACoyqrn8uNeooxXtRMKP6JuZ3sX;i1@[b_YKVtbsp17wxL2k;SZAn?xHjFvZg=qviK50@4;qnNBFPF5rhY>4B7UZU7:KD;HI8P?Yl85fB2PQ4k?2FOBYUg:`qH3NvdijO<a^Op?J;By\@]yHvcE_f7FtAhadv@>1IWqerqgzA0hA2SYn2m1dZ^yaAv`tzB@Bnp<lJ=LELsiyqrn8uN"
+565,"l4QXuqwF\:Vnzym]T8it?7W_DgjpnRj9smI@3Lt6YT]>4`[=In24jU[V7yeQZs}iGgu[G8XXUuC_6PvN<KUor;ds8<o3>u6l3vg9dU?rRsmZ0kbFQ[NCvFYmup3Ws3`@dtFZzt9JK8PA3pn00Kyi]HnMEj5HS^Ii`:FwH92Bq:Ap~2Z[c>7`ko5N6pkdzfqFYxLXwktl4QXuqwF\:Vntym]T8it?7W_DgjpnRj9wmI@3Lt6YT]>4@Z=In24jU[V79`RZsmnGguKE8XXUuCW6PuN<KUor;ds8<o8>u6l3vgIhU?rRsmZ0krHS[NCvFYmup3Wc<d@dT@Zyt9JK8P16pnp9Kyy_HnMEj5HS^Ii`:6sH92Mq:Ap~1Z[c>7`kO>N6pkdzF|vyYxLXwkt"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -50,13 +50,13 @@ pIncludeNoParentElems,0
 pTgtSubNoParents,"Bedrock - No Parents"
 pDelim,"&"
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
-pTgtSubLeaves,"Optional: Name of target subset to store orphans in Leaves hierarchy"
-pIncludeNoParentElems,"Optional: Include elements that have no parent in any of matching hierarchies"
-pTgtSubNoParents,"Optional: Name of target subset to store elements that have no parent in any of matching hierarchies"
-pDelim,"Optional: Delimiter character"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
+pTgtSubLeaves,"OPTIONAL: Name of target subset to store orphans in Leaves hierarchy"
+pIncludeNoParentElems,"OPTIONAL: Include elements that have no parent in any of matching hierarchies"
+pTgtSubNoParents,"OPTIONAL: Name of target subset to store elements that have no parent in any of matching hierarchies"
+pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
 577,1
 vDim
 578,1
@@ -70,7 +70,20 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,135
+572,148
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.leaves.orphan.check', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '*',
+    	'pTgtSubLeaves', 'Bedrock - Orphan Elements - Leaves',
+    	'pIncludeNoParentElems', 0,
+    	'pTgtSubNoParents', 'Bedrock - No Parents',
+    	'pDelim', '&' 
+	);
+EndIf;
+#EndRegion CallThisProcess
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 

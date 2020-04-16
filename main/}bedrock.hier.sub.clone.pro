@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"mp^aw[SvXy^O@aG5VrSzrzdK@f8B9lj1TK_o0XK72?wB4bDr5?Rj2UP7htlH8iZ;<1P[x8VDCpGiFVY^srR\]:;QoUBzekAd<4[BOyTDd^<r7V`VUTd?y32Qm1u?q`BYmZ;oA0:aHfhGjpC0DnQ6MgpS@BYgSJfGZWl;ZGYHwhVqr`@Auor`\uw2i_PP2y8ffhd96OJK"
+565,"yZr<9gwt9WREIEkD9tywil<bUaU>[PO3m8nopzIt5X4>bKx8aXi^62w6hb?9[sS>aM7G0Y@:31O^h;44brqWgPY>nu_kbPVWTFx[g39Qq^7@aF]@QcU]rMpzcmyK4rVRHNGHaC@F^xK:19t2Sw];kxtjL^PfAJ9czJC`7?CsFsljdv`A:<393qg3X3l360w9^3rojX[i"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -53,14 +53,14 @@ pTgtHier,""
 pTgtSub,""
 pTemp,1
 637,8
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Dimension where the subset exists"
-pSrcHier,"Optional: Source Hierarchy (blank = same as source)"
-pSrcSub,"Required: Source Subset"
-pTgtDim,"Optional: Target dimension (blank = same as source)"
-pTgtHier,"Optional: Target Hierarchy (blank = same as Target Dimension)"
-pTgtSub,"Required: Target Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Dimension where the subset exists"
+pSrcHier,"OPTIONAL: Source Hierarchy (blank = same as source)"
+pSrcSub,"REQUIRED: Source Subset"
+pTgtDim,"OPTIONAL: Target dimension (blank = same as source)"
+pTgtHier,"OPTIONAL: Target Hierarchy (blank = same as Target Dimension)"
+pTgtSub,"REQUIRED: Target Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,1
 vEle
 578,1
@@ -74,7 +74,17 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,144
+572,154
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.clone', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pSrcHier', '', 'pSrcSub', '',
+    	'pTgtDim', '', 'pTgtHier', '', 'pTgtSub', '',
+    	'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

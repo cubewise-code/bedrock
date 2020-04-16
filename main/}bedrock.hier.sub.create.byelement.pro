@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"gxMapt;a9FLDI3YdqZ38riudEG9@j<:roYM4K;\U0=Dvqzl\8K7ePW;GWNTl>?uvehqKzP63OtfDBc3LJ^oh8KwTsJK5DH^dIhLaM;RrHtCQ:8TCUh2]aMiXjyFes]ZSJD=b?<8T5fr\mo\_j9eaatbxZ8wuJ:R]DM^rK1sdNe?[J`k6QtrKaBT\IDc4kghQgdAw<>pr"
+565,"tyR@aZ@cFrH2Y@dp45\Ta>=0_EwWTtEr:7ORm5Xx6ZXpZmb5\pN6[Lge`I[w9oD9e3zRsXbwmrgYjGW2FOtWy\X5Hzgc4FN]cSlM?w`CaqqsSJf6H=TEqjGHxMR6<mf>YG8MKpsxX[L;3tbppRlrkjJK=y;w?OEUYDefi;SHGTaT^cajF>lBAUx1XBw4\<h6@\BGsAO`"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -56,15 +56,15 @@ pAddToSubset,0
 pAlias,""
 pTemp,1
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pEle,"Required: Elements Separated by Delimiter"
-pDelim,"Optional: Delimiter character"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pEle,"REQUIRED: Elements Separated by Delimiter"
+pDelim,"OPTIONAL: Delimiter character"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0
@@ -72,7 +72,17 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,199
+572,209
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.byelement', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pEle', '', 'pDelim', '&',
+    	'pAddToSubset', 0, 'pAlias', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

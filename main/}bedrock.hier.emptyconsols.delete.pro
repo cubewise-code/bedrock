@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"s^hLL8y<w2hHDGzis@CazHuQC;EhvT>]rANkE0BhtC^zLd_cNCVM^43fa96>UxbwZnLjdwSIWej3ri0nzL9WJuQxx9<QR[kDVZH>RF=@S:U`u6V<j4qMgIsv4BHr^hV^HM4sIC0zjt[Ea@;kfcRv_@Pvh[5XMMCbfBjbfETEysmVND:r4oUE6BnSUo2CSdmX\It?9Tmz"
+565,"eDAtya\OjerVZ[Rc2@lby;jcFZKLQ0ee=v<d0IPnmuRZqic7Dp@tvqfzLVD648DcdY46;_Pt4KxR_pz3@n`SqrM8:ctFnytVUdP@Zb4_=dcaV0R]ifa[m[Cx_KboefK<ibiBC1K5Vj:7or3NorClew2ybDn8JB1]rLAcb_c=Wu0cET>:`KDl:DU9bnDkF87K\8=n;Hv\"
 559,1
 928,0
 593,
@@ -18,29 +18,33 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
 pDim
 pHier
-561,3
+pDelim
+561,4
 1
 2
 2
-590,3
+2
+590,4
 pLogOutput,0
 pDim,""
 pHier,""
-637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Target Dimension"
-pHier,"Optional: Target Hierarchy (uses default hierarchy if left blank)"
+pDelim,"&"
+637,4
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Target Dimension (accepts wildcards and delimited list)"
+pHier,"OPTIONAL: Target Hierarchy (accepts wildcards and delimited list, uses default hierarchy if left blank)"
+pDelim,"OPTIONAL: Delimiter character for dimension or hierarchy list (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -48,7 +52,15 @@ pHier,"Optional: Target Hierarchy (uses default hierarchy if left blank)"
 581,0
 582,0
 603,0
-572,100
+572,221
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.emptyconsols.delete', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pHier', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -84,6 +96,7 @@ cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%.' ;  
+cMsgInfoContent = 'User:%cUserName% Process:%cThisProcName% Message:%sMessage%';
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -93,7 +106,7 @@ ENDIF;
 ### Validate Parameters ###
 nErrors = 0;
 
-If( Scan( ':', pDim ) > 0 & pHier @= '' );
+If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( ':', pDim ) > 0 & pHier @= '' );
     # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy
     pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );
     pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );
@@ -101,32 +114,19 @@ EndIf;
 
 # Validate dimension
 If( Trim( pDim ) @= '' );
-  nErrors = 1;
-  sMessage = 'No dimension specified.';
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( DimensionExists( pDim ) = 0 );
-  nErrors = 1;
-  sMessage = 'Dimension: ' | pDim | ' does not exist.';
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    nErrors = 1;
+    sMessage = 'No dimension specified.';
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 # Validate Hierarchy
-If(pHier @= 'Leaves' );
-  nErrors = 1;
-  sMessage = 'Invalid  Hierarchy: ' | pDim |':'|pHier;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
-
 If( Trim( pHier ) @= '' );
-  sHier = pDim;
-Else;
-  sHier = pHier;
+    ## use same name as Dimension. Since wildcards are allowed this is managed inside the code below
 EndIf;
 
-If( HierarchyExists( pDim, sHier ) = 0 );
-  nErrors = 1;
-  sMessage = 'The Hierachy ' | sHier | ' does not exists.';
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
 EndIf;
 
 ### Check for errors before continuing
@@ -134,18 +134,143 @@ If( nErrors <> 0 );
     ProcessBreak;
 EndIf;
 
-### Go through dimension and delete consols with no children ###
-nElementCount       = ElementCount( pDim, sHier );
-While( nElementCount >= 1 );
-    sElement        = ElementName( pDim, sHier, nElementCount );
-    sElementType    = ElementType( pDim, sHier, sElement );
-    If( sElementType @= 'C' );
-        nChildCount = ElementComponentCount( pDim, sHier, sElement );
-        If( nChildCount = 0 );
-            HierarchyElementDelete( pDim, sHier, sElement );
-        EndIf;
+# Loop through dimensions in pDim
+sDims = pDim;
+nDimDelimiterIndex = 1;
+sMdx = '';
+# Get 1st dimension
+While( nDimDelimiterIndex <> 0 );
+    # Extract 1st dimension > sDim
+    nDimDelimiterIndex = Scan( pDelim, sDims );
+    If( nDimDelimiterIndex = 0 );
+        sDim = sDims;
+    Else;
+        sDim = Trim( SubSt( sDims, 1, nDimDelimiterIndex - 1 ) );
+        sDims = Trim( Subst( sDims, nDimDelimiterIndex + Long(pDelim), Long( sDims ) ) );
     EndIf;
-    nElementCount = nElementCount - 1;
+    
+      # Create subset of dimensions using Wildcard to loop through dimensions in pDim with wildcard
+    sDimExp = '"'|sDim|'"';
+    sMdxPart = '{TM1FILTERBYPATTERN( EXCEPT( TM1SUBSETALL( [}Dimensions] ) , TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions] ) , "*:*") ) ,'| sDimExp | ')}';
+    IF( sMdx @= ''); 
+      sMdx = sMdxPart; 
+    ELSE;
+      sMdx = sMdx | ' + ' | sMdxPart;
+    ENDIF;
+End;
+
+If( SubsetExists( '}Dimensions' , cTempSub ) = 1 );
+    # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
+    SubsetMDXSet( '}Dimensions' , cTempSub, sMDX );
+Else;
+    # temp subset, therefore no need to destroy in epilog
+    SubsetCreatebyMDX( cTempSub, sMDX, '}Dimensions' , 1 );
+EndIf;
+
+# Loop through dimensions in subset created based on wildcard
+nCountDim = SubsetGetSize( '}Dimensions' , cTempSub );
+While( nCountDim >= 1 );
+    sDim = SubsetGetElementName( '}Dimensions' , cTempSub, nCountDim );
+    # Validate dimension name
+    If( DimensionExists(sDim) = 0 );
+        nErrors = 1;
+        sMessage = Expand( 'Dimension %sDim% does not exist.' );
+        LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
+    Else;
+        If( pLogOutput = 1 );
+          sMessage = Expand( 'Dimension %sDim% being processed....' );
+          LogOutput( 'INFO', Expand( cMsgInfoContent ) );
+        EndIf;
+        # Loop through hierarchies in pHier
+        If( Trim( pHier ) @= '' );
+          ### Use main hierarchy for each dimension if pHier is empty
+          sHierarchies = sDim;
+        Else;
+          sHierarchies              = pHier;
+        EndIf;
+        nDelimiterIndexA    = 1;
+        sHierDim            = '}Dimensions';
+        
+        sMdxHier = '';
+        While( nDelimiterIndexA <> 0 );
+
+            nDelimiterIndexA = Scan( pDelim, sHierarchies );
+            If( nDelimiterIndexA = 0 );
+                sHierarchy   = sHierarchies;
+            Else;
+                sHierarchy   = Trim( SubSt( sHierarchies, 1, nDelimiterIndexA - 1 ) );
+                sHierarchies  = Trim( Subst( sHierarchies, nDelimiterIndexA + Long(pDelim), Long( sHierarchies ) ) );
+            EndIf;
+            
+            ## If no wildcard specified and current hierarchy does not exist in dimension, create it
+            If( Scan( '*', sHierarchy ) = 0 & Scan( '?', sHierarchy ) = 0);
+              If( HierarchyExists( sDim, sHierarchy ) = 0 );
+                  HierarchyCreate( sDim, sHierarchy );
+              EndIf;
+            EndIf;
+
+            # Create subset of Hierarchies using Wildcard
+            If( sHierarchy @= sDim );
+                sHierExp = '"'| sHierarchy |'"';
+            Else;
+                sHierExp = '"'|sDim|':'|sHierarchy|'"';
+            EndIf;
+            sMdxHierPart = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sHierDim| '])},'| sHierExp | ')}';
+            IF( sMdxHier @= ''); 
+              sMdxHier = sMdxHierPart; 
+            ELSE;
+              sMdxHier = sMdxHier | ' + ' | sMdxHierPart;
+            ENDIF;
+        End;
+        IF(Trim(pHier) @= '*');
+          sMdxHier = '{ UNION ( ' | sMdxHier |' , {[}Dimensions].[' | sDim | ']} )}';
+        ENDIF;
+        
+        If( SubsetExists( sHierDim, cTempSub ) = 1 );
+            # If a delimited list of attr names includes wildcards then we may have to re-use the subset multiple times
+            SubsetMDXSet( sHierDim, cTempSub, sMdxHier );
+        Else;
+            # temp subset, therefore no need to destroy in epilog
+            SubsetCreatebyMDX( cTempSub, sMdxHier, sHierDim, 1 );
+        EndIf;
+    
+        # Loop through subset of hierarchies created based on wildcard
+        nCountHier = SubsetGetSize( sHierDim, cTempSub );
+        While( nCountHier >= 1 );
+            sCurrHier = SubsetGetElementName( sHierDim, cTempSub, nCountHier );
+            sCurrHierName = Subst( sCurrHier, Scan(':', sCurrHier)+1, Long(sCurrHier) );
+            # Validate hierarchy name in dimension
+            If( Dimix( sHierDim , sCurrHier ) = 0 );
+                sMessage = Expand('The %sCurrHier% hierarchy does NOT exist in the %sDim% dimension.');
+                LogOutput( 'INFO' , Expand( cMsgInfoContent ) );
+            Else;
+              If( pLogOutput = 1 );
+                sMessage = Expand( 'Hierarchy %sCurrHierName% in Dimension %sDim% being processed....' );
+                LogOutput( 'INFO', Expand( cMsgInfoContent ) );
+              EndIf;
+              
+              ### Go through dimension and delete consols with no children ###
+              nElementCount       = ElementCount( sDim, sCurrHierName );
+              While( nElementCount >= 1 );
+                  sElement        = ElementName( sDim, sCurrHierName, nElementCount );
+                  sElementType    = ElementType( sDim, sCurrHierName, sElement );
+                  If( sElementType @= 'C' );
+                      nChildCount = ElementComponentCount( sDim, sCurrHierName, sElement );
+                      If( nChildCount = 0 );
+                          HierarchyElementDelete( sDim, sCurrHierName, sElement );
+                      EndIf;
+                  EndIf;
+                  nElementCount = nElementCount - 1;
+              End;
+
+          Endif;
+          
+            nCountHier = nCountHier - 1;
+        End;
+            
+    EndIf;
+    
+    nCountDim = nCountDim - 1;
 End;
 
 ### End Prolog ###
@@ -176,7 +301,7 @@ If( nErrors > 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
 Else;
-    sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted all C level items that did not have children in dimension:hierarchy %pDim%:%sHier%.' );
+    sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted all C level items that did not have children.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );

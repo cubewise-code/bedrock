@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"f<oVdCaGnjbq:wupzPMLG6vG21n>9GFRZaVzt>rS8owMIK0<em\KkM6aeZaS;8KAQ]XiPy2YBrCD=7\rQ@g;w[6srV2a1XVaq?puP0EKA3OU]Ad;v8r2fV[]AU\kH4lWU]>HMmPeGQ^FU^q;E`Y=S3=Ttj:L6L`YLyg5[ku3V\n`9=\3r?IN=VD\QMrJy5@<Nq?WxC;c"
+565,"mq[sIA4s`CWtuaxXw6YF40YD^[?``gK=OvL1sHK7J@nFdXOm0FWL[UIknE7pizq0dea9d[8r5zzr@\q@kySefWiwm<VJaT7uPhmfu:xdnt^mHR]^c\ll]n<MP\0_K]6m5en@Y9gwe?y[J6kdTxhy07>ht1DxLO=QAr`S5g9PPn<?^qg<V5W<um=h[9zNPS61l;wG=[pn"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -56,15 +56,15 @@ pAttr,1
 pUnwind,2
 pRemove,0
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Source Dimension"
-pSrcHier,"Optional: Source Hierarchy (blank = same name as source dimension)"
-pConsol,"Required: Cons element in source dim to create root element in target"
-pTgtDim,"Optional: Target Dimension (blank = same name as source dimension)"
-pTgtHier,"Optional: Target Hierarchy (blank = same name as target dimension)"
-pAttr,"Optional: Include Attributes? (Boolean 1=True)"
-pUnwind,"Optional: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pRemove,"Optional: Remove cons elements from source? (1 = Yes, 0 = No)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Source Dimension"
+pSrcHier,"OPTIONAL: Source Hierarchy (blank = same name as source dimension)"
+pConsol,"REQUIRED: Cons element in source dim to create root element in target"
+pTgtDim,"OPTIONAL: Target Dimension (blank = same name as source dimension)"
+pTgtHier,"OPTIONAL: Target Hierarchy (blank = same name as target dimension)"
+pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True)"
+pUnwind,"OPTIONAL: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
+pRemove,"OPTIONAL: Remove cons elements from source? (1 = Yes, 0 = No)"
 577,0
 578,0
 579,0
@@ -72,7 +72,17 @@ pRemove,"Optional: Remove cons elements from source? (1 = Yes, 0 = No)"
 581,0
 582,0
 603,0
-572,159
+572,169
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create.fromrollup', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pSrcHier', '', 'pConsol', '',
+    	'pTgtDim', '', 'pTgtHier', '',
+    	'pAttr', 1, 'pUnwind', 2, 'pRemove', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

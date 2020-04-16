@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"i3;LQTII4ycCM6rrigHm<_@2TAO[20l{P]W3k[9ZPzx6hCJ8_mNjOQlFofT1?x;rD3isJTG62XcaWsUVR1j6jY;?C?KLces;5^B>]OoaL5u?P`BsQn<7_N?<BUWoCOJgRlb=P=Jm]c@2WMjVum3]?utwEK=`5zYLTmeWW<AgA;SiiuKh5PMKLkRd\r?Y|f<VAfEEsI\"
+565,"y>j3_]r34lpRa44;x_Bo=5B1uyZ8pwK{@=fWVPHYQAt?;OZyegmYBbqcXaTqm[2B5VKuzriiv;fa=|e6j@oj[g15ecFLpeLO`v5=mE^@FM]A\h@s1<3\ftbYC3D6JliPcR?08o\>3h}rz5eFxs5=EocC7Q>cSjfxra5iX2Aid<miy[uY6FdnGkqYNbsi|6;61DL@Y[R"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -35,8 +35,8 @@ pRun
 pLogOutput,0
 pRun,"Y"
 637,2
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pRun,"Optional: Do you want to delete Persistent Feeders? (Y or N)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pRun,"OPTIONAL: Do you want to delete Persistent Feeders? (Y or N)"
 577,0
 578,0
 579,0
@@ -44,7 +44,15 @@ pRun,"Optional: Do you want to delete Persistent Feeders? (Y or N)"
 581,0
 582,0
 603,0
-572,43
+572,51
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.deleteallpersistentfeeders', 'pLogOutput', pLogOutput,
+	    'pRun', 'Y'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

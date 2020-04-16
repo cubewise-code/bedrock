@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"iPMQM`toTakSnW`nYV?9eF8VJpzhU^qSPFHmy@giTOto4X5r9sintCxT?uIx;OjkpB09>xxkX9Syb?15y@8NjVf<HkYN]bK@Q2_A:Tn7U8T0\JsDxSmvbQXt>`gD68lW`;O;ILFpM;;80PpINxa=1TT^G`7:PiK5=3d]N2POtYzM:smG6svLW;:lkUI6n_WZ9Wt\MEZ["
+565,"c\RazahxgxHpgmLRK`91kQb34pF_g]QM9kGbJJd_WaS=\N=juN>oslZ=@_CRXaqwyT:f21aTS9=bJrZe[AlLA9EI9>kp[1s?m;`YxDmio[1Pj?vV]n::Ty[AuhGfP;pr_Tkd[iY]P7uPS8[;O?\>p^3e9gh=@F>_K8K??naMs:<_mi`6n`D58Ns[oQl9Pu7Fe;@U?nrW"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,13 +38,13 @@ pDelim
 590,4
 pLogOutput,0
 pCube,""
-pView,"}Bedrock*"
+pView,"}bedrock*"
 pDelim,"&"
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: List of Cubes Separated by Delimiter (For all cubes just the wildcard character alone i.e. *)"
-pView,"Required: List of Views Separated by Delimiter. Wildcards Permitted on View Names."
-pDelim,"Delimiter Character  (default value if blank = '&')"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: List of Cubes Separated by Delimiter (For all cubes just the wildcard character alone i.e. *)"
+pView,"REQUIRED: List of Views Separated by Delimiter. Wildcards Permitted on View Names."
+pDelim,"OPTIONAL: Delimiter Character  (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -52,7 +52,15 @@ pDelim,"Delimiter Character  (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,218
+572,223
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.delete', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pView', '', 'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -138,17 +146,16 @@ EndIf;
 
 # Validate delimiter
 If( Trim( pDelim ) @= '' );
-  pDelim     = '&';
+    pDelim     = '&';
 EndIf;
-
 
 ### Iterate through cubes ###
 
 # If no cube has been specified then process all cubes
 If( Trim( pCube ) @= '' );
-  sMessage = 'No cube specified.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    sMessage = 'No cube specified.';
+    nErrors = nErrors + 1;
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 ### Check for errors before continuing
@@ -172,7 +179,7 @@ While( nCubeDelimIndex <> 0 );
 
     # Create subset of cubes using Wildcard to loop through cubes in pCube with wildcard
     sCubeExp = '"'|sCube|'"';
-    sMdxPart = '{TM1FILTERBYPATTERN( TM1SUBSETALL( [}Cubes] ), '| sCubeExp | ')}';
+    sMdxPart = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [}Cubes] ), %sCubeExp% )}');
     IF( sMdx @= ''); 
       sMdx = sMdxPart; 
     ELSE;
@@ -206,10 +213,10 @@ EndIf;
           While( nViewDelimIndex <> 0 );
               nViewDelimIndex       = Scan( sDelimiter, sViews );
               If( nViewDelimIndex = 0 );
-                  sView           = sViews;
+                  sView           = Trim( sViews );
               Else;
-                  sView           = SubSt( sViews, 1, nViewDelimIndex - 1 );
-                  sViews          = SubSt( sViews, nViewDelimIndex + Long( sDelimiter ), Long( sViews ) );
+                  sView           = Trim( SubSt( sViews, 1, nViewDelimIndex - 1 ) );
+                  sViews          = Trim( SubSt( sViews, nViewDelimIndex + Long( sDelimiter ), Long( sViews ) ) );
               EndIf;
   
               # Check if a wildcard has been used to specify the view name.
@@ -224,10 +231,10 @@ EndIf;
               # If it has then iterate through '}Views_CubeName' dimension
               Else;
                   sDimViews       = '}Views_' | sCurrentCube ;
-                  If( DimIx( '}Dimensions', sDimViews ) <>0 );
+                  If( DimensionExists( sDimViews ) = 1 );
                     # Create subset of views using Wildcard to loop through views in current cube
                     sViewExp = '"'|sView|'"';
-                    sMdxViewPart = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sDimViews| '])},'| sViewExp | ')}';
+                    sMdxViewPart = Expand('{TM1FILTERBYPATTERN( {TM1SUBSETALL([%sDimViews%])}, %sViewExp% )}');
                     IF( sMdxView @= ''); 
                       sMdxview = sMdxViewPart; 
                     ELSE;
@@ -248,7 +255,7 @@ EndIf;
                         # Validate attribute name in sDim
                         If( ViewExists( sCurrentCube, sViewEle ) = 1 );
                           If( pLogOutput = 1 );
-                            LogOutput( 'INFO', Expand( '  Destroying view %sViewEle% in cube %sCurrentCube%.' ) );
+                            LogOutput( 'INFO', Expand( 'Destroying view %sViewEle% in cube %sCurrentCube%.' ) );
                           EndIf;
                             ViewDestroy( sCurrentCube, sViewEle );
                         Endif;
@@ -267,8 +274,6 @@ EndIf;
             
       nCountCubes = nCountCubes - 1;
     End;
-
-
 
 ### End Prolog ###
 573,4

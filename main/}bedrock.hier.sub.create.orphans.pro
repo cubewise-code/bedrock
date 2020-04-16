@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"s@Qcca81l8Ds4>b2p`Qa2NGc9KLVN[t0:nUPX?:J7DX24F4OWk8lLWfgx?bY0WU5\yHCK7TBRmhH48rHCueX0kg6>_ntN]zraX6>6<lYBxwcwzptW?QzM3`IINT`Fdx^uzT_2a1XXE2hnREA=u\_VOF^6eZH?WJeF>=lWXmm9O3fGTq;OWBkRfu8fs8YK14fx7frNovL"
+565,"rv0jr9[xUZW;qkiLxda=GHvCc?6BIk5=hmjCv2]A\E2ncfzweX2oLAkylo<2fye2jr?gy2BPjs][hmVtXBCUDMe\=_UK5=c57B[rAmLJCh[rKv5mZ@D_`d>;csBsFEDjm`BD`LXubogcM^xkbEPdQ3P=A`xIi0j_I6zd4@eif0UZKP]_]kOKIa4ld5]:H]ISTs;JSH8X"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -41,10 +41,10 @@ pDim,""
 pHier,""
 pTemp,1
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0
@@ -52,7 +52,15 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,141
+572,148
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.orphans', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pHier', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -60,7 +68,6 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
-
 
 #Region @DOC
 # Description:

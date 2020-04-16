@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"zB16O=Y_VWYdkzckrneIN9Fr;Ga[gOZ?G:@1dbsu3yHxeic?a[726;Ci2NlQtTNmJj_ATiSZ3J5JJj96`wX0paaiJkSojLvNGUt4Xb[:6zdG:1hI;vYmC8xUft5Y<0KmUKjyi`:q@dVoj^rueck`TT9Y?hR9i=JVt^6W_P3Q3XuaVF8[2vJsG1rQ`S44ZJILk]83U[69"
+565,"c\^aW6UvExfMFLDS3qyp@yj][EZZhaRq6?XJ3xj?j7o\s5yCj6m1Y5WTh?[Za2DHw87Mw<1P2iCotS?Iz2baCeMyYRa=BRb3@9QNrxaT]xX[lI\MQZVLx:2y?Lgv\14g3vgwW9PCEQFp<f3wPSStaC_DIx9A\9d9abmNI?Q3^2FoSFexEt5_GKDy67tay18e4UgFFj<t"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pHier,""
 pEle,""
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name, accepts wildcards (if = *, then all the dimensions)"
-pHier,"Optional: hierarchy name (if blank then same named hierarchy as dimension is assumed), accepts wildcards (if = *, then all hierarchies)"
-pEle,"Optional: filter on elements (delimiter separated list of elements, accepts wildcards (if = *, then all the elements in hierarchy get deleted))"
-pDelim,"Optional: delimiter character for element list (required if pEle parameter is used)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: dimension name, accepts wildcards (if = *, then all the dimensions)"
+pHier,"OPTIONAL: hierarchy name (if blank then same named hierarchy as dimension is assumed), accepts wildcards (if = *, then all hierarchies)"
+pEle,"OPTIONAL: filter on elements (delimiter separated list of elements, accepts wildcards (if = *, then all the elements in hierarchy get deleted))"
+pDelim,"OPTIONAL: delimiter character for element list (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -56,7 +56,16 @@ pDelim,"Optional: delimiter character for element list (required if pEle paramet
 581,0
 582,0
 603,0
-572,244
+572,261
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.element.delete', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pEle', '',
+    	'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -83,9 +92,12 @@ nProcessReturnCode= 0;
 cThisProcName     = GetProcessName();
 cTimeStamp        = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
-cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
+cTempSubDim       = cThisProcName |'_dims_'| cTimeStamp |'_'| cRandomInt;
+cTempSubHier      = cThisProcName |'_hiers_'| cTimeStamp |'_'| cRandomInt;
+cTempSubEle       = cThisProcName |'_eles_'| cTimeStamp |'_'| cRandomInt;
 cUserName         = TM1User();
 cMsgErrorLevel    = 'ERROR';
+cMsgInfoLevel     = 'INFO';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoContent   = 'User:%cUserName% Process:%cThisProcName% Message:%sMessage%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pEle:%pEle%, pDelim:%pDelim%.'; 
@@ -119,10 +131,6 @@ EndIf;
 # Validate Hierarchy
 If( Trim( pHier ) @= '' );
     ## use same name as Dimension. Since wildcards are allowed this is managed inside the code below
-ElseIf(pHier @= 'Leaves' );
-    nErrors = 1;
-    sMessage = 'Invalid  Hierarchy: ' | pDim |':'|pHier;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 ### Check for errors before continuing
@@ -155,18 +163,18 @@ While( nDimDelimiterIndex <> 0 );
     ENDIF;
 End;
 
-If( SubsetExists( '}Dimensions' , cTempSub ) = 1 );
+If( SubsetExists( '}Dimensions' , cTempSubDim ) = 1 );
     # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
-    SubsetMDXSet( '}Dimensions' , cTempSub, sMDX );
+    SubsetMDXSet( '}Dimensions' , cTempSubDim, sMDX );
 Else;
     # temp subset, therefore no need to destroy in epilog
-    SubsetCreatebyMDX( cTempSub, sMDX, '}Dimensions' , 1 );
+    SubsetCreatebyMDX( cTempSubDim, sMDX, '}Dimensions' , 1 );
 EndIf;
 
 # Loop through dimensions in subset created based on wildcard
-nCountDim = SubsetGetSize( '}Dimensions' , cTempSub );
+nCountDim = SubsetGetSize( '}Dimensions' , cTempSubDim );
 While( nCountDim >= 1 );
-    sDim = SubsetGetElementName( '}Dimensions' , cTempSub, nCountDim );
+    sDim = SubsetGetElementName( '}Dimensions' , cTempSubDim, nCountDim );
     # Validate dimension name
     If( DimensionExists(sDim) = 0 );
         nErrors = 1;
@@ -180,13 +188,13 @@ While( nCountDim >= 1 );
         # Loop through hierarchies in pHier
         If( Trim( pHier ) @= '' );
           ### Use main hierarchy for each dimension if pHier is empty
-          sHierarchies = sDim;
+          sHierarchies      = sDim;
         Else;
-          sHierarchies              = pHier;
+          sHierarchies      = pHier;
         EndIf;
         nDelimiterIndexA    = 1;
-        sHierDim            = '}Hierarchies_'|sDim ;
-        sMdxHier = '';
+        sHierDim            = '}Dimensions' ;
+        sMdxHier            = '';
         While( nDelimiterIndexA <> 0 );
 
             nDelimiterIndexA = Scan( pDelim, sHierarchies );
@@ -194,43 +202,43 @@ While( nCountDim >= 1 );
                 sHierarchy   = sHierarchies;
             Else;
                 sHierarchy   = Trim( SubSt( sHierarchies, 1, nDelimiterIndexA - 1 ) );
-                sHierarchies  = Trim( Subst( sHierarchies, nDelimiterIndexA + Long(pDelim), Long( sHierarchies ) ) );
+                sHierarchies = Trim( Subst( sHierarchies, nDelimiterIndexA + Long(pDelim), Long( sHierarchies ) ) );
             EndIf;
 
             # Create subset of Hierarchies using Wildcard
-            If( sHierarchy @= sDim );
-                sHierExp = '"'|sDim|'"';
+            If( sHierarchy  @= sDim );
+                sHierExp    = '"'|sDim|'"';
             Else;
-                sHierExp = '"'|sDim|':'|sHierarchy|'"';
+                sHierExp    = '"'|sDim|':'|sHierarchy|'"';
             EndIf;
-            sMdxHierPart = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sHierDim| '])},'| sHierExp | ')}';
-            IF( sMdxHier @= ''); 
-              sMdxHier = sMdxHierPart; 
+            sMdxHierPart    = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |sHierDim| '])},'| sHierExp | ')}';
+            IF( sMdxHier    @= ''); 
+              sMdxHier      = sMdxHierPart; 
             ELSE;
-              sMdxHier = sMdxHier | ' + ' | sMdxHierPart;
+              sMdxHier      = sMdxHier | ' + ' | sMdxHierPart;
             ENDIF;
         End;
+        If( Trim( pHier )   @= '*' );
+          sMdxHier          = '{ UNION ( ' | sMdxHier |' , {[}Dimensions].[' | sDim | ']} )}';
+        EndIf;
 
-        If( SubsetExists( sHierDim, cTempSub ) = 1 );
-            # If a delimited list of attr names includes wildcards then we may have to re-use the subset multiple times
-            SubsetMDXSet( sHierDim, cTempSub, sMdxHier );
+        If( SubsetExists( sHierDim, cTempSubHier ) = 1 );
+            # If a delimited list of hier names includes wildcards then we may have to re-use the subset multiple times
+            SubsetMDXSet( sHierDim, cTempSubHier, sMdxHier );
         Else;
             # temp subset, therefore no need to destroy in epilog
-            SubsetCreatebyMDX( cTempSub, sMdxHier, sHierDim, 1 );
+            SubsetCreatebyMDX( cTempSubHier, sMdxHier, sHierDim, 1 );
         EndIf;
     
         # Loop through subset of hierarchies created based on wildcard
-        nCountHier = SubsetGetSize( sHierDim, cTempSub );
+        nCountHier = SubsetGetSize( sHierDim, cTempSubHier );
         While( nCountHier >= 1 );
-            sCurrHier = SubsetGetElementName( sHierDim, cTempSub, nCountHier );
+            sCurrHier = SubsetGetElementName( sHierDim, cTempSubHier, nCountHier );
             sCurrHierName = Subst( sCurrHier, Scan(':', sCurrHier)+1, Long(sCurrHier) );
             # Validate hierarchy name in sHierDim
             If( Dimix( sHierDim , sCurrHier ) = 0 );
                 sMessage = Expand('The %sCurrHier% hierarchy does NOT exist in the %sDim% dimension.');
                 LogOutput( 'INFO' , Expand( cMsgInfoContent ) );
-            ElseIf( sCurrHierName @= 'Leaves' );
-                sMessage = 'Invalid  Hierarchy: ' | sCurrHier | ' will be skipped....';
-                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
             Else;
               If( pLogOutput = 1 );
                 sMessage = Expand( 'Hierarchy %sCurrHierName% in Dimension %sDim% being processed....' );
@@ -256,10 +264,18 @@ While( nCountDim >= 1 );
                   ElseIf( Scan( '*', sEle ) = 0 & Scan( '?', sEle ) = 0);
                       If( HierarchyElementExists( sDim,sCurrHierName, sEle ) = 1 );
                           HierarchyElementDelete( sDim, sCurrHierName,sEle );
+                          If( sCurrHierName @= 'Leaves' );
+                              sMessage = Expand('Element %sEle% deleted from LEAVES hierarchy in dimension %sDim%. This action removes the element from all hierarchies!');
+                              LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+                          ElseIf( pLogOutput = 1 );
+                              sMessage = Expand( 'Element %sEle% deleted from hierarchy %sCurrHierName% in dimension %sDim%.' );
+                              LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+                          EndIf;
                       Else;
-                          nErrors = 1;
-                          sMessage = 'The Hierarchy ' | sCurrHier | ' does not have element ' | sEle;
-                          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                          If( pLogOutput >= 1 );
+                              sMessage = Expand('The Hierarchy %sCurrHier% does not contain element %sEle%.');
+                              LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+                          EndIf;
                       Endif;
                   Else;
                       # Wildcard search string
@@ -267,21 +283,22 @@ While( nCountDim >= 1 );
                       sProc = '}bedrock.hier.sub.create.bymdx';
                       sMdxEle = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' | sCurrHier |' ])},'| sEle| ')}';
 
-                      If( HierarchySubsetExists( sDim, sCurrHierName, cTempSub ) = 1 );
-                          # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
-                          HierarchySubsetMDXSet( sDim, sCurrHierName, cTempSub, sMDXEle );
+                      If( HierarchySubsetExists( sDim, sCurrHierName, cTempSubEle ) = 1 );
+                          # If a delimited list of ele names includes wildcards then we may have to re-use the subset multiple times
+                          HierarchySubsetMDXSet( sDim, sCurrHierName, cTempSubEle, sMDXEle );
                       Else;
                           # temp subset, therefore no need to destroy in epilog
-                          SubsetCreatebyMDX( cTempSub, sMDXEle, sCurrHier, 1 );
+                          SubsetCreatebyMDX( cTempSubEle, sMDXEle, sCurrHier, 1 );
                       EndIf;
 
                       # Loop through subset of hierarchy elements created based on wildcard
-                      nCountElems = HierarchySubsetGetSize(sDim, sCurrHierName, cTempSub);
+                      nCountElems = HierarchySubsetGetSize(sDim, sCurrHierName, cTempSubEle);
                       While( nCountElems >= 1 );
-                          sElement = HierarchySubsetGetElementName(sDim, sCurrHierName, cTempSub, nCountElems);
+                          sElement = HierarchySubsetGetElementName(sDim, sCurrHierName, cTempSubEle, nCountElems);
                           HierarchyElementDelete( sDim, sCurrHierName,sElement );
                           If( pLogOutput = 1 );
-                            LogOutput( 'INFO', Expand( 'Element "%sElement%" deleted from hierarchy %sCurrHierName% in dimension %sDim%.' ) );
+                              sMessage = Expand( 'Element %sElement% deleted from hierarchy %sCurrHierName% in dimension %sDim%.' );
+                              LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
                           EndIf;
                           nCountElems = nCountElems - 1;
                       End;
@@ -311,7 +328,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,37
+575,24
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -319,19 +336,6 @@ End;
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
-
-### Remove any temporary objects
-If( HierarchySubsetExists( pDim, pHier, cTempSub ) = 1 );
-    ExecuteProcess( '}bedrock.hier.sub.delete',
-        'pLogOutput', pLogOutput,
-    	'pDim', pDim,
-    	'pHier', pHier,
-    	'pSub', cTempSub,
-    	'pDelim', pDelim,
-    	'pMode', 0
-    );
-EndIf;
-
 
 ### Return code & final error message handling
 If( nErrors > 0 );

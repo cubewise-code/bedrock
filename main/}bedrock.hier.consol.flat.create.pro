@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"pY\[Tb28t`]un`jwa^^b`HIPD2Rz13t[bV8Hwq]RJT>Qfq=kOi;jvwad]W_Z_OVYG`:PJ3R3Rl96m8Qr3\grf9oCxXzl`kNX8wxDoVA:fFkXytfsULj`b5q`B7IIFzgTDuBJXeDc;>XZOMuhf^<x>Kt1X:J:<>7>Xrk\aD1tav2wdM8FyX?ZPIHCYv`Qu[>ueou4`=xN"
+565,"y_cadL8wkQf^=WQ<v7F4hwzF;a23Wm0cKz9vGU9es52tOwYUVIQxzReTOc9wp18dHdX\wgSqIg<jM?B9NLXKB5Q5TV:i0RiiI_Y=\@JQypB@ZxCdBOAi]>o=ICpWLMQ;\>uAs^zMnK<S;2p<rn]KqrS?oLIeHwH^jh`@fAm=V>4FpCDb\la7A<Wje;>5C2Cl5FMiC:Ma"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -47,12 +47,12 @@ pSrcConsol,""
 pTgtConsol,""
 pWeight,1
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension"
-pHier,"Optional: Hierarchy (will default to dimension name if blank)"
-pSrcConsol,"Optional: Source consolidated element name"
-pTgtConsol,"Required: Target consolidated element name"
-pWeight,"Optional: Component Weight"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension"
+pHier,"OPTIONAL: Hierarchy (will default to dimension name if blank)"
+pSrcConsol,"OPTIONAL: Source consolidated element name"
+pTgtConsol,"REQUIRED: Target consolidated element name"
+pWeight,"OPTIONAL: Component Weight"
 577,1
 vElement
 578,1
@@ -66,7 +66,16 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,140
+572,149
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.consol.flat.create', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '',
+    	'pSrcConsol', '', 'pTgtConsol', '', 'pWeight', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

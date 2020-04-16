@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aaprH8_p<^:Kc@[Lm^_eDe9T^zZt0mv1x>[jZORU^v:Pag4FCnS1NYW7@ulZeo@AS5[:1pB\c@f1;2zj;G4l^t;sO0uySjAStKqMr9h]s_oo<?hXpBKto4fA;v1NWKTp8f5IBT8J0CgOvbWnV]MhHuPf?tx`jJPiov667fU<wKC__>q6W7oIsm0Y]L4Qb4`G<lrESf^X"
+565,"bNaM]cZXiyWz3dFil2KVAn^ho<`W>II`icHXOQ40QLbU5_dCQ@@V`jfz]<rm8?2guIn]BXO>[?H;1]`8gJ_JGVd0@GDL^Lu@6Yhx=N>_uG4GnQY9_2cpU^Q[rro_nDPz0xqwuA1ZzfUF1?T9vplUAfH6RBvb=b`JUQ7Cys]]=\ewB<^wNR\QP_gsG5IBjlYj4FnMLCuw"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pHier,""
 pEle,""
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: dimension name"
-pHier,"Optional: hierarchy name (if blank then same named hierarchy as dimension is assumed)"
-pEle,"Optional: filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))"
-pDelim,"Optional: delimiter character for element list (default to '&' if blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (if blank then same named hierarchy as dimension is assumed)"
+pEle,"OPTIONAL: Filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))"
+pDelim,"OPTIONAL: Delimiter character for element list (default to '&' if blank)"
 577,0
 578,0
 579,0
@@ -56,7 +56,16 @@ pDelim,"Optional: delimiter character for element list (default to '&' if blank)
 581,0
 582,0
 603,0
-572,162
+572,171
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.consol.delete', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pEle', '',
+    	'pDelim', '&'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

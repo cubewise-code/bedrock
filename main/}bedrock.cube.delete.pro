@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lfBmbqAuGk<Ma7bWTnHH`yaN:Rs]9QR:fUVS[Dwfihg7jlxLLAI4cw:StiA0XQgRW>J<wj>M_BNaM43N6qsFHV`XZK_stpUcCY\KVSVCzaa2LYcEx[dCfk7LzDubIShQ\qEF>[w:gYZtc1?VD<;Ey?^GnLJyJiVTH[rH=XMS`yn_SH]uB]]D_5Inz0ymw9>2ws67ugu7"
+565,"di9@awM=LeQ>39qP9:H:ti@ll<5YJxwtwu4@OPuK01TLqNQ28zo5kLZ`p<e\ZNPfNQGFjvrZfD3v8[\:vKTQW54a;FdDEj3JMd^2vX`vjKzwRey=44s@Vfs4[VTF4aMLQzAW[d_mZ\tG>z[;idDBP4e=w]>Urwgd?F^_l_2SevlIU6srB`kyv:JsWAqJQfpJ5C0H\rZ`"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -41,10 +41,10 @@ pCube,""
 pDelim,"&"
 pCtrlObj,0
 637,4
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: List of Cubes to Delete (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter"
-pCtrlObj,"Optional: to Delete control cube 1= Delete control objects, 0 = Not to delete control objects, Default value 0"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: List of Cubes to Delete (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter"
+pCtrlObj,"OPTIONAL: To Delete control cube 1=Delete control objects, 0=Do not delete control objects, Default value 0"
 577,0
 578,0
 579,0
@@ -52,7 +52,16 @@ pCtrlObj,"Optional: to Delete control cube 1= Delete control objects, 0 = Not to
 581,0
 582,0
 603,0
-572,138
+572,147
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.delete', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pDelim', '&',
+    	'pCtrlObj', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

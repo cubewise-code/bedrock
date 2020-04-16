@@ -4,7 +4,7 @@
 586,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 585,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 564,
-565,"xPAqk=O9iAsQ`KJB:oJtd[eWyIc\97NYcs\T@d;^3@QdyRR3@Hn9E5fdAKmgRaf=v^@FZ=Tu?xDdea7EB4t3V8j\Z]4cB@>VHd`?=RpDVCKAY[@/;Kdn[Skqt2Utjk3TUQQk[zGiy@8Lmgrs2H84}Gw:c2x=7ec6@lKGN[d\X@@:IZD]RLu8XDmoANN[xcO%[9GwlVFU"
+565,"r@DZxop]<T0aq?^PLByMSSOHzo2wGoU\3<9;If8BIfYOMYBeIYP?IafCOAmg3Xb=luZFjxfKn4@dYmwhYNI5Lbcrx;1sLiYY5H`<}T;[1lBVFVG/kECxaiRHS\][kkjZ@XajK=6yQUXMM_3p2DG6MT1S1tG=2jZzNcCgpIk\5F=:JJ:d62A:3J}wT<0?@hO(;7_4nr2]"
 559,1
 928,0
 593,
@@ -38,9 +38,9 @@ pLogOutput,0
 pCube,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Process feeders for this cube (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Process feeders for this cube (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pDelim,"Optional: Delimiter"
 581,0
 582,0
 603,0
-572,119
+572,127
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.rule.processfeeders', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pDelim', '&'
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

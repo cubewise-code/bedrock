@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"iMxJC^0r9a9Ri7sEtLmaBvm[ylF8?]0v4_YoTF9_<xMNE5VNk^D]WI\IFQ622\[bo>w]uLY1ESQOj2FC017[y\uVF9O441c02mMhGGH72<BEz4?Xh3;UGExrS1P7yG>ANoW]OK\YaFb=35_LpMlvlES=oxJohq?nN0e9@JUbgM_ViZo:i;[?lW_Ze<eDpGh80S3DqEs="
+565,"tqmulcplXWE?lfNc<5k6aN9Ge\_]V<HG7vnpoUGo[5GSB^EGzv]d3z_Vg?h7I@qZT2oL5<Hlx5a?BP0t2>;^ZEO:x^_r6I5yJMH0Yye`qQL[m5lI7ygMkBdObcPHqua5wqLIIy>^@A<xl^]xMumKGN[5AOu2SN=p3kh_zt;lZd9FNgcaa2d350E1Ozso1P:[MEy4Z35l"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -32,7 +32,7 @@ pLogOutput
 590,1
 pLogOutput,0
 637,1
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 577,0
 578,0
 579,0
@@ -40,7 +40,13 @@ pLogOutput,"Optional: write parameters and action summary to server message log 
 581,0
 582,0
 603,0
-572,46
+572,52
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.refresh', 'pLogOutput', pLogOutput );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

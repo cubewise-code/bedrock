@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xP[Si4PU3bwPrrz:HToQO`eNa^Sqpe4XLacH`xFyp;Qo5wuCUxr4>bxXrYks?11ywTrhj85f0E:amP7><Lu_y\3HzYI41iSm@dtX3CD8k^^AI`R;RnoffH6YeZ6Kbxs1rSmaklJImUYHQH3Rl^KE@laETP`BnyBI2]WD=z576<1T457NIT\SFsrqkSopcTV:e?sHBn>6"
+565,"cf@apAa0VfQLomP6htLj?sqb2p1t[QIEGA<HbHVV@R5ftUShI_I3SXd4D34Ea6F;G]APB=7osGJVW`Fy:Js2Oyr?c1iA9CfaKIJzh[SnAph7Q>oM\mkRYjKCw8sxClqi<5y<15]][R5fnpTYj:G1iFn3J8f9z;R`8PEO?H>m<b`K;F9f\:dOLXZGS9uH8BF3Ys`8R\I_"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -56,15 +56,15 @@ pDelim,"&"
 pAlias,""
 pTemp,1
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pAddToSubset,"Optional: Add to Subset if it Already Exists (0=No 1=Yes)"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pAlias,"Optional: Set Alias for Subset"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pAlias,"OPTIONAL: Set Alias for Subset"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0
@@ -72,7 +72,17 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,67
+572,72
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.create.leaf', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pAddToSubset', 0, 'pExclusions', '',
+    	'pDelim', '&', 'pAlias', '', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -126,18 +136,13 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-nReturncode = ExecuteProcess( '}bedrock.hier.sub.create',
-                              'pDim', pDim,
-                              'pHier',pHier,
-                              'pSub', pSub,
-                              'pLevelFrom', 0,
-                              'pLevelTo', 0,
-                              'pExclusions', pExclusions,
-                              'pDelim', pDelim,
-                              'pAddToSubset', pAddToSubset,
-                              'pAlias', pAlias,
-                              'pTemp', pTemp
-                            );
+nRet = 
+ExecuteProcess( '}bedrock.hier.sub.create', 'pLogOutput', pLogOutput,
+    'pDim', pDim, 'pHier',pHier, 'pSub', pSub,
+    'pLevelFrom', 0, 'pLevelTo', 0,
+    'pExclusions', pExclusions, 'pAddToSubset', pAddToSubset,
+    'pDelim', pDelim, 'pAlias', pAlias, 'pTemp', pTemp
+);
 
 ### End Prolog ###
 573,4

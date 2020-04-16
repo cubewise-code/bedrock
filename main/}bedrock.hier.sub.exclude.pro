@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rOLabVd=xaV_;jiadFa6Bl;bf@fm<07bSMUJaU8IQDbDuy42lKL_oXg5V_>lBJKiltfNJR7jK9fydZQkdz>35aTFleSk2DM7SnW?uDBP3\eNA6H2G@Mra48QBzLbsTXhmwMh@ebUGWprjU>3NGU0EFUp]NCNnqqvY6`ZZ<Ji]D<xd=NctBhRk[<fj?Vk5Blc?aSy<Sb8"
+565,"aauo@j`1CW6^z4WYcz[6FvSLZh8c]rZ57YA[27SMVLp3v:rmvCpLjX[?`jB8NV9rYX6b`LnX<x;VUSXwm<^t1\fpy;emQHP8XP>z5ma?L=Cktqk2=rqHRID_hH9CTztq]@gt2_XVKm6INFvPas`g8AOystU6vb^MfPxEBy7bkT?gZ4jhHFNuipCRqrgjG2sbWN@gK=H_"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pExclusions,""
 pDelim,"&"
 pTemp,1
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pExclusions,"Optional: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
-pDelim,"Optional: Delimiter character"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
+pDelim,"OPTIONAL: Delimiter character"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
 578,0
 579,0
@@ -64,7 +64,16 @@ pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,197
+572,206
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.exclude', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pExclusions', '', 'pDelim', '&', 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

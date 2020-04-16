@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"prP][A@\YW:3dz6hafxL75Ii<t6>zcLyfhK9eg[IqE;\]Y2KG_wzRIP9`>J]Xgq=pf7j^w?Uu]^L<F`]bLG=NB<hDTzQzX^P1;=\[wEc;\[dcwjiIrg85llk>YipM]5:cw>QHD0T15ZGAF0Q6dOUp\Zu6U^:Hsy3^LcP]D<Pvm0PYsPDSzc0TXP@ny9^?tjkxiDYGYzc"
+565,"lEOXfGv]OXQDaVRBYZ6[IHmtr0R`SD521i0uxoiraBvoAc=G>VG]vB2k1bO?U=vzMCbn1h?8SBTRFltT2R6omOSj_cpK^<:1:KzD2;g7C=r9=vxBaM@l83az;r5L5Mww<JmVHN?46\O7^08r07U2Ey<lG_<a8wLb^@t^2Qg5_q[z]WAXlbz7uFUynSCduzZddFQhX>bM"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -30,13 +30,13 @@ pLogOutput
 pWaitSec
 561,2
 1
-2
+1
 590,2
 pLogOutput,0
-pWaitSec,""
+pWaitSec,0
 637,2
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pWaitSec,"Required: Wait time in seconds"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pWaitSec,"REQUIRED: Wait time in seconds"
 577,0
 578,0
 579,0
@@ -44,7 +44,15 @@ pWaitSec,"Required: Wait time in seconds"
 581,0
 582,0
 603,0
-572,36
+572,44
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.wait', 'pLogOutput', pLogOutput,
+	    'pWaitSec', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -62,13 +70,14 @@ pWaitSec,"Required: Wait time in seconds"
 StringGlobalVariable('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
 nProcessReturnCode= 0;
+sWaitSec = NumberToString( pWaitSec );
 
 ### Constants ###
 cThisProcName     = GetProcessName();
 cUserName         = TM1User();
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pWaitSec:%pWaitSec%.'; 
+cLogInfo          = 'Process:%cThisProcName% run with parameters pWaitSec:%sWaitSec%.'; 
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -78,9 +87,8 @@ ENDIF;
 nErrors = 0;
 
 ### SLEEP ##
-nWaitTime = StringToNumber( pWaitSec ) * 1000;
+nWaitTime = pWaitSec * 1000;
 Sleep ( nWaitTime );
-
 573,3
 
 #****Begin: Generated Statements***
@@ -105,7 +113,7 @@ If( nErrors > 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
 Else;
-    sProcessAction = Expand( 'Process:%cThisProcName% successfully waited for %pWaitSec% .' );
+    sProcessAction = Expand( 'Process:%cThisProcName% successfully waited for %sWaitSec% .' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );

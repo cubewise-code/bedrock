@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"jd^K6P=f6CaQoUduKZG?g[BxQKX1BbJ1sO0MPNEKR?nF7eo6:NP8j5Q@h;S4\bf4WYl\yKoiN=fLoE^ij@bJpCmnaq6P<Xe2RO5[YzpWCsHFmIO7a;L2a[kwnLqzvJ:]<<2^tJ1YM?mwnL<ogZ8C^aHRE>zyU\H>Y<Mmo;2[o;N3eecf1s_Va<D>9f4FJyZqjlakb:eL"
+565,"j9ntVYRGl<apX_=ql0YL5hYbJZNQR0>\i8bQNiWK44`JqA=LW<JC2BV54t;@?Nt6PmiU:27lXN;wZ2KATP5Gb:FT_<Db<YoNBkm7DqKIsW_`[==eVknT^ymk<5N?GM[tcrA6G`gWOcpags5Rt]_Y:ziu[8fWcn8Xk9JfL_esUVIZo<<4I]WhKuGmXbawQd4CD;sW\7UE"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pIncludeRules,2
 pCtrlObj,0
 pTemp,1
 637,7
-pLogOutput,"Required: Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube"
-pDim,"Required: Dimension to be deleted"
-pIncludeData,"Required: If 1 then data is kept (copied through clone cube)"
-pIncludeRules,"Required: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
-pCtrlObj,"Required: Allow overwrite control cubes"
-pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
+pLogOutput,"REQUIRED: Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube"
+pDim,"REQUIRED: Dimension to be deleted"
+pIncludeData,"REQUIRED: If 1 then data is kept (copied through clone cube)"
+pIncludeRules,"REQUIRED: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
+pCtrlObj,"REQUIRED: Allow overwrite control cubes"
+pTemp,"REQUIRED: Delete the clone cube (1 = delete, 0 = not delete)"
 577,0
 578,0
 579,0
@@ -64,7 +64,17 @@ pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,283
+572,301
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.dimension.delete', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pDim', '',
+    	'pIncludeData', 1, 'pIncludeRules', 2,
+    	'pCtrlObj', 0, 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -101,6 +111,15 @@ cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pDim:%pDim%, pIncludeData:%pIncludeData%, pIncludeRules:%pIncludeRules%, pCtrlObj:%pCtrlObj%, pTemp:%pTemp%.';
+
+## Check Operating System
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -140,7 +159,7 @@ EndIf;
 
 
 IF(pIncludeRules = 1 % pIncludeRules = 2);
-    cCubeRuleFileName = '.\'|pCube | '.RUX';
+    cCubeRuleFileName = '.' | sOSDelim |pCube | '.RUX';
     If(FileExists(cCubeRuleFileName) = 0);
         pIncludeRules = 0;
         LogOutput( 'INFO', Expand( 'No rule found for %pCube%.' ) );
@@ -329,13 +348,12 @@ IF(pIncludeRules = 2);
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     # Create error rule file 
     cErrorRuleName = 'ErrorRuleFile.rux';
+
     IF(FileExists( cErrorRuleName ) = 0 );
-      sFile = '.\' | cErrorRuleName;
-      sCommand = 'cmd /c "(echo # Rule could not be attached due to invalid !Dimension references.) > ' | sFile | '"';
-      ExecuteCommand ( sCommand, 0 );
-      sCommand = 'cmd /c "(echo # Please recover from the backup and fix manually.) >> ' | sFile | '"';
-      ExecuteCommand ( sCommand, 0 );
+      sFile = '.' | sOSDelim | cErrorRuleName;
+      LogOutput(cMsgErrorLevel, 'Rule could not be attached due to invalid !Dimension references. Please recover from the backup and fix manually.');
     ENDIF;
+
     EXECUTEPROCESS( sProc,
     'pLogOutput', pLogOutput,
     'pCube', pCube,

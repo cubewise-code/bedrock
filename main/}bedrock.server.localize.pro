@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xvw@]qxBc0ZPbdYy6?RaydoBayjZqxV_lJ6dUj6z\CL:snFaY3G=xwAl@6J3z7ZWSI4HTSf1jRdKUBo^T5X3Z`xY[`KzwiN^93X__1j6[xSy`nek[GgEHq07hI0FdCqB@kAkA:jj>pm\A\[JouE91t<ZJodcUvD`ety17<RYXWwCBjt9\QPnZSVcRSF@;ik>2ViVt1h4"
+565,"rEhe`eE]R5dbjurNDRaPT]spc4]ut0hJ4s7^bOQBv[F96lINER[zwMrjxmjLSH8=HgDBKSYYl;ZLWBEBHamak<RDHc6Sb`P:F1A0Kbr8NT:lMtecu\>OuOdX3h>W]u><2ATZ0P?aZ=Zhid:7r]w:OQ]OV9Kq07v1\hathJ]r3s3Rhygf\n^V2Xs28p5dC5\mDDM]qb<n"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pDim,""
 pDelim,"&"
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension (Delimited list & wildcards (*) acceptable)"
-pDelim,"Required: delimiter character for dimension list. (Defaults to & if blank)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension (Delimited list & wildcards (*) acceptable)"
+pDelim,"REQUIRED: delimiter character for dimension list. (Defaults to & if blank)"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pDelim,"Required: delimiter character for dimension list. (Defaults to & if blan
 581,0
 582,0
 603,0
-572,147
+572,155
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.localize', 'pLogOutput', pLogOutput,
+	    'pDim', '', 'pDelim', '&'
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

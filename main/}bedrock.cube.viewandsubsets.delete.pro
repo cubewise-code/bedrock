@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"mXh:XiSAzlVC4ay<Hib5Ni[Ns>A;BR0otCFAo8YaLTuz3nQ72m9cnm4rU0@9n08yi_Vs`s1]JJQg;epF@LuTsWTf2sCZT4c^Io=v@Ji4A1M_mz>p7x4v4DpQb^HqVPCsNFmW9z8\3eO4^L3nD_5DHwCT2t]TU2lFhNdlxbmdyy_6d4EE5[ufqf:Ox4a2eK3>RD?ANGGS"
+565,"dFy5aE:fOqjsg3bLK8E72=6FMGyrv2qjoS3UP2g45kY6`\[Ui0osH=LrtE<Dym^dX>NoxyJk<;CG?sJtaM^na;ggX1V8tSt`5o]BlFSeg^kG\Ylv=F]ubxD;Y1AZGX]302yF<5:lBVdzyICd6trLR:k?cfetzLJb_LIF0g4uoh[TSt<FjTxLWu_Z;NVDi[a`s^`QqVy="
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pView,""
 pSub,""
 pMode,1
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: View Name"
-pSub,"Optional: Subset Name (will default to pView if left blank)"
-pMode,"Required: Delete temporary view and Subset (0 = Delete View and Subsets indirectly 1 = Delete View and Subsets directly 2 = Delete View only )"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: View Name"
+pSub,"OPTIONAL: Subset Name (will default to pView if left blank)"
+pMode,"REQUIRED: Delete temporary view and Subset (0 = Delete View and Subsets indirectly 1 = Delete View and Subsets directly 2 = Delete View only )"
 577,0
 578,0
 579,0
@@ -56,7 +56,15 @@ pMode,"Required: Delete temporary view and Subset (0 = Delete View and Subsets i
 581,0
 582,0
 603,0
-572,130
+572,138
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.viewandsubsets.delete', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pView', '', 'pSub', '', 'pMode', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

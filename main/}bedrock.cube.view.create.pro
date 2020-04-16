@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"jz^OrGiNRoaXQ^<a@uN^6yfyFtRQzd05IuDnnqWcRaU^5Te3N6p]AW8D3^@ExuCY_Y7kRRPqRL0P@jITWzB^eGnYtq69x^=e6woOXW[YkSmR_okr;>1Kq91z=mq6wrPct\TC?0`H66FR119o8eJeIeGgvS0YZou7tXBZZ3R`SyLg::>TFjgy63GKxa:YKxp7C1o8HdLL"
+565,"tQBNmULn9yWjy<7JpWF0aYqw2N]K?EGPnO]tHpY8SRHOl]wJW]MeCz8?2u9Aw=QGQoZrXWtwNaRR`?1<JYT0wB8p5RGw9BUOq_F@?z=GoX82S2gbbOvL2^Snv`dZxrhR>9BY8DKB9gYExaJDw4<pRDFLL5L]N>WeGw=sHFHe;`s?\P<dOmnbml4aXpe@gXSJ8qtgk8U`"
 559,1
 928,0
 593,
@@ -18,14 +18,14 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
 569,0
 592,0
 599,1000
-560,12
+560,13
 pLogOutput
 pCube
 pView
@@ -33,12 +33,13 @@ pFilter
 pSuppressZero
 pSuppressConsol
 pSuppressRules
+pSuppressConsolStrings
 pDimDelim
 pEleStartDelim
 pEleDelim
 pTemp
 pSubN
-561,12
+561,13
 1
 2
 2
@@ -46,12 +47,13 @@ pSubN
 1
 1
 1
+1
 2
 2
 2
 1
 1
-590,12
+590,13
 pLogOutput,0
 pCube,""
 pView,""
@@ -59,24 +61,26 @@ pFilter,""
 pSuppressZero,1
 pSuppressConsol,1
 pSuppressRules,1
+pSuppressConsolStrings,0
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSubN,0
-637,12
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: Name of the View"
-pFilter,"Optional: Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations"
-pSuppressZero,"Required: Suppress Zero Data (Skip = 1)"
-pSuppressConsol,"Required: Suppress Consolidations (Skip = 1)"
-pSuppressRules,"Required: Suppress Rules (Skip = 1)"
-pDimDelim,"Required: Delimiter for start of Dimension/Element set"
-pEleStartDelim,"Required: Delimiter for start of element list"
-pEleDelim,"Required: Delimiter between elements"
-pTemp,"Optional: Make View Temporary (1=Temporary)"
-pSubN,"Optional: Create N level subset for all dims not mentioned in pFilter"
+637,13
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: Name of the View"
+pFilter,"OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations"
+pSuppressZero,"REQUIRED: Suppress Zero Data (Skip = 1)"
+pSuppressConsol,"REQUIRED: Suppress Consolidations (Skip = 1)"
+pSuppressRules,"REQUIRED: Suppress Rules (Skip = 1)"
+pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
+pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
+pEleStartDelim,"REQUIRED: Delimiter for start of element list"
+pEleDelim,"REQUIRED: Delimiter between elements"
+pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 577,0
 578,0
 579,0
@@ -84,7 +88,18 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,393
+572,434
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.create', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '', 'pFilter', '',
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
+    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+    	'pTemp', 1, 'pSubN', 0
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***s
 #****End: Generated Statements****
@@ -116,6 +131,7 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pFilter"
 ### Global Variables
 StringGlobalVariable ('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
+StringGlobalVariable('sBedrockViewCreateParsedFilter');
 sProcessReturnCode = '';
 nProcessReturnCode = 0;
 
@@ -131,7 +147,7 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoLevel     =  'INFO';
 cMsgInfoContent   = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%.' ;  
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSuppressConsolStrings:%pSuppressConsolStrings%.' ;  
 
 
 sSubset           = pView;
@@ -160,18 +176,18 @@ If( pEleDelim     @= '' );
 EndIf;
 
 # If specified cube does not exist then terminate process
-If( TRIM(pCube) @= '' );
+If( Trim( pCube ) @= '' );
   sMessage = 'A cube name must be provided.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( CubeExists(   pCube   ) = 0 );
+ElseIf( CubeExists( pCube ) = 0 );
   sMessage = 'Cube: ' | pCube | ' does not exist.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 ## Validate the View parameter
-If( TRIM(pView) @= '' );
+If( Trim( pView ) @= '' );
   sMessage = 'A view name must be provided.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -200,7 +216,9 @@ EndIf;
 If( ViewExists( pCube, pView ) = 1 );
     ### Reset View ###
     sMessage = 'Resetting view ' | pView | ' on cube ' | pCube;
-    LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    IF ( pLogoutput = 1 );
+       LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    EndIf;
     nCount = 1;
     While( TabDim( pCube, nCount ) @<> '' );
         sCubeDimName = TabDim( pCube, nCount );
@@ -208,7 +226,7 @@ If( ViewExists( pCube, pView ) = 1 );
         If( SubsetExists( sCubeDimName, sSubset ) = 1 );
             # Add all elements
             If( SubsetIsAllSet(sCubeDimName, sSubset, 1) <> 1 );
-                sMessage = 'Unable to add all elements on subset ' | sSubset | ' on dimension ' | sCubeDimName;
+                sMessage = Expand('Unable to add all elements on subset %sSubset% in dimension %sCubeDimName%');
                 nErrors = nErrors + 1;
                 LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
             EndIf;
@@ -217,18 +235,24 @@ If( ViewExists( pCube, pView ) = 1 );
     End;
 Else;
     ### Create View ###
-    sMessage = 'Creating view ' | pView | ' on cube ' | pCube;
-    LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    sMessage = Expand('Creating view %pView% in cube %pCube%');
+    IF ( pLogoutput = 1 );
+       LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    EndIf;
     ViewCreate( pCube, pView, pTemp );
 EndIf;
 
 ViewExtractSkipCalcsSet( pCube, pView, pSuppressConsol );
 ViewExtractSkipZeroesSet( pCube, pView, pSuppressZero );
 ViewExtractSkipRuleValuesSet( pCube, pView, pSuppressRules );
-
+# Fix of issue #141, https://github.com/cubewise-code/bedrock/issues/141
+If( pSuppressConsolStrings <> -1 );
+    ViewExtractSkipConsolidatedStringsSet( pCube, pView, pSuppressConsolStrings );
+EndIf;
 
 ### Split filter and create subsets ###
 sFilter = TRIM( pFilter );
+sParsedFilter = '';
 nChar = 1;
 nCharCount = LONG( sFilter );
 sWord = '';
@@ -274,6 +298,7 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         sDimension = sWord;
+        nOneDimEleAdded = 0;
         
         If( DimensionExists( sDimension ) = 0 );
             # The dimension does not exist in the model. Cancel process
@@ -286,12 +311,11 @@ WHILE (nChar <= nCharCount);
         nCount = 1;
         nDimensionIndex = 0;
         While( TabDim( pCube, nCount ) @<> '' );
-          sCubeDimName = TabDim( pCube, nCount );
-          IF(
-          sDimension @= sCubeDimName);
-            nDimensionIndex = nCount;
-          ENDIF;
-          nCount = nCount + 1;
+            sCubeDimName = TabDim( pCube, nCount );
+            If( sDimension @= sCubeDimName );
+                nDimensionIndex = nCount;
+            EndIf;
+            nCount = nCount + 1;
         End;
 
         If( nDimensionIndex = 0 );
@@ -309,7 +333,14 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         # Attach to the view
-        ViewSubsetAssign(pCube, pView, sDimension, sSubset);
+        ViewSubsetAssign( pCube, pView, sDimension, sSubset );
+        
+        #Add to the Parsed filter
+        IF(sParsedFilter@='');
+          sParsedFilter=sDimension;          
+        Else;
+          sParsedFilter=sParsedFilter|sDelimDim|sDimension;
+        Endif;  
 
         nIndex = 1;
         sLastDelim = sChar;
@@ -383,14 +414,16 @@ WHILE (nChar <= nCharCount);
               LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
               #ProcessError();
           EndIf;
-
+          
+          sElement = DimensionElementPrincipalName(sDimension,sElement);
 
           If ( pSuppressConsol = 1 & DTYPE( sDimension, sElement) @= 'C'  );
               # Add all N level elements to the subset
               # Loop through all elements and check if it is an ancestor
               sMessage = 'Element ' | sElement | ' is consolidated' ;
-              LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
-              
+              IF ( pLogoutput = 1 );
+                LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+              EndIf;
               nElCount = DIMSIZ ( sDimension );
               n = 1;
               WHILE ( n <= nElCount );
@@ -400,10 +433,23 @@ WHILE (nChar <= nCharCount);
                   EndIf;
                   n = n + 1;
               END;
+              
+              # Add the consolidated element to the subset as well to export strings, if necessary
+              If ( pSuppressConsolStrings = 0 );
+                SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+              EndIf;
 
           Else;
               # Add the element to the subset
               SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+          EndIf;
+          
+          #Add to the Parsed filter
+          If( nOneDimEleAdded = 0 );
+            sParsedFilter=sParsedFilter|pEleStartDelim|sElement;
+            nOneDimEleAdded = nOneDimEleAdded + 1;
+          Else;
+            sParsedFilter=sParsedFilter|sDelimElem|sElement;
           EndIf;
 
           nIndex = nIndex + 1;
@@ -422,62 +468,61 @@ WHILE (nChar <= nCharCount);
     nChar = nChar + nAddExtra + 1;
 
 END;
+sBedrockViewCreateParsedFilter = sParsedFilter;
 
 # creating N level subset for all dim not included in pFilter 
 # useful when suppress consolidation is not on
 If(pSubN = 1);
-  
+    
     nCountDimC = 1;
     While( TabDim( pCube, nCountDimC ) @<> '' );
-    sDimC = TabDim( pCube, nCountDimC );
-    sDimString = sDimC;
-  
-    # filters created by other bedrock processes skip spaces from dim names and between separators
-    While(Scan(' ',sDimString)>0);
-      sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
-    End; 
-    sTFilter = sFilter;
-    While(Scan(' ',sTFilter)>0);
-      sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
+        sDimC = TabDim( pCube, nCountDimC );
+        sDimString = sDimC;
+        
+        # filters created by other bedrock processes skip spaces from dim names and between separators
+        While(Scan(' ',sDimString)>0);
+            sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
+        End; 
+        sTFilter = sFilter;
+        While(Scan(' ',sTFilter)>0);
+            sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
+        End;
+        
+        # to make sure that the name of the dim is not part of the name of another dim
+        If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
+            sProc   = '}bedrock.hier.sub.create';
+            nRet    = ExecuteProcess( sProc,
+                'pLogOutput', pLogOutput,
+                'pDim', sDimC,
+                'pHier', '',
+                'pSub', sSubset,
+                'pConsol', '',
+                'pAttr', '',
+                'pAttrValue', '',
+                'pLevelFrom', 0,
+                'pLevelTo', 0,
+                'pExclusions', '',
+                'pDelim', pEleDelim,
+                'pAddToSubset', 0,
+                'pAlias', '',
+                'pTemp', pTemp
+            );
+            
+            IF(nRet <> 0);
+                sMessage = 'Error creating the view from the filter.';
+                nErrors = nErrors + 1;
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                ProcessBreak;
+            ENDIF;
+            
+            ViewSubsetAssign( pCube, pView, sDimC, sSubset );
+        
+        EndIf;
+        
+        nCountDimC = nCountDimC + 1;
     End;
-  
-    # to make sure that the name of the dim is not part of the name of another dim
-    If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
-      sProc   = '}bedrock.hier.sub.create';
-      nRet    = ExecuteProcess( sProc,
-      'pLogOutput', pLogOutput,
-      'pDim', sDimC,
-      'pHier', '',
-      'pSub', sSubset,
-      'pConsol', '',
-      'pAttr', '',
-      'pAttrValue', '',
-      'pLevelFrom', 0,
-      'pLevelTo', 0,
-      'pExclusions', '',
-      'pDelim', pEleDelim,
-      'pAddToSubset', 0,
-      'pAlias', '',
-      'pTemp', pTemp
-      );
 
-    IF(nRet <> 0);
-        sMessage = 'Error creating the view from the filter.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
-    ENDIF;
-    
-    ViewSubsetAssign( pCube, pView, sDimC, sSubset );
-
-    Endif;
-
-    nCountDimC = nCountDimC + 1;
-    End;
-
-  Endif;  
-
-
+  EndIf;  
 573,4
 
 #****Begin: Generated Statements***
@@ -547,7 +592,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0

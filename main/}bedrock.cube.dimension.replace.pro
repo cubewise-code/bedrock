@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"f:LgEMyRg:@z8H[n2LT8gIT3jn=p[u@HQ_>M2d@zNB@d0ZYa6YtD>4nTpij7CC3DYm8Z1;zUc\p7ch8rrQ]8EpbmhNwjpup0e2P8]\yTHhgyvG:2VamHq\guOPaNaQSauwBywUp`sMl|y\8nW5^5MI8Ry^rBhb1>K7O9tIaB1KqL=F1od3\h5Fz6lE<52EB>0o=;xKcJ"
+565,"bNyhyy0hb<Dk1u6^_CR509usDBzJ1s[J1Bn=aL3bco9tN\YpdCGKensacgjghS8tJbcU1\cSfm75bXLi8Zhw^<nZFqZLbd_vSU8]E>V9w@L:i626N9^>G4oAAb`kA2u^s2x7j0OgP0qi8Tfg3]8]8zN@zI2Ed42T1JY55hb0mfo;Vio2DG@JGztZB]UeMb3p;b@<G_X"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -56,15 +56,15 @@ pIncludeRules,0
 pCtrlObj,0
 pTemp,1
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube"
-pSrcDim,"Required: Dimension to be replaced"
-pTgtDim,"Required: Replacement Dimension"
-pIncludeData,"Required: If 1 then data is kept (copied through clone cube)"
-pEle,"Required: If pIncludeData =1: Element in target dimension to load data to"
-pIncludeRules,"Required: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
-pCtrlObj,"Required: Allow overwrite control cubes"
-pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube"
+pSrcDim,"REQUIRED: Dimension to be replaced"
+pTgtDim,"REQUIRED: Replacement Dimension"
+pIncludeData,"REQUIRED: If 1 then data is kept (copied through clone cube)"
+pEle,"REQUIRED: If pIncludeData =1: Element in target dimension to load data to"
+pIncludeRules,"REQUIRED: Unload and reload the rule (0 = do not keep the rule, 1 = unload the rule, 2 = unload the rule and reload on new cube)"
+pCtrlObj,"REQUIRED: Allow overwrite control cubes"
+pTemp,"REQUIRED: Delete the clone cube (1 = delete, 0 = not delete)"
 577,0
 578,0
 579,0
@@ -72,7 +72,18 @@ pTemp,"Required: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,321
+572,340
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.dimension.replace', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pSrcDim', '', 'pTgtDim', '',
+    	'pIncludeData', 0, 'pEle', '',
+    	'pIncludeRules', 0,
+    	'pCtrlObj', 0, 'pTemp', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -119,6 +130,15 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcDim:%pSrcDim%, pTgtDim:%pTgtDim%, pIncludeData:%pIncludeData%, pEle:%pEle%, pIncludeRules:%pIncludeRules%, pCtrlObj:%pCtrlObj%, pTemp:%pTemp%.' ;   
 cDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
+
+## Check Operating System
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
 
 ### Validate Parameters ###
 nErrors = 0;
@@ -183,7 +203,7 @@ If( pIncludeData = 1 & DIMIX(pTgtDim, pEle)=0 );
 EndIf;
 
 IF(pIncludeRules = 1 % pIncludeRules = 2);
-  cCubeRuleFileName = '.\'|pCube | '.RUX';
+  cCubeRuleFileName = '.' | sOSDelim | pCube | '.RUX';
   If(FileExists(cCubeRuleFileName) = 0);
     pIncludeRules = 0;
     LogOutput( 'INFO', Expand( 'No rule found for %pCube%.' ) );
@@ -375,13 +395,12 @@ IF(pIncludeRules = 2);
       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
       # Create error rule file 
       cErrorRuleName = 'ErrorRuleFile.rux';
+
       IF(FileExists( cErrorRuleName ) = 0 );
-        sFile = '.\' | cErrorRuleName;
-        sCommand = 'cmd /c "(echo # Rule could not be attached due to invalid !Dimension references.) > ' | sFile | '"';
-        ExecuteCommand ( sCommand, 0 );
-        sCommand = 'cmd /c "(echo # Please recover from the backup and fix manually.) >> ' | sFile | '"';
-        ExecuteCommand ( sCommand, 0 );
+        sFile = '.' | sOSDelim | cErrorRuleName;
+        LogOutput(cMsgErrorLevel, 'Rule could not be attached due to invalid !Dimension references. Please recover from the backup and fix manually.');
       ENDIF;
+
       EXECUTEPROCESS( sProc,
       'pLogOutput', pLogOutput,
       'pCube', pCube,

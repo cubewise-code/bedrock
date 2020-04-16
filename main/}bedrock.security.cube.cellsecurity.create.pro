@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tDD90YORDbwTR4z5]fRIzEqmcQdE6i`uBE7<Fv0;R1]upZuhH7K866ajpZi>4o4uOYXr6SSpEyY1;X1kOGET3RB6<?a3FutMruA{QaPi8STN76uu9v<VahD`D?9i_gd:H1pLctjN:O9Ck\u3GLOUvQ>0=>hcsjhcMaBt]v]QIhgziX>BDo@aAE^m>hbuX\FMyLijDbXNtDD90YORDbwTR4z5]fRItEqmcQdE6i`5HE7<Fv0;R1]upZxhH7K866ajp*_74odrOYXR1SSpEyi=;84kOGET3RB6<?q2FutMruAkPaPi8STN76E45v<VahD`D?9iO]k:HavlmtjN:O9cf\ucILOUuQ>0=>hcsjhcMaru]v=]Ihgz)[>BDo@aAUPm>hbuX\JMsLijDbXN"
+565,"rHn\3utj\u7e8yi^W6zWBO8v>Mag3qi}B85s3RrRMuYz3\efw^R2;lZnAUi>Wl8EA2Oq63Bz8nY1=PaA9=eSaMmz0hbC]a[8fXzuq23qKfNSEmvuiwaVG[JzibiePgDmq20BC[6T9>CM[Ae:WBv]6_a?5V5Ty1cLLdCd:Q^1EWs[kXDKjR<L6FN0PscAfS6BYc:yu`UqrHn\3utj\u7e8yi^W6tWBO8v>Mag3qi=H85s3RrRMuYz3\hfw^R2;lZnA%O;WlhBA2OQ13Bz8ni==0dA9=eSaMmz0hrB]a[8fXzUt23qKfNSEmF4ewaVG[Jzibie00@mqb6bM[6T9>CmVAe:^BvM2_a?5V5Ty1cLLdse:Q>=EWs[+[DKjR<L6V@0PscAfS:BSc:yu`Uq"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pCube,""
 pDim,""
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube to create cell security for"
-pDim,"Required: Map of dimensions to include in cell security as a array of 1:0 colon delimited e.g. ""1:0:0:1:0"""
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube to create cell security for"
+pDim,"REQUIRED: Map of dimensions to include in cell security as a array of 1:0 colon delimited e.g. ""1:0:0:1:0"""
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pDim,"Required: Map of dimensions to include in cell security as a array of 1:0 
 581,0
 582,0
 603,0
-572,119
+572,127
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.cube.cellsecurity.create', 'pLogOutput', pLogOutput,
+	    'pCube', '', 'pDim', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

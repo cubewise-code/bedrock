@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"po=6:IzEMKzu:LQKaPhg5kiGkIREJleS>3u0CHAc[0kfVD=xk94;hAHa:zPe=p9x7KMK]W?GIkV?wu;cHF;<[uN^9iDzxVuhmM`nfIBgUVA_c;2g9UPiz_i_uYnPoE=uw\g78\oBiSLFcZ8Vi2Sd=ngGi\sb1jqCXx^@Nxflg]r5gk3`6K2=vAk3e4B1vP6biyoftfQj"
+565,"vo1eebWJeeCQv_4J?FF@69aca_4C47Y_DXRVAyPW1G5MVl>^XQ;N?AhB4M;FNJo1yHiBOIn_cwpzJJM`_tw:mxkLT?VSEf5i=pQjvGRIGG6T2QP0c0:1EUKgPaCn_thVhlp0Yccf75q[leAb;88[B\6[Mnplc?ZBtmHYY<cJ7Q:k_BI0Q5MHUhWPaWY1Z?b6rltD7w::"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pView,""
 pSubPublish,1
 pOverwrite,0
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: Cube Name"
-pView,"Required: Private View Name"
-pSubPublish,"Optional: Publish Private Subsets? (Boolean 1=Yes)"
-pOverwrite,"Optional: Overwrite Existing Named View? (Boolean 1=Yes)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: Cube Name"
+pView,"REQUIRED: Private View Name"
+pSubPublish,"OPTIONAL: Publish Private Subsets? (Boolean 1=Yes)"
+pOverwrite,"OPTIONAL: Overwrite Existing Named View? (Boolean 1=Yes)"
 577,0
 578,0
 579,0
@@ -56,7 +56,16 @@ pOverwrite,"Optional: Overwrite Existing Named View? (Boolean 1=Yes)"
 581,0
 582,0
 603,0
-572,109
+572,118
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.view.publish', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '',
+    	'pSubPublish', 1, 'pOverwrite', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ec8Oqax]SJffSJkN3H]pmXGWYVAbZIBBYPP=C8W>NF>4rAxTPiq[P:7Sup=V@_r[Bjc@Z\_e0xrz35v6a^R2TaTikZxcSG5[vp<oqc<vW[8NJt8SCKWwwVylDL1rtQsYhknwOYAOiLGFNg_ev\vY8L@9MaOm6=R9r;PR7F<Ez>OV?=hexsmQP:Rby5fMt2eRDQq3BUv?"
+565,"pqY]iZD8QcjmUGCHa4InOT3D<qk1KzNX__fQx?EXhMmr<kVdWl`k;sA>i<`CzIt_si=6ZqCXkl7K0etQb_\my7YMRm_@mb4d\U4:o2r\E_3iL2k^5?Ef4bpM=[ta\@5G08?ii@iuAtF`qU;2I:?9lQc:c6U>JcpBN94hB1JWmEHjZX7fG`BuFwG7;zU@o`n1RP1TWoJv"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -44,11 +44,11 @@ pAlias,""
 pPassword,""
 pDelim,"&"
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pClient,"Required: Single user name or list of users separated by delimiter"
-pAlias,"Optional: single or delimited list of }TM1_DefaultDisplayValue alias to assign to user (if list of users then size of list of aliases must be the same!)"
-pPassword,"Optional: Initial Password"
-pDelim,"Optional: Delimiter (Blank = &)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pClient,"REQUIRED: Single user name or list of users separated by delimiter"
+pAlias,"OPTIONAL: single or delimited list of }TM1_DefaultDisplayValue alias to assign to user (if list of users then size of list of aliases must be the same!)"
+pPassword,"OPTIONAL: Initial Password"
+pDelim,"OPTIONAL: Delimiter (Blank = &)"
 577,0
 578,0
 579,0
@@ -56,7 +56,15 @@ pDelim,"Optional: Delimiter (Blank = &)"
 581,0
 582,0
 603,0
-572,97
+572,105
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.security.client.create', 'pLogOutput', pLogOutput,
+	    'pClient', '', 'pAlias', '', 'pPassword', '', 'pDelim', '&' 
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"efp`=a4qRizI5_uDAp;ozhP98G?2v8[OzzIwvx9tnzE^6ooPKc\Skvh9Ito?dhQW4HY><Aw1_Y6HJ8=9bEfgJv8RU?hwfr?f::9XebU8h:I3n<T1nQh3iN6ht8jhho>N;DzFCg;YGBK@IW\=JIAj^tddlK6TBkZR4IO[E6AOV1Ii8Y6SaxpHViu`_I<:M8khDpPMGfUa"
+565,"qt^AOS3zx9y5ra\8vanYWKTZGwM[vp430lsEIp^[DOEneX2fDigvhaXVjXT2F\GEjlheFu_TCYj68MT^FnTIexSw30N2HFjDZ:=euGC]wfTkN03Y_p6es_7H9K7ph1f]KTMVs22?a]kfafJc>m8?1J675CL4Aw8ldacGpTkJ;ISyf`<b4N^pk4eOIx:REzF=sqp\r=`n"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -38,9 +38,9 @@ pLogOutput,0
 pLevel,""
 pMessage,""
 637,3
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pLevel,"Required: Severity of the message - INFO, DEBUG or ERROR"
-pMessage,"Required: Message to display in TM1 server Message Log"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pLevel,"REQUIRED: Severity of the message - INFO, DEBUG or ERROR"
+pMessage,"REQUIRED: Message to display in TM1 server Message Log"
 577,0
 578,0
 579,0
@@ -48,7 +48,15 @@ pMessage,"Required: Message to display in TM1 server Message Log"
 581,0
 582,0
 603,0
-572,56
+572,64
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.writetomessagelog', 'pLogOutput', pLogOutput,
+    	'pLevel', '', 'pMessage', ''
+    );
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

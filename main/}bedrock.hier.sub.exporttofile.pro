@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"lc=dHv=rmQP>a72`6gTYhDJaD8i]p1_AI?be2n]mjC`5Efk:]LAwJP@ApRPyFd:`]jbOT\6zY75JOw<<wyhqnf:a=St7W0dHXhFsEsDd_q;=uWQbhI_6D2vvYwfpS`2Y155xprOT_9AC\x1]Z3ZRzM:orJZ4uCn@_Ho[<HqGkptuntPGEMMb5Q\fyZL5ddTQ1C<vB\`2"
+565,"utqM<2ooxY1kt6_bvzx6EaFYh0BtBgBCR7R<<YfTPZxY7?<98Ig1Z\DbLuTnD8;Q;B]@e5D@1rT]X>`MFvbX^]WbECN1z2vr0RLoxLB3yRN2GzJZ]wNsrF>8V:HJuG<=L`ROO@lxa<coq1UgIaBmjn<M3R;0e8UCs97\npDwGL17:YJ3i3YtMBbXysh24pwTH9c[Yj_g"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -56,15 +56,15 @@ pTitleRecord,1
 pDelim,","
 pQuote,""""
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pTgtDir,"Required: Target Directory Path"
-pTgtFile,"Optional: Target File Name (Default Extension .csv)"
-pTitleRecord,"Optional: Boolean: 1 = Yes include header row"
-pDelim,"Optional: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"Optional: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pTgtDir,"REQUIRED: Target Directory Path"
+pTgtFile,"OPTIONAL: Target File Name (Default Extension .csv)"
+pTitleRecord,"OPTIONAL: Boolean: 1 = Yes include header row"
+pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 577,1
 vElement
 578,1
@@ -78,7 +78,17 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,206
+572,225
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.sub.exporttofile', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pSub', '',
+    	'pTgtDir', '', 'pTgtFile', '',
+    	'pTitleRecord', 1, 'pDelim', ',', 'pQuote', '"'
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -178,9 +188,18 @@ If( HierarchySubsetExists( pDim, pHier, pSub ) = 0 );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Validate file path
 # Strip off trailing backslash (if present)
-If( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= '\' );
+If( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= sOSDelim );
   pTgtDir = SubSt( pTgtDir, 1, Long( pTgtDir ) - 1 );
 EndIf;
 If( FileExists( pTgtDir ) = 0 );
@@ -246,7 +265,7 @@ Else;
     pTgtFile = pTgtFile | '.csv';
   EndIf;
 EndIf;
-sFile = pTgtDir | '\' | pTgtFile;
+sFile = pTgtDir | sOSDelim | pTgtFile;
 
 ### Initialise & declare variables ###
 

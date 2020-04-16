@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"g:gaB?=a:cX7f;^v[6`brv\gB_7T?MwRer^6HN^LYOA4SMMP41IAVn=X@;P[qUY<Y9e4Uymt6W6Wmf>]xS\vHMzePufd<0De]VLvSUd[2\i@LCnqFG=Rk6HLeY8K9\jZ9?Trk^FgMi9\RS8H_Q50\DPLOWPZmuE4JMfOqpsZb2hca?lI58kmSeDz13lM>Lw5VXEreuua"
+565,"m0`fSxh\=_^38aHQbgp7GMCLRs6GYG5]R\k3ep\Qo7Rea2GqORmQkxxpdfke63>fOO5?;QL[Z:2V[o22a9fMnfiPl[ef_Pz=ffWWpAucz:iS[cOpG`8iP^_Pp7sy?R2ePjG<]t6nX7Sq7Vqf48n0`7ogR5@1sqGMvnxi0@JI=7=XB5ZXAySsV6FB1>QGCCUMVHD]Zh:f"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -35,8 +35,8 @@ pSrcDir
 pLogOutput,0
 pSrcDir,""
 637,2
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDir,"Optional: Data Directory (Leave Blank to use TM1 Settings)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDir,"OPTIONAL: Data Directory (Leave Blank to use TM1 Settings)"
 577,0
 578,0
 579,0
@@ -44,7 +44,15 @@ pSrcDir,"Optional: Data Directory (Leave Blank to use TM1 Settings)"
 581,0
 582,0
 603,0
-572,83
+572,115
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.server.dir.listcontents', 'pLogOutput', pLogOutput,
+	    'pSrcDir', ''
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -83,13 +91,23 @@ cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo            = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%.' ;  
-cBatchFile          = cThisProcName | '.bat';
 #cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
+
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+  sOS = 'Linux';
+  sOSDelim = '/';
+  cBatchFile = LOWER(cThisProcName) | '.sh';
+Else;
+  sOS = 'Windows';
+  sOSDelim = '\';
+  cBatchFile = cThisProcName | '.bat';
+EndIf;
 
 ### Build Command ###
 nErrors         = 0;
@@ -99,7 +117,7 @@ If( pSrcDir @= '' );
     sCommand    = cBatchFile;
 Else;
     # Trim off trailing backslash if present
-    If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= '\' );
+    If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= sOSDelim );
         pSrcDir = SubSt( pSrcDir, 1, Long( pSrcDir ) - 1 );
     EndIf;
     # Check that data directory exists
@@ -108,24 +126,38 @@ Else;
         sMessage = 'Data directory does not exist: ' | pSrcDir;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     Else;
-        sCommand = pSrcDir | '\' | cBatchFile;
+        sCommand = pSrcDir | sOSDelim | cBatchFile;
     EndIf;
 EndIf;
 
 ### Create Batch File ###
 DatasourceASCIIQuoteCharacter='';
+If( sOS @= 'Windows');
+  ASCIIOUTPUT( sCommand, 'dir /b /s *.* > List_All_Data_Directory_Files.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b /s }*.* > List_All_Control_Objects.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *.cub > List_All_Cubes.txt');
+  
+  ASCIIOUTPUT( sCommand, 'dir /b *.dim > List_All_Dimensions.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *.pro > List_All_Processes.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *.cho > List_All_Chores.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b *Bedrock*.pro > List_All_Bedrock_Processes.txt');
+  
+  ASCIIOUTPUT( sCommand, 'dir /b /s *.vue > List_All_Views.txt');
+  ASCIIOUTPUT( sCommand, 'dir /b /s *.sub > List_All_Subsets.txt');
+Else;
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f > List_All_Data_Directory_Files.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "}*" > List_All_Control_Objects.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.cub" > List_All_Cubes.txt ;');
+  
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.dim" > List_All_Dimensions.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.pro" > List_All_Processes.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.cho" > List_All_Chores.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -iname "*Bedrock*.pro" > List_All_Bedrock_Processes.txt ;');
+  
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.vue" > List_All_Views.txt ;');
+  ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.sub" > List_All_Subsets.txt ;');
+EndIf;
 
-ASCIIOUTPUT( sCommand, 'dir /b /s *.* > List_All_Data_Directory_Files.txt');
-ASCIIOUTPUT( sCommand, 'dir /b /s }*.* > List_All_Control_Objects.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *.cub > List_All_Cubes.txt');
-
-ASCIIOUTPUT( sCommand, 'dir /b *.dim > List_All_Dimensions.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *.pro > List_All_Processes.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *.cho > List_All_Chores.txt');
-ASCIIOUTPUT( sCommand, 'dir /b *Bedrock*.pro > List_All_Bedrock_Processes.txt');
-
-ASCIIOUTPUT( sCommand, 'dir /b /s *.vue > List_All_Views.txt');
-ASCIIOUTPUT( sCommand, 'dir /b /s *.sub > List_All_Subsets.txt');
 
 ### End Prolog ###
 573,4
@@ -138,7 +170,7 @@ ASCIIOUTPUT( sCommand, 'dir /b /s *.sub > List_All_Subsets.txt');
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,40
+575,44
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -157,7 +189,11 @@ EndIf;
 
 ### Execute Batch File ###
 If( nErrors = 0 );
+  If(sOS @= 'Windows');
     ExecuteCommand ( sCommand, 1 );
+  Else;
+    ExecuteCommand ( 'sh ' | sCommand, 1 );
+  EndIf;
 EndIf;
 
 ### Delete temporary batch file

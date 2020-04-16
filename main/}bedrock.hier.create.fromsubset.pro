@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"w@?<RDK;Vy;J7p[5h87<6@`aOaIITKTeybX9S<2DXQpLiA>HvQ?h3ZXV?etpzfRWffi[>fEmNatJ`^__B=m<E_NLl:dwT;`rM4^XMSrvNU[SW9jHphBK@wIQ9vvd_6AmpRV0=[VqRDdJn1y@vYl::Zkx=MBmM=lND4d6eDp_5H[<l<2ECM@KDPnx?GGo6:MeD65qna:g"
+565,"kP4qzUI4adnysc`Di>L>6F=Rj>vFmfsy6U_W_eYw6D?]mCHcNNtvXb2@tSYQgfkfNuWx5sBHd4vDJWQJ<8i6PZY:D3AYn<A3TR96m43m>F?BXfG\FYgQ;P7oa_IGcF9]oPSCkXJ\RHR%?3eUhp>6=9:h^o1gWZ\k3fce`@YEfDGLadukeW4e69rbwmusaiNUWcWq=4q8"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -56,15 +56,15 @@ pAttr,1
 pUnwind,0
 pFlat,0
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pSrcDim,"Required: Source Dimension"
-pSrcHier,"Optional: Source Hierarchy (blank = same name as source dimension)"
-pSubset,"Required: Source Subset"
-pTgtDim,"Optional: Target Dimension (blank = same name as source dimension)"
-pTgtHier,"Optional: Target Hierarchy (blank = same name as target dimension)"
-pAttr,"Optional: Include Attributes? (Boolean 1=True)"
-pUnwind,"Optional: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pFlat,"Optional: Whether to create flat hierarchy? (1 = Yes, 0 = No)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pSrcDim,"REQUIRED: Source Dimension"
+pSrcHier,"OPTIONAL: Source Hierarchy (blank = same name as source dimension)"
+pSubset,"REQUIRED: Source Subset"
+pTgtDim,"OPTIONAL: Target Dimension (blank = same name as source dimension)"
+pTgtHier,"OPTIONAL: Target Hierarchy (blank = same name as target dimension)"
+pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True)"
+pUnwind,"OPTIONAL: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
+pFlat,"OPTIONAL: Whether to create flat hierarchy? (1 = Yes, 0 = No)"
 577,1
 vElement
 578,1
@@ -78,7 +78,17 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,179
+572,193
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.create.fromsubset', 'pLogOutput', pLogOutput,
+    	'pSrcDim', '', 'pSrcHier', '', 'pSubset', '',
+    	'pTgtDim', '', 'pTgtHier', '',
+    	'pAttr', 1, 'pUnwind', 0, 'pFlat', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -200,12 +210,9 @@ If( HierarchyExists(pTgtDim, pTgtHier) = 0 );
     HierarchyCreate( pTgtDim, pTgtHier );
 Else;
     IF(pUnwind = 1 );
-        ExecuteProcess( '}bedrock.hier.unwind',
-            'pLogOutput', 0,
-            'pDim', pTgtDim,
-            'pHier', pTgtHier,
-             'pConsol', '',
-             'pRecursive', 1
+        ExecuteProcess( '}bedrock.hier.unwind', 'pLogOutput', 0,
+            'pDim', pTgtDim, 'pHier', pTgtHier, 'pConsol', '*',
+            'pRecursive', 1
         );
     ELSEIF(
         pUnwind = 2 );
@@ -238,10 +245,6 @@ WHILE( nIndex <= nLimit);
     sElName = SubsetGetElementName( pSrcDim|':'|pSrcHier, pSubset, nIndex );
     ElementAttrPuts( cAttrVal, pSrcDim, pSrcHier, sElName, cHierAttr );
     sElType = ElementType( pSrcDim, pSrcHier, sElName );
-    IF(
-        sElType @<> 'S');
-        sElType = 'N';
-    ENDIF;
     HierarchyElementInsert(pTgtDim, pTgtHier, '',sElName, sELType);
     nIndex = nIndex + 1;
 END;
@@ -253,7 +256,7 @@ EndIf;
 
 ### Replicate Attributes ###
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
-
+ 
 sAttrDim = '}ElementAttributes_' | pSrcDim;
 sLastAttr = '';
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
@@ -267,7 +270,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
         nCount = nCount + 1;
     End;
 EndIf;
-
+ 
 ### End Prolog ###
 573,46
 
@@ -305,7 +308,7 @@ Else;
     nLimit = ElementComponentCount( pSrcDim, pSrcHier, vElement );
     WHILE( nIndex <= nLimit );
         sElName = ElementComponent( pSrcDim, pSrcHier, vElement, nIndex );
-        sDecendant = ATTRS( pSrcDim, sElName, cHierAttr);
+        sDecendant = ElementAttrS(pSrcDim, pSrcHier, sElName, cHierAttr);
         IF(
             sDecendant @= cAttrVal);
             nElWeight = ElementWeight( pSrcDim, pSrcHier, vElement, sElName );
@@ -375,7 +378,7 @@ Endif;
 
 sCube = '}DimensionProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pCube', sCube,
@@ -386,7 +389,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
@@ -398,7 +401,7 @@ ENDIF;
   
 sCube = '}HierarchyProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pCube', sCube,
@@ -409,7 +412,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,

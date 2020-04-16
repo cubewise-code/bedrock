@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wR078w]]`W>Fcx^su_]G?`Wa?<l4EV_cYC2OBppnb7x1kq1A]=9[qD0C4hEZFWOWd2P<jjqkY]9yHZ7z4UbfODi;[?6\xF@PtJ0gNl^PB0]]iLulC<Ziz4q;gknHJKJoI6roTYkDvFBOt1WZ6CK3MH>DtruLt`9UW8ibDtB40bN=h6oABr\]QKkS;<2Nb]P:]Se69[;t"
+565,"f7KZy[abQpHFB7Mx=o?w:kFsy`acK8[M4vRq4HA2jk@?5xs:]EfyApzKZh@F3Qd9[78IVkCeYZl5Hbc[9dFUdp1pH<[tYAU0?M=[ngz^RDaqomyF>9o^=>`Ymu>5MDv<M7slPI8W\eM^MxxF6P>bzYNeMhaMclN1E:=^:EoE_ouWF=v@crxT>ojoW0<c26@STQX<;xN`"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -62,17 +62,17 @@ pSuppressRules,1
 pTemp,1
 pSubN,0
 637,11
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pCube,"Required: List of Cubes (Separated by Delimiter, Accepts Wild card)"
-pView,"Optional: View (will default to pSubset if left blank)"
-pSub,"Optional: Subset (will default to pView if left blank)"
-pDim,"Required: Dimension(s) to create empty processing subsets for (separated by delimiter), * = all"
-pDelim,"Optional: List Delimiter (default value if blank = '&')"
-pSuppressZero,"Optional: Suppress Zeros (Boolean Yes = 1)"
-pSuppressConsol,"Optional: Suppress Calcs (Boolean Yes = 1)"
-pSuppressRules,"Optional: Suppress Rules (Boolean Yes = 1)"
-pTemp,"Optional: Make View Temporary (1=Temporary)"
-pSubN,"Optional: Create N level subset for all dims not mentioned in pDim"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCube,"REQUIRED: List of Cubes (Separated by Delimiter, Accepts Wild card)"
+pView,"OPTIONAL: View (will default to pSubset if left blank)"
+pSub,"OPTIONAL: Subset (will default to pView if left blank)"
+pDim,"REQUIRED: Dimension(s) to create empty processing subsets for (separated by delimiter), * = all"
+pDelim,"OPTIONAL: List Delimiter (default value if blank = '&')"
+pSuppressZero,"OPTIONAL: Suppress Zeros (Boolean Yes = 1)"
+pSuppressConsol,"OPTIONAL: Suppress Calcs (Boolean Yes = 1)"
+pSuppressRules,"OPTIONAL: Suppress Rules (Boolean Yes = 1)"
+pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pDim"
 577,0
 578,0
 579,0
@@ -80,7 +80,18 @@ pSubN,"Optional: Create N level subset for all dims not mentioned in pDim"
 581,0
 582,0
 603,0
-572,278
+572,289
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.cube.viewandsubsets.create', 'pLogOutput', pLogOutput,
+    	'pCube', '', 'pView', '', 'pSub', '', 
+    	'pDim', '*', 'pDelim', '&',
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pTemp', 1, 'pSubN', 0
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

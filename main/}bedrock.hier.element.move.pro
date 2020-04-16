@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"w3TtFG:68n:4;:<S]^dAh;AaTgfwMx3:7z6:Y3]E?_bUx3UkZ<honWcM`>JVTdiHvo^[p6vkAiZzkE\?s:aN^?N;v[Bem;JD2kC?L7L=i?@Edv:mM`=RPk3F3:gP5qREuBGWu<01BUQwl6oxBOiGS>Tp]5Es;gf>q73XPB:Ojjb<[HvGtrT;A:wOJeB=dS3Qh9Km5Gtz"
+565,"b5a7S7sb:P<HGLbq:zLjT`9KdGL3oeIYXO3:s>MoP3MH_;hpF6rRAaVz;>Uu<a\qIU]7L8F2kvP[<0IMSs<anWVu^f=Y::g\CRIf1oplVhOG8HL6yoHo3``c3z:ztRMmIF55JcZ8VuzHygYRhXj3gq]6E@fh]u]j_6wiBcSdHLulNCJd@pQ7LqWd@H>278G;^\ww_qMg"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
@@ -50,13 +50,13 @@ pTgtConsol,""
 pMode,"Add"
 pWeight,1
 637,7
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"Required: Dimension Name"
-pHier,"Optional: Hierarchy Name"
-pEle,"Required: Element Name"
-pTgtConsol,"Required: Target Consolidation"
-pMode,"Required: Add or Remove Element from Hierarchy"
-pWeight,"Optional: Element Weight (for Add only)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pDim,"REQUIRED: Dimension Name"
+pHier,"OPTIONAL: Hierarchy Name"
+pEle,"REQUIRED: Element Name"
+pTgtConsol,"REQUIRED: Target Consolidation"
+pMode,"REQUIRED: Add or Remove Element from Hierarchy"
+pWeight,"OPTIONAL: Element Weight (for Add only)"
 577,0
 578,0
 579,0
@@ -64,7 +64,16 @@ pWeight,"Optional: Element Weight (for Add only)"
 581,0
 582,0
 603,0
-572,136
+572,145
+#Region CallThisProcess
+# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
+If( 1 = 0 );
+    ExecuteProcess( '}bedrock.hier.element.move', 'pLogOutput', pLogOutput,
+    	'pDim', '', 'pHier', '', 'pEle', '',
+    	'pTgtConsol', '', 'pMode', 'Add', 'pWeight', 1
+	);
+EndIf;
+#EndRegion CallThisProcess
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****

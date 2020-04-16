@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tx3Udn0LYhpGbmed11HiaVSmoLvLQqaoj2R@Qi=wQVxjp6zJXzsJsC7>8AGPQF<Ix02=tfovj9KYmhp<SX0je[M6czy6GGw>y@zYTsmzJxj\1O3:8zqyZDv0of=mms2y7\DUzKuD5dHH_FTF=?m`iP[y5ZDl[@Ig_=ty_HBMlL^<muirxTmGvoRIOD^AicZ3MGWAJzDZ"
+565,"kWr]DERCtHCat_Cj]P2v3QMAJA0gWwE7fPOe7yMGoOGaWwYcS2@mU98AowBhaILxOP@l@Zb>PjKygDqFy<Rbdn4EuedfZxmQE3j78BeS5Z@vc6quHR7qID376aJ;BDt@vx^UVwXdigB_W8_O1Zsd2HoeyTsKQ<F>fp?D`f=]gs@chrR\<1[wj>8PU9nQZuTX[YGQNvcr"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,","
-589,
+589,","
 568,""""
 570,
 571,
@@ -47,12 +47,12 @@ pDelim,"&"
 pStartTime,0
 pEndTime,24
 637,6
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
-pMonthDays,"Optional: Delimited string of days in month as dd e.g. 01 & 02 & 30 & 31 (Blank=All)"
-pWeekDays,"Optional: Delimited string of days in week as ddd e.g. MON & WED (Blank=All)"
-pDelim,"Optional: String array delimiter. Only 1 character allowed (Blank=&)"
-pStartTime,"Optional: Time to start running chore from in 24 hr time (at start of hour) (Blank=0)"
-pEndTime,"Optional: Time to finish chore being able to start in 24 hr time (Blank=24)"
+pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pMonthDays,"OPTIONAL: Delimited string of days in month as dd e.g. 01 & 02 & 30 & 31 (Blank=All)"
+pWeekDays,"OPTIONAL: Delimited string of days in week as ddd e.g. MON & WED (Blank=All)"
+pDelim,"OPTIONAL: String array delimiter. Only 1 character allowed (Blank=&)"
+pStartTime,"OPTIONAL: Time to start running chore from in 24 hr time (at start of hour) (Blank=0)"
+pEndTime,"OPTIONAL: Time to finish chore being able to start in 24 hr time (Blank=24)"
 577,0
 578,0
 579,0
@@ -64,15 +64,15 @@ pEndTime,"Optional: Time to finish chore being able to start in 24 hr time (Blan
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-ExecuteProcess( '}bedrock.chore.execution.check', 'pLogOutput', pLogOutput,
-    'pMonthDays', '',
-    'pWeekDays', '',
-    'pDelim', '&',
-    'pStartTime', 0,
-    'pEndTime', 24
-);
+    ExecuteProcess( '}bedrock.chore.execution.check', 'pLogOutput', pLogOutput,
+        'pMonthDays', '', 
+        'pWeekDays', '',
+        'pDelim', '&',
+        'pStartTime', 0, 'pEndTime', 24
+    );
 EndIf;
-#EndRegion CallThisProcessExample
+#EndRegion CallThisProcess
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
