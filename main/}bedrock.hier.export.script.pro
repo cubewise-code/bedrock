@@ -463,7 +463,7 @@ If( pAttr = 1 & DimensionExists( sDimAttr ) = 1 & Scan( sDim|pDelim, sAttrDone )
             nChar = nChar + 1;
         End;
         If( nCtr = 1 );
-            AsciiOutput( sFileName, 'If( DimensionExists( sDimAttr ) = 0 );');
+            AsciiOutput( sFileName, 'If( DimensionExists( sDimAttr ) = 0 % CubeExists( sDimAttr ) = 0 );');
             AsciiOutput( sFileName, Expand('    AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
             AsciiOutput( sFileName, 'EndIf;' );
         EndIf;
