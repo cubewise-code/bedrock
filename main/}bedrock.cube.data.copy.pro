@@ -438,11 +438,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-<<<<<<< HEAD
 572,864
-=======
-572,873
->>>>>>> 9f05c388f3d1fe3a46e3972710ae0f3fea890c90
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
