@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lvVc0v50WaR4a4j@?BTD4FMv@J^bwbn@W8uwY\OzE5kHRKIG1QWfr9qTa@6f90MZ2jCjY\oK32w90qA6;O8l;V82e4k?Wp?3E8`jVGnirvCX^TD4NHacJfP:WwisPSM@QHml\;:clzf5_KxHGTYBgEj7aSdSe]C8dOEQtkg0lO:Mlv[2i8mQYyl>ChhDZ@rixS1RG<Sd"
+565,"xS67>D2CwHMF]hopuuBw^PdMa6Q^\Fnn:KaYiNxfpm7dIi\QeDQukF_TdfKbCEqnQ@HTc_9qZY[5pve;IQF4PZoDU?i=l::UcfWhjMClqKKlhs1TIjByUdEFv>X]sKT1zn_9KSQLSM;ErAwVVdm`NhA6p57[;7eYCzbFDppDDCMWFjmLZ;TyrSM<Rh>UD;rYrIdRx0h4"
 559,1
 928,0
 593,
@@ -48,7 +48,7 @@ pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,193
+572,221
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -137,12 +137,25 @@ While( nDelimiterIndex <> 0 );
     If( sClient @<> '' );
       If( DimIx( cClientDim, sClient ) <> 0 );
         sClient = DimensionElementPrincipalName(cClientDim,sClient);
-        DeleteClient( sClient );
+        If( sClient @<> 'Admin' & sClient @<> TM1User() );
+            DeleteClient(sClient);
+        ElseIf( sClient @= 'Admin' );
+            nErrors = 1;
+            sMessage = 'Skipping attempt to delete Admin user.';
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ElseIf( sClient @= TM1User() );
+            nErrors = 1;
+            sMessage = 'Skipping attempt to delete self.';
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        EndIf;
       Else;
         nErrors = 1;
-        sMessage = 'Client: ' | sClient | ' does not exists';
+        sMessage = 'Client: ' | sClient | ' does not exist.';
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
       Endif;
+      If( nErrors > 0 );
+          ItemReject( Expand( cMsgErrorContent ) );
+      EndIf;
     Endif;  
   Else;
   # Wildcard search string
@@ -173,14 +186,19 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cClientDim, 1 );
         EndIf;
         
-        nCount = 1;
         nHier_Sub_Size = HierarchySubsetGetSize(cClientDim, cClientHier, cTempSub);
-        While (nCount <= nHier_Sub_Size);
-          nSubsetIndex = 1;
-          sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', nSubsetIndex);
+        nCount = nHier_Sub_Size;
+        While (nCount >= 1);
+          sTemp = HierarchySubsetElementGetIndex(cClientDim, cClientHier, cTempSub, '', 1);
           sElement = HierarchySubsetGetElementName(cClientDim, cClientHier, cTempSub, nCount);
-          HierarchyElementDelete( cClientDim, cClientHier,sElement );
-          nCount = nCount +1;
+          If( sElement @<> 'Admin' & sElement @<> TM1User() );
+              DeleteClient(sElement);
+          ElseIf( sElement @= 'Admin' );
+              LogOutput( 'WARN', 'Skipping attempt to delete Admin user.' );
+          ElseIf( sElement @= TM1User() );
+              LogOutput( 'WARN', 'Skipping attempt to delete self.' );
+          EndIf;
+          nCount = nCount -1;
         End;
         ##If the wilcardsearch is String*, below code will get executed
         ElseIf(Subst(sClient,Long(sClient),1) @= '*');
@@ -198,14 +216,19 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cClientDim, 1 );
         EndIf;
 
-        nCount = 1;
         nHier_Sub_Size = HierarchySubsetGetSize(cClientDim, cClientHier, cTempSub);
-        While (nCount <= nHier_Sub_Size);
-          nSubsetIndex = 1;
-          sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', nSubsetIndex);
+        nCount = nHier_Sub_Size;
+        While (nCount >= 1);
+          sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', 1);
           sElement = HierarchySubsetGetElementName(cClientDim, cClientHier, cTempSub, nCount);
-          HierarchyElementDelete( cClientDim, cClientHier,sElement );
-          nCount = nCount +1;
+          If( sElement @<> 'Admin' & sElement @<> TM1User() );
+              DeleteClient(sElement);
+          ElseIf( sElement @= 'Admin' );
+              LogOutput( 'WARN', 'Skipping attempt to delete Admin user.' );
+          ElseIf( sElement @= TM1User() );
+              LogOutput( 'WARN', 'Skipping attempt to delete self.' );
+          EndIf;
+          nCount = nCount -1;
         End;
       Endif;
     Else;
@@ -223,14 +246,19 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cClientDim, 1 );
       EndIf;
 
-      nCount = 1;
       nHier_Sub_Size = HierarchySubsetGetSize(cClientDim, cClientHier, cTempSub);
-      While (nCount <= nHier_Sub_Size);
-        nSubsetIndex = 1;
-        sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', nSubsetIndex);
+      nCount = nHier_Sub_Size;
+      While (nCount >= 1);
+        sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', 1);
         sElement = HierarchySubsetGetElementName(cClientDim, cClientHier, cTempSub, nCount);
-        HierarchyElementDelete( cClientDim, cClientHier,sElement );
-        nCount = nCount +1;
+          If( sElement @<> 'Admin' & sElement @<> TM1User() );
+              DeleteClient(sElement);
+          ElseIf( sElement @= 'Admin' );
+              LogOutput( 'WARN', 'Skipping attempt to delete Admin user.' );
+          ElseIf( sElement @= TM1User() );
+              LogOutput( 'WARN', 'Skipping attempt to delete self.' );
+          EndIf;
+        nCount = nCount -1;
       End;
     Endif;
   EndIf;

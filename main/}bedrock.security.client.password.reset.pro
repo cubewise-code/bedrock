@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ywf[>0^W[RTn4uaz2Sf8dOM<1a^ulF;o0a:T7t^yjREe;T7r0dpYS3TCCT=46nox21LrCOlM6:SXDfDG\YNP;a;@FqlJJfqhybgtqu<tYJE;>B7mOrobyNHmhty5oy4<^qU9k:IB5:9`5VNeCNbCgqMfeZBvbGDx?0Jlmz7YJb1@cDRVVRt;8jqX?XIu3dkhSENNJI4L"
+565,"kMtk5_zvvbhamH6sZF0OjeDvPb32A5q4CGSBoiF?>wLn41]HD`]N`DxT8pxY9sn<W^]SG9y9r`5YzjYO:uSAP7=O2]v\px:K\ntk0lc3Ey2<Xqwtg8LL6LGzZB`NEmkKetOqPJKOKLy8rPt?oBGZt9<bx>oJatC1WvK>mGEDAf6B[j_2qn<ls_;pztw;:ywDm^Sf?oSu"
 559,1
 928,0
 593,
@@ -98,7 +98,7 @@ cClientDim          = '}Clients';
 cClientHier         = cClientDim;
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pClient:%pClient%, pPassword:%******%, pDelim:%pDelim%.' ;  
+cLogInfo            = 'Process:%cThisProcName% run with parameters pClient:%pClient%, pPassword:******, pDelim:%pDelim%.' ;  
 
 ### Validate Parameters ###
 nErrors             = 0;
