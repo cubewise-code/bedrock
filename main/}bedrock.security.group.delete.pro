@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fsc6tJa=^Cw4icuDA6_ej9GJVxYs[D@>RiSsrw[e3ZJNTm=zU58CFN[iV69rl:xz\3qtClDNi]NnSuMhTY1?TpnfaCYjR8SGQPxrkN1dyOT=D\2tAZIawu9r>3[L[?UMIuO^4y]f:Mj5`Rs<vyXVzH<gxp>ZJGXbHmCL:9NdU6_]6DuYY`:9tGSvWJ0:c5kcOVcA[B_e"
+565,"rhGTqi0jEGf>kP48bia4s0\IvkZlSykx;;^w`l9Q\OJu\1hOSA[V3M?Xr[6Q:;yWvZ:MXKj9v:P:[iKYAgyyEL6nE=BHEpg[SH2QyPwiZb6xsfc^SdmfWGsfYAPWOQG[Z@D`>Yxjeb0:0S0338Rl?7PKnnv6njobS9T8^AgDo:q1cyq4vPztSKM`7Qptq:q4reFRB^^6"
 559,1
 928,0
 593,
@@ -48,7 +48,7 @@ pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 581,0
 582,0
 603,0
-572,196
+572,219
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -96,7 +96,8 @@ cGroupHier              = cGroupDim;
 cUserName               = TM1User();
 cMsgErrorLevel          = 'ERROR';
 cMsgErrorContent        = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo                = 'Process:%cThisProcName% run with parameters pGroup:%pGroup%, pDelim:%pDelim%.' ;  
+cLogInfo                = 'Process:%cThisProcName% run with parameters pGroup:%pGroup%, pDelim:%pDelim%.';
+cBuiltInGroups          = 'ADMIN&SecurityAdmin&DataAdmin&OperationsAdmin&';
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -142,9 +143,18 @@ While( nDelimiterIndex <> 0 );
   If( Scan( '*', sGroup ) = 0);
     # Don't attempt to delete a blank group
     If( sGroup @<> '' );
-        If( DimIx( '}Groups', sGroup ) <> 0 );
+        If( DimIx( '}Groups', sGroup ) > 0 );
             If( nErrors = 0 );
-                DeleteGroup( sGroup );
+                If( Scan( Upper( sGroup ) |'&', Upper( cBuiltInGroups ) ) = 0 );
+                    DeleteGroup( sGroup );
+                Else;
+                    nErrors = 1;
+                    sMessage= Expand('Attempt to delete built-in group %sGroup%.');
+                    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                EndIf;
+            EndIf;
+            If( nErrors > 0 );
+                ItemReject( Expand( cMsgErrorContent ) );
             EndIf;
         EndIf;
     EndIf;
@@ -177,14 +187,19 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cGroupDim, 1 );
         EndIf;
 
-        nCount = 1;
         nHier_Sub_Size = HierarchySubsetGetSize(cGroupDim, cGroupHier, cTempSub);
-        While (nCount <= nHier_Sub_Size);
+        nCount = nHier_Sub_Size;
+        While (nCount >= 1);
           nSubsetIndex = 1;
-          sTemp = HierarchySubsetElementGetIndex (cGroupDim, cGroupHier, cTempSub, '', nSubsetIndex);
+          sTemp = HierarchySubsetElementGetIndex (cGroupDim, cGroupHier, cTempSub, '', 1);
           sElement = HierarchySubsetGetElementName(cGroupDim, cGroupHier, cTempSub, nCount);
-          HierarchyElementDelete( cGroupDim, cGroupHier,sElement );
-          nCount = nCount +1;
+          If( Scan( Upper( sElement ) |'&', Upper( cBuiltInGroups ) ) = 0 );
+            DeleteGroup( sElement );
+          Else;
+            sMessage= 'Attempt to delete built-in group %sGroup%.';
+            LogOutput( 'WARN', Expand( cMsgErrorContent ) );
+          EndIF;
+          nCount = nCount -1;
         End;
         ##If the wilcardsearch is String*, below code will get executed
         ElseIf(Subst(sGroup,Long(sGroup),1) @= '*');
@@ -201,14 +216,18 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cGroupDim, 1 );
         EndIf;
 
-        nCount = 1;
         nHier_Sub_Size = HierarchySubsetGetSize(cGroupDim, cGroupHier, cTempSub);
-        While (nCount <= nHier_Sub_Size);
-          nSubsetIndex = 1;
-          sTemp = HierarchySubsetElementGetIndex (cGroupDim, cGroupHier, cTempSub, '', nSubsetIndex);
+        nCount = nHier_Sub_Size;
+        While (nCount >= 1);
+          sTemp = HierarchySubsetElementGetIndex (cGroupDim, cGroupHier, cTempSub, '', 1);
           sElement = HierarchySubsetGetElementName(cGroupDim, cGroupHier, cTempSub, nCount);
-          HierarchyElementDelete( cGroupDim, cGroupHier,sElement );
-          nCount = nCount +1;
+          If( Scan( Upper( sElement ) |'&', Upper( cBuiltInGroups ) ) = 0 );
+            DeleteGroup( sElement );
+          Else;
+            sMessage= 'Attempt to delete built-in group %sGroup%.';
+            LogOutput( 'WARN', Expand( cMsgErrorContent ) );
+          EndIF;
+          nCount = nCount -1;
         End;
       Endif;
     Else;
@@ -226,14 +245,18 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cGroupDim, 1 );
         EndIf;
 
-      nCount = 1;
       nHier_Sub_Size = HierarchySubsetGetSize(cGroupDim, cGroupHier, cTempSub);
-      While (nCount <= nHier_Sub_Size);
-        nSubsetIndex = 1;
-        sTemp = HierarchySubsetElementGetIndex (cGroupDim, cGroupHier, cTempSub, '', nSubsetIndex);
+      nCount = nHier_Sub_Size;
+      While (nCount >= 1);
+        sTemp = HierarchySubsetElementGetIndex (cGroupDim, cGroupHier, cTempSub, '', 1);
         sElement = HierarchySubsetGetElementName(cGroupDim, cGroupHier, cTempSub, nCount);
-        HierarchyElementDelete( cGroupDim, cGroupHier,sElement );
-        nCount = nCount +1;
+          If( Scan( Upper( sElement ) |'&', Upper( cBuiltInGroups ) ) = 0 );
+            DeleteGroup( sElement );
+          Else;
+            sMessage= 'Attempt to delete built-in group %sGroup%.';
+            LogOutput( 'WARN', Expand( cMsgErrorContent ) );
+          EndIF;
+        nCount = nCount -1;
       End;
     Endif;
   EndIf;
