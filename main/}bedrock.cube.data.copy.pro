@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.copy"
 562,"VIEW"
 586,"zzSYS 50 Dim Cube"
@@ -108,7 +108,7 @@ pTgtView,"OPTIONAL: Temporary view name for target"
 pFilter,"OPTIONAL: Filter Unmapped Dimensions using format: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget etc"
 pFilterParallel,"OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
-pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy:SourceElement->TargetElement & Dim2ToCopy:Source Element->TargetElement etc"
+pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy¦SourceElement->TargetElement & Dim2ToCopy¦Source Element->TargetElement etc"
 pMappingDelim,"OPTIONAL: Delimiter between source element and target element in pEleMapping  (default value if blank = '->')"
 pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
@@ -438,7 +438,11 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
+<<<<<<< HEAD
 572,864
+=======
+572,873
+>>>>>>> 9f05c388f3d1fe3a46e3972710ae0f3fea890c90
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1287,15 +1291,24 @@ Else;
           ProcessBreak;
     ENDIF;
     
-  
-    ### Assign Datasource ###
-    DataSourceType                  = 'CHARACTERDELIMITED';
-    DatasourceNameForServer         = cFile;
-    DatasourceNameForClient         = cFile;
-    DatasourceASCIIHeaderRecords    = cTitleRows;
-    DatasourceASCIIDelimiter        = cDelimiter;
-    DatasourceASCIIQuoteCharacter   = cQuote;
+    If(FileExists(cFile) = 0);
+      # If the file does not exist, it means that nothing got exported, so there is nothing to import
+      If( pLogoutput = 1 );
+        LogOutput('INFO', Expand( 'Process:%cThisProcName% is skipping import as export file %cFile% was not found.' ) );     
+      EndIf;
+      DataSourceType = 'NULL';
+    Else;
+      ### Assign Datasource ###
+      DataSourceType                  = 'CHARACTERDELIMITED';
+      DatasourceNameForServer         = cFile;
+      DatasourceNameForClient         = cFile;
+      DatasourceASCIIHeaderRecords    = cTitleRows;
+      DatasourceASCIIDelimiter        = cDelimiter;
+      DatasourceASCIIQuoteCharacter   = cQuote;
+    EndIf;
+    
     nThreadMode = 1;
+  
   EndIf;
 
 EndIf;
