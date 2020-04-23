@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"mm]EP5LEb9ECxaHW<:fR:\<=t^FmcmT6ghZ5N`tOoS>qV:?gTVekpRzn5]0nsvgtt1F2r:FLWB1NrEhq>Ca2hNO^SFLy1D\zp]n4u04RS=En@jJZg9?szhgX9^Wkt3sA5hijGjB4vvzU88OR5AOu]GX>B[hqLH9d4oqss:2eq=6a?`g8ebmY9n\U\78X;NMkGtO:pQWI"
+565,"zC=DXDj_9ZV?gUe?Yn9WzFS^DRaOM3pKt8IHs:jCu2@bw6pu:cuJ`C7@Kz9iO;9G9rdy\vtxf_A\Iqoj[pIq0N4?Piq\0I1jzm[dVpMgBuhFpXdxly?L22rRGnDPaNlea4icVV2qvxYCMn7JwL9_Ku5JrMb0AP7l?H7=@463\s=wn@z9M2YTsD[aetfr8]lvdQWeB^<3"
 559,1
 928,0
 593,
@@ -288,7 +288,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,903
+572,915
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -973,13 +973,9 @@ WHILE(TabDim( pCube, nTargetIndex ) @<> '');
     sMappedV6  = 'V' | NumberToString(nSourceIndex);
     nSourceIndex = nSourceIndex + 1;
   ElseIf(nTargetIndex = 7 & nNewDim7 = 0);
-    If( nNewDim7 = 0 );
       nMappedDim7 = 1;
       sMappedV7  = 'V' | NumberToString(nSourceIndex);
       nSourceIndex = nSourceIndex + 1;
-    Else;
-      
-    EndIf;
   ElseIf(nTargetIndex = 8 & nNewDim8 = 0);
     nMappedDim8 = 1;
     sMappedV8  = 'V' | NumberToString(nSourceIndex);
@@ -996,54 +992,70 @@ WHILE(TabDim( pCube, nTargetIndex ) @<> '');
     nMappedDim11 = 1;
     sMappedV11  = 'V' | NumberToString(nSourceIndex);
     nSourceIndex = nSourceIndex + 1;
-  ElseIf(nTargetIndex = 12);
+  ElseIf(nTargetIndex = 12 & nNewDim12 = 0 );
     nMappedDim12 = 1;
     sMappedV12  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 13);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 13 & nNewDim13 = 0 );
     nMappedDim13 = 1;
     sMappedV13  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 14);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 14 & nNewDim14 = 0 );
     nMappedDim14 = 1;
     sMappedV14  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 15);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 15 & nNewDim15 = 0 );
     nMappedDim15 = 1;
     sMappedV15  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 16);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 16 & nNewDim16 = 0 );
     nMappedDim16 = 1;
     sMappedV16  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 17);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 17 & nNewDim17 = 0 );
     nMappedDim17 = 1;
     sMappedV17  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 18);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 18 & nNewDim18 = 0 );
     nMappedDim18 = 1;
     sMappedV18  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 19);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 19 & nNewDim19 = 0 );
     nMappedDim19 = 1;
     sMappedV19  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 20);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 20 & nNewDim20 = 0 );
     nMappedDim20 = 1;
     sMappedV20  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 21);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 21 & nNewDim21 = 0 );
     nMappedDim21 = 1;
     sMappedV21  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 22);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 22 & nNewDim22 = 0 );
     nMappedDim22 = 1;
     sMappedV22  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 23);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 23 & nNewDim23 = 0 );
     nMappedDim23 = 1;
     sMappedV23  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 24);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 24 & nNewDim24 = 0 );
     nMappedDim24 = 1;
     sMappedV24  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 25);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 25 & nNewDim25 = 0 );
     nMappedDim25 = 1;
     sMappedV25  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 26);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 26 & nNewDim26 = 0 );
     nMappedDim26 = 1;
     sMappedV26  = 'V' | NumberToString(nSourceIndex);
-  ElseIf(nTargetIndex = 27);
+    nSourceIndex = nSourceIndex + 1;
+  ElseIf(nTargetIndex = 27 & nNewDim27 = 0 );
     nMappedDim27 = 1;
     sMappedV27  = 'V' | NumberToString(nSourceIndex);
+    nSourceIndex = nSourceIndex + 1;
   EndIf;
 
   nTargetIndex = nTargetIndex + 1;

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"utqM<2ooxY1kt6_bvzx6EaFYh0BtBgBCR7R<<YfTPZxY7?<98Ig1Z\DbLuTnD8;Q;B]@e5D@1rT]X>`MFvbX^]WbECN1z2vr0RLoxLB3yRN2GzJZ]wNsrF>8V:HJuG<=L`ROO@lxa<coq1UgIaBmjn<M3R;0e8UCs97\npDwGL17:YJ3i3YtMBbXysh24pwTH9c[Yj_g"
+565,"rNz0i`D3e=9Oa4ddJ<aFq7iTfdGwV7OLa7Su[8EF56h45YSHHEEPSpceBGpG]t^S9kwBx^Io8nz7[:gf5EdR=XO3:^pbyloX:vn[GD_LrT?FJGMxYGk3YzYXm>Xd7]uh[3fW;US@K0X5\LI[;eQfQWLD6?0]Q=SFm@mEpiEphE:f^YtnlRLt15R4Kb<<HwyGa>8jb5Qf"
 559,1
 928,0
 593,
@@ -126,7 +126,7 @@ cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pTgtDir:%pTgtDir%, pTgtFile:%pTgtFile%, pTgtRecord:%pTgtRecord%.'; 
+cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pTgtDir:%pTgtDir%, pTgtFile:%pTgtFile%, pTitleRecord:%pTitleRecord%.'; 
 cAttributeDim       = '}ElementAttributes_' | pDim;
 cLenASCIICode = 3;
 
