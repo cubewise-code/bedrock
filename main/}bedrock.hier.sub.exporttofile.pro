@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"utqM<2ooxY1kt6_bvzx6EaFYh0BtBgBCR7R<<YfTPZxY7?<98Ig1Z\DbLuTnD8;Q;B]@e5D@1rT]X>`MFvbX^]WbECN1z2vr0RLoxLB3yRN2GzJZ]wNsrF>8V:HJuG<=L`ROO@lxa<coq1UgIaBmjn<M3R;0e8UCs97\npDwGL17:YJ3i3YtMBbXysh24pwTH9c[Yj_g"
+565,"w7ga;L>P[z8X?rkRpH]>1HiatOb[0BExJbM1wL]3QuLz1[YmGfsJxxM4RcKnDOxovlWwWqJQjn5<@6IiCKumZL3vzPFr6LKU:JnUp1BLG9HLexwCNMRG>c>fP6O:wRwCptM]h8kZi[44`B@C^2SW5c:`fB<RRh@c>dAAs@Fbw3mw7H^@BmcqZCv[YvEA0;4z7uOropx\"
 559,1
 928,0
 593,
@@ -78,14 +78,20 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,225
+572,231
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.hier.sub.exporttofile', 'pLogOutput', pLogOutput,
-    	'pDim', '', 'pHier', '', 'pSub', '',
-    	'pTgtDir', '', 'pTgtFile', '',
-    	'pTitleRecord', 1, 'pDelim', ',', 'pQuote', '"'
+ExecuteProcess( '}bedrock.hier.sub.exporttofile'
+	, 'pLogOutput', pLogOutput
+	, 'pDim', ''
+	, 'pHier', ''
+	, 'pSub', ''
+	, 'pTgtDir', ''
+	, 'pTgtFile', ''
+	, 'pTitleRecord', 1
+	, 'pDelim', ','
+	, 'pQuote', '"'
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -126,7 +132,7 @@ cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pTgtDir:%pTgtDir%, pTgtFile:%pTgtFile%, pTgtRecord:%pTgtRecord%.'; 
+cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pTgtDir:%pTgtDir%, pTgtFile:%pTgtFile%, pTgtRecord:%pTitleRecord%.'; 
 cAttributeDim       = '}ElementAttributes_' | pDim;
 cLenASCIICode = 3;
 
