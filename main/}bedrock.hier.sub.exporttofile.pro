@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"rNz0i`D3e=9Oa4ddJ<aFq7iTfdGwV7OLa7Su[8EF56h45YSHHEEPSpceBGpG]t^S9kwBx^Io8nz7[:gf5EdR=XO3:^pbyloX:vn[GD_LrT?FJGMxYGk3YzYXm>Xd7]uh[3fW;US@K0X5\LI[;eQfQWLD6?0]Q=SFm@mEpiEphE:f^YtnlRLt15R4Kb<<HwyGa>8jb5Qf"
+565,"vLWlAS@:6o\6Gt9J]9\C3saQ4zkxjX`K=q]X5\BJG]b?\7_aCe[V\<z]Hyjc=LKkMTYOM?8RlN7[^lt2dfd`mUch0cSpu8mGxyAwX6d@gdpQj]\W3srLtIJtWb<C>>le0Kt1TPoidgG<;qVGmdOc`K5Ry<g^U?i6E;[kkUU9dIT7_3ts>5oG5=SDV=cK6b7E]3KWnhNI"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
 pDim
 pHier
@@ -35,7 +35,8 @@ pTgtFile
 pTitleRecord
 pDelim
 pQuote
-561,9
+pCharacterSet
+561,10
 1
 2
 2
@@ -45,7 +46,8 @@ pQuote
 1
 2
 2
-590,9
+2
+590,10
 pLogOutput,0
 pDim,""
 pHier,""
@@ -55,7 +57,8 @@ pTgtFile,""
 pTitleRecord,1
 pDelim,","
 pQuote,""""
-637,9
+pCharacterSet,""
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
@@ -65,6 +68,7 @@ pTgtFile,"OPTIONAL: Target File Name (Default Extension .csv)"
 pTitleRecord,"OPTIONAL: Boolean: 1 = Yes include header row"
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
+pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 577,1
 vElement
 578,1
@@ -78,7 +82,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,225
+572,230
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -267,6 +271,11 @@ Else;
 EndIf;
 sFile = pTgtDir | sOSDelim | pTgtFile;
 
+# Validate Character Set
+If(Trim( pCharacterSet ) @= '' );
+  pCharacterSet = 'TM1CS_UTF8';
+EndIf;
+
 ### Initialise & declare variables ###
 
 nRecordCount = 0;
@@ -309,7 +318,7 @@ DatasourceAsciiQuoteCharacter = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,105
+574,106
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -318,13 +327,14 @@ DatasourceAsciiQuoteCharacter = pQuote;
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
+# Set the output character set
+SetOutputCharacterSet( sFile, pCharacterSet );
 
 ### Check for error in prolog ###
 
 If( nErrors <> 0 );
   ProcessBreak;
 EndIf;
-
 
 ### Check whether to write title records ###
 
@@ -335,14 +345,14 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
   nSubsetSize = HierarchySubSetGetSize( pDim, pHier, pSub );
 
   # Write params
-  AsciiOutput(
+  TextOutput(
     sFile,
     'Export from dimension: ' | pDim | ',Hierarchy:'|pHier|',Subset:'|pSub|
     ', Total elements: ' | NumberToString( nSubsetSize ) |
     '. On ' | Date( Now, 1 ) | ' at ' | Time
    );
   # Write header records
-  AsciiOutput(
+  TextOutput(
     sFile,
     'Subix',
     'Element',
@@ -391,7 +401,7 @@ Else;
   sAliasValue = '';
 EndIf;
 
-  AsciiOutput(
+  TextOutput(
     sFile,
     sSubix,
     sElement,
