@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"xQfVAyM1Wia8\L\<ZXy@g?f`anYnCi8pw3nlvx2`a5J0\P^wEGcvo0Ccb7gxw=>CNn_phEerw@G]CXXoTV_rdr:6=wb0gk@`_j<5kQyJBANztI\AJ5<z2@;185SAzGZP<bCdklW8dzarCrvQ7]khRZUKC`laTX1v9KZsKhuVvoDFpCbm]l:a59QZa:ape:98WRO^46qG"
+565,"lNRMzjSnQ@DLaN>bbB2>VNBiij63@A0u7rwP:1q0MwOlMA3H[_o\eQ1MskB4=^hF8?k7?Lu9xMg6VDx124NyEe1huL5kqCkGWZn?23Ui1m<i9DAOL_ZU1YSq3Y_^RGVFnP7hVV6lsXnoE9DmETMKe>\Rx]oiHj2JnhGaHp4XRO`TRT428B@I\^>AcMzDInqogO4v3jF;"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,23
+560,24
 pLogoutput
 pCube
 pView
@@ -49,7 +49,8 @@ pQuote
 pTitleRecord
 pSandbox
 pSubN
-561,23
+pCharacterSet
+561,24
 1
 2
 2
@@ -73,7 +74,8 @@ pSubN
 1
 2
 1
-590,23
+2
+590,24
 pLogoutput,0
 pCube,""
 pView,""
@@ -97,7 +99,8 @@ pQuote,""""
 pTitleRecord,1
 pSandbox,""
 pSubN,0
-637,23
+pCharacterSet,""
+637,24
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
 pView,"OPTIONAL: Temporary view name"
@@ -121,6 +124,7 @@ pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 di
 pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
+pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 577,101
 V1
 V2
@@ -734,7 +738,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,364
+572,369
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -967,6 +971,11 @@ Else;
     SetUseActiveSandboxProperty( 0 );
 EndIf;
 
+# Validate Character Set
+If(Trim( pCharacterSet ) @= '' );
+  pCharacterSet = 'TM1CS_UTF8';
+EndIf;
+
 # Jump to Epilog if any errors so far
 IF ( nErrors > 0 );
     DataSourceType = 'NULL';
@@ -1104,7 +1113,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,47
+574,50
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1113,17 +1122,20 @@ EndIf;
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
+# Set the output character set
+SetOutputCharacterSet( cExportFile, pCharacterSet );
+
 ### Data Count ###
 nDataCount = nDataCount + 1;
 
 # Output the title string
 IF( nDataCount = 1 & pTitleRecord >= 1 );
-    AsciiOutput( cExportFile, Expand(sTitle) );
+    TextOutput( cExportFile, Expand(sTitle) );
 Endif; 
 
 ### Export filter into the 1st record of the file, it will be used from import process to zero out the corresponding slice, if specified
 IF( nDataCount = 1 & pTitleRecord = 2 );
-    AsciiOutput( cExportFile, Expand(sFilterRow) );
+    TextOutput( cExportFile, Expand(sFilterRow) );
 Endif;
     
 ### Export data from source version to file ###
@@ -1131,7 +1143,7 @@ If( value_is_string = 0 );
     sValue = NumberToString( nValue );
 EndIf;
 
-# Selects the correct AsciiOutput formula depending upon the number of dimensions in the cube
+# Selects the correct TextOutput formula depending upon the number of dimensions in the cube
 IF(SCAN( CHAR( 10 ), sValue ) > 0 );
     sValueCleaned = '';
     nNoChar = 1;
@@ -1149,7 +1161,7 @@ IF(SCAN( CHAR( 10 ), sValue ) > 0 );
 ENDIF;
 
 # Output data
-AsciiOutput( cExportFile, Expand(sRow) );
+TextOutput( cExportFile, Expand(sRow) );
 
 ### End Data ###
 575,38

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"pK@uC<=\lKw:1\5raHtLls5wlTL1YAW87DL8vRu2eRzX0DLdysgSwc`5FMDuPG`p5jsg07PSgbO3[^3Cg:B^7DHhI;hLFgGUK;Lj0<VYE>]3;qv^X9pn9X`6q]qX`t=ZkueXkfIE<85epmsabLX[d4sYkZfConJMLaER^zKL?rs@21L[ZDuC?Gb^vs5;\RVy^D5<A5tp"
+565,"pCVXu?MJ?8fr^q<aa>n0H@spZX;kn<1^B;s2_<24xwN]<>fKK@]fxi5fZUz[eEAg8YD6fSSG4^bo?H^rzbPMigeMOAa;DJyD3>VT=KHMRSscHeG4c8PdW>@2N?A3pF:etf>sg9D>cwdZir4c_>T?qm>8nqT^RRSFl8Mmk[rM_>FwktRbdWvWyKSi`gTp8V\uZX<6;Igb"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
 pDim
 pHier
@@ -35,7 +35,8 @@ pTitleRecord
 pDelim
 pQuote
 pLegacy
-561,9
+pCharacterSet
+561,10
 1
 2
 2
@@ -45,7 +46,8 @@ pLegacy
 2
 2
 1
-590,9
+2
+590,10
 pLogOutput,0
 pDim,""
 pHier,""
@@ -55,7 +57,8 @@ pTitleRecord,1
 pDelim,","
 pQuote,""""
 pLegacy,0
-637,9
+pCharacterSet,""
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pHier,"OPTIONAL: Hierarchy (defaults to dimension name if blank)"
@@ -65,6 +68,7 @@ pTitleRecord,"REQUIRED: Boolean 1 = Yes - Include header row"
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pLegacy,"REQUIRED: Boolean 1 = Legacy format"
+pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 577,1
 vEle
 578,1
@@ -78,7 +82,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,207
+572,212
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -268,6 +272,11 @@ Else;
     EndIf;
 EndIf;
 
+# Validate Character Set
+If(Trim( pCharacterSet ) @= '' );
+  pCharacterSet = 'TM1CS_UTF8';
+EndIf;
+
 # Construct full export filename including path
 sFilename       = pTgtDir | pTgtFile;
 sAttrDimName    = '}ElementAttributes_' | pDim ;
@@ -291,7 +300,7 @@ DatasourceAsciiQuoteCharacter = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,93
+574,96
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -300,17 +309,20 @@ DatasourceAsciiQuoteCharacter = pQuote;
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
+# Set the output character set
+SetOutputCharacterSet( sFileName, pCharacterSet );
+
 ### Record Count
 nRecordCount = nRecordCount + 1;
 
 ### Export Header Information
 ## Line 1: File Metadata information
 If( nRecordCount = 1 & pTitleRecord = 1 );
-    AsciiOutput( sFilename, 'Export from dimension Hierarchy: ' | pDim|':'|sHier | ', all elements in index order. Total elements=' |
+    TextOutput( sFilename, 'Export from dimension Hierarchy: ' | pDim|':'|sHier | ', all elements in index order. Total elements=' |
                  NumberToString( ElementCount( pDim, sHier ) ) | '. On ' | Date( Now, 1 ) | ' at ' | Time );
 
 ## Line 2: Source Dimension
-    AsciiOutput( sFilename, pDim, sHier  );
+    TextOutput( sFilename, pDim, sHier  );
 
 ## Line 3: Sort Order Information
     sSortElementType    = CELLGETS( cCubeS1, pDim, 'SORTELEMENTSTYPE' );
@@ -318,19 +330,19 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
     sSortElementSense   = CELLGETS( cCubeS1, pDim, 'SORTELEMENTSSENSE' );
     sSortComponentSense = CELLGETS( cCubeS1, pDim, 'SORTCOMPONENTSSENSE' );
     If( pLegacy = 1 );
-        AsciiOutput( sFilename, sSortElementType , sSortComponentType , sSortElementSense , sSortComponentSense  );
+        TextOutput( sFilename, sSortElementType , sSortComponentType , sSortElementSense , sSortComponentSense  );
     Else;
-        AsciiOutput( sFilename, 'Sort parameters :', sSortElementType , sSortComponentType , sSortElementSense , sSortComponentSense  );
+        TextOutput( sFilename, 'Sort parameters :', sSortElementType , sSortComponentType , sSortElementSense , sSortComponentSense  );
     EndIf;
     
 ## Line 4 (and 5?): Header Information
     If( pLegacy = 1 );
-            AsciiOutput( sFilename, 'Reserved' );
+            TextOutput( sFilename, 'Reserved' );
     EndIf;
-    AsciiOutput( sFilename, 'Reserved' );
+    TextOutput( sFilename, 'Reserved' );
     
 ## Line 5 or 6: Header Information
-    AsciiOutput( sFilename, 'Line_Type', 'Element', 'Value_1', 'Value_2', 'Value_3' );
+    TextOutput( sFilename, 'Line_Type', 'Element', 'Value_1', 'Value_2', 'Value_3' );
 
 ### Attribute Information 
     If( DimensionExists( sAttrDimName ) = 1 );
@@ -339,17 +351,17 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
         WHILE( nIndex <= nLimit );
             sElName   = DIMNM( sAttrDimName, nIndex );
             sElType   = DTYPE( sAttrDimName, sElName);
-            AsciiOutput( sFilename, 'A', sElName, sElType );
+            TextOutput( sFilename, 'A', sElName, sElType );
             nIndex = nIndex + 1;
         END; 
     EndIf;
-#    AsciiOutput( sFilename, '' );
+#    TextOutput( sFilename, '' );
 EndIf;
 
 ### Element Information
 nElIndex        = ElementIndex( pDim, sHier, vEle );
 sElType         = ElementTYPE(  pDim, sHier, vEle );
-AsciiOutput( sFilename,'E', vEle, If( pLegacy = 1,'', cType ) | sElType, If( pLegacy = 1,'', cIndex ) | NumberToString( nElIndex ) );
+TextOutput( sFilename,'E', vEle, If( pLegacy = 1,'', cType ) | sElType, If( pLegacy = 1,'', cIndex ) | NumberToString( nElIndex ) );
 
 ### Element Parents
 nElPar          = ElementParentCount( pDim, sHier, vEle );
@@ -360,7 +372,7 @@ IF( nElPar > 0 );
         sElPar  = ElementParent( pDim, sHier, vEle, nIndex );
         sElType = ElementTYPE( pDim, sHier, sElPar );
         nElWgt  = ElementWeight( pDim, sHier, sElPar, vEle );
-        AsciiOutput( sFilename, 'P', vEle, If( pLegacy = 1,'', cParent ) | sElPar, If( pLegacy = 1,'', cType ) | sElType, If( pLegacy = 1,'', cWeight ) | NumberToString( nElWgt ) );
+        TextOutput( sFilename, 'P', vEle, If( pLegacy = 1,'', cParent ) | sElPar, If( pLegacy = 1,'', cType ) | sElType, If( pLegacy = 1,'', cWeight ) | NumberToString( nElWgt ) );
         nIndex = nIndex + 1;
     END;
 ENDIF;
@@ -378,7 +390,7 @@ IF( DimensionExists( sAttrDimName ) = 1 );
             sAttrValue = ElementAttrS( pDim , sHier , vEle , sElName );
         ENDIF;
         IF( sAttrValue @<>'' & sAttrValue @<>'0' );
-            AsciiOutput( sFilename, 'V', vEle, If( pLegacy = 1,'', cAttrName ) | sElName, If( pLegacy = 1,'', cAttrValue ) | sAttrValue );
+            TextOutput( sFilename, 'V', vEle, If( pLegacy = 1,'', cAttrName ) | sElName, If( pLegacy = 1,'', cAttrValue ) | sAttrValue );
         EndIf;
         nIndex = nIndex + 1;
     END;
