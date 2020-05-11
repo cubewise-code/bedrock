@@ -323,7 +323,9 @@ While( nCubeDelimiterIndex <> 0 );
         ## Validate the View & filter parameter
         If( Trim( pView ) @= '' & Trim( pFilter ) @= '' );
           sMessage  = Expand('No view OR filter specified so the entire %sCube% cube has been cleared.');
-          LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	  IF( pLogoutput = 1 );
+          	LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	  ENDIF;
           CubeClearData( sCube );
         Else;
           # Use different view/subset for different cubes
@@ -343,7 +345,9 @@ While( nCubeDelimiterIndex <> 0 );
             ## Validate that a Filter has been provided so that a view can be created.
             If( Trim( pFilter ) @= '' );
               sMessage = Expand('View %cView% does not exist in the %sCube% cube AND no Filter has not been specified in order to create a view.');
-              LogOutput( 'INFO' , Expand( cMsgErrorContent ) );
+              IF( pLogoutput = 1 );
+	      	LogOutput( 'INFO' , Expand( cMsgErrorContent ) );
+	      ENDIF;
               #ProcessBreak;
             EndIf;
 
@@ -372,7 +376,9 @@ While( nCubeDelimiterIndex <> 0 );
               EndIf;
               ViewZeroOut( sCube, cView );
               sMessage = Expand( 'Succeeded in creating the %cView% view in the %sCube% cube and data has been cleared.' );
-              LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	      IF( pLogoutput = 1 );
+              	LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	      ENDIF;
               If ( pCubeLogging <= 1 );
                 CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
               EndIf;
@@ -485,7 +491,9 @@ While( nCubeDelimiterIndex <> 0 );
           If( Trim( pView ) @= '' & Trim( pFilter ) @= '' );
             # Clear entire cube
             sMessage  = Expand('No view OR filter specified so the entire %sCube% cube has been cleared.');
-            LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	    IF( pLogoutput = 1 );
+            	LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	    ENDIF;
             CubeClearData( sCube );
           Else;
             # Clear view cView
@@ -528,7 +536,9 @@ While( nCubeDelimiterIndex <> 0 );
                 EndIf;
                 ViewZeroOut( sCube, cView );
                 sMessage = Expand( 'Succeeded in creating the %cView% view in the %sCube% cube and data has been cleared.' );
-                LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+		IF( pLogoutput = 1 );
+                	LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+		ENDIF;
                 If ( pCubeLogging <= 1 );
                   CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
                 EndIf;
