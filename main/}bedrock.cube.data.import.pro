@@ -91,8 +91,8 @@ pDim,"OPTIONAL: Dimension"
 pSrcEle,"OPTIONAL: Source Element ( Only required if a Dimension is used.)"
 pTgtEle,"OPTIONAL: Target Element (Only required if Dimension is used.)"
 pTitleRows,"REQUIRED: Number of Title Rows to Skip"
-pDelim,"REQUIRED: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pQuote,"REQUIRED: Quote (Accepts empty quote, exactly 3 digits = ASCII code)"
+pDelim,"REQUIRED: AsciiOutput delimiter character (Default=comma, 2 or 3 digits = ASCII code)"
+pQuote,"REQUIRED: Quote (Accepts empty quote, 2 or 3 digits = ASCII code)"
 pCumulate,"REQUIRED: Accumulate Amounts (0 = Overwrite values, 1 = Accumulate values)"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
@@ -353,7 +353,8 @@ cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pCube:%pCube%, pDim:%pDim%, pSrcEle:%pSrcEle%, pTgtEle:%pTgtEle%, pTitleRows:%pTitleRows%, pDelim:%pDelim%, pQuote:%pQuote%, pCumulate:%pCumulate%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pZeroFilter:%pZeroFilter%, pMappingToNewDims:%pMappingToNewDims%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%.';   
-cLenASCIICode = 3;
+cMinLenASCIICode = 2;
+cMaxLenASCIICode = 3;
 
 pDelimiter        = TRIM(pDelim);
 sDelimDim           = TRIM(pDimDelim);
@@ -423,14 +424,12 @@ EndIf;
 If( pDelimiter @= '' );
     pDelimiter = ',';
 Else;
-    # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
-    nValid = 0;
-    If ( LONG(pDelimiter) = cLenASCIICode );
+    # If length of pDelimiter is between 2 and 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
+    nValid = 1;
+    If ( LONG(pDelimiter) <= cMaxLenASCIICode & LONG(pDelimiter) >= cMinLenASCIICode  );
       nChar = 1;
-      While ( nChar <= cLenASCIICode );
-        If( CODE( pDelimiter, nChar )>=CODE( '0', 1 ) & CODE( pDelimiter, nChar )<=CODE( '9', 1 ) );
-          nValid = 1;
-        Else;
+      While ( nChar <= LONG(pDelimiter) );
+        If( CODE( pDelimiter, nChar ) < CODE( '0', 1 ) % CODE( pDelimiter, nChar ) > CODE( '9', 1 ) );
           nValid = 0;
         EndIf;
         nChar = nChar + 1;
@@ -438,21 +437,18 @@ Else;
     EndIf;
     If ( nValid<>0 );
       pDelimiter=CHAR(StringToNumber( pDelimiter ));
-    Else;
-      pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );
     EndIf;
 EndIf;
+
 If( pQuote @= '' );
     ## Use no quote character 
 Else;
-    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
-    nValid = 0;
-    If ( LONG(pQuote) = cLenASCIICode );
+    # If length of pQuote is between 2 and 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 1;
+    If ( LONG(pQuote) <= cMaxLenASCIICode & LONG(pQuote) >= cMinLenASCIICode);
       nChar = 1;
-      While ( nChar <= cLenASCIICode );
-        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
-          nValid = 1;
-        Else;
+      While ( nChar <= LONG(pQuote) );
+        If( CODE( pQuote, nChar ) < CODE( '0', 1 ) % CODE( pQuote, nChar ) > CODE( '9', 1 ) );
           nValid = 0;
         EndIf;
         nChar = nChar + 1;
@@ -460,8 +456,6 @@ Else;
     EndIf;
     If ( nValid<>0 );
       pQuote=CHAR(StringToNumber( pQuote ));
-    Else;
-      pQuote = SubSt( Trim( pQuote ), 1, 1 );
     EndIf;
 EndIf;
 
@@ -527,24 +521,20 @@ IF( pDimension @<> '');
 ENDIF;
 
 ## Validate delimiter
-pDelimiter = TRIM(pDelim);
+
 If( pDelimiter @= '' );
   sMessage = 'Error: The file delimiter parameter is blank.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ElseIf( Long( pDelimiter ) > 1 );
-  sMessage = 'Invalid delimiter specified: ' | pDelimiter | ' field delimiter must be single character.';
+  sMessage = 'Invalid delimiter specified: ' | pDelimiter | ' field delimiter must be single character or 2-3 symbols number representing ASCII code.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 ## Validate quote character
-If( pQuote @= '' );
-  sMessage = 'Error: The quote charecter is blank.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( Long( pQuote ) > 1 );
-  sMessage = 'Invalid string qualIfier: ' | pQuote | ' quote character must be single character.';
+If( Long( pQuote ) > 1 );
+  sMessage = 'Invalid string qualIfier: ' | pQuote | ' quote character must be single character or empty string or 2-3 symbols number representing ASCII code.';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
