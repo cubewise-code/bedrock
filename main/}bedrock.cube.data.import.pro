@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"zC=DXDj_9ZV?gUe?Yn9WzFS^DRaOM3pKt8IHs:jCu2@bw6pu:cuJ`C7@Kz9iO;9G9rdy\vtxf_A\Iqoj[pIq0N4?Piq\0I1jzm[dVpMgBuhFpXdxly?L22rRGnDPaNlea4icVV2qvxYCMn7JwL9_Ku5JrMb0AP7l?H7=@463\s=wn@z9M2YTsD[aetfr8]lvdQWeB^<3"
+565,"k1`lrt2Vs?RaGBDqdKN32`:<H0^2k^Kc?guUjEH4z`tpROa``Lqr[<5hJ460qRc5qODRSu6GJMCAxz_9U7BUBs<pXXiiHemfxsJTB6`T6BSmLI?hMo6\`P8tyzwqe27T\PkLCk\dvdgP[SmC:?3eCF06cxHwZHsn<7Mw8Za4N]BC6Uw_Hb_PwkQoJJU^;4uWrnh\GC:\"
 559,1
 928,0
 593,
@@ -288,7 +288,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,915
+572,905
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1199,7 +1199,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,800
+574,805
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1579,9 +1579,14 @@ V29= sV29;
 If( nDimensionCount = 2 );
     If( CellIsUpdateable( pCube, v2, v3 ) = 1 );
         sElType = DType( sDim2, v3 );
-        sDim = SubST ( sDim2, LONG('}ElementAttributes_')+1, 9999);
+        IF( SubSt( sDim2, 1, 19 ) @= '}ElementAttributes_' % SubSt( pCube, 1, 17 ) @= '}ElementSecurity_' );
+            sDim = sDim1;
+        ENDIF;
 
-        IF( sElType @= 'AS');
+        IF( SubSt( pCube, 1, 17 ) @= '}ElementSecurity_' );
+            v4 = IF( v4 @= '', 'NONE', v4 );
+            ElementSecurityPut( v4, sDim, v2, v3 );
+        ELSEIF( sElType @= 'AS');
             AttrPutS( v4, sDim, v2, v3, 1 );
         ELSEIF( sElType @= 'AA');
             AttrPutS( v4, sDim, v2, v3 );
