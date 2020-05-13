@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.cube.data.copy"
 562,"VIEW"
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"fJSfOMaqx]yuTi79XCX9Y4AmUUt@NJmfv[VKG1eHJ?5R?KfM1?:;5=>OU?i8WUp5n`UcPs2t@Zfl9u1ky3fm\Q2hIx397qn8N8lZCnCP_Choyd9Vn1hXnUuNlCYtvA[r9\?Ei2>:BsAY4:eHee\[hC7t^<qQwBjXQWJS7@I_mm<DGEv_YEJqfv;BLfxWD;atJcAZg_kC"
+565,"tx5UKqsww<v=jkbIe`MWa>1z[c4>QXd<cTh9[DF3M4`f6GY7cRL:T_;[Ha_gVBqQ3IVwq1z\siG1@_Fu<boKSY1Y8lFU:0^99OZ23nWFS\QGM:p_GjJ@gpsRMXvCRQgf11a2RemEENnwIGkBJrV]^oTzRJ10wX1D;txEKt^e6Cat3nAz2PKjyyrz_oIdc=2\;w=BRAtk"
 559,1
 928,0
 593,
@@ -1317,7 +1317,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,452
+574,457
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1372,10 +1372,15 @@ v27 = IF(nMappedDim27 = 1, IF(v27 @= sSourceDim27 % elisanc(sDim27,sSourceDim27,
 If( nDimensionCount = 2 );
     If( CellIsUpdateable( pCube, v1, v2 ) = 1 );
         sElType = DType( sDim2, v2 );
-        IF( sElType @= 'AS' % sElType @= 'AA');
-            CellPutS( v3, pCube, v1, v2 );
+        IF( SubSt( pCube, 1, 17 ) @= '}ElementSecurity_');
+            v3 = IF( v3 @= '', 'NONE', v3 );
+            ElementSecurityPut( v3, sDim1, v1, v2 );
+        ELSEIF( sElType @= 'AA' );
+            AttrPutS( v3, sDim1, v1, v2, 1 );
+        ELSEIF( sElType @= 'AS' );
+            AttrPutS( v3, sDim1, v1, v2 );
         ELSEIF( sElType @= 'AN' );
-            CellPutN( Numbr( v3) * nFactor, pCube, v1, v2 );
+            AttrPutN( Numbr( v3) * nFactor, sDim1, v1, v2 );
         ElseIf( sElType @= 'S' );
             CellPutS( v3, pCube, v1, v2 );
         Else;

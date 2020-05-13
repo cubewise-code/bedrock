@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"jaRzvc4[91ajCHf_`1Bp0xZPC\oWDLq[tJA9zd1?1jCHg3pbh8bkA7e]xNosnS;`pNka;zm5uQSemtj28N<_0SgM@`mX6;2E@znErX7uAXF>kl<iWd3_E5Kf[:PEJFrz1upSXVb\`;T^IWKj>uAz563H>5cu>W9jP=s1jSkxW0J;hJR7XJp?CY1p<U=s9LA^z=Je^wm9"
+565,"f`X6?ca@:BwjNXiY]?mJX?gNicVrClIK__D08I:XE90kWeVKpxJtMpH54b=5dnRxxMe=<fL_cU8sF4z`Ib1W1nhJv@hx\K0_d2_jfD@9esnvKn`^Pg5fCC4OJTE?j_\@wPWeywxC8?NRpfCkJ;2>JKi]Letk2a6Jks<=?\5j@L68=1w=Ljt_cuW4FVH;vICgkcWvWyfc"
 559,1
 928,0
 593,
@@ -1650,7 +1650,7 @@ EndIf;
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,368
+574,373
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1720,16 +1720,21 @@ ElseIf( pFile > 0 );
   sV28=IF(nMappedDim28=1, Expand('%'|sMappedV28|'%'),V29);
 EndIf;
     
-################################################################################################# ########################
+##########################################################################################################
 ### Write data from source file to target cube ###########################################################
 
   If( nDimensionCount = 2 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2 ) = 1 );
       sElType = DType( sDim2, sV2 );
-      IF( sElType @= 'AS' % sElType @= 'AA');
-        CellPutS( sV3, pTgtCube, sV1, sV2 );
+      IF( SubSt( pTgtCube, 1, 17 ) @= '}ElementSecurity_');
+        sV3 = IF( sV3 @= '', 'NONE', sV3 );
+        ElementSecurityPut( sV3, sDim1, sV1, sV2 );
+      ELSEIF( sElType @= 'AA' );
+        AttrPutS( sV3, sDim1, sV1, sV2, 1 );
+      ELSEIF( sElType @= 'AS' );
+        AttrPutS( sV3, sDim1, sV1, sV2 );
       ELSEIF( sElType @= 'AN' );
-        CellPutS( NumberToString( Numbr( sV3) * nFactor ), pTgtCube, sV1, sV2 );
+        AttrPutN( Numbr( sV3) * nFactor, sDim1, sV1, sV2 );
       ElseIf( sElType @= 'S' );
         CellPutS( sV3, pTgtCube, sV1, sV2 );
       Else;
