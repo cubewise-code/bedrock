@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"olG7<eZ[xr`m8Kfa@tpMxhAH?8vwAuc_p=QVP]nxovUeLp=@fjQ]5iyc2SM;<TQDNuOTYPo:yGoJgrxhLXOT3cjgJKcjdHrMJwzi1^sIwfSKF_B3QxqeE_KdHb7mE]a?kGNHdTnDslG7\YeB?c0SHtCbzpcuDm\\M2LP?U\s4YWb;mpbnpJKUSL]<b1gf17fJ\6EE^`J"
+565,"q[8]oW:ct<\;M2_miaJL26nrvhdMThyFqnm70YA17P\1L@ouLFHsEjiB=lhTGlmyoSqizMvPjeT1=pAmkXc[RU4?qt`Fm42Pcr]5l:M>NBZkA9_aJdH>yyMO;E0RI98TenYUPN=n18][SNjuG=X4aLn_DG[\f9E7AChmRJU6nA9W[kTT:S4pQuA\x]syDvF>0;xygAW?"
 559,1
 928,0
 593,
@@ -114,7 +114,7 @@ cTempFile       = GetProcessErrorFileDirectory | cTempSub | '.csv';
 cUserName       = TM1User();
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%.' ;
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%, pAlias:%pAlias%.' ;
 sMDXExpr        = pMDXExpr;
 
 ## LogOutput parameters

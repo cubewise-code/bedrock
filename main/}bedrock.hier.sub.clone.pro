@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"yZr<9gwt9WREIEkD9tywil<bUaU>[PO3m8nopzIt5X4>bKx8aXi^62w6hb?9[sS>aM7G0Y@:31O^h;44brqWgPY>nu_kbPVWTFx[g39Qq^7@aF]@QcU]rMpzcmyK4rVRHNGHaC@F^xK:19t2Sw];kxtjL^PfAJ9czJC`7?CsFsljdv`A:<393qg3X3l360w9^3rojX[i"
+565,"b@afLFRJ[SCCzR7=;fWgoAL]IK9YkV[h3uDCPZZ3y2f1v<Zew`Id9stCVs3U8EX?d93fmLEN_sQO45Zdu0FNqzgaLzRFfjYvVIAA<`<8\AGi`qO8l`LrljbPkj=ndoDpMXTlhhz6@MZyDdhT4ObPA:hQV`vNGxZqcGx53@c`UM[OiiJ\ICy27M>Ck=@L]SuXvwVGm^dc"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,8
+560,9
 pLogOutput
 pSrcDim
 pSrcHier
@@ -34,7 +34,8 @@ pTgtDim
 pTgtHier
 pTgtSub
 pTemp
-561,8
+pAlias
+561,9
 1
 2
 2
@@ -43,7 +44,8 @@ pTemp
 2
 2
 1
-590,8
+2
+590,9
 pLogOutput,0
 pSrcDim,""
 pSrcHier,""
@@ -52,7 +54,8 @@ pTgtDim,""
 pTgtHier,""
 pTgtSub,""
 pTemp,1
-637,8
+pAlias,""
+637,9
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Dimension where the subset exists"
 pSrcHier,"OPTIONAL: Source Hierarchy (blank = same as source)"
@@ -61,6 +64,7 @@ pTgtDim,"OPTIONAL: Target dimension (blank = same as source)"
 pTgtHier,"OPTIONAL: Target Hierarchy (blank = same as Target Dimension)"
 pTgtSub,"REQUIRED: Target Subset"
 pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
+pAlias,"Optional: Set Alias for Subset"
 577,1
 vEle
 578,1
@@ -74,7 +78,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,154
+572,163
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -120,7 +124,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pSrcSub:%pSrcSub%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pTgtSub:%pTgtSub%, pTemp:%pTemp%.' ; 
+cLogInfo        = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pSrcSub:%pSrcSub%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pTgtSub:%pTgtSub%, pTemp:%pTemp%, pAlias:%pAlias%.' ; 
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -218,6 +222,15 @@ If( HierarchySubsetExists( pTgtDim, pTgtHier, pTgtsub ) = 1 );
     HierarchySubsetDeleteAllElements( pTgtDim, pTgtHier, pTgtsub );
 Else;
     HierarchySubsetCreate( pTgtDim, pTgtHier, pTgtsub, pTemp );
+EndIf;
+
+### Set Alias ###
+If(pAlias @<> '' );
+  If ( pTgtDim @= pTgtHier );
+    SubsetAliasSet( pTgtDim, pTgtsub, pAlias);
+  Else;
+    SubsetAliasSet( pTgtDim | ':' | pTgtHier, pTgtsub, pAlias);
+  EndIf;
 EndIf;
 
 # HierarchySubsetMDXGet not returning anything. Thought it might also return alias used in source subset
