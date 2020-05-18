@@ -367,9 +367,9 @@ nMetaCount = nMetaCount + 1;
 
 sVar1 = v1;
 sVar2 = v2;
-sVar3 = If( pLegacy = 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
-sVar4 = If( pLegacy = 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
-sVar5 = If( pLegacy = 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
+sVar3 = If( pLegacy <> 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
+sVar4 = If( pLegacy <> 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
+sVar5 = If( pLegacy <> 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
 
 ## Set Dimension Sort Order
 IF( v1 @= 'Sort parameters :' );
@@ -432,9 +432,9 @@ nDataCount = nDataCount + 1;
 
 sVar1 = v1;
 sVar2 = v2;
-sVar3 = If( pLegacy = 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
-sVar4 = If( pLegacy = 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
-sVar5 = If( pLegacy = 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
+sVar3 = If( pLegacy <> 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
+sVar4 = If( pLegacy <> 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
+sVar5 = If( pLegacy <> 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
 
 If( pDim @= sHier);
     sDim = pDim;
