@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.import"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"k1`lrt2Vs?RaGBDqdKN32`:<H0^2k^Kc?guUjEH4z`tpROa``Lqr[<5hJ460qRc5qODRSu6GJMCAxz_9U7BUBs<pXXiiHemfxsJTB6`T6BSmLI?hMo6\`P8tyzwqe27T\PkLCk\dvdgP[SmC:?3eCF06cxHwZHsn<7Mw8Za4N]BC6Uw_Hb_PwkQoJJU^;4uWrnh\GC:\"
+565,"pXRK1tu;gtoBOw;2a2X2kmb=nmGs=sm<\:\q\um64FTN0v1qtPx:h=w;;Lkpf0@DHMVht@QvPrsfSgl:ri?ZlU2:nEw\JcocXtd8U08mPYD\wJHFT:r1eoRy1j5jE0VM6pYh7YT`sgrA8jC`vAfuVET\_GUe?`x@0vkV[=VEZvP8D=2ic`LR^FRbPa]K3cYUw0`w813@"
 559,1
 928,0
 593,
@@ -425,8 +425,8 @@ If( pDelimiter @= '' );
     pDelimiter = ',';
 Else;
     # If length of pDelimiter is between 2 and 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code
-    nValid = 1;
     If ( LONG(pDelimiter) <= cMaxLenASCIICode & LONG(pDelimiter) >= cMinLenASCIICode  );
+      nValid = 1;
       nChar = 1;
       While ( nChar <= LONG(pDelimiter) );
         If( CODE( pDelimiter, nChar ) < CODE( '0', 1 ) % CODE( pDelimiter, nChar ) > CODE( '9', 1 ) );
@@ -434,9 +434,9 @@ Else;
         EndIf;
         nChar = nChar + 1;
       End;
-    EndIf;
-    If ( nValid<>0 );
-      pDelimiter=CHAR(StringToNumber( pDelimiter ));
+      If ( nValid<>0 );
+        pDelimiter=CHAR(StringToNumber( pDelimiter ));
+      EndIf;
     EndIf;
 EndIf;
 
@@ -444,8 +444,8 @@ If( pQuote @= '' );
     ## Use no quote character 
 Else;
     # If length of pQuote is between 2 and 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
-    nValid = 1;
     If ( LONG(pQuote) <= cMaxLenASCIICode & LONG(pQuote) >= cMinLenASCIICode);
+      nValid = 1;
       nChar = 1;
       While ( nChar <= LONG(pQuote) );
         If( CODE( pQuote, nChar ) < CODE( '0', 1 ) % CODE( pQuote, nChar ) > CODE( '9', 1 ) );
@@ -453,9 +453,9 @@ Else;
         EndIf;
         nChar = nChar + 1;
       End;
-    EndIf;
-    If ( nValid<>0 );
-      pQuote=CHAR(StringToNumber( pQuote ));
+      If ( nValid<>0 );
+        pQuote=CHAR(StringToNumber( pQuote ));
+      EndIf;
     EndIf;
 EndIf;
 
