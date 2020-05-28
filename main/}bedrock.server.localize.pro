@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rEhe`eE]R5dbjurNDRaPT]spc4]ut0hJ4s7^bOQBv[F96lINER[zwMrjxmjLSH8=HgDBKSYYl;ZLWBEBHamak<RDHc6Sb`P:F1A0Kbr8NT:lMtecu\>OuOdX3h>W]u><2ATZ0P?aZ=Zhid:7r]w:OQ]OV9Kq07v1\hathJ]r3s3Rhygf\n^V2Xs28p5dC5\mDDM]qb<n"
+565,"tsu<7Ri5[<p?otuFueWnaXzkij^CA:uGDgyg\MciLEm3bh\i;f1KVuwNnb[v18s^dM@m]QR`X6M9Kw8kUDrhWRz]BzuTeoUWHxgbMbiw0M3T=T:WmFihTm0l>TUzyy2ES\B\w^lg8>DU@]_qK5=824<C2uz<Lz>9^W3[h2Y`PSQl4bN@We\tUuE=TflIwCe\id\dnH40"
 559,1
 928,0
 593,
@@ -25,22 +25,30 @@
 569,0
 592,0
 599,1000
-560,3
+560,5
 pLogOutput
 pDim
+pCube
 pDelim
-561,3
+pSub
+561,5
 1
 2
 2
-590,3
+2
+1
+590,5
 pLogOutput,0
 pDim,""
+pCube,""
 pDelim,"&"
-637,3
+pSub,0
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"REQUIRED: Dimension (Delimited list & wildcards (*) acceptable)"
-pDelim,"REQUIRED: delimiter character for dimension list. (Defaults to & if blank)"
+pDim,"OPTIONAL: Dimension (Delimited list & wildcards (*) acceptable)"
+pCube,"OPTIONAL: Cube( Delimited list & wildcards (*) acceptable)"
+pDelim,"OPTIONAL: delimiter character for dimension list. (Defaults to & if blank)"
+pSub,"OPTIONAL: If localizing attributes for a dimension also localize subset names?"
 577,0
 578,0
 579,0
@@ -48,12 +56,12 @@ pDelim,"REQUIRED: delimiter character for dimension list. (Defaults to & if blan
 581,0
 582,0
 603,0
-572,155
+572,258
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.localize', 'pLogOutput', pLogOutput,
-	    'pDim', '', 'pDelim', '&'
+	    'pDim', '', 'pCube', '', 'pDelim', '&', 'pSub', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -67,10 +75,13 @@ EndIf;
 
 #Region @DOC
 # Description:
-# This process localizes cube & dimension names & optionally localizes attributes for any dimension
+# This process localizes cube & dimension names & optionally localizes:
+# * attributes for specified dimension(s)
+# * subsets for specified dimension(s)
+# * views for specified cube(s)
 
 # Note:
-# In no dimension is passed, just cube & dimension names will be localized
+# If no dimension or cube names are passed, then just cube & dimension names will be localized.
 #EndRegion @DOC
 
 ### Global Variables
@@ -97,39 +108,42 @@ ENDIF;
 nErrors = 0;
 
 If( Trim( pDelim ) @= '' );
-  pDelim = '&';
+    pDelim = '&';
+EndIf;
+
+If( pSub <> 1 );
+    pSub = 0;
 EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+    ProcessBreak;
 EndIf;
 
 IF( CubeExists( '}CubeAttributes' ) = 0 );
-  CubeAttrInsert( '', 'Caption', 'S');
+    CubeAttrInsert( '', 'Caption', 'S');
 ELSEIF( DimIx( '}CubeAttributes', 'Caption' ) = 0 );
-  CubeAttrInsert( '', 'Caption', 'S');
+    CubeAttrInsert( '', 'Caption', 'S');
 ENDIF;
 IF( CubeExists( '}DimensionAttributes' ) = 0 );
-  DimensionAttrInsert( '', 'Caption', 'S');
+    DimensionAttrInsert( '', 'Caption', 'S');
 ELSEIF( DimIx( '}DimensionAttributes', 'Caption' ) = 0 );
-  DimensionAttrInsert( '', 'Caption', 'S');
+    DimensionAttrInsert( '', 'Caption', 'S');
 ENDIF;
 
 IF( CubeExists( '}LocalizedCubeAttributes' ) = 0 );
-  CubeAttrPutS( '', '}CubeAttributes', 'Caption', 'en');
+    CubeAttrPutS( '', '}CubeAttributes', 'Caption', 'en');
 ENDIF;
 IF( CubeExists( '}LocalizedDimensionAttributes' ) = 0 );
-  DimensionAttrPutS( '', '}Cultures', 'Caption', 'en');
+    DimensionAttrPutS( '', '}Cultures', 'Caption', 'en');
 ENDIF;
 
-
-## Localization of attributes for any dimension passed
+### Localization of attributes (& subsets) for any dimension passed
 # Loop through dimensions in pDim 
 sDims               = Trim( pDim );
 nDimDelimiterIndex  = 1;
 # Get 1st dimension
-While( nDimDelimiterIndex <> 0 );
+While( pDim @<> '' & nDimDelimiterIndex > 0 );
     # Extract 1st dimension > sDim
     nDimDelimiterIndex = Scan( pDelim, sDims );
     If( nDimDelimiterIndex = 0 );
@@ -148,23 +162,38 @@ While( nDimDelimiterIndex <> 0 );
         Else;
             sAttrDim = '}ElementAttributes_' | sDim;
             sLocAttrDim = '}LocalizedElementAttributes_' | sDim; 
+            sSubDim = '}Subsets_' | sDim;
+            sSubAttr = '}SubsetAttributes_' | sDim;
+            sLocSubAttr = '}LocalizedSubsetAttributes_' | sDim;
             IF( CubeExists( sAttrDim ) = 0 );
-              AttrInsert( sDim, '', 'Caption', 'S' );
+                AttrInsert( sDim, '', 'Caption', 'S' );
             ELSEIF( DimIx( sAttrDim, 'Caption' ) = 0 );
-              AttrInsert( sDim, '', 'Caption', 'S' );
+                AttrInsert( sDim, '', 'Caption', 'S' );
             ENDIF;
             IF( CubeExists( sLocAttrDim ) = 0 );
-              sFirstEle = '';
-              sFirstEle = DimNm( sDim, 1 );
-              IF( sFirstEle @<> '' );
-                AttrPutS( '', sDim, sFirstEle, 'Caption', 'en' );
-              ENDIF;
+                sFirstEle = '';
+                sFirstEle = DimNm( sDim, 1 );
+                IF( sFirstEle @<> '' );
+                    AttrPutS( '', sDim, sFirstEle, 'Caption', 'en' );
+                ENDIF;
             ENDIF;
+            If( pSub = 1 & DimSiz( sSubDim ) > 0 );
+                If( CubeExists( sSubAttr ) = 0 );
+                    SubsetAttrInsert( sDim, '', 'Caption', 'S' );
+                EndIf;
+                If( CubeExists( sLocSubAttr ) = 0 );
+                    sSub = DimNm( sSubDim, 1 );
+                    If( Scan( ':', sSub ) > 0 );
+                        sDim = sDim |':'| SubSt( sSub, 1, Scan( ':', sSub ) - 1 );
+                        sSub = SubSt( sSub, Scan( ':', sSub ) + 1, Long( sSub ) );
+                    EndIf;
+                    SubsetAttrPutS( '', sDim, sSub, 'Caption', 'en' );
+                EndIf;
+            EndIf;
         Endif;
     Else;
         # Create subset of dimensions using Wildcard to loop through dimensions in pDim with wildcard
-        sDimExp = '"'|sDim|'"';
-        sMdx = '{TM1FILTERBYPATTERN( EXCEPT ( EXCEPT ( TM1SUBSETALL( [}Dimensions] ) , TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions] ) , "*:*") ), TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions] ) , "}ElementAttributes_*") ) ,'| sDimExp | ')}';
+        sMdx = Expand('{TM1FILTERBYPATTERN( EXCEPT ( EXCEPT ( TM1SUBSETALL( [}Dimensions] ) , TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions] ) , "*:*") ), TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions] ) , "}ElementAttributes_*") ) , "%sDim%" )}');
         If( SubsetExists( '}Dimensions' , cTempSub ) = 1 );
             # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
             SubsetMDXSet( '}Dimensions' , cTempSub, sMDX );
@@ -182,25 +211,107 @@ While( nDimDelimiterIndex <> 0 );
                 sMessage = Expand( 'Dimension %sDim% does not exist.' );
                 LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
             Else;
-              sAttrDim = '}ElementAttributes_' | sDim;
-              sLocAttrDim = '}LocalizedElementAttributes_' | sDim; 
-              IF( CubeExists( sAttrDim ) = 0 );
-                AttrInsert( sDim, '', 'Caption', 'S' );
-              ELSEIF( DimIx( sAttrDim, 'Caption' ) = 0 );
-                AttrInsert( sDim, '', 'Caption', 'S' );
-              ENDIF;
-              IF( CubeExists( sLocAttrDim ) = 0 );
-                sFirstEle = '';
-                sFirstEle = DimNm( sDim, 1 );
-                IF( sFirstEle @<> '' );
-                  AttrPutS( '', sDim, sFirstEle, 'Caption', 'en' );
+                sAttrDim = '}ElementAttributes_' | sDim;
+                sLocAttrDim = '}LocalizedElementAttributes_' | sDim; 
+                sSubDim = '}Subsets_' | sDim;
+                sSubAttr = '}SubsetAttributes_' | sDim;
+                sLocSubAttr = '}LocalizedSubsetAttributes_' | sDim;
+                IF( CubeExists( sAttrDim ) = 0 );
+                    AttrInsert( sDim, '', 'Caption', 'S' );
+                ELSEIF( DimIx( sAttrDim, 'Caption' ) = 0 );
+                    AttrInsert( sDim, '', 'Caption', 'S' );
                 ENDIF;
-              ENDIF;
+                IF( CubeExists( sLocAttrDim ) = 0 );
+                    sFirstEle = '';
+                    sFirstEle = DimNm( sDim, 1 );
+                    IF( sFirstEle @<> '' );
+                        AttrPutS( '', sDim, sFirstEle, 'Caption', 'en' );
+                    ENDIF;
+                ENDIF;
+                If( pSub = 1 );
+                    If( CubeExists( sSubAttr ) = 0 );
+                        SubsetAttrInsert( sDim, '', 'Caption', 'S' );
+                    EndIf;
+                    If( CubeExists( sLocSubAttr ) = 0 & DimSiz( sSubDim ) > 0 );
+                        sSub = DimNm( sSubDim, 1 );
+                        If( Scan( ':', sSub ) > 0 );
+                            sDim = sDim |':'| SubSt( sSub, 1, Scan( ':', sSub ) - 1 );
+                            sSub = SubSt( sSub, Scan( ':', sSub ) + 1, Long( sSub ) );
+                        EndIf;
+                        SubsetAttrPutS( '', sDim, sSub, 'Caption', 'en' );
+                    EndIf;
+                EndIf;
             Endif;
             nCountDim = nCountDim - 1;
         End;
     EndIf;
-   
+End;
+
+### Localization of views for any cube passed
+# Loop through cubes in pCube 
+sCubes              = Trim( pCube );
+nCubDelimiterIndex  = 1;
+# Get 1st Cube
+While( pCube @<> '' & nCubDelimiterIndex > 0 );
+    # Extract 1st cube > sCube
+    nCubDelimiterIndex = Scan( pDelim, sCubes );
+    If( nCubDelimiterIndex = 0 );
+        sCube       = sCubes;
+    Else;
+        sCube       = Trim( SubSt( sCubes, 1, nCubDelimiterIndex - 1 ) );
+        sCubes      = Trim( Subst( sCubes, nCubDelimiterIndex + Long(pDelim), Long( sCubes ) ) );
+    EndIf;
+    
+    # Check if sCube has wildcard
+    If( Scan( '*', sCube ) = 0);
+        If( CubeExists(sCube) = 0 );
+            nErrors = 1;
+            sMessage = Expand( 'Cube "%sCube%" does not exist.' );
+            LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
+        Else;
+            sViewDim = '}Views_' | sCube;
+            sViewAttr = '}ViewAttributes_' | sCube;
+            sLocViewAttr = '}LocalizedViewAttributes_' | sCube;
+            IF( CubeExists( sViewAttr ) = 0 & DimensionExists( sViewDim ) = 1 );
+                ViewAttrInsert( sCube, '', 'Caption', 'S' );
+            ENDIF;
+            IF( CubeExists( sLocViewAttr ) = 0 & DimSiz( sViewDim ) >= 1 );
+                ViewAttrPutS( '', sCube, DimNm( sViewDim, 1 ), 'Caption', 'en' );
+            ENDIF;
+        Endif;
+    Else;
+        # Create subset of cubes using Wildcard to loop through cubes in pCube with wildcard
+        sMdx = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [}Cubes] ),  "%sCube%" )}');
+        If( SubsetExists( '}Cubes' , cTempSub ) = 1 );
+            # If a delimited list of Cub names includes wildcards then we may have to re-use the subset multiple times
+            SubsetMDXSet( '}Cubes' , cTempSub, sMDX );
+        Else;
+            # temp subset, therefore no need to destroy in epilog
+            SubsetCreatebyMDX( cTempSub, sMDX, '}Cubes' , 1 );
+        EndIf;
+        
+        # Loop through cubes in subset created based on wildcard
+        nCountCub = SubsetGetSize( '}Cubes' , cTempSub );
+        While( nCountCub >= 1 );
+            sCube = SubsetGetElementName( '}Cubes' , cTempSub, nCountCub );
+            If( CubeExists(sCube) = 0 );
+                nErrors = 1;
+                sMessage = Expand( 'Cube %sCube% does not exist.' );
+                LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
+            Else;
+                sViewDim = '}Views_' | sCube;
+                sViewAttr = '}ViewAttributes_' | sCube;
+                sLocViewAttr = '}LocalizedViewAttributes_' | sCube;
+                IF( CubeExists( sViewAttr ) = 0 & DimensionExists( sViewDim ) = 1 );
+                    ViewAttrInsert( sCube, '', 'Caption', 'S' );
+                ENDIF;
+                IF( CubeExists( sLocViewAttr ) = 0 & DimSiz( sViewDim ) >= 1 );
+                    ViewAttrPutS( '', sCube, DimNm( sViewDim, 1 ), 'Caption', 'en' );
+                ENDIF;
+            Endif;
+            nCountCub = nCountCub - 1;
+        End;
+    EndIf;
 End;
 
 ### End Prolog ###
