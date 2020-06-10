@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"yAK7H?;_h@ko^>cN?b<0t@5@pyAHLO7JJtiew?y_X8Tucrg0<U[KPbX;[5SAEOia3[roW^6PpsgOgK>qCEQ\9Q9]Hek3Y\k<^v?MbV^7FpcY\~BN7gN\j>19^J5UEV6?ujkD`?yOpjBNJB20e^>}3Zkf@DqpSo??Nh?gCTtdMsP'oDLFWR?Wo8zvVcgqFT`<f?JcY@C"
+565,"vFjr9\y>]e_>aQaDF`:miEy6LMLXh=;JzI[[9<wiq6`?xuG4qG<`>4UXR2S1TZ`QP9?jg5R;e@f?8CoJ26[D`lHoXPd{iBlwPOB:MxgCzY49Mv}BNoN==U^\hCICQ5zH8rJe4zn:ebtHn=730=o<MUyMW=gNR7:7M3bO29TTyB9h.O^uv0w`1nXs52H>CLtclwpHbHM^"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,8
+560,9
 pLogOutput
 pDim
 pHier
@@ -34,7 +34,8 @@ pSrcFile
 pDelim
 pQuote
 pLegacy
-561,8
+pUnwind
+561,9
 1
 2
 2
@@ -43,7 +44,8 @@ pLegacy
 2
 2
 1
-590,8
+1
+590,9
 pLogOutput,0
 pDim,""
 pHier,""
@@ -52,7 +54,8 @@ pSrcFile,""
 pDelim,","
 pQuote,""""
 pLegacy,0
-637,8
+pUnwind,1
+637,9
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pHier,"OPTIONAL: Target Hierarchy (defaults to dimension name if blank)"
@@ -61,6 +64,7 @@ pSrcFile,"OPTIONAL: Source File Name (defaults to 'Dimension Hierarchy _Export.c
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pLegacy,"OPTIONAL: 1 = Legacy format (bedrock v3) 0 or empty = new bedrock v4 format"
+pUnwind,"OPTIONAL: 1 = unwind elements 0 = like for like copy which may result in lost elements / data"
 577,6
 V1
 V2
@@ -104,16 +108,21 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,237
+572,252
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.hier.import', 'pLogOutput', pLogOutput,
-    	'pDim', '', 'pHier', '',
-    	'pSrcDir', '', 'pSrcFile', '',
-    	'pDelim', ',', 'pQuote', '"',
-    	'pLegacy', 0
-	);
+ExecuteProcess( '}bedrock.hier.import'
+    , 'pLogOutput', pLogOutput
+    , 'pDim', ''
+    , 'pHier', ''
+    , 'pSrcDir', ''
+    , 'pSrcFile', ''
+    , 'pDelim', ','
+    , 'pQuote', '"'
+    , 'pLegacy', 0
+    , 'pUnwind' , 1
+);
 EndIf;
 #EndRegion CallThisProcess
 
@@ -145,6 +154,8 @@ EndIf;
 # Valid dimension name (pDim) is mandatory otherwise the process will abort.
 # If needed, custom delimiter might be used by specifying parameter pDelim value as either exactly one
 # character or as a 3-digit (decimal) ASCII code. For example to use TAB as a delimiter, use 009.
+# pUnwind provides the option to 1 (unwind) or 0 (delete) elements in the target dimension. Default is to unwind,
+# care should be taken when using option 0 otherwise data loss may occur.
 
 # Caution: Process was redesigned in Bedrock4 but is able to process dimension extracts from prior
 # versions of Bedrock in legacy mode (pLegacy = 1).
@@ -164,7 +175,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%.';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%, pUnwind:%pUnwind%.';
 cLenASCIICode = 3;
 
 pDelim  = TRIM(pDelim);
@@ -304,12 +315,16 @@ EndIf;
 
 ### Prepare target dimension ###
 If( HierarchyExists( pDim, sHier ) = 1 );
+    IF ( pUnwind = 1 ) ;
     ExecuteProcess('}bedrock.hier.unwind',
 	'pLogOutput',pLogOutput,
 	'pDim',pDim,
 	'pHier',sHier,
 	'pConsol','',
 	'pRecursive',1);
+    ELSEIF ( pUnwind = 0 ) ;
+        DimensionDeleteAllElements( pDim );
+    ENDIF ;
 Else;
     ExecuteProcess('}bedrock.hier.create',
 	'pLogOutput',pLogOutput,
@@ -319,7 +334,11 @@ EndIf;
 
 If( nErrors = 0 );
     If( HierarchyExists( pDim, pHier ) = 1 );
-        sMessage = 'Dimension unwound: ' | pDim|':'|sHier;
+        IF ( pUnwind = 1 ) ;
+            sMessage = 'Dimension unwound: ' | pDim|':'|sHier;
+        ELSEIF ( pUnwind = 0 ) ;
+            sMessage = 'Dimension rebuilt: ' | pDim|':'|sHier;
+        ENDIF ;
     Else;
         sMessage = 'Dimension created: ' | pDim|':'|sHier;
     EndIf;
@@ -413,7 +432,7 @@ ELSEIF( V1 @= 'P' );
 
 ENDIF;
 
-574,49
+574,55
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -446,6 +465,9 @@ Endif;
 IF( V1 @= 'V' );
     sAttrType = DTYPE( sAttrDimName , sVar3 );
     IF ( pDim @<> sHier );
+        IF ( CellIsUpdateable ( '}ElementAttributes_' | pDim, sVar2, sVar3 ) = 0 ) ;
+            ItemSkip ;
+        ENDIF ;
         IF( sAttrType @= 'AN' );
             ElementAttrPUTN( StringToNumber( sVar4 ), pDim, sHier, sVar2, sVar3 );
         ELSEIF( sAttrType @= 'AA' );
@@ -454,6 +476,9 @@ IF( V1 @= 'V' );
             ElementATTRPUTS( sVar4, pDim, sHier, sVar2, sVar3 );
         ENDIF;
     ELSE;
+        IF ( CellIsUpdateable ( '}ElementAttributes_' | pDim , sVar2, sVar3 ) = 0 ) ;
+            ItemSkip ;
+        ENDIF ;
         IF( sAttrType @= 'AN' );
             AttrPUTN( StringToNumber( sVar4 ), pDim, sVar2, sVar3 );
         ELSEIF( sAttrType @= 'AA' );
@@ -490,7 +515,7 @@ If ( pLogoutput = 1 );
 EndIf;
 
 ### End Epilog ###
-576,
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
 930,0
 638,1
 804,0
