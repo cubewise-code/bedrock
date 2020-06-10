@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"vFjr9\y>]e_>aQaDF`:miEy6LMLXh=;JzI[[9<wiq6`?xuG4qG<`>4UXR2S1TZ`QP9?jg5R;e@f?8CoJ26[D`lHoXPd{iBlwPOB:MxgCzY49Mv}BNoN==U^\hCICQ5zH8rJe4zn:ebtHn=730=o<MUyMW=gNR7:7M3bO29TTyB9h.O^uv0w`1nXs52H>CLtclwpHbHM^"
+565,"vt_GxPZI:fmxpNKhk^D^sJyyQGjAebnF:qRQW3PGd_Tb1{WsJfj\o=RJ37SAlfeQlrqjW^Tbo:jO>DOUz?SLBfqy85e[eDvUrTu9]6[=H;<taTwBn654v6K`=kUBZ5zRkyza4Sxqwt;DnFX?PFr2}9M;KiM>mhwX\yjPHUdg_hz(_lLqpC<Ji8kNT1=FHDdlZ<INsC4"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
 pDim
 pHier
@@ -35,7 +35,8 @@ pDelim
 pQuote
 pLegacy
 pUnwind
-561,9
+pConsol
+561,10
 1
 2
 2
@@ -45,7 +46,8 @@ pUnwind
 2
 1
 1
-590,9
+2
+590,10
 pLogOutput,0
 pDim,""
 pHier,""
@@ -55,7 +57,8 @@ pDelim,","
 pQuote,""""
 pLegacy,0
 pUnwind,1
-637,9
+pConsol,"*"
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pHier,"OPTIONAL: Target Hierarchy (defaults to dimension name if blank)"
@@ -65,6 +68,7 @@ pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digi
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pLegacy,"OPTIONAL: 1 = Legacy format (bedrock v3) 0 or empty = new bedrock v4 format"
 pUnwind,"OPTIONAL: 1 = unwind elements 0 = like for like copy which may result in lost elements / data"
+pConsol,"OPTIONAL: Target Consolidation, accepts wildcards ( * will unwind ALL). Note: ignored if pUnwind=0"
 577,6
 V1
 V2
@@ -108,20 +112,15 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,252
+572,262
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-ExecuteProcess( '}bedrock.hier.import'
-    , 'pLogOutput', pLogOutput
-    , 'pDim', ''
-    , 'pHier', ''
-    , 'pSrcDir', ''
-    , 'pSrcFile', ''
-    , 'pDelim', ','
-    , 'pQuote', '"'
-    , 'pLegacy', 0
-    , 'pUnwind' , 1
+ExecuteProcess( '}bedrock.hier.import', 'pLogOutput', pLogOutput
+    , 'pDim', '', 'pHier', ''
+    , 'pSrcDir', '', 'pSrcFile', ''
+    , 'pDelim', ',', 'pQuote', '"'
+    , 'pLegacy', 0, 'pUnwind' , 1, 'pConsol', '*'
 );
 EndIf;
 #EndRegion CallThisProcess
@@ -175,7 +174,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%, pUnwind:%pUnwind%.';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%, pUnwind:%pUnwind%, pConsol:%pConsol%';
 cLenASCIICode = 3;
 
 pDelim  = TRIM(pDelim);
@@ -262,6 +261,17 @@ If( FileExists( sFilename ) = 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate unwind
+If( pUnwind <> 0 );
+    pUnwind = 1;
+EndIf;
+
+# Validate consolidation to unwind
+If( pConsol @= '' );
+    # Only check if parameter is passed as empty as this is invalid. Validation in case of element not existng in dimension will be evaluated in the unwind sub-process
+    pConsol = '*';
+EndIf;
+
 # Validate file delimiter & quote character
 If( pDelim @= '' );
     pDelim = ',';
@@ -315,16 +325,20 @@ EndIf;
 
 ### Prepare target dimension ###
 If( HierarchyExists( pDim, sHier ) = 1 );
-    IF ( pUnwind = 1 ) ;
-    ExecuteProcess('}bedrock.hier.unwind',
-	'pLogOutput',pLogOutput,
-	'pDim',pDim,
-	'pHier',sHier,
-	'pConsol','',
-	'pRecursive',1);
-    ELSEIF ( pUnwind = 0 ) ;
-        DimensionDeleteAllElements( pDim );
-    ENDIF ;
+    If( pUnwind = 1 );
+    ExecuteProcess('}bedrock.hier.unwind', 'pLogOutput', pLogOutput,
+    	'pDim', pDim,
+    	'pHier', sHier,
+    	'pConsol', pConsol,
+    	'pRecursive', 1
+    );
+    ElseIf( pUnwind = 0 );
+        If( pDim @= pHier );
+            DimensionDeleteAllElements( pDim );
+        Else;
+            HierarchyDeleteAllElements( pDim, pHier );
+        EndIf;
+    EndIf;
 Else;
     ExecuteProcess('}bedrock.hier.create',
 	'pLogOutput',pLogOutput,
