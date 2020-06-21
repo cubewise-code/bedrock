@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"olG7<eZ[xr`m8Kfa@tpMxhAH?8vwAuc_p=QVP]nxovUeLp=@fjQ]5iyc2SM;<TQDNuOTYPo:yGoJgrxhLXOT3cjgJKcjdHrMJwzi1^sIwfSKF_B3QxqeE_KdHb7mE]a?kGNHdTnDslG7\YeB?c0SHtCbzpcuDm\\M2LP?U\s4YWb;mpbnpJKUSL]<b1gf17fJ\6EE^`J"
+565,"kXHTAuWawMkaaOaM4GhoQfruGZ]mXykJul8lsPnUjMvsvXj=RYcwE`10??X_hm`<iTS>9Pd7?h3BnsM?tJ_6lQAqUS6_H_@h<qY`<e9HpU>@I2w_?tJQ4ynT6vlI<796wiEHay8;Z:2Xl4>YmjjjH`tRx`_>lOx@cBse0wA9PZwTd8;FL3lNmFm^[8[6TEArv^9cuYNO"
 559,1
 928,0
 593,
@@ -68,14 +68,14 @@ pAlias,"Optional: Set Alias for Subset"
 581,0
 582,0
 603,0
-572,147
+572,150
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.bymdx', 'pLogOutput', pLogOutput,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pMDXExpr', '',
-    	'pConvertToStatic', 1, 'pTemp', 1, 'pAlias', ''
+    	'pConvertToStatic', 1, 'pTemp', 1
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -114,7 +114,7 @@ cTempFile       = GetProcessErrorFileDirectory | cTempSub | '.csv';
 cUserName       = TM1User();
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%.' ;
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%, pAlias:%pAlias%.' ;
 sMDXExpr        = pMDXExpr;
 
 ## LogOutput parameters
@@ -206,7 +206,10 @@ If( nErrors = 0 );
 EndIf;
 
 ### Set Alias ###
-If(pAlias @<> '' );
+If ( pAlias @<> '' & 
+  ElementIndex ( Expand ( '}ElementAttributes_%pDim%' ), Expand ( '}ElementAttributes_%sHier%' ), pAlias )  > 0 & 
+  ElementType ( Expand ( '}ElementAttributes_%pDim%' ), Expand ( '}ElementAttributes_%sHier%' ), pAlias ) @= 'AA'
+);
   If ( pDim @= sHier );
     SubsetAliasSet( pDim, pSub, pAlias);
   Else;
