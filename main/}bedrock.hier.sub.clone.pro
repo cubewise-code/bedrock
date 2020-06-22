@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"v1:zqCZkYO[kZ]?vlk5S8SaiW0LKr84Y45QKum7a<r3Io`fZEOXpb^hzr<jwiC?IBm2XevLdom<;Z=n6[D_0UM44g5_Z@zR][v2gX_AxF3RM1;j:DjWsUXSJzBJjR]59DQ\T]A371Je>iu7\NJfic3<8;9Ak2kxgtxLt`nXM]f8OMoW7\1Om\PlRGm?=0X@Q9A8Wq1k;"
+565,"aaqQx[na2h`rCxp<e>x>XW@OVw:9Fbz3XS?px94PdPWOWk?0;alHbAGXh3PTYVgkjJc>R5zZrY@IxrK6FX3tM=UwFf:fkO5=:Rrro4?goSH3Ij[?FGg3^HaCc_[1rBuKG`Uy;E1]B7eXfwaRt8HMgT5<EZIyFD?lYDie]Q?U98>mjKX@yL6xjeAOHgYHeTHr\EgeWrM3"
 559,1
 928,0
 593,
@@ -78,7 +78,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,180
+572,181
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -214,18 +214,19 @@ EndIf;
 
 # Validate Alias exists
 If ( pAlias @<> '' & 
-    DimIx ( Expand ( '}ElementAttributes_%pTgtDim%:}ElementAttributes_%pTgtHier%' ), pAlias ) = 0
+    DimIx ( Expand ( '}ElementAttributes_%pTgtDim%' ), pAlias ) = 0
 );
   nErrors = 1;
-  sMessage = 'Alias does not exist in dimension %pTgtDim% hierarchy %pTgtHier%.';
+  sMessage = 'Alias does not exist in dimension %pTgtDim%.';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;  
 
+# Validate alias attribute name is actually an alias
 If ( pAlias @<> '' & 
-    Dtype ( Expand ( '}ElementAttributes_%pTgtDim%:}ElementAttributes_%pTgtHier%' ), pAlias ) @<> 'AA'
+    Dtype ( Expand ( '}ElementAttributes_%pTgtDim%' ), pAlias ) @<> 'AA'
 );
   nErrors = 1;
-  sMessage = 'Attribute %pAlias% is not an alias in dimension %pTgtDim% hierarchy %pTgtHier%.';
+  sMessage = 'Attribute %pAlias% is not an alias in dimension %pTgtDim%.';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;  
 

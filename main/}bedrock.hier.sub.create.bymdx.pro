@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wUfmBA[hO@l_nFk24bZqU2xa:Bxejh@bpIj0Z0CeIPrAI>mw=DG6CO^_H9SviE3;4gYi<i4uL:ZQTfB:1=KBgIxh:rfu>=0BN5QykL@7ZxKI]bhwZF0z9^@Y]dr?YApsCF3wIsWFq`@nW5uUBuux?_u=GK>4tM5l5Mc71XA:7=tL7U;poU5Iw>KlTZxESGU;P59A0C7_"
+565,"u\_^7k?H=8ajJDl]Drm^JaBnTKEec7qh>A81?hMI>nIhr5ir^TX?ZtXB<3BE`a<4E^F[:YPdXdwV6^MEp?lYx5]f8DW4OvjE\lVMkIRIT]AQH3jttU4gol0JQbeB[SQtLKa@zxZTgRXMk9tdAfuOwHZNaSp[u;O7;4;0N32^Y;XaH5kYr<gKbCHfuTHpKtwdlN_?VTrW"
 559,1
 928,0
 593,
@@ -189,19 +189,19 @@ EndIf;
 
 # Validate Alias exists
 If ( pAlias @<> '' & 
-    DimIx ( Expand ( '}ElementAttributes_%pDim%:}ElementAttributes_%pHier%' ), pAlias ) = 0
+    DimIx ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) = 0
 );
   nErrors = 1;
-  sMessage = 'Alias does not exist in dimension %pDim% hierarchy %pHier%.';
+  sMessage = 'Alias does not exist in dimension %pDim%.';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;  
 
 # Validate alias attribute name is actually an alias
 If ( pAlias @<> '' & 
-    Dtype ( Expand ( '}ElementAttributes_%pDim%:}ElementAttributes_%pHier%' ), pAlias ) @<> 'AA'
+    Dtype ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) @<> 'AA'  
 );
   nErrors = 1;
-  sMessage = 'Attribute %pAlias% is not an alias in dimension %pDim% hierarchy %pHier%.';
+  sMessage = 'Attribute %pAlias% is not an alias in dimension %pDim%.';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
