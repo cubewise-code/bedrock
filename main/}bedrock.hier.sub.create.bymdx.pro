@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"olG7<eZ[xr`m8Kfa@tpMxhAH?8vwAuc_p=QVP]nxovUeLp=@fjQ]5iyc2SM;<TQDNuOTYPo:yGoJgrxhLXOT3cjgJKcjdHrMJwzi1^sIwfSKF_B3QxqeE_KdHb7mE]a?kGNHdTnDslG7\YeB?c0SHtCbzpcuDm\\M2LP?U\s4YWb;mpbnpJKUSL]<b1gf17fJ\6EE^`J"
+565,"u\_^7k?H=8ajJDl]Drm^JaBnTKEec7qh>A81?hMI>nIhr5ir^TX?ZtXB<3BE`a<4E^F[:YPdXdwV6^MEp?lYx5]f8DW4OvjE\lVMkIRIT]AQH3jttU4gol0JQbeB[SQtLKa@zxZTgRXMk9tdAfuOwHZNaSp[u;O7;4;0N32^Y;XaH5kYr<gKbCHfuTHpKtwdlN_?VTrW"
 559,1
 928,0
 593,
@@ -68,14 +68,14 @@ pAlias,"Optional: Set Alias for Subset"
 581,0
 582,0
 603,0
-572,147
+572,165
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.bymdx', 'pLogOutput', pLogOutput,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pMDXExpr', '',
-    	'pConvertToStatic', 1, 'pTemp', 1, 'pAlias', ''
+    	'pConvertToStatic', 1, 'pTemp', 1
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -114,7 +114,7 @@ cTempFile       = GetProcessErrorFileDirectory | cTempSub | '.csv';
 cUserName       = TM1User();
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%.' ;
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%, pAlias:%pAlias%.' ;
 sMDXExpr        = pMDXExpr;
 
 ## LogOutput parameters
@@ -187,6 +187,24 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate Alias exists
+If ( pAlias @<> '' & 
+    DimIx ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) = 0
+);
+  nErrors = 1;
+  sMessage = 'Alias does not exist in dimension %pDim%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;  
+
+# Validate alias attribute name is actually an alias
+If ( pAlias @<> '' & 
+    Dtype ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) @<> 'AA'  
+);
+  nErrors = 1;
+  sMessage = 'Attribute %pAlias% is not an alias in dimension %pDim%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
 
 ### Create Subset ###
 If( nErrors = 0 );
@@ -203,14 +221,14 @@ If( nErrors = 0 );
         HierarchySubsetElementDelete( pDim, sHier, pSub, 1 );
     EndIf;
   EndIf;
-EndIf;
-
-### Set Alias ###
-If(pAlias @<> '' );
-  If ( pDim @= sHier );
-    SubsetAliasSet( pDim, pSub, pAlias);
-  Else;
-    SubsetAliasSet( pDim | ':' | sHier, pSub, pAlias);
+  
+  # Set Alias
+  If ( pAlias @<> '' );
+      If ( pDim @= sHier );
+          SubsetAliasSet( pDim, pSub, pAlias);
+      Else;
+          SubsetAliasSet( pDim | ':' | sHier, pSub, pAlias);
+      EndIf;
   EndIf;
 EndIf;
 
