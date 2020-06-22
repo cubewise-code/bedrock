@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"d??7aMUTf@V6Vg\w[6ADeQ^5G`33[FGc@BN8HCokAAJlaH<f9B>WeG]Dn\kTb6qFzU;ehG6^<wyk4DiPwrap3561[qW6Po:almH07r5iKSKqzoUreot>_Y<:h@i31_DnS`V`xvc\iCZDwD4PW75n\xX@9f>dIAnH:tP_ckZmL7nG<]D0O`KnJ@Xg`8VS4PQawPxT7PAU"
+565,"v1:zqCZkYO[kZ]?vlk5S8SaiW0LKr84Y45QKum7a<r3Io`fZEOXpb^hzr<jwiC?IBm2XevLdom<;Z=n6[D_0UM44g5_Z@zR][v2gX_AxF3RM1;j:DjWsUXSJzBJjR]59DQ\T]A371Je>iu7\NJfic3<8;9Ak2kxgtxLt`nXM]f8OMoW7\1Om\PlRGm?=0X@Q9A8Wq1k;"
 559,1
 928,0
 593,
@@ -78,7 +78,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,166
+572,180
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -212,6 +212,23 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate Alias exists
+If ( pAlias @<> '' & 
+    DimIx ( Expand ( '}ElementAttributes_%pTgtDim%:}ElementAttributes_%pTgtHier%' ), pAlias ) = 0
+);
+  nErrors = 1;
+  sMessage = 'Alias does not exist in dimension %pTgtDim% hierarchy %pTgtHier%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;  
+
+If ( pAlias @<> '' & 
+    Dtype ( Expand ( '}ElementAttributes_%pTgtDim%:}ElementAttributes_%pTgtHier%' ), pAlias ) @<> 'AA'
+);
+  nErrors = 1;
+  sMessage = 'Attribute %pAlias% is not an alias in dimension %pTgtDim% hierarchy %pTgtHier%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;  
+
 ### Check for errors before continuing
 If( nErrors <> 0 );
     ProcessBreak;
@@ -225,10 +242,7 @@ Else;
 EndIf;
 
 ### Set Alias ###
-If ( pAlias @<> '' & 
-    DimIx ( pTgtDim | ':' | pTgtHier, pAlias ) > 0 &
-    Dtype ( pTgtDim | ':' | pTgtHier, pAlias ) @= 'AA'
-);
+If ( pAlias @<> '' );
     If ( pTgtDim @= pTgtHier );
         SubsetAliasSet( pTgtDim, pTgtsub, pAlias);
     Else;

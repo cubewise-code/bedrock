@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"yu81kXJhavE4LR;?97Gg1@ON6a@q^t\bd:Z>BwAY3uL3KMNztjU7_a>jQa=@aAtx68IEv7?B^9]oEuKH9yTvaIeW15oEul\6tQ:B6DBJCj;iFgqJn1LijMBhwgg1rT6bjh7lFo0Sg^kkZcxtCQS50>pCG^euBIkfe@G>_MtfGbWLAms6S3pskFtmd;Qg[fTs3FsqA@I;"
+565,"wUfmBA[hO@l_nFk24bZqU2xa:Bxejh@bpIj0Z0CeIPrAI>mw=DG6CO^_H9SviE3;4gYi<i4uL:ZQTfB:1=KBgIxh:rfu>=0BN5QykL@7ZxKI]bhwZF0z9^@Y]dr?YApsCF3wIsWFq`@nW5uUBuux?_u=GK>4tM5l5Mc71XA:7=tL7U;poU5Iw>KlTZxESGU;P59A0C7_"
 559,1
 928,0
 593,
@@ -68,7 +68,7 @@ pAlias,"Optional: Set Alias for Subset"
 581,0
 582,0
 603,0
-572,150
+572,165
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -187,6 +187,24 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate Alias exists
+If ( pAlias @<> '' & 
+    DimIx ( Expand ( '}ElementAttributes_%pDim%:}ElementAttributes_%pHier%' ), pAlias ) = 0
+);
+  nErrors = 1;
+  sMessage = 'Alias does not exist in dimension %pDim% hierarchy %pHier%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;  
+
+# Validate alias attribute name is actually an alias
+If ( pAlias @<> '' & 
+    Dtype ( Expand ( '}ElementAttributes_%pDim%:}ElementAttributes_%pHier%' ), pAlias ) @<> 'AA'
+);
+  nErrors = 1;
+  sMessage = 'Attribute %pAlias% is not an alias in dimension %pDim% hierarchy %pHier%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
 
 ### Create Subset ###
 If( nErrors = 0 );
@@ -203,18 +221,15 @@ If( nErrors = 0 );
         HierarchySubsetElementDelete( pDim, sHier, pSub, 1 );
     EndIf;
   EndIf;
-EndIf;
-
-### Set Alias ###
-If ( pAlias @<> '' & 
-    DimIx ( pDim | ':' | sHier, pAlias ) > 0 &
-    Dtype ( pDim | ':' | sHier, pAlias ) @= 'AA'
-);
-    If ( pDim @= sHier );
-        SubsetAliasSet( pDim, pSub, pAlias);
-    Else;
-        SubsetAliasSet( pDim | ':' | sHier, pSub, pAlias);
-    EndIf;
+  
+  # Set Alias
+  If ( pAlias @<> '' );
+      If ( pDim @= sHier );
+          SubsetAliasSet( pDim, pSub, pAlias);
+      Else;
+          SubsetAliasSet( pDim | ':' | sHier, pSub, pAlias);
+      EndIf;
+  EndIf;
 EndIf;
 
 
