@@ -61,7 +61,7 @@ pFilter,""
 pSuppressZero,1
 pSuppressConsol,1
 pSuppressRules,1
-pSuppressConsolStrings,0
+pSuppressConsolStrings,-1
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
@@ -75,7 +75,7 @@ pFilter,"OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Org
 pSuppressZero,"REQUIRED: Suppress Zero Data (Skip = 1)"
 pSuppressConsol,"REQUIRED: Suppress Consolidations (Skip = 1)"
 pSuppressRules,"REQUIRED: Suppress Rules (Skip = 1)"
-pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
+pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1, Include = 0) (Default [Skip] = -1 for backward compatibility)"
 pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
 pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
