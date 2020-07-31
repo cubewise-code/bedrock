@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tR<HaiHb?;XAAGT>IrRKaSk^k?wuPTY<jzwT>OU>9CzKHx4:CF?P;g^`R9]AL[BVTiWYbItCRlJ4q0ucDu]Taebk0\0a4v]zUi1]UHPMeXqq7F`2pJaOM`Nu_jmCBuBJtOgHPKDRM`SvtEyoLBOh`OSM;BEo3h3HeLlujke3mCoa^<kxMi=[po:7<_<5OGDjH7YBXc<]"
+565,"d;J6aKH2\^[;=HIfgX\:qlDNQHDfuPd2<:;ON\@Z7L3AaFn:3Eur@PUx`x@`WdxwPIrBB?olJvf_Ld<UzqXBL@atD9<OFe?=G2k9`A1OKKMCFqBH8<Tv=eLQZJnxBxVQjsi]@5Cg5NYpjpbteT4uq1XENt;P[wznLtoxz[<0F\i0kXw`FuDZoAbs:5tpAwsehd\V95<O"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pTgtDir
 pLogDays
 pErrorDays
 pBedrockDays
 pCSVDays
-561,6
+561,7
+1
 1
 2
 1
 1
 1
 1
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pTgtDir,""
 pLogDays,7
 pErrorDays,21
 pBedrockDays,7
 pCSVDays,7
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pTgtDir,"OPTIONAL: Log file directory. (Blank = from TM1 configuration file)"
 pLogDays,"REQUIRED: The number of days to retain log Files"
 pErrorDays,"REQUIRED: The number of day to retain TM1 Error Logs"
@@ -60,11 +64,12 @@ pCSVDays,"REQUIRED: The number of days to retain CSV files"
 581,0
 582,0
 603,0
-572,113
+572,118
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.logfile.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pTgtDir', '',
     	'pLogDays', 7, 'pErrorDays', 21, 'pBedrockDays', 7, 'pCSVDays', 7
     );
@@ -140,7 +145,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 sLogDays        = NumberToString( ROUND( pLogDays ) );
@@ -149,7 +158,7 @@ sBedrockDays    = NumberToString( ROUND( pBedrockDays ) );
 sCSVDays        = NumberToString( ROUND( pCSVDays ) );
 
 ### Save the model to disk
-ExecuteProcess( '}bedrock.server.savedataall' );
+ExecuteProcess( '}bedrock.server.savedataall', 'pStrictErrorHandling', pStrictErrorHandling );
 
 ### Create Execute File File ###
 DatasourceASCIIQuoteCharacter='';
@@ -184,7 +193,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,34
+575,37
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -209,6 +218,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted log files from %pTgtDir% older then  %pLogDays%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

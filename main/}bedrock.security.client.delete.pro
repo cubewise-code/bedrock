@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xS67>D2CwHMF]hopuuBw^PdMa6Q^\Fnn:KaYiNxfpm7dIi\QeDQukF_TdfKbCEqnQ@HTc_9qZY[5pve;IQF4PZoDU?i=l::UcfWhjMClqKKlhs1TIjByUdEFv>X]sKT1zn_9KSQLSM;ErAwVVdm`NhA6p57[;7eYCzbFDppDDCMWFjmLZ;TyrSM<Rh>UD;rYrIdRx0h4"
+565,"iQsN9NRXYaSc3<LxC0NZ[CE7J3pkMZJZYTkox@Q2pFW;2@xXt3xDjE;]>t\bU>Lm>BIlu:Bjm[gTYI=`F0w;38NxJw]UxGkOU[c0l[ej50Hb916OCaq0RJk?u_VZLimI>Fi<>NEE7<vmojZ<q><3nb_iqWp^K:IE\oi^d_p@LznoGm1i>7ZyIG7h0?`jJ<Ua@2e<Mdnq"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pClient
 pDelim
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pClient,""
 pDelim,"&"
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
 pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
@@ -48,11 +52,12 @@ pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,221
+572,222
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
 	ExecuteProcess( '}bedrock.security.client.delete', 'pLogOutput', pLogOutput,
+	    'pStrictErrorHandling', pStrictErrorHandling,
 	    'pClient', '', 'pDelim', '&'
 	);
 EndIf;
@@ -280,7 +285,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -295,6 +300,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted Client %pClient% from dimension %cClientDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

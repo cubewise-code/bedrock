@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"l4QXuqwF\:Vnzym]T8it?7W_DgjpnRj9smI@3Lt6YT]>4`[=In24jU[V7yeQZs}iGgu[G8XXUuC_6PvN<KUor;ds8<o3>u6l3vg9dU?rRsmZ0kbFQ[NCvFYmup3Ws3`@dtFZzt9JK8PA3pn00Kyi]HnMEj5HS^Ii`:FwH92Bq:Ap~2Z[c>7`ko5N6pkdzfqFYxLXwktl4QXuqwF\:Vntym]T8it?7W_DgjpnRj9wmI@3Lt6YT]>4@Z=In24jU[V79`RZsmnGguKE8XXUuCW6PuN<KUor;ds8<o8>u6l3vgIhU?rRsmZ0krHS[NCvFYmup3Wc<d@dT@Zyt9JK8P16pnp9Kyy_HnMEj5HS^Ii`:6sH92Mq:Ap~1Z[c>7`kO>N6pkdzF|vyYxLXwkt"
+565,"tqJ^r_HVFBuaH@V54yeAz@MqdhMhstA<SzEPKHXQcppzQo[]XN\jYUcDVue102sIOwKV7=:okED?fSFXxB3?>ooXeZdSSO\f>eL04n1VET7WWdkFQ_Rfk6vw_R2Gy3PAOqVYZtH?i0c@cvZ<@Wui=i42d7]`k^jbIXIW?O=2<5HBuRMGJYs`JcEi9Rp9mdqN?AVH;yLRtqJ^r_HVFBuaH@V54yeAt@MqdhMhstA<WzEPKHXQcppzQOZ]XN\jYUcDV5`802cNOwKF5=:okED7fSEXxB3?>ooXeZdXSO\f>eL@9n1VET7WWd{HS_Rfk6vw_R2GYDPAOQPYYtH?i0c0fvZLBWu99i42d7]`k^jbIX9S?O==<5HBuQMGJYs`JCNi9Rp9mD|~9AVH;yLR"
 559,1
 928,0
 593,
@@ -25,15 +25,17 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pTgtSubLeaves
 pIncludeNoParentElems
 pTgtSubNoParents
 pDelim
-561,7
+561,8
+1
 1
 2
 2
@@ -41,16 +43,18 @@ pDelim
 1
 2
 2
-590,7
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,"*"
 pTgtSubLeaves,"Bedrock - Orphan Elements - Leaves"
 pIncludeNoParentElems,0
 pTgtSubNoParents,"Bedrock - No Parents"
 pDelim,"&"
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
 pTgtSubLeaves,"OPTIONAL: Name of target subset to store orphans in Leaves hierarchy"
@@ -70,11 +74,12 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,148
+572,153
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.leaves.orphan.check', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '*',
     	'pTgtSubLeaves', 'Bedrock - Orphan Elements - Leaves',
     	'pIncludeNoParentElems', 0,
@@ -175,7 +180,11 @@ EndIf;
 
 ### If errors occurred terminate process with a major error status ###
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Handle All dimensions or a dimension list
@@ -329,7 +338,7 @@ EndIf;
 574,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,55
+575,57
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -343,7 +352,9 @@ If( nErrors <> 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code

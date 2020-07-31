@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"sX5<C1o]:OG3=y27R^Ra@LA:STtaEHUG`FXSA^Hb1G=V=_I?;1Ic`y8io52\vu\ZPmuH0fxh2es47:OP;bX<N?jvRLHfhw@L_nM@?EFrexO^TqpH1n:g>t2a5;Ho[0WdULtW8VyJv[2mxYoxzRZQ?RdAorDM3?WnTsXcGAh8deer70iEiPoc9d:yAi`Gvf1DxAtSJ<XW"
+565,"pl2XyKj5;o<UlFqqaBcCGbE95H4KJobb?WHdq7LGm686wm_>m3U4rmMlc>SloB<bNjs?WO?@w856MNH]W^oG4BtM=E6qVbn[ToOXmgQ@ZiLOcsUhOu^Ma_o^c5jgOWjcJy2uQoZZe;_]4DBUqgZ]c2893VOj_GVkmp]z;:d8\eapqtSZyd83KU\D[B^jSm]hVw58;F@B"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
+pStrictErrorHandling
 pInputString
 pUndesirableFileSystem
 pUndesirable1st
@@ -35,7 +36,8 @@ pReplaceIfNotFound
 pDelim
 pSeperator
 pMode
-561,9
+561,10
+1
 1
 2
 2
@@ -45,8 +47,9 @@ pMode
 2
 2
 1
-590,9
+590,10
 pLogOutput,1
+pStrictErrorHandling,0
 pInputString,""
 pUndesirableFileSystem,"/|\>""<:?*"
 pUndesirable1st,"'+-[]@!{}%"
@@ -55,8 +58,9 @@ pReplaceIfNotFound,"_"
 pDelim,"&"
 pSeperator,","
 pMode,3
-637,9
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pInputString,"REQUIRED: Element name to validate and update if necessary"
 pUndesirableFileSystem,"OPTIONAL: Undesirable characters for file system (e.g. /|\>""<:?* )"
 pUndesirable1st,"OPTIONAL: Undesirable 1st characters (e.g. '+-[]@!{}% )"
@@ -72,11 +76,12 @@ pMode,"REQUIRED: 1=Validate for File System only, 2=Validate for 1st only, 3=Val
 581,0
 582,0
 603,0
-572,180
+572,185
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.util.string.validate', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pInputString', '', 'pUndesirableFileSystem', '/|\>"<:?*', 'pUndesirable1st', Char(39) | '+-[]@!{}%',
 	    'pChanges', '\,B Slash&/,F Slash&|, &-,Minus&+,Plus&>,greater than&<,less than',
 	    'pReplaceIfNotFound', '_',
@@ -204,7 +209,11 @@ ENDIF;
 
 ##### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 #EndRegion 
 
@@ -263,7 +272,7 @@ END;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,28
+575,31
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -282,6 +291,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% has validated the string the element "%pInputString%" and returned "%sOutputString%".' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

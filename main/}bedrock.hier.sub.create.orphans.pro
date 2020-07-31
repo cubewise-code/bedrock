@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rv0jr9[xUZW;qkiLxda=GHvCc?6BIk5=hmjCv2]A\E2ncfzweX2oLAkylo<2fye2jr?gy2BPjs][hmVtXBCUDMe\=_UK5=c57B[rAmLJCh[rKv5mZ@D_`d>;csBsFEDjm`BD`LXubogcM^xkbEPdQ3P=A`xIi0j_I6zd4@eif0UZKP]_]kOKIa4ld5]:H]ISTs;JSH8X"
+565,"l^^79Yo2E4KCat2La0_Wak?M@F586g;TUZqSG7har8OO0cf:Oh6p9wQAf9;CqzMthTx?1h^i1:p_4tZ@@zTO=m1o^`]?u_:nWbv>[iuJx8z?vvQfqEHGoPp[R:KwZ<e6`>tLeUGpTrTPj7AaKpeb;rZLuods]<mI<Dz`nKW0H1WLjgkx[=7\I5tZ4\\NXRV8vn^Eog>M"
 559,1
 928,0
 593,
@@ -25,23 +25,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pTemp
-561,4
+561,5
+1
 1
 2
 2
 1
-590,4
+590,5
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pTemp,1
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
@@ -52,11 +56,12 @@ pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,148
+572,149
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.orphans', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pHier', '', 'pTemp', 1
 	);
 EndIf;
@@ -211,7 +216,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,38
+575,41
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -226,6 +231,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     If( nLeafCount > 0 );
        sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %cSubsetOrphanN% from dimension %pDim%:%pHier%.' );

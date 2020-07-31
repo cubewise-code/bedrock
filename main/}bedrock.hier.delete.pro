@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"oR0a?5AjW9><hnZa5`JCx1fX?AjwP2M_gn\Pcc9hDtg?9x0=Z7drzr<D1mUAcNZVylBHS[NLRL1Wps543H[`D4tb65cho5Vry5R;fcLTGP13maw9aAMTy\bG2<S8uJ[Fxh1QY@=wHQhH8ArWR_ZKRQIUls4ES7TNt5PhCL<ZjC_>;ON1dcllRQ`dri9dF[WEtwVgA78i"
+565,"gbapjmTaH?r_xGsPhUYHxNlJl=[]qfljVq?2jW>?UYAV?2K[1iArrI2TkYO7Fp30az@fbeYqHNdCvUdy92kKR;UNU\`mB[lpfcF7dw4YAaIJ@a@afi^nadiFH@H_mCmKzzdnP:M0HeSc9nHWOf>nRT^mN]5F[qc\5Vcnyc?jdWLX5Uf45ImC6@O:w4d<3B5IcHFFTlyU"
 559,1
 928,0
 593,
@@ -25,23 +25,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pDelim
-561,4
+561,5
+1
 1
 2
 2
 2
-590,4
+590,5
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pDelim,"&"
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies except default and Leaves deleted if = *)"
 pDelim,"OPTIONAL: delimiter character for element list. (default value if blank = '&')"
@@ -52,11 +56,12 @@ pDelim,"OPTIONAL: delimiter character for element list. (default value if blank 
 581,0
 582,0
 603,0
-572,232
+572,237
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pHier', '', 'pDelim', '&'
 	);
 EndIf;
@@ -141,7 +146,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 
@@ -295,7 +304,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -310,6 +319,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction     = Expand( 'Process:%cThisProcName% successfully deleted the dimension:hierarchy %pDim%:%pHier%' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

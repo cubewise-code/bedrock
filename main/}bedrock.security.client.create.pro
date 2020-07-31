@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"pqY]iZD8QcjmUGCHa4InOT3D<qk1KzNX__fQx?EXhMmr<kVdWl`k;sA>i<`CzIt_si=6ZqCXkl7K0etQb_\my7YMRm_@mb4d\U4:o2r\E_3iL2k^5?Ef4bpM=[ta\@5G08?ii@iuAtF`qU;2I:?9lQc:c6U>JcpBN94hB1JWmEHjZX7fG`BuFwG7;zU@o`n1RP1TWoJv"
+565,"nA;@E130BFc_iFaaxnq3nY5bn=F^4oB;AU]yrmlnY:2s=DF\S`bY@JcfzA7r:xgP3EKQ:j@euKn[HwD_VpIu7a7I:TcTlqZpaUUS;f3`DX=hd]tMgCbOqYjeNi:Kv5DWyn>:4QSQuGpfVRAW4LvPBv8unlKlvyo3Mr\RP_:m[VqjOyy63EeO50BL3p:LkJ@AS:P5Lwst"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pClient
 pAlias
 pPassword
 pDelim
-561,5
+561,6
+1
 1
 2
 2
 2
 2
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pClient,""
 pAlias,""
 pPassword,""
 pDelim,"&"
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pClient,"REQUIRED: Single user name or list of users separated by delimiter"
 pAlias,"OPTIONAL: single or delimited list of }TM1_DefaultDisplayValue alias to assign to user (if list of users then size of list of aliases must be the same!)"
 pPassword,"OPTIONAL: Initial Password"
@@ -56,11 +60,12 @@ pDelim,"OPTIONAL: Delimiter (Blank = &)"
 581,0
 582,0
 603,0
-572,105
+572,110
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.client.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pClient', '', 'pAlias', '', 'pPassword', '', 'pDelim', '&' 
 	);
 EndIf;
@@ -123,7 +128,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Alias
@@ -172,7 +181,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,59
+575,62
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -222,6 +231,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully added user(s) %pClient% to }Clients Dimension.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

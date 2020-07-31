@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.cube.data.import"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"pXRK1tu;gtoBOw;2a2X2kmb=nmGs=sm<\:\q\um64FTN0v1qtPx:h=w;;Lkpf0@DHMVht@QvPrsfSgl:ri?ZlU2:nEw\JcocXtd8U08mPYD\wJHFT:r1eoRy1j5jE0VM6pYh7YT`sgrA8jC`vAfuVET\_GUe?`x@0vkV[=VEZvP8D=2ic`LR^FRbPa]K3cYUw0`w813@"
+565,"dCkNa3TpKFV0GEz@^VtA?9=Q:vM\bvPlwGJo;2fjXviRqrz3R6@z3N?opcPcqZjTekf]^VRVFVCqNA^sZqTdc:uR[Y1PWxEm^\MPXzF\XGM78`E]nJCXFkq7>YCJwK3]xG>b_mW42RXMV@w1@FHJao]k^Y\5XW`8ODwEz]jlLE=R0ky91:l9]gA`r7fT4=8tFGg7YBl_"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,2
 592,0
 599,1000
-560,18
+560,19
 pLogOutput
+pStrictErrorHandling
 pCube
 pSrcDir
 pSrcFile
@@ -44,27 +45,29 @@ pMappingToNewDims
 pDimDelim
 pEleStartDelim
 pEleDelim
-561,18
+561,19
+1
+1
+2
+2
+2
+2
+2
+2
+1
+2
+2
+1
+1
+2
 1
 2
 2
 2
 2
-2
-2
-1
-2
-2
-1
-1
-2
-1
-2
-2
-2
-2
-590,18
+590,19
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pSrcDir,""
 pSrcFile,""
@@ -82,8 +85,9 @@ pMappingToNewDims,""
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
-637,18
+637,19
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Target Cube"
 pSrcDir,"OPTIONAL: Source Directory (will default to error log path)"
 pSrcFile,"OPTIONAL: Source File (will default to pCube_Export.csv )"
@@ -288,11 +292,12 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,905
+572,926
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.data.import', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pSrcDir', '', 'pSrcFile', '',
     	'pDim', '', 'pSrcEle', '', 'pTgtEle', '',
     	'pTitleRows', 1, 'pDelim', ',', 'pQuote', '"',
@@ -476,7 +481,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Validate Dimension
@@ -541,7 +550,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Determine number of dims in target cube ###
@@ -586,7 +599,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Determine dimensions in target cube, we need to know this to test cell type before loading ###
@@ -731,7 +748,11 @@ WHILE (nChar <= nCharCount);
             sMessage = 'Dimension: ' | sDimension | ' is not a member of: '| pCube | ' cube.';
             nErrors = nErrors + 1;
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            ProcessBreak;
+            If( pStrictErrorHandling = 1 ); 
+                ProcessQuit; 
+            Else;
+                ProcessBreak;
+            EndIf;
         EndIf;
 
         # Find the index of the dimension is in the Target cube
@@ -1173,7 +1194,11 @@ WHILE(nIndexInTarget <= nTargetCubeDimensionCount);
             sTargetDimName  = TabDim( pCube,  nIndexInTarget );
             sMessage        = 'Dimension ' | sTargetDimName | ' is missing an input element in pMappingToNewDims';
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            ProcessBreak();
+            If( pStrictErrorHandling = 1 ); 
+                ProcessQuit; 
+            Else;
+                ProcessBreak;
+            EndIf;
        EndIf;
        
        nIndexInTarget = nIndexInTarget + 1;
@@ -1199,7 +1224,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,805
+574,822
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1229,14 +1254,22 @@ If( nRecordProcessedCount = 1 );
         sMessage = 'Filter row in source file not having the expected format.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
     ENDIF;
     ### Check delimiters are the same when using any mapping. This because filter from the file and mappings form the params will be concatenated / substituted
     IF((sElementMapping @<> '' % pDimension @<>'') & (sDelimDim @<> sImportedDelimDim % sElementStartDelim @<> sImportedElementStartDelim % sDelimElem @<> sImportedDelimElem));
         sMessage = 'Error zeroing out target slice corresponding to the filter plus new mapped dimensions: delimiters in source file do not match with the ones in parameters.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
     ENDIF;
     
     ### Check filter in source file and validate its dimensions
@@ -1405,7 +1438,11 @@ If( nRecordProcessedCount = 1 );
 
     ### Check for errors before continuing
     If( nErrors <> 0 );
-      ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
     EndIf;
     
     IF( sTargetFilter @= '' );
@@ -1452,6 +1489,7 @@ If( nRecordProcessedCount = 1 );
     
     nRet = ExecuteProcess('}bedrock.cube.data.clear',
        'pLogOutput', pLogOutput,
+       'pStrictErrorHandling', pStrictErrorHandling,
        'pCube', pCube,
        'pView', '',
        'pFilter', sTargetFilter,
@@ -1469,7 +1507,11 @@ If( nRecordProcessedCount = 1 );
         sMessage = 'Error zeroing out target slice corresponding to the filter.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
     ENDIF;
   ENDIF;
   IF( pZeroFilter > 0 );
@@ -2005,7 +2047,7 @@ ElseIf( nDimensionCount = 27 );
 ## Increase Record count
 nRecordPostedCount = nRecordPostedCount + 1;
 ### End Data ###
-575,38
+575,40
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -2025,7 +2067,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return code & final error message handling

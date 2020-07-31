@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"c\^aW6UvExfMFLDS3qyp@yj][EZZhaRq6?XJ3xj?j7o\s5yCj6m1Y5WTh?[Za2DHw87Mw<1P2iCotS?Iz2baCeMyYRa=BRb3@9QNrxaT]xX[lI\MQZVLx:2y?Lgv\14g3vgwW9PCEQFp<f3wPSStaC_DIx9A\9d9abmNI?Q3^2FoSFexEt5_GKDy67tay18e4UgFFj<t"
+565,"p@QFfXxTXhEyP;<6aUxUlLxFFbBqY[P\0UilsKyPqH08<fql>sR1hwrKJmniyloEBmCRB1rrI2Djzw4rjJrA>u5o^Mzqn55lnE4PV4imFlNPCu0VMdBlCss5sQjU^n:\S6E]p@luWe_7LFJ[^4cXYmLvBYt4>L5B^ZB_u1bybENX4=uFvW=2XBbfXvT_1ZnP?:R>WkS["
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pEle
 pDelim
-561,5
+561,6
+1
 1
 2
 2
 2
 2
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pEle,""
 pDelim,"&"
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name, accepts wildcards (if = *, then all the dimensions)"
 pHier,"OPTIONAL: hierarchy name (if blank then same named hierarchy as dimension is assumed), accepts wildcards (if = *, then all hierarchies)"
 pEle,"OPTIONAL: filter on elements (delimiter separated list of elements, accepts wildcards (if = *, then all the elements in hierarchy get deleted))"
@@ -56,11 +60,12 @@ pDelim,"OPTIONAL: delimiter character for element list (default value if blank =
 581,0
 582,0
 603,0
-572,261
+572,266
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.element.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pEle', '',
     	'pDelim', '&'
 	);
@@ -135,7 +140,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through dimensions in pDim
@@ -328,7 +337,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -343,6 +352,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction      = Expand( 'Process:%cThisProcName% successfully deleted the appropriate elements in hierarchy %pDim%:%pHier%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lEOXfGv]OXQDaVRBYZ6[IHmtr0R`SD521i0uxoiraBvoAc=G>VG]vB2k1bO?U=vzMCbn1h?8SBTRFltT2R6omOSj_cpK^<:1:KzD2;g7C=r9=vxBaM@l83az;r5L5Mww<JmVHN?46\O7^08r07U2Ey<lG_<a8wLb^@t^2Qg5_q[z]WAXlbz7uFUynSCduzZddFQhX>bM"
+565,"eDlD2a_SEIfpUEcCjZSN?JMT8h9SJU`YNyg^nsq`s^Z>:\fUF5dQJe<Nddaqgqv:1VsY7B?C1Abp68U<_fq=pNNF=DjW`aZCjSW<Ds0sWmo8w?l9WnEGB<R`oUTVGWBV<9<FH3:by0NJLh4=joz^Vc:6xY>lCIF:;xmRNnqin9lQzg]liL`oGgu?Kj\8kgEoP^3FQ8hp"
 559,1
 928,0
 593,
@@ -25,17 +25,21 @@
 569,0
 592,0
 599,1000
-560,2
+560,3
 pLogOutput
+pStrictErrorHandling
 pWaitSec
-561,2
+561,3
 1
 1
-590,2
+1
+590,3
 pLogOutput,0
+pStrictErrorHandling,0
 pWaitSec,0
-637,2
+637,3
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pWaitSec,"REQUIRED: Wait time in seconds"
 577,0
 578,0
@@ -44,11 +48,12 @@ pWaitSec,"REQUIRED: Wait time in seconds"
 581,0
 582,0
 603,0
-572,44
+572,45
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.wait', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pWaitSec', 0
 	);
 EndIf;
@@ -97,7 +102,7 @@ Sleep ( nWaitTime );
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -112,6 +117,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully waited for %sWaitSec% .' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

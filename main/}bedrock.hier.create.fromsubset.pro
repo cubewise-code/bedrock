@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"kP4qzUI4adnysc`Di>L>6F=Rj>vFmfsy6U_W_eYw6D?]mCHcNNtvXb2@tSYQgfkfNuWx5sBHd4vDJWQJ<8i6PZY:D3AYn<A3TR96m43m>F?BXfG\FYgQ;P7oa_IGcF9]oPSCkXJ\RHR%?3eUhp>6=9:h^o1gWZ\k3fce`@YEfDGLadukeW4e69rbwmusaiNUWcWq=4q8"
+565,"zS@Y_o[jnkjW2xk_4hw`e`WV>@y1Ebs|VPlmfvnXwci[vMH0PN7OQt08DUYA@_bf_jKx5L_=s8pdLP1gr44dPmzPJKEigH3DD8e7mH]`ko>N;qD\6Q0R7=SboC:ycV@IEZsLkO9oazD&?oqU83:2mTRLajW:HLC1nP`5N3WeM:97o4W`7MDf:?R5mb7=Fe>Zg6mrnH_8"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pSrcHier
 pSubset
@@ -35,18 +36,20 @@ pTgtHier
 pAttr
 pUnwind
 pFlat
-561,9
-1
-2
-2
-2
-2
-2
+561,10
 1
 1
+2
+2
+2
+2
+2
 1
-590,9
+1
+1
+590,10
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pSrcHier,""
 pSubset,""
@@ -55,8 +58,9 @@ pTgtHier,""
 pAttr,1
 pUnwind,0
 pFlat,0
-637,9
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
 pSrcHier,"OPTIONAL: Source Hierarchy (blank = same name as source dimension)"
 pSubset,"REQUIRED: Source Subset"
@@ -78,11 +82,12 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,193
+572,203
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.create.fromsubset', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '', 'pSubset', '',
     	'pTgtDim', '', 'pTgtHier', '',
     	'pAttr', 1, 'pUnwind', 0, 'pFlat', 0
@@ -165,7 +170,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+   If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Validate source Hierarchy
@@ -188,7 +197,11 @@ ENDIF;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Validate target Dimension
@@ -211,6 +224,7 @@ If( HierarchyExists(pTgtDim, pTgtHier) = 0 );
 Else;
     IF(pUnwind = 1 );
         ExecuteProcess( '}bedrock.hier.unwind', 'pLogOutput', 0,
+            'pStrictErrorHandling', pStrictErrorHandling,
             'pDim', pTgtDim, 'pHier', pTgtHier, 'pConsol', '*',
             'pRecursive', 1
         );
@@ -272,14 +286,18 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
  
 ### End Prolog ###
-573,46
+573,50
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 ### Check for errors in prolog ###
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 If (pFlat = 1);
@@ -319,7 +337,7 @@ Else;
 Endif;
 
 ### End MetaData ###
-574,38
+574,42
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -327,7 +345,11 @@ Endif;
 
 ### Check for errors in prolog ###
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 
@@ -358,7 +380,7 @@ If( pAttr = 1 );
   EndIf;
 
 ### End Data ###
-575,86
+575,91
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -381,6 +403,7 @@ IF(CubeExists ( sCube ) = 1 );
   sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pCube', sCube,
   'pSrcView', '',
   'pTgtView', '',
@@ -404,6 +427,7 @@ IF(CubeExists ( sCube ) = 1 );
   sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pCube', sCube,
   'pSrcView', '',
   'pTgtView', '',
@@ -435,6 +459,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned dimension:hierarchy %pSrcDim%:%pSrcHier% to %pTgtDim%:%pTgtHier% based on the %pSubset% subset.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

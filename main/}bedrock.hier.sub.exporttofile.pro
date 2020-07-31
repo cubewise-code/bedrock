@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"vLWlAS@:6o\6Gt9J]9\C3saQ4zkxjX`K=q]X5\BJG]b?\7_aCe[V\<z]Hyjc=LKkMTYOM?8RlN7[^lt2dfd`mUch0cSpu8mGxyAwX6d@gdpQj]\W3srLtIJtWb<C>>le0Kt1TPoidgG<;qVGmdOc`K5Ry<g^U?i6E;[kkUU9dIT7_3ts>5oG5=SDV=cK6b7E]3KWnhNI"
+565,"lQbTM@iXxXk6aj6_;<hU?1akXsCgiA\4s0I>MNors4^?H>raCjFGLa<\mGh[cjqe;CPc<G3sXkq<]4x8q[4=d[INgq]`Sh9AjI]Qc]Jbi84Gq8flMUv@MA<5=EdZxDJ6NSy?W4X3@hj=Vo`4sWT8>YWYxc]J8w:2MLFA6pC=@_[]Ptyo<W3r\rfoAbNUkgCfY5_LXn@B"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,10
+560,11
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSub
@@ -36,7 +37,8 @@ pTitleRecord
 pDelim
 pQuote
 pCharacterSet
-561,10
+561,11
+1
 1
 2
 2
@@ -47,8 +49,9 @@ pCharacterSet
 2
 2
 2
-590,10
+590,11
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSub,""
@@ -58,8 +61,9 @@ pTitleRecord,1
 pDelim,","
 pQuote,""""
 pCharacterSet,""
-637,10
+637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"REQUIRED: Subset name"
@@ -82,11 +86,12 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,230
+572,235
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.exporttofile', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pTgtDir', '', 'pTgtFile', '',
     	'pTitleRecord', 1, 'pDelim', ',', 'pQuote', '"'
@@ -299,7 +304,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Assign Data Source ###
@@ -318,7 +327,7 @@ DatasourceAsciiQuoteCharacter = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,106
+574,110
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -333,7 +342,11 @@ SetOutputCharacterSet( sFile, pCharacterSet );
 ### Check for error in prolog ###
 
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Check whether to write title records ###
@@ -425,7 +438,7 @@ EndIf;
 
 
 ### End Data ###
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -440,6 +453,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully exported subset %pSub% from dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

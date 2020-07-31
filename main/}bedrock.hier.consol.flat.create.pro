@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"y_cadL8wkQf^=WQ<v7F4hwzF;a23Wm0cKz9vGU9es52tOwYUVIQxzReTOc9wp18dHdX\wgSqIg<jM?B9NLXKB5Q5TV:i0RiiI_Y=\@JQypB@ZxCdBOAi]>o=ICpWLMQ;\>uAs^zMnK<S;2p<rn]KqrS?oLIeHwH^jh`@fAm=V>4FpCDb\la7A<Wje;>5C2Cl5FMiC:Ma"
+565,"jx5y_9CTApaV7O40Pt5;[P3cI1Sfzxcm63Pbfa^XMmjqaIzsTtZg@AieBv<Fsa>k>ucVAaMHu_TiZ?yI5d;2T;zkNCvFQ6IqZl_aCFSz]l5q5kGXeHWu@]<pryu\9H9:?<l^uJ1PS<nc<lE>\[zuvcYN`JzxZsSfa7MLs35kGGyWJ8]2[pc>4GBSASYLoXimtA;jKwJS"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSrcConsol
 pTgtConsol
 pWeight
-561,6
+561,7
+1
 1
 2
 2
 2
 2
 1
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSrcConsol,""
 pTgtConsol,""
 pWeight,1
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pHier,"OPTIONAL: Hierarchy (will default to dimension name if blank)"
 pSrcConsol,"OPTIONAL: Source consolidated element name"
@@ -66,11 +70,12 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,149
+572,155
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.consol.flat.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '',
     	'pSrcConsol', '', 'pTgtConsol', '', 'pWeight', 1
 	);
@@ -193,12 +198,17 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### UNWIND CONSOLIDATION ###
 IF( ElementIndex( pDim, pHier, pTgtConsol ) > 0 );
   ExecuteProcess('}bedrock.hier.unwind'
+    ,'pStrictErrorHandling', pStrictErrorHandling
     ,'pDim', pDim
     ,'pHier',pHier
     ,'pConsol', pTgtConsol
@@ -258,7 +268,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,22
+575,25
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -273,6 +283,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created a consolidation %pTgtConsol% in the hierarchy %pDim%:%pHier%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

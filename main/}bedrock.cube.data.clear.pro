@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"q@9QuWHGOTdah>Oqla1F=?pk:xRBKM6EqNMAsUTN4BKzYaSpn<bhKJys<7SMn0EeFqwART=3Wbhy4NM[=36pIcg:aD^yfv8RYkfoyxtspuG<nPCfqUSV9SZ`u8WNd_rdmJx@Jd8QCN^xhcow[p;?g`nPej__l@EwcQKNe7[1gHLk3ihe<m[K`JNR?P<G=Sih;nL\T]ey"
+565,"hSSt2wr^a^juzaGhCKzh0>7jEMcD_<9wU@]5SryH7qPIaT\wGsh<64h1yRjvsiLU5`:[b;sdMFbf@UMwfPGO>zqC4DOh7nVllZbBfn>CYgA0;nq\kEBHlS4A7HSgQjVI:NC9dLi\TyhcEwK>oTGV]VfJWwmuQ7?xh601DFxCTB<zFEQgKRCcF43iq>[alXB1x<UI[^3k"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,13
+560,14
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pFilter
@@ -39,22 +40,24 @@ pCubeLogging
 pTemp
 pSandbox
 pSubN
-561,13
+561,14
+1
+1
+2
+2
+2
+2
 1
 2
 2
 2
-2
-1
-2
-2
-2
 1
 1
 2
 1
-590,13
+590,14
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pFilter,""
@@ -67,8 +70,9 @@ pCubeLogging,0
 pTemp,1
 pSandbox,""
 pSubN,0
-637,13
+637,14
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name (wildcard * and/or cube1 & cube2 list)"
 pView,"OPTIONAL: View name to be cleared (uses pFilter if pView not specified else clears entire cube)"
 pFilter,"Optional but ignored if view is specified: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations"
@@ -88,11 +92,12 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,480
+572,491
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.data.clear', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
@@ -230,7 +235,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through cubes in pCube
@@ -257,7 +266,11 @@ While( nCubeDelimiterIndex <> 0 );
       nErrors     = 1;
       sMessage    = Expand( 'Cube %sCube% does not exist.' );
       LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
-      ProcessBreak;
+      If( pStrictErrorHandling = 1 ); 
+          ProcessQuit; 
+      Else;
+          ProcessBreak;
+      EndIf;
     Else;
       If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         nDim = 1;
@@ -353,6 +366,7 @@ While( nCubeDelimiterIndex <> 0 );
             sProc = '}bedrock.cube.view.create';
             nRet = ExecuteProcess( sProc,
                     'pLogOutput', pLogOutput,
+                    'pStrictErrorHandling', pStrictErrorHandling,
                     'pCube', sCube,
                     'pView', cView,
                     'pFilter', pFilter,
@@ -513,6 +527,7 @@ While( nCubeDelimiterIndex <> 0 );
               sProc = '}bedrock.cube.view.create';
               nRet = ExecuteProcess( sProc,
                   'pLogOutput', pLogOutput,
+                  'pStrictErrorHandling', pStrictErrorHandling,
                   'pCube', sCube,
                   'pView', cView,
                   'pFilter', pFilter,
@@ -579,7 +594,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -594,6 +609,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cleared data out of the %pCube% cube(s).' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

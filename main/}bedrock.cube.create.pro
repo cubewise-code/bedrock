@@ -4,7 +4,7 @@
 586,"Variables"
 585,"Variables"
 564,
-565,"fkAdyuy71wuLqh:ucA<s\B:s2UgGQ6yrP<HM9?sSZ1sstMZhqS\LIfb9KnT1Kq129;5t:8?u`vfaFt5QWSq]d8?9p1DlzNV7b]t0}GMs[v[[RKHsaFFzNB`uQO4lOodnkj28pBCXv8G|bdzeV;F3mt6Z>PwgZzfL3GauTX:AvcZhaIthLMnPTFkD00cb>tf?vvofpB_="
+565,"ebMLmy[wi8[XJ9@YvPUG:eLQF<OIgro|PCN?0Oamg7[K>Ejkv3N_Mso;klTqmL9B6l;uJ0p0ITg1GpUwl3lM`L1R=YG<TW3h0ze?=4`h>POrl>Es1avP72<d^gKdB_o_PiR=ppM:txF{b<BjVOa;m39NREGVY]ryxWje8x>AD@nchYsXeIWW<B;87tW9LuF2V>tE[`T="
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pCube
 pDims
 pRecreate
 pDelim
-561,5
+561,6
+1
 1
 2
 2
 1
 2
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pDims,""
 pRecreate,0
 pDelim,"&"
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pDims,"REQUIRED: Dim1 & Dim2 & Dim3 & Dim4 & Dim5"
 pRecreate,"OPTIONAL: If cube exists delete and recreate (Default=0)"
@@ -56,11 +60,12 @@ pDelim,"OPTIONAL: Delimiter for Dimension list (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,648
+572,653
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pDims', '',
     	'pRecreate', 0, 'pDelim', '&'
 	);
@@ -497,7 +502,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 If( CubeExists( pCube ) = 1 & pRecreate = 1 );
@@ -715,7 +724,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,29
+575,32
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -730,6 +739,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created %pCube% with %pDims%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

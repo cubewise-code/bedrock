@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tyR@aZ@cFrH2Y@dp45\Ta>=0_EwWTtEr:7ORm5Xx6ZXpZmb5\pN6[Lge`I[w9oD9e3zRsXbwmrgYjGW2FOtWy\X5Hzgc4FN]cSlM?w`CaqqsSJf6H=TEqjGHxMR6<mf>YG8MKpsxX[L;3tbppRlrkjJK=y;w?OEUYDefi;SHGTaT^cajF>lBAUx1XBw4\<h6@\BGsAO`"
+565,"lQktBJeV1rbpaP`6i78DTokRGQDyBX_i<MIoFWoVjj0tSLvRtPOT_MXOjgqUSh?pZ53NUZu;yY:pcWS\q<oFr\:7Dv[v]Kx`5R[RKF6Y2ERav^Y5YKyXf]^SwqkSciyF9k>Z?m2q@RrIe]axotUCZv@:s^JKaG]?0Y;LI2@DgBZDotR2RQM[B7glQ;KLmi:xVBFUkiZW"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSub
@@ -35,7 +36,8 @@ pDelim
 pAddToSubset
 pAlias
 pTemp
-561,9
+561,10
+1
 1
 2
 2
@@ -45,8 +47,9 @@ pTemp
 1
 2
 1
-590,9
+590,10
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSub,""
@@ -55,8 +58,9 @@ pDelim,"&"
 pAddToSubset,0
 pAlias,""
 pTemp,1
-637,9
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"REQUIRED: Subset name"
@@ -72,11 +76,12 @@ pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,209
+572,211
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.byelement', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pEle', '', 'pDelim', '&',
     	'pAddToSubset', 0, 'pAlias', '', 'pTemp', 1
@@ -259,8 +264,9 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
 
   If( ElementIndex( pDim, pHier, sElement ) <> 0 );
     If( nErrors = 0 );
-       IF(ElementLevel( pDim, pHier, sElement) > 0);
+      IF(ElementLevel( pDim, pHier, sElement) > 0);
          ExecuteProcess('}bedrock.hier.sub.create',
+                         'pStrictErrorHandling', pStrictErrorHandling,
                          'pDim', pDim,
                          'pHier',pHier,
                          'pSub', pSub,
@@ -292,7 +298,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -307,6 +313,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %pSub% from dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

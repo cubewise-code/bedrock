@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"y>j3_]r34lpRa44;x_Bo=5B1uyZ8pwK{@=fWVPHYQAt?;OZyegmYBbqcXaTqm[2B5VKuzriiv;fa=|e6j@oj[g15ecFLpeLO`v5=mE^@FM]A\h@s1<3\ftbYC3D6JliPcR?08o\>3h}rz5eFxs5=EocC7Q>cSjfxra5iX2Aid<miy[uY6FdnGkqYNbsi|6;61DL@Y[R"
+565,"guhL<EIy]wNfxXBtJ7NB3_qhjnFhvnHp0a0:mG0Ss>bmoL:W6>u1q[QmjeTaZI4B`aasjiwNFcb1erUeT`fBh6g_BtBLVuKsIys>=skfG73DM@JsQLDr2QTa_5PDK?i7>lR8pvlt[MF}RS1aVYE<MMrKM_60csx<:>mEt`312V7LfIp9GS2erAk<dJR@fvf2FIHy38GS"
 559,1
 928,0
 593,
@@ -25,17 +25,21 @@
 569,0
 592,0
 599,1000
-560,2
+560,3
 pLogOutput
+pStrictErrorHandling
 pRun
-561,2
+561,3
+1
 1
 2
-590,2
+590,3
 pLogOutput,0
+pStrictErrorHandling,0
 pRun,"Y"
-637,2
+637,3
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pRun,"OPTIONAL: Do you want to delete Persistent Feeders? (Y or N)"
 577,0
 578,0
@@ -44,11 +48,12 @@ pRun,"OPTIONAL: Do you want to delete Persistent Feeders? (Y or N)"
 581,0
 582,0
 603,0
-572,51
+572,52
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.deleteallpersistentfeeders', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pRun', 'Y'
 	);
 EndIf;
@@ -106,7 +111,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -121,6 +126,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted persistant feeders.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

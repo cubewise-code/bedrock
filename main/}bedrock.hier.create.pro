@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"z??u>>3FsIu@;K<w4Y4fn:M[kLa;0YB><@xkj@pG70[fb=22LAGYixy3sAg4A9j6li\joClQ]SHszVULcN=d0yH=?4jUZE`Ps0[\\JY=aySS\Wl=@6v2Z;EN_kbfpFi;hvho`?Iww<94NTDAFko`1n;zjpQ]jPD<^tMI>N`=0s;@U\;hBgvUwPeUm55<z3F8?vd7J:3Y"
+565,"k?:P=jX<3kpaNsqyoas98`JA:AKB<g>m6XK3cT>7uCyfbFh_<89?l8Jd]rt;Km>AG4ClKq2hc_AvjhvW;E_Ig5ps]yWn4[^H]GofZO@c:V_a?O<N1;kz_BUW>LeDDTPpRYUa7mD]2stxAUeVsSG57OzPpioW]@BhUTckGh;1>`LqLqa[zYyG;[`phWRE4jWkO<c7Anga"
 559,1
 928,0
 593,
@@ -25,23 +25,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pDelim
-561,4
+561,5
+1
 1
 2
 2
 2
-590,4
+590,5
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pDelim,"&"
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"OPTIONAL: Hierarchy, accepts delimited list"
 pDelim,"OPTIONAL: delimiter character for element list. (default value if blank = '&')"
@@ -52,11 +56,12 @@ pDelim,"OPTIONAL: delimiter character for element list. (default value if blank 
 581,0
 582,0
 603,0
-572,167
+572,172
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pHier', '', 'pDelim', '&'
 	);
 EndIf;
@@ -124,7 +129,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Set up hierachy if not provided
@@ -230,7 +239,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,26
+575,29
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -245,6 +254,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction     = Expand( 'Process:%cThisProcName% successfully created the %pHier% hierarchy in the %pDim% dimension.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

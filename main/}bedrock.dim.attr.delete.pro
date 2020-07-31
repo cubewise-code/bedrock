@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"z]epk0JJH^v2H`VwzlpaV]nJXtagV?U;3VjI>Pk^9Z6wq^;7Oq;vy`:nQ>a1?^pn=Rdu\z9xZWcwaUzAu=HJEBHs0s<4FixP@2k?Pnw453A6jfHIy52B::gTy^5QPF>1c[PUcX^AHV2bV[t@xgA9\XZsDi3Bgpr`f\c:MfbRUlOh\thWfr:c1eJFcqOcbM0u?<jYG>I_"
+565,"c8laJ6iYZwYOw^nIsD`hcE4JcN4Ufclth5_eLzQMVGXo[e3raP<>U]WT:i>?U`4Hl`6q8b\KyF1^Cu1KtZnI4YzdY`L?AxbJN]VKUcswxr4wyONSR3JbJOmbdQN4vlVS3BMp:P>oZA7MThh:9;xeJ3pBTFB;4k2gKERLwUuHfZa2vjFOr]@dW\:VSTxG2aA\<m4]fSU6"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pDim
 pAttr
 pDelim
 pCtrlObj
-561,5
+561,6
+1
 1
 2
 2
 2
 1
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pAttr,""
 pDelim,"&"
 pCtrlObj,0
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name, parameter accepts delimited list and wildcards(*)."
 pAttr,"REQUIRED: attribute name, parameter accepts delimited list and wildcards (* = ALL)."
 pDelim,"OPTIONAL: delimiter character for attribute list. (Defaults to & if blank)"
@@ -56,11 +60,12 @@ pCtrlObj,"REQUIRED: Include control dimensions (1 = include, 0 = not include)"
 581,0
 582,0
 603,0
-572,204
+572,209
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.dim.attr.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pAttr', '', 'pDelim', '&', 'pCtrlObj', 0
 	);
 EndIf;
@@ -142,7 +147,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors > 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through dimensions in pDim and attributes in pAttr
@@ -271,7 +280,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,21
+575,24
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -282,6 +291,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction      = Expand( 'Process:%cThisProcName% successfully deleted attribute(s) %pAttr% from dimension(s) %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

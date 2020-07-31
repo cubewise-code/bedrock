@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"i6u^w\l:ja`UUnVu\:ESQEuNvKg1TiPBU;PIeqUcQ:X9J<>ZBXnqtwsNcvIH4ZZy\\wQC8z7rQ_A[kScb>^e:sCAH@l3os:BwO@_1:w2BOLDhv=cNv:gKCm51goU5J2OnWS?C=bWkeUFk6;V]iQJue;kTv^J\QdsSfEB:g_]2b7QA@pjTU8^bRcz[>RrNUgEGqcko`1C"
+565,"wleeZe@zs7:tX9hx?u8=<0FaW__6<f1[8>oO_IW\i]GERwH5<CKC8MK:DxAhiO02`qR6];6X4ttLeDRQoRBwuVJqM3ci>`Hw`6q9e0r_mjF4dnqAvM0p`FzSI9dbQewiAIAJZ:9z]onUjR5yxbZv@p]FnptevOM8bUkkO_:U`O0w2PB^a5Co7ez`=R<qM4KckFPCuRxl"
 559,1
 928,0
 593,
@@ -25,32 +25,36 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pSrcHier
 pTgtDim
 pTgtHier
 pAttr
 pUnwind
-561,7
-1
-2
-2
-2
-2
+561,8
 1
 1
-590,7
+2
+2
+2
+2
+1
+1
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pSrcHier,""
 pTgtDim,""
 pTgtHier,""
 pAttr,0
 pUnwind,0
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
 pSrcHier,"REQUIRED: Source Hierarchy"
 pTgtDim,"REQUIRED: Target Dimension (can be the same as source)"
@@ -70,11 +74,12 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,221
+572,227
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.clone', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '',
     	'pTgtDim', '', 'pTgtHier', '',
     	'pAttr', 0, 'pUnwind', 0
@@ -215,7 +220,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Create target dimension Hierarchy ###
@@ -225,6 +234,7 @@ Else;
     IF(pUnwind = 1 );
       nRet = ExecuteProcess('}bedrock.hier.unwind',
         'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
         'pDim', pTgtDim,
         'pHier', pTgtHier,
         'pConsol', '*',
@@ -292,7 +302,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
 
 ### End Prolog ###
-573,31
+573,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -305,7 +315,11 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Add Elements to target dimension ###
@@ -324,7 +338,7 @@ IF( sElType @= 'C' & ElementComponentCount( pSrcDim, pSrcHier, vEle  ) > 0 );
 EndIf;
 
 ### End MetaData ###
-574,86
+574,90
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -337,7 +351,11 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Replicate Attributes ###
@@ -411,7 +429,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
 
 ### End Data ###
-575,50
+575,54
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -437,6 +455,7 @@ EndIf;
 If( nProcessSameNamedHier = 1 );
   nRet = EXECUTEPROCESS('}bedrock.hier.clone',
     'pLogOutput', pLogOutput,
+    'pStrictErrorHandling', pStrictErrorHandling,
     'pSrcDim', pSrcDim,
     'pSrcHier',pSrcHier,
     'pTgtDim', pTgtDim,
@@ -452,6 +471,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned the %pSrcDim%:%pSrcHier% dimension:hierarchy to %pTgtDim%:%pTgtHier%' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

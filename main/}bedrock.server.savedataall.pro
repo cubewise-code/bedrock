@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aa1H\5;VFc<7wL^2Q02`5wki[;oN^Lop^754ub@9kEq?<h^[QyWzoko@_NoO;^6m=H1QGxIt;7h5:unjK?3OiX<`Ekgdf\sIJBxkFPP:<UEZ5_e1PMVw>N:Q;:9ziK0W26?sCtO9l4FyBj^GoOtV0<LVKoFx9wLbtnHf;IF06]5;p66PDUpn`_XPUxxNJx[7>=5j56Y7"
+565,"gW2C7U\a8H[<[_wEmrDr;rHEQKumqeNhDIegjx_mWSNzcPOWPAYYuQzg>4pGkYaVSEILUa=Fp0w:K[2j:W^U;kjrB7UjScuZ7vvnwTNG@oE3TtZxMj?D0jSgXdu1euG1jLxrm@PGyw5X[W1=AjGVMRYr;@is6UGOH4XLCO9Beo<fhTqopYB`Wz2L6QjJmG9Ij8uQf]i_"
 559,1
 928,0
 593,
@@ -25,14 +25,18 @@
 569,0
 592,0
 599,1000
-560,1
+560,2
 pLogOutput
-561,1
+pStrictErrorHandling
+561,2
 1
-590,1
+1
+590,2
 pLogOutput,0
-637,1
+pStrictErrorHandling,0
+637,2
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 577,0
 578,0
 579,0
@@ -44,7 +48,7 @@ pLogOutput,"OPTIONAL: Write parameters and action summary to server message log 
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.server.savedataall', 'pLogOutput', pLogOutput );
+    ExecuteProcess( '}bedrock.server.savedataall', 'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling );
 EndIf;
 #EndRegion CallThisProcess
 
@@ -105,7 +109,7 @@ SaveDataAll;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,28
+575,31
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -124,6 +128,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully saved all cube data.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

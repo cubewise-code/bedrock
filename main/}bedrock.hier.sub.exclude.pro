@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aauo@j`1CW6^z4WYcz[6FvSLZh8c]rZ57YA[27SMVLp3v:rmvCpLjX[?`jB8NV9rYX6b`LnX<x;VUSXwm<^t1\fpy;emQHP8XP>z5ma?L=Cktqk2=rqHRID_hH9CTztq]@gt2_XVKm6INFvPas`g8AOystU6vb^MfPxEBy7bkT?gZ4jhHFNuipCRqrgjG2sbWN@gK=H_"
+565,"ol7cyo3LPn^DV2Na[:hNRaMxzZDaJbj[^nR2nz5A=h0US[jMl8g?LZfz`[H9S\2TTjd2o^WsKpsvQ_u@8vxGJo:nx_x^I9s@=w\FC:^F:Bm`9kRuu1jTlV_`u\j\qfzE4]w>IEDQ=t<4^2Eaobg8\YZq<Z1^z<2jdtW\x;bc`f]xFyHdxcvpz1dL1SsFuqjnxINq=pcS"
 559,1
 928,0
 593,
@@ -25,15 +25,17 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSub
 pExclusions
 pDelim
 pTemp
-561,7
+561,8
+1
 1
 2
 2
@@ -41,16 +43,18 @@ pTemp
 2
 2
 1
-590,7
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSub,""
 pExclusions,""
 pDelim,"&"
 pTemp,1
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"REQUIRED: Subset name"
@@ -64,11 +68,12 @@ pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,206
+572,208
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.exclude', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pExclusions', '', 'pDelim', '&', 'pTemp', 1
 	);
@@ -231,6 +236,7 @@ If(nErrors = 0);
         sProc = '}bedrock.hier.sub.create.bymdx';
         sMdx = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |pDim|':'|sHier |' ])},'| sExclusion| ')}';
         ExecuteProcess(sProc,
+                      'pStrictErrorHandling', pStrictErrorHandling,
                     	'pDim',pDim,
                     	'pHier',sHier,
                     	'pSub',stempSub,
@@ -281,7 +287,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -296,6 +302,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully excluded elements from subset %pSub% from dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

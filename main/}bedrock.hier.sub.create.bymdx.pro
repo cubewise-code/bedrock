@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"u\_^7k?H=8ajJDl]Drm^JaBnTKEec7qh>A81?hMI>nIhr5ir^TX?ZtXB<3BE`a<4E^F[:YPdXdwV6^MEp?lYx5]f8DW4OvjE\lVMkIRIT]AQH3jttU4gol0JQbeB[SQtLKa@zxZTgRXMk9tdAfuOwHZNaSp[u;O7;4;0N32^Y;XaH5kYr<gKbCHfuTHpKtwdlN_?VTrW"
+565,"z2v`Yo0T4\BSgEB;R^zU;sEeUlajDd\GbOV@bvh[RQK02zZv8H>t^qlsLy\3h<S:S=JMLVzTA?<;F4AQYBnVMJb]e[uZbmFPZFRV2Ao9`KEhPlNn=53TMMEk[iZOrgVd;aX0u5Q8tmB^zwg9JXG>PpLf=AYCAmdfzBG[\6x3@1n;j4\\ughIS>omYHiv1>Fu[RM?`\s["
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,8
+560,9
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSub
@@ -34,17 +35,19 @@ pMDXExpr
 pConvertToStatic
 pTemp
 pAlias
-561,8
-1
-2
-2
-2
-2
+561,9
 1
 1
 2
-590,8
+2
+2
+2
+1
+1
+2
+590,9
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSub,""
@@ -52,8 +55,9 @@ pMDXExpr,""
 pConvertToStatic,1
 pTemp,1
 pAlias,""
-637,8
+637,9
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"Required: Dimension name"
 pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"Required: Subset name"
@@ -68,11 +72,12 @@ pAlias,"Optional: Set Alias for Subset"
 581,0
 582,0
 603,0
-572,165
+572,166
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.bymdx', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pMDXExpr', '',
     	'pConvertToStatic', 1, 'pTemp', 1
@@ -245,7 +250,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,34
+575,37
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -270,6 +275,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %pSub% from dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

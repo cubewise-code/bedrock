@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"f`X6?ca@:BwjNXiY]?mJX?gNicVrClIK__D08I:XE90kWeVKpxJtMpH54b=5dnRxxMe=<fL_cU8sF4z`Ib1W1nhJv@hx\K0_d2_jfD@9esnvKn`^Pg5fCC4OJTE?j_\@wPWeywxC8?NRpfCkJ;2>JKi]Letk2a6Jks<=?\5j@L68=1w=Ljt_cuW4FVH;vICgkcWvWyfc"
+565,"mg[DhDFpKWs5Eau@MaI:JL^AOfAEbw34MFFJzfuwrM6\fy0u2L?>hQ<FP1LlC<SHigR:q2AIYoCJUAm>5A\k?MGyaQ1ol=WFE^54RWykYkD0CFlWa1NkjOc<BG9VhWruQJBQJcEUi4XXjx]irTw@N1sA4fx3oSaPtTaw=7z61Kd0CzTn[5wG1J7PGf=^^[m3eHZ@Z:rM"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,21
+560,22
 pLogOutput
+pStrictErrorHandling
 pSrcCube
 pFilter
 pFilterParallel
@@ -47,30 +48,32 @@ pSandbox
 pFile
 pSubN
 pThreadMode
-561,21
-1
-2
-2
-2
-1
-2
-2
-1
-1
-1
+561,22
 1
 1
 2
 2
 2
 1
+2
+2
+1
+1
+1
+1
+1
+2
+2
+2
+1
 1
 2
 1
 1
 1
-590,21
+590,22
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcCube,""
 pFilter,""
 pFilterParallel,""
@@ -91,8 +94,9 @@ pSandbox,""
 pFile,0
 pSubN,0
 pThreadMode,0
-637,21
+637,22
 pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
 pFilter,"OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube"
 pFilterParallel,"OPTIONAL: Parallelization Filter: Month¦Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
@@ -294,11 +298,12 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1351
+572,1384
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.data.copy.intercube', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcCube', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pTgtCube', '', 'pMappingToNewDims', '',
@@ -467,7 +472,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 #EndRegion
 #Region 
@@ -1278,7 +1287,11 @@ WHILE(nIndexInTarget <= nTargetCubeDimensionCount);
             sTargetDimName  = TabDim( pTgtCube,  nIndexInTarget );
             sMessage        = 'Dimension ' | sTargetDimName | ' is missing an input element in pMappingToNewDims';
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            ProcessBreak();
+            If( pStrictErrorHandling = 1 ); 
+                ProcessQuit; 
+            Else;
+                ProcessBreak;
+            EndIf;
        EndIf;
        
        nIndexInTarget = nIndexInTarget + 1;
@@ -1450,7 +1463,11 @@ END;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Branch depending on whether to do recursive calls to self on independent threads or run all in this thread
@@ -1512,7 +1529,8 @@ Else;
       # Create View of target ###
       nRet = ExecuteProcess('}bedrock.cube.view.create',
           'pLogOutput', pLogOutput,
-         'pCube', pTgtCube,
+          'pStrictErrorHandling', pStrictErrorHandling,
+          'pCube', pTgtCube,
           'pView', sTargetView ,
           'pFilter', sTargetFilter,
           'pSuppressZero', 1,
@@ -1528,11 +1546,16 @@ Else;
           sMessage = 'Error creating the view from the filter.';
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          ProcessBreak;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
       ENDIF;
   
       nRet = ExecuteProcess( '}bedrock.cube.data.clear',
           'pLogOutput', pLogOutput,
+          'pStrictErrorHandling', pStrictErrorHandling,
           'pCube', pTgtCube,
           'pView', sTargetView,
           'pFilter', sTargetFilter,
@@ -1548,7 +1571,11 @@ Else;
           sMessage = 'Error clearing the target view.';
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          ProcessBreak;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
       ENDIF;
   
   Endif;
@@ -1563,6 +1590,7 @@ Else;
     
     nRet = ExecuteProcess('}bedrock.cube.view.create',
       'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
       'pCube', pSrcCube,
       'pView', sView,
       'pFilter', pFilter,
@@ -1580,7 +1608,11 @@ Else;
           sMessage = 'Error creating the view from the filter.';
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          ProcessBreak;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
     ENDIF;
   
   ElseIf( pFile > 0 );
@@ -1593,6 +1625,7 @@ Else;
     
     nRet = ExecuteProcess('}bedrock.cube.data.export',
        'pLogoutput', pLogOutput,
+       'pStrictErrorHandling', pStrictErrorHandling,
        'pCube', pSrcCube,
        'pView', sView,
        'pFilter', pFilter,
@@ -1620,7 +1653,11 @@ Else;
           sMessage = 'Error exporting data to file.';
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          ProcessBreak;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
     ENDIF;
   ENDIF;
   
@@ -2024,7 +2061,7 @@ EndIf;
 
 
 
-575,47
+575,50
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -2061,6 +2098,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully copied data from %pSrcCube% cube to the %pTgtCube% cube.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

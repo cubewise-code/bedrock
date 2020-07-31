@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"bNaM]cZXiyWz3dFil2KVAn^ho<`W>II`icHXOQ40QLbU5_dCQ@@V`jfz]<rm8?2guIn]BXO>[?H;1]`8gJ_JGVd0@GDL^Lu@6Yhx=N>_uG4GnQY9_2cpU^Q[rro_nDPz0xqwuA1ZzfUF1?T9vplUAfH6RBvb=b`JUQ7Cys]]=\ewB<^wNR\QP_gsG5IBjlYj4FnMLCuw"
+565,"sCY=QH5[bG;fpgr`lX1aew=9oE>VEL1WB`@de0N:l0hZ4:EVmYhFt>gUsgRKz2He?HZ<noIH[NO0KJieYe>jej_dz:ey@JOzayn5AnZLhTbI<rOt91r551CJEQ2qD9w?iS8wob4HJrY5EPfQDwGMw5\J;zoe^8W;3^YBHOk[9=ZvpL?H_WozL:VVYH6IWmrbAH3cm=Dz"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pEle
 pDelim
-561,5
+561,6
+1
 1
 2
 2
 2
 2
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pEle,""
 pDelim,"&"
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (if blank then same named hierarchy as dimension is assumed)"
 pEle,"OPTIONAL: Filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))"
@@ -56,11 +60,12 @@ pDelim,"OPTIONAL: Delimiter character for element list (default to '&' if blank)
 581,0
 582,0
 603,0
-572,171
+572,177
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.consol.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pEle', '',
     	'pDelim', '&'
 	);
@@ -162,7 +167,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors > 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 sEles = pEle;
@@ -207,6 +216,7 @@ While( nDelimiterIndex <> 0 );
         sMdx    = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |pDim|':'|sHier |' ])},'| sEle| ')}';
         ExecuteProcess('}bedrock.hier.sub.create.bymdx',
           'pLogOutput', pLogOutput,
+          'pStrictErrorHandling', pStrictErrorHandling,
         	'pDim', pDim,
         	'pHier', sHier,
         	'pSub', cTempSub,
@@ -239,7 +249,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -254,6 +264,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted the appropriate consolidated elements in hierarchy %pDim%:%pHier%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

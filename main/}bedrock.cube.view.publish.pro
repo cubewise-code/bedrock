@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vo1eebWJeeCQv_4J?FF@69aca_4C47Y_DXRVAyPW1G5MVl>^XQ;N?AhB4M;FNJo1yHiBOIn_cwpzJJM`_tw:mxkLT?VSEf5i=pQjvGRIGG6T2QP0c0:1EUKgPaCn_thVhlp0Yccf75q[leAb;88[B\6[Mnplc?ZBtmHYY<cJ7Q:k_BI0Q5MHUhWPaWY1Z?b6rltD7w::"
+565,"b?aAy7=BMM[VbSKvJ62VPODaKbH>2<0Dpxk_]2dFCR4^1rhQc4h><7678Lx6L4F3<XSd34TcEezMN8B6zKl70QtoNNmUKjYWA5@eMSTj@zS<00GDWkuR6b9j?<7X?OJxKZ<=yfhShZH?d[aFv7PtG:jlJm4IjfTG9Rn;5yGUZWvq>cMpoukeX:MDti_634DMRGLD4^et"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pSubPublish
 pOverwrite
-561,5
+561,6
+1
 1
 2
 2
 1
 1
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pSubPublish,1
 pOverwrite,0
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pView,"REQUIRED: Private View Name"
 pSubPublish,"OPTIONAL: Publish Private Subsets? (Boolean 1=Yes)"
@@ -56,11 +60,12 @@ pOverwrite,"OPTIONAL: Overwrite Existing Named View? (Boolean 1=Yes)"
 581,0
 582,0
 603,0
-572,118
+572,123
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.view.publish', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '',
     	'pSubPublish', 1, 'pOverwrite', 0
 	);
@@ -168,7 +173,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Publish the view ( and any private subsets ) ###
@@ -185,7 +194,7 @@ PublishView( pCube, pView, pSubPublish, pOverwrite );
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -200,6 +209,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully published view %pView% in cube %pCube% created by cient %pClient%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

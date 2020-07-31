@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"aaqQx[na2h`rCxp<e>x>XW@OVw:9Fbz3XS?px94PdPWOWk?0;alHbAGXh3PTYVgkjJc>R5zZrY@IxrK6FX3tM=UwFf:fkO5=:Rrro4?goSH3Ij[?FGg3^HaCc_[1rBuKG`Uy;E1]B7eXfwaRt8HMgT5<EZIyFD?lYDie]Q?U98>mjKX@yL6xjeAOHgYHeTHr\EgeWrM3"
+565,"jLwo5u@][xazPFZ>Jn61@>Q?O2f`NrRq;iM8c3HhGOkz9MWxQXCydHDYMrdn=f@o2km?<FYohr^I[[W`_prevhE=U@ag6BXz:6dDH[P\JqJxRl8tJR5a[5wQ>kUMZ?6hcQ34LV3spmk62M_\rxqOBsH^oHNLyc\RzlH`JTVy5Dx22@2dxGvw1ma?GaH^ugsxBaA`8A<`"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pSrcHier
 pSrcSub
@@ -35,7 +36,8 @@ pTgtHier
 pTgtSub
 pTemp
 pAlias
-561,9
+561,10
+1
 1
 2
 2
@@ -45,8 +47,9 @@ pAlias
 2
 1
 2
-590,9
+590,10
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pSrcHier,""
 pSrcSub,""
@@ -55,8 +58,9 @@ pTgtHier,""
 pTgtSub,""
 pTemp,1
 pAlias,""
-637,9
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Dimension where the subset exists"
 pSrcHier,"OPTIONAL: Source Hierarchy (blank = same as source)"
 pSrcSub,"REQUIRED: Source Subset"
@@ -78,11 +82,12 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,181
+572,186
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.clone', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '', 'pSrcSub', '',
     	'pTgtDim', '', 'pTgtHier', '', 'pTgtSub', '',
     	'pTemp', 1
@@ -232,7 +237,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Create Target Subset ###
@@ -284,7 +293,7 @@ HierarchySubsetElementInsert( pTgtDim , pTgtHier, pTgtSub , vEle , nElementPosit
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -299,6 +308,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned the %pTgtDim%:%pTgtHier%:%pTgtSub% subset from %pSrcDim%:%pSrcHier%:%pSrcSub%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
