@@ -1,5 +1,5 @@
 ﻿601,100
-602,"}bedrock.security.evaluate.mdx.security"
+602,"}bedrock.security.evaluate.mdx"
 562,"NULL"
 586,
 585,
@@ -68,7 +68,7 @@ pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 di
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess('}bedrock.security.evaluate.mdx.security', 'pLogOutput', pLogOutput,
+    ExecuteProcess('}bedrock.security.evaluate.mdx', 'pLogOutput', pLogOutput,
        'pStrictErrorHandling', pStrictErrorHandling,
        'pNameSpace', 0,
        'pFilePath', pFilePath,
