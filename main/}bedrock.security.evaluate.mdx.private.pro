@@ -90,7 +90,7 @@ VarType=32ColType=827
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess('}bedrock.security.evaluate.subset.mdx.statement',
+    ExecuteProcess('}bedrock.security.evaluate.mdx.private',
        'pLogOutput', pLogOutput,
        'pStrictErrorHandling', pStrictErrorHandling,
        'pUser', pUser,
