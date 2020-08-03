@@ -1,5 +1,5 @@
 ﻿601,100
-602,"}bedrock.security.evaluate.subset.mdx.statement"
+602,"}bedrock.security.evaluate.mdx.private"
 562,"CHARACTERDELIMITED"
 586,"Admin\store}subs\Euros.sub"
 585,"Admin\store}subs\Euros.sub"
