@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"bKaN7Nm[a\@3q6\GdrkYN@LssyLMEY^JlURjrlL5ZLZWlKtD=LpJWa;jHsG3h]x9=^w0GRIX7IQEEgn@T?xDo<M>pYz2n@jGhuV]=F8f`93x_oCNSlyueAyP8sdL`48nZOu5YJaL7Y5aX4Kxh=s]woVSvz1FX83]aJ72H`lF6<2xl\CrXKr3=XD@;qWRhKTC\q]J8=O]"
+565,"cmCaKjI1Cd>i^>_sXLQkOx]eFmgvMCjf`qElH_KL`T>86:sMK\<F0BckkuyX82XRSw3Y1;LPOm_vpg8<9ZwcKU0HRFcXX\CJOxY=[a]L=6qCVveJf:>PEBe<YkyyiF7`9@d<@9I]vj5]I^G@O;fn3hgxtO>c`I99gk\gP^SG]gs:f6WJ199>DfYBU>anD^rV8BSVVnuA"
 559,1
 928,0
 593,
@@ -25,32 +25,36 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pTgtDim
 pHier
 pAttr
 pUnwind
 pDelim
-561,7
-1
-2
-2
-2
+561,8
 1
 1
 2
-590,7
+2
+2
+1
+1
+2
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pTgtDim,""
 pHier,"*"
 pAttr,0
 pUnwind,0
 pDelim,"&"
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
 pTgtDim,"OPTIONAL: Target Dimension (will default to pSrcDim_clone If blank (or) is same as pSrcDim)"
 pHier,"REQUIRED: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
@@ -70,11 +74,12 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,172
+572,178
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.dim.clone', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pTgtDim', '', 'pHier', '*',
     	'pAttr', 0, 'pUnwind', 0, 'pDelim', '&'
 	);
@@ -167,7 +172,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Create target dimension ###
@@ -178,6 +187,7 @@ Else;
     IF(pUnwind = 1 );
        nRet = ExecuteProcess('}bedrock.hier.unwind',
         'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
         'pDim', pTgtDim,
         'pHier', pTgtDim,
         'pConsol', '*',
@@ -243,7 +253,7 @@ EndIf;
 
 
 ### End Prolog ###
-573,30
+573,34
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -256,7 +266,11 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Add Elements to target dimension ###
@@ -274,7 +288,7 @@ IF( sElType @= 'C' & ElCompN( pSrcDim, vEle ) > 0 );
 EndIf;
 
 ### End MetaData ###
-574,86
+574,90
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -287,7 +301,11 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Replicate Attributes ###
@@ -361,7 +379,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
 
 ### End Data ###
-575,204
+575,215
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -399,6 +417,8 @@ If( pHier @= '*' );
           vSourceHierarchy = SUBST(sEle,nElestart,nElength);
          If ( vSourceHierarchy @<> 'Leaves');
              nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+               'pLogOutput', pLogOutput,
+               'pStrictErrorHandling', pStrictErrorHandling,
                'pSrcDim', sDim,
                'pSrcHier', vSourceHierarchy,
                'pTgtDim', pTgtDim,
@@ -430,6 +450,8 @@ ElseIf( Scan( '*', pHier )=0 &  Scan( '?', pHier )=0 & Scan( pDelim, pHier )=0 &
         LogOutput( 'INFO', Expand( cMsgInfoContent ) );
       EndIf;
       nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+       'pLogOutput', pLogOutput,
+       'pStrictErrorHandling', pStrictErrorHandling,
        'pSrcDim', sDim,
        'pSrcHier', sCurrHierName,
        'pTgtDim', pTgtDim,
@@ -471,6 +493,8 @@ ElseIf( Scan( '*', pHier )=0 &  Scan( '?', pHier )=0 & Trim( pHier ) @<> '' );
             LogOutput( 'INFO', Expand( cMsgInfoContent ) );
           EndIf;
           nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+           'pLogOutput', pLogOutput,
+           'pStrictErrorHandling', pStrictErrorHandling,
            'pSrcDim', sDim,
            'pSrcHier', sCurrHierName,
            'pTgtDim', pTgtDim,
@@ -536,6 +560,8 @@ ElseIf( Trim( pHier ) @<> '' );
             LogOutput( 'INFO', Expand( cMsgInfoContent ) );
           EndIf;
           nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+           'pLogOutput', pLogOutput,
+           'pStrictErrorHandling', pStrictErrorHandling,
            'pSrcDim', sDim,
            'pSrcHier', sCurrHierName,
            'pTgtDim', pTgtDim,
@@ -556,6 +582,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% has cloned the %pSrcDim% dimension into %pTgtDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

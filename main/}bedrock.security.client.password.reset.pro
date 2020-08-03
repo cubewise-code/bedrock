@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"kMtk5_zvvbhamH6sZF0OjeDvPb32A5q4CGSBoiF?>wLn41]HD`]N`DxT8pxY9sn<W^]SG9y9r`5YzjYO:uSAP7=O2]v\px:K\ntk0lc3Ey2<Xqwtg8LL6LGzZB`NEmkKetOqPJKOKLy8rPt?oBGZt9<bx>oJatC1WvK>mGEDAf6B[j_2qn<ls_;pztw;:ywDm^Sf?oSu"
+565,"uVbRrG@o\=sFEMW2PLxOca3v`iFL5:Y:7Wr2\K<lmR74lqJN_zksiGQW_tJ=y?UW6:qM8g>6vVJ<p5dpLgnbBRtR]^0=8iPGetA^zrbc0]OmC982uq3ACTuG0jHlamEV=dUwLTjo\AcHiwKFNUs3pN<zAnzn[dhTK@XkpVBV=uA8j:AH^HgEiNkZhPknGiQw6Qtn41a0"
 559,1
 928,0
 593,
@@ -25,23 +25,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
+pStrictErrorHandling
 pClient
 pPassword
 pDelim
-561,4
+561,5
+1
 1
 2
 2
 2
-590,4
+590,5
 pLogOutput,0
+pStrictErrorHandling,0
 pClient,""
 pPassword,""
 pDelim,"&"
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
 pPassword,"REQUIRED: New Password"
 pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
@@ -52,11 +56,12 @@ pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,187
+572,192
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.client.password.reset', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pClient', '', 'pPassword', '', 'pDelim', '&'
 	);
 EndIf;
@@ -125,7 +130,11 @@ ENDIF;
 
 ### Check for errors before continuing
 If( nErrors > 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Split pClient into individual clients and reset password ###
@@ -250,7 +259,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -265,6 +274,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully reset password for client %pClient% .' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

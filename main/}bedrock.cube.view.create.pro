@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tQBNmULn9yWjy<7JpWF0aYqw2N]K?EGPnO]tHpY8SRHOl]wJW]MeCz8?2u9Aw=QGQoZrXWtwNaRR`?1<JYT0wB8p5RGw9BUOq_F@?z=GoX82S2gbbOvL2^Snv`dZxrhR>9BY8DKB9gYExaJDw4<pRDFLL5L]N>WeGw=sHFHe;`s?\P<dOmnbml4aXpe@gXSJ8qtgk8U`"
+565,"gzJ<p57a8SyeAcD>_IrLN_pKhhu44BOQGbU=py0[k3CR]6HKe4FRiU=rUGWC;XRC1^<P?BGiSyVo:`As7l\50Lp25UOYiEHIRC1cp`@Pg<pX9NuVgQ@kTJ\s7K\C?CIJFOBWY;kq\Dv41hi\p@<GZrB:rw8y3R5i^\Pvm5wl@[BU6heLFcaeZLr2k7a2DA`QwjQ6mtKv"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,13
+560,14
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pFilter
@@ -39,13 +40,7 @@ pEleStartDelim
 pEleDelim
 pTemp
 pSubN
-561,13
-1
-2
-2
-2
-1
-1
+561,14
 1
 1
 2
@@ -53,8 +48,16 @@ pSubN
 2
 1
 1
-590,13
+1
+1
+2
+2
+2
+1
+1
+590,14
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pFilter,""
@@ -67,8 +70,9 @@ pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSubN,0
-637,13
+637,14
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pView,"REQUIRED: Name of the View"
 pFilter,"OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations"
@@ -88,11 +92,12 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,434
+572,444
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.view.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
@@ -209,7 +214,11 @@ EndIf;
 
 ### If errors occurred terminate process with a major error status ###
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
   
 # Reset all of the subsets that may be attached to the view in the case that dimensions not in the filter
@@ -493,6 +502,7 @@ If(pSubN = 1);
             sProc   = '}bedrock.hier.sub.create';
             nRet    = ExecuteProcess( sProc,
                 'pLogOutput', pLogOutput,
+                'pStrictErrorHandling', pStrictErrorHandling,
                 'pDim', sDimC,
                 'pHier', '',
                 'pSub', sSubset,
@@ -512,7 +522,11 @@ If(pSubN = 1);
                 sMessage = 'Error creating the view from the filter.';
                 nErrors = nErrors + 1;
                 LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-                ProcessBreak;
+                If( pStrictErrorHandling = 1 ); 
+                    ProcessQuit; 
+                Else;
+                    ProcessBreak;
+                EndIf;
             ENDIF;
             
             ViewSubsetAssign( pCube, pView, sDimC, sSubset );
@@ -533,7 +547,7 @@ If(pSubN = 1);
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,26
+575,31
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -549,6 +563,11 @@ If( nErrors <> 0 );
     nProcessReturnCode = 0;
     LogOutput( 'ERROR' , Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
 Else; 
 
     sProcessAction      = Expand( 'Process:%cThisProcName% successfully created View %pView% in Cube %pCube%.' );

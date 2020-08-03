@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"h4GD6mTca?VQOIsANsE=8`k[EIARPBQL@wEZ;[\dyVLyBlKWsEFoRApFGGW^n4TcIigTj0`uaRO5e7zVUo:?f@ZEDEzzI>JcJDnVN5EDC^?L43RkRCyOw<px4Wrh5;ftUOMk=_p`?PAGmhXZKwV_P\H5hQqOnOop[IwUtKY6C9PASRYf@UU?A;e_paY\cF[VHcxtEZcf"
+565,"sP?lswkLDI1M@C0=VCUaBr=N>fOTutdN59`uP?zAY@G4;2HF>Dm8oRJN:fZQAUGuT74Q5`R?dVuNlgGtM[RK_TlfJXzF7yMu4j7AQ<3o@2@rbS0@Rxe\o_XJw5LXvn5d7e^1_eiWqjEGDpjp<9z_e=AF<i]ahDVw[Ho6O@[GYnTE1keli]=G5NOQB4py`^h5t:]MY<E^"
 559,1
 928,0
 593,
@@ -18,24 +18,28 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,
 569,0
 592,0
 599,1000
-560,2
+560,3
 pLogOutput
+pStrictErrorHandling
 pTemp
-561,2
+561,3
 1
 1
-590,2
+1
+590,3
 pLogOutput,0
+pStrictErrorHandling,0
 pTemp,1
-637,2
+637,3
 pLogOutput,"Write status messages to tm1server.log file?"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pTemp,"Use temporary objects for views & subsets?"
 577,0
 578,0
@@ -44,7 +48,7 @@ pTemp,"Use temporary objects for views & subsets?"
 581,0
 582,0
 603,0
-572,177
+572,183
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
@@ -156,7 +160,11 @@ EndIf;
 # If any parameters fail validation then set data source of process to null and go directly to epilog
 If( nErrors > 0 );
     DataSourceType = 'NULL';
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
 EndIf;
 
 ################################################################################################# 
@@ -174,6 +182,7 @@ sProc       = '}bedrock.cube.data.clear';
 # Set filter as per logic requirement of the ZeroOut
 sFilter     = 'Dim1' | sDelimEleStart | 'El1' | sDelimDim | 'Dim2' | sDelimEleStart | 'El2';
 nRet        = ExecuteProcess( sProc, 'pLogOutput', pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pCube', cCubeTgt, 'pView', cViewClr, 'pFilter', sFilter,
 	'pDimDelim', sDelimDim, 'pEleStartDelim', sDelimEleStart, 'pEleDelim', sDelimEle,
 	'pTemp', pTemp 
@@ -199,6 +208,7 @@ bSuppressNull   = 1;
 bSuppressC      = 1;
 bSuppressRule   = 1;
 nRet = ExecuteProcess( sProc, 'pLogOutput', pLogOutput, 
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pCube', cCubeSrc, 'pView', cViewSrc, 'pFilter', sFilter,
 	'pSuppressZero', bSuppressNull, 'pSuppressConsol', bSuppressC, 'pSuppressRules', bSuppressRule,
 	'pDimDelim', sDelimDim, 'pEleStartDelim', sDelimEleStart, 'pEleDelim', sDelimEle,
@@ -238,7 +248,7 @@ If( pLogOutput >= 1 );
    nDataRecordCount = nDataRecordCount + 1;
 EndIf;
 
-575,26
+575,29
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
@@ -255,6 +265,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully %cAction%. %nDataRecordCount% records processed.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

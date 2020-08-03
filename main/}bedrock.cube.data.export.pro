@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"lNRMzjSnQ@DLaN>bbB2>VNBiij63@A0u7rwP:1q0MwOlMA3H[_o\eQ1MskB4=^hF8?k7?Lu9xMg6VDx124NyEe1huL5kqCkGWZn?23Ui1m<i9DAOL_ZU1YSq3Y_^RGVFnP7hVV6lsXnoE9DmETMKe>\Rx]oiHj2JnhGaHp4XRO`TRT428B@I\^>AcMzDInqogO4v3jF;"
+565,"d>kMa8gbG6tYMSVC[5CBJGvJq379taBg8c27\L6E5awJ8D@lHpeaYOyiM6v`ZrTtng2YW3:>mbQ8EmbsHC:tDt9`;8<L[[vob:wkzdZyEPWVcnpWJ<:LMoLs3OY9<kd1?Gja<ptkde993f]DHyd`DH`P?>_L3Pz3C^c1vVSLXE7NBGqDlRd5uv^25qdmyxjeVRgCG`p9"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,24
+560,25
 pLogoutput
+pStrictErrorHandling
 pCube
 pView
 pFilter
@@ -50,21 +51,7 @@ pTitleRecord
 pSandbox
 pSubN
 pCharacterSet
-561,24
-1
-2
-2
-2
-2
-1
-2
-2
-2
-1
-1
-1
-1
-1
+561,25
 1
 1
 2
@@ -73,10 +60,26 @@ pCharacterSet
 2
 1
 2
+2
+2
+1
+1
+1
+1
+1
+1
 1
 2
-590,24
+2
+2
+2
+1
+2
+1
+2
+590,25
 pLogoutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pFilter,""
@@ -100,8 +103,9 @@ pTitleRecord,1
 pSandbox,""
 pSubN,0
 pCharacterSet,""
-637,24
+637,25
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
 pView,"OPTIONAL: Temporary view name"
 pFilter,"OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations (Blank=whole cube)"
@@ -738,11 +742,12 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,369
+572,379
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.data.export', 'pLogoutput', pLogoutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
@@ -979,7 +984,11 @@ EndIf;
 # Jump to Epilog if any errors so far
 IF ( nErrors > 0 );
     DataSourceType = 'NULL';
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
 ENDIF;
 
 # Branch depending on whether to do recursive calls to self on independent threads or run all in this thread
@@ -1073,6 +1082,7 @@ Else;
   # Create Processing View for source version 
   nRet = ExecuteProcess('}bedrock.cube.view.create',
           'pLogOutput', pLogOutput,
+          'pStrictErrorHandling', pStrictErrorHandling,
           'pCube', pCube,
           'pView', cView,
           'pFilter', pFilter,
@@ -1091,7 +1101,11 @@ Else;
       sMessage = 'Error creating the view from the filter.';
       nErrors = nErrors + 1;
       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-      ProcessBreak();
+      If( pStrictErrorHandling = 1 ); 
+          ProcessQuit; 
+      Else;
+          ProcessBreak;
+      EndIf;
   ENDIF;
   
   sParsedFilter = sBedrockViewCreateParsedFilter;
@@ -1164,7 +1178,7 @@ ENDIF;
 TextOutput( cExportFile, Expand(sRow) );
 
 ### End Data ###
-575,38
+575,41
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1191,6 +1205,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sDataCount = NUMBERTOSTRING (nDataCount);
     sProcessAction = Expand( 'Process:%cThisProcName% exported %sDataCount% records from %pCube% based on filter %pFilter%.' );

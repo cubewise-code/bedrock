@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"nP;Z?7I`4`p9GIaTZPt3QPUO5nIvGXeH5LXOudaGTMxqoDXRRs>yHoFMVwh=MP?wzllnoEFJ^[a5hUW<jmHYFNd@drNUC8aDv2m=MYPVzwAOiBqro=OcKojTnbt=bSBLpA4]^_DiKSbbKw5D:3^bS<w7xp6vDV<lGykE28Ol6J]sCcX2=`P4Bj]tC@G9p=kQre0:C9N="
+565,"rJA0pas7x<t?Dngy>La64q]2Uh]BRtmo5?NHbo`_C9RYQP?YCENxSFL_3pzaYweMUN3vcpr[xsOuZyBu6qii<v^Gn5kFERD:`:VV\yFD8GME:ISYSZlA_e4Fac]y9MONux>5w0E4=9\]afncAJF7x49QIzo7mm]BMK6MyEiL@>>g=n5=j14s5?FVg<w^BeJismHeldOk"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pClient
 pGroup
 pDelim
 pAddOrRemove
 pSecurityRefresh
-561,6
+561,7
+1
 1
 2
 2
 2
 2
 2
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pClient,""
 pGroup,""
 pDelim,"&"
 pAddOrRemove,"Add"
 pSecurityRefresh,"Yes"
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pClient,"REQUIRED: Client Names Separated by Delimiter and accepts wildcards"
 pGroup,"REQUIRED: Group Names Separated by Delimiter and excepts wildcards"
 pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
@@ -60,11 +64,12 @@ pSecurityRefresh,"REQUIRED: Refresh Security?"
 581,0
 582,0
 603,0
-572,272
+572,277
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.client.group.assign', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pClient', '', 'pGroup', '',
     	'pDelim','&', 'pAddOrRemove', 'Add', 'pSecurityRefresh', 'Yes'
 	);
@@ -161,7 +166,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Add/remove clients to/from groups ###
@@ -343,7 +352,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,26
+575,29
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -359,6 +368,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully performed %pAddOrRemove% for client %pClient% to group %pGroup%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

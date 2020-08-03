@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"p2cx<RhvzluLj_CsacC7ms4eq11]Qa3Dh9CdpfIoNnZEjW5nfeCG9:xMC7gxHCks8Ka]iAlp3LDFaQl2gM[M\^396sje3gFEbJ65Tp^CqSqqyRiVYZwj^^ByzZLmBj5sgD;=:sA9G[;1R2wLSj5dspv8aZ2h^1pO=mtdbsE8Gt4b6DP][::j6wqEX<vb2oo[P7[A;>KX"
+565,"yPELWb<ph9`d_V6@2itRsFn92aL_oc5oLoh=AcuXNRdZ`6hivHFmXkMWN<TCW_=[Y3Inr;1rmK4k0lQ7UVqv_KQbbj=RyvVQM;;X<mmX2C55^cjCuLz=Q>aPnS`_4=ziL\1VPc=XTbOTermUgVuwa<@ztHJbyR=c<at8jdnAm<Gu:ihjH@zziW:K]UQuUf>Tj7>DaZLN"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pDim
 pDelim
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pDelim,"&"
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension (Delimited list & wildcards (*) acceptable)"
 pDelim,"REQUIRED: delimiter character for attribute list. (default value if blank = '&')"
 577,0
@@ -48,11 +52,12 @@ pDelim,"REQUIRED: delimiter character for attribute list. (default value if blan
 581,0
 582,0
 603,0
-572,173
+572,178
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.dim.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pDelim', '&'
 	);
 EndIf;
@@ -114,7 +119,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Dimension delete
@@ -232,7 +241,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -247,6 +256,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted dimensions %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

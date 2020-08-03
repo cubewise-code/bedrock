@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"b5a7S7sb:P<HGLbq:zLjT`9KdGL3oeIYXO3:s>MoP3MH_;hpF6rRAaVz;>Uu<a\qIU]7L8F2kvP[<0IMSs<anWVu^f=Y::g\CRIf1oplVhOG8HL6yoHo3``c3z:ztRMmIF55JcZ8VuzHygYRhXj3gq]6E@fh]u]j_6wiBcSdHLulNCJd@pQ7LqWd@H>278G;^\ww_qMg"
+565,"qWV3ao?@feOar=@kmaKcKf=Mg3iWEmfRTlO@SwEfxnA;JJ:W:;ps7ZnEr<1YqkQUfxF:Vwl0o`E1PLHhbP61O9fI8oV[R?iIdZOrm3oBR^5\IyI96lgaN0R=vYkT^]W@2kVq=`rCs\g@N;_lsNdKb^9COBu7SR=kUkcFRoI3D7TpPw8COQDQ5PQJwF=wiS<beEkfoSw1"
 559,1
 928,0
 593,
@@ -25,15 +25,17 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pEle
 pTgtConsol
 pMode
 pWeight
-561,7
+561,8
+1
 1
 2
 2
@@ -41,16 +43,18 @@ pWeight
 2
 2
 1
-590,7
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pEle,""
 pTgtConsol,""
 pMode,"Add"
 pWeight,1
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension Name"
 pHier,"OPTIONAL: Hierarchy Name"
 pEle,"REQUIRED: Element Name"
@@ -64,11 +68,12 @@ pWeight,"OPTIONAL: Element Weight (for Add only)"
 581,0
 582,0
 603,0
-572,145
+572,150
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.element.move', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pEle', '',
     	'pTgtConsol', '', 'pMode', 'Add', 'pWeight', 1
 	);
@@ -186,7 +191,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 
@@ -220,7 +229,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,27
+575,29
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -235,7 +244,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code

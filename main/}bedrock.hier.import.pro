@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"vt_GxPZI:fmxpNKhk^D^sJyyQGjAebnF:qRQW3PGd_Tb1{WsJfj\o=RJ37SAlfeQlrqjW^Tbo:jO>DOUz?SLBfqy85e[eDvUrTu9]6[=H;<taTwBn654v6K`=kUBZ5zRkyza4Sxqwt;DnFX?PFr2}9M;KiM>mhwX\yjPHUdg_hz(_lLqpC<Ji8kNT1=FHDdlZ<INsC4"
+565,"xS]2EwB`3:u>e\QYN;e^cnsFyemKp5uGjQa?nWdG]Y``yr7fr]h8h5l2n5SQ^xlA`65`G`idG5bo6Foew7=W7>R^5te;092izuo3m=a5yo59v1|B~9z1_ueD<trZPeZj2wzoTyyR]PjDNxP4Pju;}<3z_D0GN8CsLxezMYt=OvE+_`G5>o;[m8[1b5x@KTi|Cp`hOCZ"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,10
+560,11
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSrcDir
@@ -36,19 +37,21 @@ pQuote
 pLegacy
 pUnwind
 pConsol
-561,10
-1
-2
-2
-2
-2
-2
-2
+561,11
 1
 1
 2
-590,10
+2
+2
+2
+2
+2
+1
+1
+2
+590,11
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSrcDir,""
@@ -58,8 +61,9 @@ pQuote,""""
 pLegacy,0
 pUnwind,1
 pConsol,"*"
-637,10
+637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pHier,"OPTIONAL: Target Hierarchy (defaults to dimension name if blank)"
 pSrcDir,"OPTIONAL: Source Directory Path (defaults to Error File Directory)"
@@ -112,11 +116,12 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,262
+572,273
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
 ExecuteProcess( '}bedrock.hier.import', 'pLogOutput', pLogOutput
+    , 'pStrictErrorHandling', pStrictErrorHandling
     , 'pDim', '', 'pHier', ''
     , 'pSrcDir', '', 'pSrcFile', ''
     , 'pDelim', ',', 'pQuote', '"'
@@ -320,13 +325,18 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Prepare target dimension ###
 If( HierarchyExists( pDim, sHier ) = 1 );
     If( pUnwind = 1 );
     ExecuteProcess('}bedrock.hier.unwind', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', pDim,
     	'pHier', sHier,
     	'pConsol', pConsol,
@@ -342,6 +352,7 @@ If( HierarchyExists( pDim, sHier ) = 1 );
 Else;
     ExecuteProcess('}bedrock.hier.create',
 	'pLogOutput',pLogOutput,
+	'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pDim,
 	'pHier',sHier);
 EndIf;
@@ -357,7 +368,11 @@ If( nErrors = 0 );
         sMessage = 'Dimension created: ' | pDim|':'|sHier;
     EndIf;
 Else;
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
 EndIf;
 
 ### CONSTANTS ###
@@ -375,7 +390,7 @@ DatasourceAsciiQuoteCharacter = pQuote;
 
 
 ##### End Prolog #####
-573,70
+573,74
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -386,7 +401,11 @@ DatasourceAsciiQuoteCharacter = pQuote;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 If( pDim @= sHier);
@@ -446,7 +465,7 @@ ELSEIF( V1 @= 'P' );
 
 ENDIF;
 
-574,55
+574,59
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -457,7 +476,11 @@ ENDIF;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Data Count
@@ -502,7 +525,7 @@ IF( V1 @= 'V' );
         ENDIF;        
     ENDIF;
 ENDIF;
-575,26
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -517,7 +540,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code

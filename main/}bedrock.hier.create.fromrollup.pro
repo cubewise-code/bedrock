@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"mq[sIA4s`CWtuaxXw6YF40YD^[?``gK=OvL1sHK7J@nFdXOm0FWL[UIknE7pizq0dea9d[8r5zzr@\q@kySefWiwm<VJaT7uPhmfu:xdnt^mHR]^c\ll]n<MP\0_K]6m5en@Y9gwe?y[J6kdTxhy07>ht1DxLO=QAr`S5g9PPn<?^qg<V5W<um=h[9zNPS61l;wG=[pn"
+565,"jYeva?JG3_aQf8\I>5?WD:S?wrwgxo\VgS^lH>b?guwJ<Vxjs\B`J^Gc<;fTHqo7Iwq^bwBRHxjXR8yfhIv\Wisxl423k?7X;oFOQ8oDTtp8@62;syCZm>K9I`ZT7W^:yTRAa?a^c47S5zBs^FWam@^f0q_HuTw=B^sr1oBvle=ok9BORhfVx4whl^fUXf3f:rZoe3i4"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pSrcHier
 pConsol
@@ -35,18 +36,20 @@ pTgtHier
 pAttr
 pUnwind
 pRemove
-561,9
-1
-2
-2
-2
-2
-2
+561,10
 1
 1
+2
+2
+2
+2
+2
 1
-590,9
+1
+1
+590,10
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pSrcHier,""
 pConsol,""
@@ -55,8 +58,9 @@ pTgtHier,""
 pAttr,1
 pUnwind,2
 pRemove,0
-637,9
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
 pSrcHier,"OPTIONAL: Source Hierarchy (blank = same name as source dimension)"
 pConsol,"REQUIRED: Cons element in source dim to create root element in target"
@@ -72,11 +76,12 @@ pRemove,"OPTIONAL: Remove cons elements from source? (1 = Yes, 0 = No)"
 581,0
 582,0
 603,0
-572,169
+572,182
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.create.fromrollup', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '', 'pConsol', '',
     	'pTgtDim', '', 'pTgtHier', '',
     	'pAttr', 1, 'pUnwind', 2, 'pRemove', 0
@@ -159,7 +164,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Validate source Hierarchy
@@ -184,7 +193,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Validate target Dimension
@@ -207,6 +220,7 @@ EndIf;
 #create subset
 ExecuteProcess('}bedrock.hier.sub.create',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pSrcDim,
 	'pHier', pSrcHier,
 	'pSub', cTempSub,
@@ -216,6 +230,7 @@ ExecuteProcess('}bedrock.hier.sub.create',
 
 ExecuteProcess('}bedrock.hier.create.fromsubset',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pSrcDim',pSrcDim,
   'pSrcHier', pSrcHier,
   'pSubset', cTempSub,
@@ -228,6 +243,7 @@ ExecuteProcess('}bedrock.hier.create.fromsubset',
 IF(pRemove = 1);
   ExecuteProcess('}bedrock.hier.unwind',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pSrcDim,
 	'pConsol', pConsol,
 	'pRecursive', 1
@@ -235,6 +251,7 @@ IF(pRemove = 1);
 
   ExecuteProcess('}bedrock.hier.emptyconsols.delete',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pSrcDim,
 	'pHier', pSrcHier
 );
@@ -255,7 +272,7 @@ Endif;
 
 
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -270,6 +287,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned dimension:hierarchy %pSrcDim%:%pSrcHier% to %pTgtDim%:%pTgtHier% based on the %pConsol% consolidated element.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

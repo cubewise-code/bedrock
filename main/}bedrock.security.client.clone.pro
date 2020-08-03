@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"p5fnu25kQTisO_xaaHdN2<C`MTx_C2X1nhEAi4Kh_F_4Fy`2E^=cpo6QOnS_cO3pM6u;nnQpuBRa]fMAlHsoc@9jbR9Bv7B_HdfXnHL6JNYe88g0JmC3paOUogfa^3\7@R0oHH1O;0;BijxJY:na;5OA?r<tIgtx[5EPIPt0OnQ_l3reZXyM@Cw3vVsbOKVtOpDD^;03"
+565,"y1DUw5`A:0EXWhSSt2wr^5^juaaGhCKzh0>7jEMcD_<9wU@]5SryH7qPIaT\wGsh<64h1yRjvsiLU5`:[b;sdMFbf@UMwfPGO>zqC4DOh7nVllZbBfn>CYgA0;nq\kEBHlS4A7HSgQjVI:NC9dLi\TyhcEwK>oTGV]VfJWwmuQ7?xh601DFxCTB<zFEQgKRCcF43iq>["
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pSrcClient
 pTgtClient
 pMode
 pDelim
-561,5
+561,6
+1
 1
 2
 2
 2
 2
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcClient,""
 pTgtClient,""
 pMode,"REPLACE"
 pDelim,"&"
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcClient,"REQUIRED: Source Client"
 pTgtClient,"REQUIRED: List of Target Clients Separated by Delimiter"
 pMode,"OPTIONAL: Mode REPLACE or ADD (default = REPLACE)"
@@ -56,11 +60,12 @@ pDelim,"OPTIONAL: Delimiter (Use for a list of target users. Defaults to & if bl
 581,0
 582,0
 603,0
-572,121
+572,126
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.client.clone', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcClient', '', 'pTgtClient', '',
     	'pMode', 'REPLACE', 'pDelim', '&'
 	);
@@ -151,7 +156,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Split pClients into individual Clients and add only if they don't exist ###
@@ -171,7 +180,7 @@ While( nDelimiterIndex <> 0 );
     # Don't attempt to add a blank client
     If( sClient @<> '' );
         If( DimIx( '}Clients', sClient ) = 0 );
-            ExecuteProcess( '}bedrock.security.client.create', 'pClient', sClient);
+            ExecuteProcess( '}bedrock.security.client.create', 'pStrictErrorHandling', pStrictErrorHandling, 'pClient', sClient);
         EndIf;
     EndIf;
 End;
@@ -188,7 +197,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,60
+575,63
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -239,6 +248,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned %pSrcClient% to %pTgtClient% by %pMode%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

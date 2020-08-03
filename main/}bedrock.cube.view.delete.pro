@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"c\RazahxgxHpgmLRK`91kQb34pF_g]QM9kGbJJd_WaS=\N=juN>oslZ=@_CRXaqwyT:f21aTS9=bJrZe[AlLA9EI9>kp[1s?m;`YxDmio[1Pj?vV]n::Ty[AuhGfP;pr_Tkd[iY]P7uPS8[;O?\>p^3e9gh=@F>_K8K??naMs:<_mi`6n`D58Ns[oQl9Pu7Fe;@U?nrW"
+565,"m?gMztU7Ts\dJagMy@@qaQwmV5pq@77PyEcKH=vqss^9J4>uU6;=KJ[=aizbiDY_b[IdKGrS^F0I_BDXLay8<\p\WB_1V7BJvQzqOqJ=UBao@iO5EZ;xNFS=dY9u8feM>W<O0D?Jfj34TlUXiKFFARuV<PD2v?NhFuSskgOOoD?xH]>Tse\bwd[j5;rIhjR<N5NhWYOh"
 559,1
 928,0
 593,
@@ -25,23 +25,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pDelim
-561,4
+561,5
+1
 1
 2
 2
 2
-590,4
+590,5
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,"}bedrock*"
 pDelim,"&"
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: List of Cubes Separated by Delimiter (For all cubes just the wildcard character alone i.e. *)"
 pView,"REQUIRED: List of Views Separated by Delimiter. Wildcards Permitted on View Names."
 pDelim,"OPTIONAL: Delimiter Character  (default value if blank = '&')"
@@ -52,11 +56,12 @@ pDelim,"OPTIONAL: Delimiter Character  (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,223
+572,228
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.view.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pCube', '', 'pView', '', 'pDelim', '&'
 	);
 EndIf;
@@ -160,7 +165,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors > 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Work through all cubes specified in pCube
@@ -286,7 +295,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -301,6 +310,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted view %pView% from cube %pCube%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

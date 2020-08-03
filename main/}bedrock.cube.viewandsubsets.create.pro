@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"f7KZy[abQpHFB7Mx=o?w:kFsy`acK8[M4vRq4HA2jk@?5xs:]EfyApzKZh@F3Qd9[78IVkCeYZl5Hbc[9dFUdp1pH<[tYAU0?M=[ngz^RDaqomyF>9o^=>`Ymu>5MDv<M7slPI8W\eM^MxxF6P>bzYNeMhaMclN1E:=^:EoE_ouWF=v@crxT>ojoW0<c26@STQX<;xN`"
+565,"ui^SoCAb61X\^mYuAmjj^a0yyEzfyt<uGU:n6R?c>A1lgawz4?<kPM1qPgysr:u<i1v;m8ilFfav?JnjB0ux0Mm>f`c]z9r]cX]Em6L`5>`9ym8?8b\@CRZhi@c5my8<DVTOTwQ@XXNoLlY7c66RTkF0o>opazK3@6y[\RZKQaqc:@y8bzgV\IWaz]XJR6kCBqna^?kd"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,11
+560,12
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pSub
@@ -37,7 +38,8 @@ pSuppressConsol
 pSuppressRules
 pTemp
 pSubN
-561,11
+561,12
+1
 1
 2
 2
@@ -49,8 +51,9 @@ pSubN
 1
 1
 1
-590,11
+590,12
 pLogOutput,1
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pSub,""
@@ -61,8 +64,9 @@ pSuppressConsol,1
 pSuppressRules,1
 pTemp,1
 pSubN,0
-637,11
+637,12
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: List of Cubes (Separated by Delimiter, Accepts Wild card)"
 pView,"OPTIONAL: View (will default to pSubset if left blank)"
 pSub,"OPTIONAL: Subset (will default to pView if left blank)"
@@ -80,11 +84,12 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pDim"
 581,0
 582,0
 603,0
-572,289
+572,302
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.viewandsubsets.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '', 'pSub', '', 
     	'pDim', '*', 'pDelim', '&',
     	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
@@ -204,7 +209,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Handle All cubes or a cubes list
@@ -231,7 +240,11 @@ Else;
         sMessage = Expand( 'Cube: %sSearchCube% does not exist.' );
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
       Else;
         If( sMDX @= '' );
           sMDX = Expand( '{[%cDimCubes%].[%sSearchCube%]}' );
@@ -280,7 +293,11 @@ Else;
         sMessage    = Expand( 'Dimension: %sSearchDim% does not exist.' );
         nErrors     = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
       Else;
         If( sMDX @= '' );
           sMDX = Expand( '{[%cDimDimensions%].[%sSearchDim%]}' );
@@ -380,7 +397,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -395,6 +412,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created views and subsets for cube  %pCube%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

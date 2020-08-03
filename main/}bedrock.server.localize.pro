@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tsu<7Ri5[<p?otuFueWnaXzkij^CA:uGDgyg\MciLEm3bh\i;f1KVuwNnb[v18s^dM@m]QR`X6M9Kw8kUDrhWRz]BzuTeoUWHxgbMbiw0M3T=T:WmFihTm0l>TUzyy2ES\B\w^lg8>DU@]_qK5=824<C2uz<Lz>9^W3[h2Y`PSQl4bN@We\tUuE=TflIwCe\id\dnH40"
+565,"dGb9ajgKeMbgk:>x<r:Sgk19N=;mgz?eq:354`;I@\ZO9ck:dxtr7tV^Rfg7JzbDtx;iqMz\rHds[GI0otKzTJk1KYcDpsuozBM>ko7c73`a[:^Sw]5LX:@ingU?np]j<5]quFvsV]xWtZVRFc7EGXHu\agM0VZ2h3Z6RT841z2A<rhb5m@41oM;IM=gNmN_^k[5XdTS"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pDim
 pCube
 pDelim
 pSub
-561,5
+561,6
+1
 1
 2
 2
 2
 1
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pCube,""
 pDelim,"&"
 pSub,0
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"OPTIONAL: Dimension (Delimited list & wildcards (*) acceptable)"
 pCube,"OPTIONAL: Cube( Delimited list & wildcards (*) acceptable)"
 pDelim,"OPTIONAL: delimiter character for dimension list. (Defaults to & if blank)"
@@ -56,11 +60,12 @@ pSub,"OPTIONAL: If localizing attributes for a dimension also localize subset na
 581,0
 582,0
 603,0
-572,258
+572,263
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.localize', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pCube', '', 'pDelim', '&', 'pSub', 0
     );
 EndIf;
@@ -117,7 +122,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 IF( CubeExists( '}CubeAttributes' ) = 0 );
@@ -325,7 +334,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -340,6 +349,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% localized cube & dimension names & localized attributes for dimensions %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

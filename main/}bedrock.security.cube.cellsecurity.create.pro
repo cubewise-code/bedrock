@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rHn\3utj\u7e8yi^W6zWBO8v>Mag3qi}B85s3RrRMuYz3\efw^R2;lZnAUi>Wl8EA2Oq63Bz8nY1=PaA9=eSaMmz0hbC]a[8fXzuq23qKfNSEmvuiwaVG[JzibiePgDmq20BC[6T9>CM[Ae:WBv]6_a?5V5Ty1cLLdCd:Q^1EWs[kXDKjR<L6FN0PscAfS6BYc:yu`UqrHn\3utj\u7e8yi^W6tWBO8v>Mag3qi=H85s3RrRMuYz3\hfw^R2;lZnA%O;WlhBA2OQ13Bz8ni==0dA9=eSaMmz0hrB]a[8fXzUt23qKfNSEmF4ewaVG[Jzibie00@mqb6bM[6T9>CmVAe:^BvM2_a?5V5Ty1cLLdse:Q>=EWs[+[DKjR<L6V@0PscAfS:BSc:yu`Uq"
+565,"az6Co4Tw<9BzlnymA:?u@nXB`5ZZu[w{BnMl9385`gn]rPuIfA_8wxw:p\i~>n0UHbQp6;]K`s^qEUaVgrxw<ux6mNcSbXX51qkqqON?;HpEcHuuiz1^b0@EVB:WVgTs\0@J3QiiRCqG[;S5WOCW6frd6]CfH;kdUIE4][PQW5RFeHUJCI=nKHNPgdXCQT6@YloUx:x>at6Co4Tw<9BzlnymA:?u@nXB`5ZZu[w;HnMl9385`gn]rPxIfA_8wxw:p,?z>n`RHbQP1;]K`sn}E5dVgrxw<ux6mNsRbXX51qkAvON?;HpEcHE4ez1^b0@EVB:Wv0\s\`Fj=QiiRCqgV;S5\OCg=frd6]CfH;kdUIu5][0]W5RF%KUJCI=nKX@PgdXCQT:@SloUx:x>"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pCube
 pDim
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pDim,""
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube to create cell security for"
 pDim,"REQUIRED: Map of dimensions to include in cell security as a array of 1:0 colon delimited e.g. ""1:0:0:1:0"""
 577,0
@@ -48,11 +52,12 @@ pDim,"REQUIRED: Map of dimensions to include in cell security as a array of 1:0 
 581,0
 582,0
 603,0
-572,127
+572,132
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.cube.cellsecurity.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pCube', '', 'pDim', ''
 	);
 EndIf;
@@ -123,7 +128,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Count dimensions in cube ###
@@ -186,7 +195,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -202,6 +211,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created cell security for %pCube% and %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

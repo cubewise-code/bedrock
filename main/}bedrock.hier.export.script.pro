@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"q\hro@N\w79iU3vfca:4M328bpGhO]x_P4d;:f@]bG4`fDi\oRwsN5A>AEFkBTiWU28dgu3FiN]h6zm18SG`B\N8k\<tLS`aY\7^upWMtkjwR>\a3HjntU8cBXfA1o^XKxihGATyMqNhbq@xsD>sW[c6hx[\AG:zvk8BL8OoM]yvsl=gI?;N0Z1L_x]hXuHiajSf:7`c"
+565,"qJ8b0yU:j=DAH0^V]aV5Ke?V^xESG:lVAwWRKqX^oYCFEk=4@ZhN885`N=?HUc@Fdxrmse`yn1rB[v8XR:jIFjqVLmLq^hZ;KK:L^ly@eFSOiGBOQEAGAg;Zn<UY2:zo=U?[jkp5CMl_530SxLU0Q?Tf^ZQbHKCBp]rPSD\q;StlhHV>6O16DZNh_1OJkoY0vs9QzZbg"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,12
+560,13
 pLogOutput
+pStrictErrorHandling
 pDim
 pEle
 pDelim
@@ -38,21 +39,23 @@ pAttr
 pSub
 pAttrVal
 pCharacterSet
-561,12
+561,13
 1
+1
+2
 2
 2
 2
 2
-2
 1
 1
 1
 1
 1
 2
-590,12
+590,13
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pEle,""
 pDelim,"&"
@@ -64,8 +67,9 @@ pAttr,1
 pSub,0
 pAttrVal,1
 pCharacterSet,""
-637,12
+637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Target Dimension or Hierarchy (as dim:hier), accepts wildcards (if = *, then all the dimensions)"
 pEle,"OPTIONAL: Target Element(s), accepts wildcards ( * will include ALL)"
 pDelim,"OPTIONAL: Delimiter character if list used for pDim, pHier or pEle"
@@ -90,11 +94,12 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,212
+572,217
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.hier.export.script', 'pLogOutput', 0,
+    ExecuteProcess( '}bedrock.hier.export.script', 'pLogOutput', pLogOutput,
+         'pStrictErrorHandling', pStrictErrorHandling,
          'pDim', '', 'pEle', '', 'pDelim', '&', 
          'pTgtDir', '', 'pTitleRecord', 1,
          'pDimInfo', 1, 'pAttr', 1, 'pAttrVal', 1, 'pSub', 0
@@ -260,7 +265,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through dimensions in pDim
@@ -853,7 +862,7 @@ If( ( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & pEle @<> '' ) % ( pSub = 
     TextOutput( sFileName2, Expand('#EndRegion Dimension/Hierarchy: %vDim%') );
     TextOutput( sFileName2, cHashLine );
 EndIf;
-575,27
+575,29
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -869,7 +878,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code

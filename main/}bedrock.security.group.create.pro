@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"rfZ>I?o4kL11on`cM;a17r_kJOimn[sPhU6?@PwR0<eRa[UfAIx:en=R]_cn\\_`vqBu8C6HtT4aiOA7X3O^Hgh];94B:y;N]pO`Th]pNPMIoVLKoSVtjTwu1@]7y=JM7d@>x0T>8Z=;U6CtfSP=CwPNnhD:tNga<Gc80_zVZECyS[vpYdlcY[WO2VDwRKGA:Juc?Vv4"
+565,"bya[_^`Ce<8\VYO><\gK?:i5>z_li@k3JlsB2^?LUnD13KqyMi_vFWeJVK4dObB=3p9<p7ddX@s<TXva;egQQC:eo9cjFX7KM8t4\9quZ<ToSqrrLV8C8rUD6liRzgByKkyalsRD=>x_2OzUy`3VUbAI:r[\VQcGj;AJ3]rsYe=Sg`zbF8fY[FAKNm9iihic>W?@c3jb"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pGroup
 pDelim
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pGroup,""
 pDelim,"&"
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pGroup,"REQUIRED: Groups separated by delimiter"
 pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 577,0
@@ -48,11 +52,12 @@ pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 581,0
 582,0
 603,0
-572,94
+572,99
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.group.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pGroup', '', 'pDelim', '&'
 	);
 EndIf;
@@ -114,7 +119,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Split pGroups into individual groups and add ###
@@ -153,7 +162,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,27
+575,30
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -168,6 +177,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created Group %pGroup% .' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

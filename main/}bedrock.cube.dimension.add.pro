@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xOG?Q_]un8cUhIcm^ad<A_I_ajU9fph[4nmSB>i^^lpSCdY[dDf5x7@9p37?Md`NkGAC^uP1NWADp^XEbW]bmfmffgxDip[VXY@ipEJhX`t9WVCzt5Z\Ogjg;^DhWx3[Ya8Vm2>@L[U5YA=\<I`I^^yavVfRiAiUjztHyV6Z6vWiU1[n]0UNTpUhptX]7TS>KpzMt;Cr"
+565,"xEpRw:qTGUAUIFSNhb?RJJ;CagmFmJa31HK[e9]uXV=aa0Zswa<J6C_mHLSaYW^pRFVDwRfbw^UNX`95zX1F:l6IRn<Azm0b9duj:tW;?7t52rTahyJ0g_MIj8yYm6z6`d`QWOled4WuEq`:Zz2Keo3vEcwiZbNX\fTHpkmK4h07q<pgP8l@B;=]O[X3jLgVJO`m0^]Y"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,9
+560,10
 pLogOutput
+pStrictErrorHandling
 pCube
 pDim
 pDimIndex
@@ -35,18 +36,20 @@ pEle
 pIncludeRules
 pCtrlObj
 pTemp
-561,9
-1
-2
-2
+561,10
 1
 1
 2
+2
+1
+1
+2
 1
 1
 1
-590,9
+590,10
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pDim,""
 pDimIndex,1
@@ -55,8 +58,9 @@ pEle,""
 pIncludeRules,2
 pCtrlObj,0
 pTemp,1
-637,9
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
 pDim,"REQUIRED: Dimension to be added"
 pDimIndex,"REQUIRED: Dimension number of the new dimension in the cube"
@@ -72,11 +76,12 @@ pTemp,"OPTIONAL: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,312
+572,348
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.dimension.add', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pDim', '', 'pDimIndex', 1,
     	'pIncludeData', 0, 'pEle', '', 'pIncludeRules', 2,
     	'pCtrlObj', 0, 'pTemp', 1
@@ -234,7 +239,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ######  CALLING THE STEP PROCESSES #####
@@ -245,6 +254,7 @@ IF(pIncludeRules = 1 % pIncludeRules = 2);
   sProc = '}bedrock.cube.rule.manage';
   nRet = EXECUTEPROCESS( sProc,
     'pLogOutput', pLogOutput,
+    'pStrictErrorHandling', pStrictErrorHandling,
     'pCube', pCube,
     'pMode', 'UNLOAD'
     );
@@ -253,7 +263,11 @@ IF(pIncludeRules = 1 % pIncludeRules = 2);
     sMessage = 'Error unloading the rule for %pCube%.';
     nErrors = nErrors + 1;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
   ENDIF;
   
 Endif; 
@@ -268,6 +282,7 @@ IF(pIncludeData = 1);
     sProc = '}bedrock.cube.clone';
     nRet = EXECUTEPROCESS( sProc,
         'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
         'pSrcCube', pCube,
         'pTgtCube', pCloneCube,
         'pIncludeRules', nIncludeRules,
@@ -281,7 +296,11 @@ IF(pIncludeData = 1);
         sMessage = 'Error creating cloned cube for keeping data.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
     ENDIF;
 Endif;
 
@@ -289,6 +308,7 @@ Endif;
 sProc = '}bedrock.cube.create';
 nRet = ExecuteProcess( sProc,
     'pLogOutput', pLogOutput,
+    'pStrictErrorHandling', pStrictErrorHandling,
     'pCube', pCube,
     'pDims', sDimString,
     'pRecreate', 1,
@@ -299,7 +319,11 @@ IF(nRet <> 0);
     sMessage = Expand('Error recreating the cube: %pCube%.');
     nErrors = nErrors + 1;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
 ENDIF;
 
 # copy back the data
@@ -309,6 +333,7 @@ IF(pIncludeData = 1);
   
     nRet = ExecuteProcess('}bedrock.cube.data.copy.intercube',
   	'pLogOutput',pLogOutput,
+  	'pStrictErrorHandling', pStrictErrorHandling,
   	'pSrcCube',pCloneCube,
   	'pFilter','',
   	'pTgtCube',pCube,
@@ -328,7 +353,11 @@ IF(pIncludeData = 1);
         sMessage = Expand('Error copying back the data from clone cube: %pCloneCube%.');
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
     ENDIF;
   
     # destroy clone cube
@@ -336,6 +365,7 @@ IF(pIncludeData = 1);
         sProc = '}bedrock.cube.delete';
         nRet = EXECUTEPROCESS( sProc,
             'pLogOutput', pLogOutput,
+            'pStrictErrorHandling', pStrictErrorHandling,
             'pCube', pCloneCube,
             'pCtrlObj', 0
             );
@@ -344,7 +374,11 @@ IF(pIncludeData = 1);
             sMessage = Expand('Error deleting the clone cube: %pCloneCube%.');
             nErrors = nErrors + 1;
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            ProcessBreak;
+            If( pStrictErrorHandling = 1 ); 
+                ProcessQuit; 
+            Else;
+                ProcessBreak;
+            EndIf;
         ENDIF;
     Endif;
 
@@ -357,6 +391,7 @@ IF(pIncludeRules = 2);
 
     nRet = EXECUTEPROCESS( sProc,
         'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
         'pCube', pCube,
         'pMode', 'LOAD'
         );
@@ -375,11 +410,16 @@ IF(pIncludeRules = 2);
       
       EXECUTEPROCESS( sProc,
       'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
       'pCube', pCube,
       'pFileName', cErrorRuleName,
       'pMode', 'LOAD'
       );
-      ProcessBreak;
+      If( pStrictErrorHandling = 1 ); 
+          ProcessQuit; 
+      Else;
+          ProcessBreak;
+      EndIf;
     ENDIF;
   
 Endif; 
@@ -395,7 +435,7 @@ Endif;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -410,6 +450,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully added dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

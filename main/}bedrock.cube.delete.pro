@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"di9@awM=LeQ>39qP9:H:ti@ll<5YJxwtwu4@OPuK01TLqNQ28zo5kLZ`p<e\ZNPfNQGFjvrZfD3v8[\:vKTQW54a;FdDEj3JMd^2vX`vjKzwRey=44s@Vfs4[VTF4aMLQzAW[d_mZ\tG>z[;idDBP4e=w]>Urwgd?F^_l_2SevlIU6srB`kyv:JsWAqJQfpJ5C0H\rZ`"
+565,"m^[k@obR?Q^RqaSmsgyzK[6jjHa=2qIdMft]2wzra1KkxG=xt2?5tqHu^ASoNDWLC0hp9aomW=^THIsQkw17^ayX8?][;wTnJGz0=bdC?>FNbZopBjlx<du=[hr@xEkPQs2n`Sb0LbumYrPINd2:\d?E;mgigbTyXZR_0jc?yF`BE8:sjXV8pIQ3HkzXl2FYePz2QVS`"
 559,1
 928,0
 593,
@@ -25,23 +25,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
+pStrictErrorHandling
 pCube
 pDelim
 pCtrlObj
-561,4
+561,5
+1
 1
 2
 2
 1
-590,4
+590,5
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pDelim,"&"
 pCtrlObj,0
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: List of Cubes to Delete (Separated by Delimiter, Accepts Wild card)"
 pDelim,"OPTIONAL: Delimiter"
 pCtrlObj,"OPTIONAL: To Delete control cube 1=Delete control objects, 0=Do not delete control objects, Default value 0"
@@ -52,11 +56,12 @@ pCtrlObj,"OPTIONAL: To Delete control cube 1=Delete control objects, 0=Do not de
 581,0
 582,0
 603,0
-572,147
+572,157
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pDelim', '&',
     	'pCtrlObj', 0
 	);
@@ -118,7 +123,11 @@ If( Trim( pCube ) @= '' );
   nErrors = 1;
   sMessage = 'No cubes specified';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-  #ProcessError();
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # If no wildcard and no delimiter, log error message if cubename is invalid 
@@ -126,6 +135,11 @@ If( Scan( pDelim, pCube ) = 0 & Scan( '*', pCube ) = 0  & Trim( pCube ) @<> '' &
   nErrors = 1;
   sMessage = 'Cubename ' | pCube | ' is invalid';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Split parameter into individual cubes and delete ###
@@ -210,7 +224,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -225,6 +239,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted cube %pCube%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"pCVXu?MJ?8fr^q<aa>n0H@spZX;kn<1^B;s2_<24xwN]<>fKK@]fxi5fZUz[eEAg8YD6fSSG4^bo?H^rzbPMigeMOAa;DJyD3>VT=KHMRSscHeG4c8PdW>@2N?A3pF:etf>sg9D>cwdZir4c_>T?qm>8nqT^RRSFl8Mmk[rM_>FwktRbdWvWyKSi`gTp8V\uZX<6;Igb"
+565,"gSXxXY;a>bPuBUZ2qmWzxKlQt=sl?Pq@HJ==8j0d[o8j^=[;LZfs5FzQj0z<_DGnLz5HiUW=K_I7v9f;mZ7MM6@N11<jDqn;:_K2ciSSdprYuFw?8m]gWum7n@8n^lK3s7rNsQNA6acaAvpSybCHa;e>;atRLheEHUz2:]Jpj\zK38=gEAGbjH4rcYvH]KVuKZwXYhN@"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,10
+560,11
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pTgtDir
@@ -36,7 +37,8 @@ pDelim
 pQuote
 pLegacy
 pCharacterSet
-561,10
+561,11
+1
 1
 2
 2
@@ -47,8 +49,9 @@ pCharacterSet
 2
 1
 2
-590,10
+590,11
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pTgtDir,""
@@ -58,8 +61,9 @@ pDelim,","
 pQuote,""""
 pLegacy,0
 pCharacterSet,""
-637,10
+637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pHier,"OPTIONAL: Hierarchy (defaults to dimension name if blank)"
 pTgtDir,"OPTIONAL: Target Directory Path (defaults to Error File Directory)"
@@ -82,11 +86,12 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,212
+572,217
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.export', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '',
     	'pTgtDir', '', 'pTgtFile', '',
     	'pTitleRecord', 1, 'pDelim', ',', 'pQuote', '"',
@@ -283,7 +288,11 @@ sAttrDimName    = '}ElementAttributes_' | pDim ;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Assign Data Source ###
@@ -397,7 +406,7 @@ IF( DimensionExists( sAttrDimName ) = 1 );
 ENDIF;
 
 
-575,28
+575,30
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -413,7 +422,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code

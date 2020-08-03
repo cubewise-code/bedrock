@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"eDAtya\OjerVZ[Rc2@lby;jcFZKLQ0ee=v<d0IPnmuRZqic7Dp@tvqfzLVD648DcdY46;_Pt4KxR_pz3@n`SqrM8:ctFnytVUdP@Zb4_=dcaV0R]ifa[m[Cx_KboefK<ibiBC1K5Vj:7or3NorClew2ybDn8JB1]rLAcb_c=Wu0cET>:`KDl:DU9bnDkF87K\8=n;Hv\"
+565,"dRTFaU[i9Ke9b;xd];DStQngh5zezrH:WZ1KlZ:43YH4BLrzmi`YlJFMRlH4HveCjVY8udY\hNBHrK[CmWqkkeKeQ]@AlRns5ySqnzs1s69YBPiB_hQI;mcmaiE=X[`qp1[POYj:fVL0?V1GNp=FMLBF4g>s4LnEB4=g4;`delCrp4i<03Vw[60SeO0<[3lMERGnYN6r"
 559,1
 928,0
 593,
@@ -25,23 +25,27 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pDelim
-561,4
+561,5
+1
 1
 2
 2
 2
-590,4
+590,5
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pDelim,"&"
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Target Dimension (accepts wildcards and delimited list)"
 pHier,"OPTIONAL: Target Hierarchy (accepts wildcards and delimited list, uses default hierarchy if left blank)"
 pDelim,"OPTIONAL: Delimiter character for dimension or hierarchy list (default value if blank = '&')"
@@ -52,11 +56,12 @@ pDelim,"OPTIONAL: Delimiter character for dimension or hierarchy list (default v
 581,0
 582,0
 603,0
-572,221
+572,226
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.emptyconsols.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pHier', ''
 	);
 EndIf;
@@ -131,7 +136,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through dimensions in pDim
@@ -285,7 +294,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -300,6 +309,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted all C level items that did not have children.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

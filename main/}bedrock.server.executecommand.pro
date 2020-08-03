@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"c6ra[C[7?MRZGEd4Vj8iW<bLezX3G;syGaB:Sf0R1gMIzkNX0>6jhYCZzGu=F6_VXaS3geIQPIpyx6J:V[jfDQgSFAG8iQts]3x9DVFqhJu4emK64:eRYT@aakRBkVloBi;bGY11r_B>gze>foyX0_bp>^DJ69mEKS<0aCEznZ>SIE0<Am=UX]XUlOw4p6mBD@XElDmH"
+565,"aaA6uti35[8_z<n9B1sY0IO@Eo@E>InokY0ErPWIxMgeht^vi^08AHegQ6O^UWJ:c0QVTBUm\=w1l6yUbtq4tO^>q<]I;o5auxasGT07qSX?Okq;dHN\7srIi_2Sp_S`ZgIxcdrVyMD<tj7wmgg_H]]LWPINdVl?Pcw\K?QB<RCXX\uDQO5o9s?1Z_RRu0^gvZOx6Bkg"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pCommand
 pWait
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pCommand,""
 pWait,"0"
-637,3
+637,4
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCommand,"The full command line string to execute"
 pWait,"Wait for command to finish 0=false 1=true"
 577,0
@@ -96,22 +100,13 @@ EndIf;
 nWait = StringToNumber ( pWait );
 
 # Check if the pCommand parameter is enclosed in quotes and add if not
-sSubst = Subst ( pCommand, 1, 1 );
-If ( Subst ( pCommand, 1, 1 ) @<> '"' );
-  sCommand = Expand ( '"%pCommand%"' );
-Else;
-  sCommand = pCommand;
-EndIf;
-
-ExecuteCommand ( pCommand, nWait );
-
 573,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 574,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,27
+575,30
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -129,6 +124,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% completed successfully.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
