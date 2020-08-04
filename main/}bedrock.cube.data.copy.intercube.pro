@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"mg[DhDFpKWs5Eau@MaI:JL^AOfAEbw34MFFJzfuwrM6\fy0u2L?>hQ<FP1LlC<SHigR:q2AIYoCJUAm>5A\k?MGyaQ1ol=WFE^54RWykYkD0CFlWa1NkjOc<BG9VhWruQJBQJcEUi4XXjx]irTw@N1sA4fx3oSaPtTaw=7z61Kd0CzTn[5wG1J7PGf=^^[m3eHZ@Z:rM"
+565,"i>wrx[O0uawW9xMDvyqcf6k?\zQnM@^AvxXAsfmlNpOPijTUT2hi7]1zpEBgapY[Xc;`dI1v?dS0<BjkvdE2R[9SWu:1T=h`uDD6q1LM__:wkP2\VTjlzLbOoQ?_uZ6haHXAm>C>qh6l`2`TOJSSmelaMbJU?2DGtbdqbN078STOZofYj@U=SlZEbF2lp5tMI?B4V8z?"
 559,1
 928,0
 593,
@@ -2061,29 +2061,25 @@ EndIf;
 
 
 
-575,50
+575,46
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
+## Zero Source
+If( pZeroSource = 1 & nErrors = 0  );
+    If ( pCubeLogging <= 1 );
+        CubeSetLogChanges( pSrcCube, pCubeLogging);
+    EndIf;
+        ViewZeroOut( pSrcCube, sView );
+    If ( pCubeLogging <= 1 );
+        CubeSetLogChanges( pSrcCube, IF(CellGetS('}CubeProperties', pSrcCube, 'LOGGING' ) @= 'YES',1,0) );
+    EndIf;
+EndIf;
+
 ## Switch back logging on Tgt Cube
-If( pThreadMode <> 0 );
-  ## Zero Source
-  If( pZeroSource = 1 & nErrors = 0  );
-    If ( pCubeLogging <= 1 );
-      sCubeLogging = CellGetS('}CubeProperties', pSrcCube, 'LOGGING' );
-      CubeSetLogChanges( pSrcCube, pCubeLogging);
-    EndIf;
-    ViewZeroOut( pSrcCube, sView );
-    If ( pCubeLogging <= 1 );
-      CubeSetLogChanges( pSrcCube, IF(sCubeLogging@='YES',1,0) );
-    EndIf;
-  EndIf;
-Else;
-  ## Switch back logging on Tgt Cube
-  If ( pCubeLogging <= 1 );
-    CubeSetLogChanges( pTgtCube, IF(sCubeLogging@='YES',1,0) );
-  EndIf;
+If ( pCubeLogging <= 1 );
+    CubeSetLogChanges( pTgtCube, IF(sCubeLogging @='YES',1,0) );
 EndIf;
 
 ### Delete export file if used

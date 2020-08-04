@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"z1b6muO4IYN=<ykCNtPE5j9j^Ja>X@UsNe@pK3gmU1yN=W8M@56S8Ic@SfA=RmabZK`o@rSDBTm^cL@GlR9GmeJ0BGnIQuJEfppCc_pe^o788vOv6zEL9DaywJ5mrzXwN3vSFQArIP5G9zXMVB>k1MCSeV5lK2jU0S2wF02I6:;gOSzv6k355SxQQQ6UWmDp;9D?RuQE"
+565,"gh@<6@\aP3;go:Ep7pAq57fsr8WricYs2By>s55_iCseiGcbgv<>n>_tBMD[ZJ^IP_gxA<fUo0GuurDS:mzFzmX;VinSW><elCTp]cM8Mzj13Pdzk6360OEaK\Ob>Aq\8as`rF3y7axF86\6]b^NtgNc9?`asE3@B2rl7kDB4LkFo`7gLY=22l9?AEn[rSRvqO@a6[xC"
 559,1
 928,0
 593,
@@ -1807,7 +1807,7 @@ ElseIf( nDimensionCount = 27 );
 
 
 ### End Data ###
-575,65
+575,62
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1817,36 +1817,33 @@ ElseIf( nDimensionCount = 27 );
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
-If( nThreadMode <> 0 );
-  # Zero out source cube #    
-  IF( pZeroSource = 1 & nErrors = 0 );
+# Zero out source cube #    
+IF( pZeroSource = 1 & nErrors = 0 );
     sProc = '}bedrock.cube.data.clear';
     nRet = ExecuteProcess( sProc,
-    'pLogOutput', pLogOutput,
-    'pStrictErrorHandling', pStrictErrorHandling,
-    'pCube', pCube,
-    'pView', cViewSource,
-    'pFilter', sFilter,
-    'pDimDelim', pDimDelim,
-    'pEleStartDelim', pEleStartDelim,
-    'pEleDelim', pEleDelim,
-    'pTemp', pTemp,
-    'pCubeLogging', pCubeLogging,
-    'pSandbox', pSandbox
+        'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
+        'pCube', pCube,
+        'pView', cViewSource,
+        'pFilter', sFilter,
+        'pDimDelim', pDimDelim,
+        'pEleStartDelim', pEleStartDelim,
+        'pEleDelim', pEleDelim,
+        'pTemp', pTemp,
+        'pCubeLogging', pCubeLogging,
+        'pSandbox', pSandbox
     );
-  EndIf;
+    If(nRet <> 0);
+        sMessage = 'Error clearing the source view.';
+        nErrors = nErrors + 1;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ProcessError();
+    EndIf;
+EndIf;
 
-  IF(nRet <> 0);
-      sMessage = 'Error clearing the source view.';
-      nErrors = nErrors + 1;
-      LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-      ProcessError();
-  ENDIF;
 
-Else;
-  If ( pCubeLogging <= 1 );
+If( pCubeLogging <= 1 );
     CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
-  EndIf;
 EndIf;
 
 ### Delete export file if used
