@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"y1DUw5`A:0EXWhSSt2wr^5^juaaGhCKzh0>7jEMcD_<9wU@]5SryH7qPIaT\wGsh<64h1yRjvsiLU5`:[b;sdMFbf@UMwfPGO>zqC4DOh7nVllZbBfn>CYgA0;nq\kEBHlS4A7HSgQjVI:NC9dLi\TyhcEwK>oTGV]VfJWwmuQ7?xh601DFxCTB<zFEQgKRCcF43iq>["
+565,"msuMRYM]F@vc`aLjU5Q7Vdg:;uLkw6EeoS1j3vlHh<PL@cxgl`g9p^_yne3dCCApm=jyPbdmKcyOM^3Xzc0XQgfzAayEWKo8`]WN77W0x@5M:R9T`tf3yl8gwfV:G=BVd:lXIIBku0WWgK;NvHU9V1UhrXIc>cfGXP0Hd<zoFX?OBz?5Qxm?<S7V4dhMfYEDEDfFYGO5"
 559,1
 928,0
 593,
@@ -60,7 +60,7 @@ pDelim,"OPTIONAL: Delimiter (Use for a list of target users. Defaults to & if bl
 581,0
 582,0
 603,0
-572,126
+572,130
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -145,6 +145,8 @@ ElseIf( DimIx( '}Clients', pSrcClient ) = 0 );
     nErrors         = 1;
     sMessage        = 'Source client does not exist';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+Else;
+    pSrcClient      = DimensionElementPrincipalName( '}Clients', pSrcClient );
 EndIf;
 
 # If no target clients have been specified then terminate process
@@ -152,6 +154,8 @@ If( Trim( pTgtClient ) @= '' );
     nErrors         = 1;
     sMessage        = 'No target client(s) specified.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+ElseIf( DimIx( '}Clients', pTgtClient ) > 0 );
+    pTgtClient      = DimensionElementPrincipalName( '}Clients', pTgtClient );
 EndIf;
 
 ### Check for errors before continuing
@@ -221,6 +225,7 @@ While( nDelimiterIndex <> 0 );
         sClients    = Trim( Subst( sClients, nDelimiterIndex + Long(pDelim), Long( sClients ) ) );
     EndIf;
     If( DimIx( '}Clients', sClient ) >= 1 );
+        sClient     = DimensionElementPrincipalName( '}Clients', sClient );
         # loop all security groups
         nGroupIndex = 1;
         nMaxGroups  = DimSiz( '}Groups' );
@@ -240,7 +245,6 @@ While( nDelimiterIndex <> 0 );
     EndIf;
     # exit loop of target clients 
 End;
-
 
 ### Return code & final error message handling
 If( nErrors > 0 );
