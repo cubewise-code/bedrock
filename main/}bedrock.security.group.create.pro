@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"bya[_^`Ce<8\VYO><\gK?:i5>z_li@k3JlsB2^?LUnD13KqyMi_vFWeJVK4dObB=3p9<p7ddX@s<TXva;egQQC:eo9cjFX7KM8t4\9quZ<ToSqrrLV8C8rUD6liRzgByKkyalsRD=>x_2OzUy`3VUbAI:r[\VQcGj;AJ3]rsYe=Sg`zbF8fY[FAKNm9iihic>W?@c3jb"
+565,"c6tavyY\4i5uzUh?gAMJ;Me:U8_>[PPZB_THlU_xnNJb]q4BZp24AeaMk]bxzy3=4>FVU<4YVn]6J03Z[[:2xX<Mf^XfbOk@RV5>0kh4G2B=^1:jcuGMX8vEC_c`WRRLm9u8FeUo[cpZb45mPbIB>EdM[byciP@gx?eWQeMJ^v7_2r6Z\5=MZApVbzj7NzR?liJ4:QG>"
 559,1
 928,0
 593,
@@ -25,25 +25,29 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
 pStrictErrorHandling
 pGroup
+pAlias
 pDelim
-561,4
+561,5
 1
 1
 2
 2
-590,4
+2
+590,5
 pLogOutput,0
 pStrictErrorHandling,0
 pGroup,""
+pAlias,""
 pDelim,"&"
-637,4
+637,5
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pGroup,"REQUIRED: Groups separated by delimiter"
+pAlias,"OPTIONAL: single or delimited list of }TM1_DefaultDisplayValue alias to assign to group (if list of groups then size of list of aliases must be the same!)"
 pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 577,0
 578,0
@@ -52,13 +56,13 @@ pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 581,0
 582,0
 603,0
-572,99
+572,108
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.group.create', 'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
-	    'pGroup', '', 'pDelim', '&'
+	    'pGroup', '', 'pAlias', '', 'pDelim', '&'
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -126,6 +130,15 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
+# Alias
+If( pAlias @<> '' );
+    If( DimensionExists( '}ElementAttributes_}Groups' ) = 0 );
+        AttrInsert( '}Groups', '', '}TM1_DefaultDisplayValue', 'A' );
+    ElseIf( DimIx( '}ElementAttributes_}Groups', '}TM1_DefaultDisplayValue' ) = 0 );
+        AttrInsert( '}Groups', '', '}TM1_DefaultDisplayValue', 'A' );
+    EndIf;
+EndIf;
+
 ### Split pGroups into individual groups and add ###
 sGroups = pGroup;
 nDelimiterIndex = 1;
@@ -162,7 +175,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,30
+575,60
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -170,6 +183,39 @@ EndIf;
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
+
+### Update Alias
+
+If( nErrors = 0 );
+
+  sAliases  = pAlias;
+  sGroups   = pGroup;
+  nDelimiterIndex = 1;
+
+  While( nDelimiterIndex > 0 );
+    nDelimiterIndex = Scan( pDelim, sAliases );
+    If( nDelimiterIndex = 0 );
+      sAlias    = sAliases;
+    Else;
+      sAlias    = Trim( SubSt( sAliases, 1, nDelimiterIndex - 1 ) );
+      sAliases  = Trim( Subst( sAliases, nDelimiterIndex + Long(pDelim), Long( sAliases ) ) );
+    EndIf;
+    nDelimiterIndex = Scan( pDelim, sGroups );
+    If( nDelimiterIndex = 0 );
+      sGroup   = sGroups;
+    Else;
+      sGroup   = Trim( SubSt( sGroups, 1, nDelimiterIndex - 1 ) );
+      sGroups  = Trim( Subst( sGroups, nDelimiterIndex + Long(pDelim), Long( sGroups ) ) );
+    EndIf;
+    
+    If( DimIx( '}Groups', sGroup ) > 0 );
+      If( sAlias @<> '' );
+        AttrPutS( sAlias, '}Groups', sGroup, '}TM1_DefaultDisplayValue', 1 );
+      EndIf;
+    EndIf;
+  End;
+
+EndIf;
 
 ### Return code & final error message handling
 If( nErrors > 0 );
@@ -189,10 +235,7 @@ Else;
     EndIf;
 EndIf;
 
-
-
 ### End Epilog ###
-
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
 930,0
 638,1
