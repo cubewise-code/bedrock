@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"n=T@\t691C=P^4aY63Z]_>DQAt`@p57D@G_>KAu9;i<?UFVYxasCzQBN[Zr8Sw[nYSQwD5tzcvsFY_?Qr7S1trDd\3LS]f<:I]6V@@<hfvX[T\;Q_69;N3s4e`5`h8YpgtT\Hs6k0QEMr^55SS89[^TpB]NP2p2sUu;:rdhShFmi4mM9`h^\q0NVyioExC\PJp;1>44v"
+565,"b=ahKeMvf:eH?LRdGvYJ9tnDvv7e:43;tLCt7<mj8uuuMOS`1d5<RVVXRvAeNj1Pxslg2:VVD<NofeNZDZ`luGXU4su2]8:q?ux0mr97<[\aeqwRA3P>Iaxr0GTvJW`=T2D[Pfgdt>^AF:pRwy0@9fHX^8`h>]M1pRmX=ob5qH`]ZAN7[a=WJ[g3ypvUGkAJ=CZ9d=hb"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pDebug,""
 581,0
 582,0
 603,0
-572,43
+572,44
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -85,6 +85,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.server.wait',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pWaitSec', StringToNumber( pWaitSec )
   );
 

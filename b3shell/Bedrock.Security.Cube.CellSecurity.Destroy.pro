@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEz<[3X;iGmwrpM>DLJqyKm8LYE?FrJ9z;UANXi~xV9eNVPpfIDtmtZAmVAFzB[agvY_^IdSveLSz:3uQ^klfpu?O^xuIrhD_7rhPfXhXgT;?>`@S]WpRJuB[5M0gxa]fZ3E0@w\qG[3BvMdnGP1Ghy\hXId<J;brBnzMcLI1X6J9oEPJ5tMvX_fwSWUsa]vzJX\EE`>EEt<[3X;iGm7xpM>DLJqyKm8LYH?FrJ9z;UAN(_xxVibNVPPaIDtmtjMm6DFzB[agvY_^ItRveLSz:35Q^klfpu?O^H4ErhD_7rhPfXhHeP;?nf`]]WpRJubV5MPjxa=hZ3E0@w\qG[3Bv}enG0=Ghy\([Id<J;brR`zMcLI1X:J3oEPJ5tM"
+565,"mV593\C7yD_OFzHBI1`b?xpqdDBk9oY}2ZYBOU5fnca6oTep9Fn1kBVUWWi^vk75UJO6_[d48^QVPaGZWyqNyhKlekstL>\qvwxQy]l3dq^^?ui`3hDqQ0B:?TQgdi:70BcRD7KSBFKQD=g3\RFgeO\r>L\\^cV4F4^D^AuOm?gH:\xtoiqJ^LVj_bOZVAI6Zx@mHpmV593\C7yD_OFtHBI1`b?xpqdDBk9oY=8ZYBOU5fnca6oThp9Fn1kBVUW'?Qvkg2UJO_1_[d48n]V0dGZWyqNyhKle{rtL>\qvwhZy]l3dq^^?O4e`3hDqQ0B:?TQski:g6bmRD7KSBfFQDMl3\BMgeO\r>L\\^cV4v5^D>MuOm?'K:\xtoiqZPLVj_bOZZAC6Zx@mHp"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -48,7 +48,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,50
+572,51
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -94,6 +94,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.security.cube.cellsecurity.destroy',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCubes,
   'pDelim', pDelimiter
   );

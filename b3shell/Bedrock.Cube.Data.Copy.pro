@@ -4,7 +4,7 @@
 586,"Balance Sheet"
 585,"Balance Sheet"
 564,
-565,"zWUKnRKDj^5hKaNm[Ju]0;ugZgab6@]Wjexee4meY3ue_d5fKQvZTv`V1t^jDIbvgZ>HybJoAp1cVvyIQ:n_a@EokucfGK0MI\QiTacyRJ2?KG3@oR`_4WcC;s=DMWHgFOu@wIL=d3k9nJXwCkqslS2DSh1M^;BuFf[W:XJ^BoA3NP^Qg_9C:6o^NMn]r8z6Wz9LJWD7"
+565,"vOdV?\Gf[VGrsAb:sKSs;UaWNmjXCXNGpcnb>du`K^?:gqztkSmh:E<F==C?Xl;9b2qo9dw10OPrr1TK5_<gbwXEjb4ddwWal``Ae3QRE]4Ue72ocDd45jZA8Yg:f8ig4p3\cXF5[5?wlIuTE;z3FtXO;eaYPS35SkE_TOrvc2`kPK[2yka6uT5[vUj^Nc]N?y]SHIg\"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,Default
 571,
@@ -386,7 +386,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,88
+572,89
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -442,6 +442,7 @@ Endif;
 
 nRet = ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCube,
   'pSrcView', pViewSource,
   'pTgtView', pViewTarget,

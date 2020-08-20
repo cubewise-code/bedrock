@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"ms5@haPgfJ^z5aKOonA^GXU<wMfM[7AHO>Q_zPm;P3aat5dWKvFD]T3jUbmbo[LZv5M;U[ART:EAJNlsRA[YuQRk6DvulQ=R?z_3mVrX^O\LEIc@ff??ALCMTUq\_OkWVx<_dRwmuonK?Yjej4u0K52r7dAwXRkH:ituHbd26K[4Biz4R90Rl;y?y3\p@`:W5?r]HRVj"
+565,"q_aU2AnCZFDlBrO?yado7Fm[VH@QlBmTlUGCU<:jyjmZQJv2MW0uKI854_QdyLeQtFM[GbE`CWCP3bKC3Nleh@;f=@rjfuIRV<AZ:fnbu7>WvI<I648>BKdzGG1r[EG?X[vTcpfTgGogw7IqmpfB7x5:8EVe3a@@sFs2eQ=;F=KuKk0f\EyQo\NHWy75Sv>>SSZw:g\@"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,}TI_Dummy_View
 571,
@@ -108,7 +108,7 @@ pDebug,"OPTIONAL: Debug: 0"
 581,0
 582,0
 603,0
-572,360
+572,366
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -255,6 +255,7 @@ If(pCopyDataViaClonedCube = 0);
 
   nRes = EXECUTEPROCESS( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', pCube,
     'pSrcView', pView,
     'pTgtView', '',
@@ -307,6 +308,7 @@ If(pCopyDataViaClonedCube = 1);
 
   nRes = EXECUTEPROCESS( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pSrcCube', pCube,
     'pTgtCube', sClonedCube,
     'pIncludeRules', 0,
@@ -332,6 +334,7 @@ If(pCopyDataViaClonedCube = 1);
 
   nRes = EXECUTEPROCESS( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', sClonedCube,
     'pSrcView', pView,
     'pTgtView', '',
@@ -366,6 +369,7 @@ If(pCopyDataViaClonedCube = 1);
   sProc = '}bedrock.cube.data.copy.intercube';
   nRet = ExecuteProcess( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pSrcCube', sClonedCube,
     'pFilter', sTargetFilter,
     'pTgtCube', pCube,
@@ -399,6 +403,7 @@ If(pCopyDataViaClonedCube = 1);
     sProc = '}bedrock.cube.data.clear';
     nRet = ExecuteProcess( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', pCube,
     'pView', pView,
     'pFilter', pFilter,
@@ -448,6 +453,7 @@ If(pDropAndReattachRules = 1);
   sProc = '}bedrock.cube.rule.manage';
   nRes = EXECUTEPROCESS( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', pCube,
     'pMode', 'LOAD'
     );

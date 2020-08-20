@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"o7s4yQl8P;NklP2a@1FNLVpDoXj6=rC]GdAg:zfz?Gt?KCAHD]iCsjpX6]h_L<e4UtHxpI5Cp1xsFK\d;OKKIhK6`?jPwX]LGGPZ4bMAOjPW92J_W`_I[]ZE[`ZYu1_Ao2vbbvQFXh?xTZ=\]3::i?1K1:[65cG@Ym<p\4MZRiy1s]1rn]IdWWb^NS4EcM`^xNMCNk:u"
+565,"r5o]<\FZc7t41z563UaAc==D2EVLBvnmwnATJFJTilVqUcBItoOj=B]JZn6nDFU3ILFoilLy=CAqDvtrsO`kpey67siqfE_<vAZAq<0I3`\zRX\;M>_U0n2C1>Q4cd1XUjmLjyhqUJDon47n6_@^8wA8jm84pEIFNreRmbKOIOogRVdv[xBKrndb`IC3rVrZi2>Y^Ppa"
 559,0
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -68,7 +68,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,115
+572,117
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -151,6 +151,7 @@ sProc = '}bedrock.cube.data.clear';
 If( Trim( pFilter) @= 'Clear Cube' );
   nRet = ExecuteProcess( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', pCube,
     'pView', '',
     'pFilter', '',
@@ -163,6 +164,7 @@ If( Trim( pFilter) @= 'Clear Cube' );
 Else;
   nRet = ExecuteProcess( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', pCube,
     'pView', pView,
     'pFilter', pFilter,

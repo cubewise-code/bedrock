@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"rQ>R4thyuv0x8L_uqAa7lWcQZgTHb;teiJIZl>kHY3T_sg<@8H0kSyCFkam5l<1_p2EZU:<_uBj^L[Mk>C^]vVXdFLT`T_ZG5oWsTgOqjds;`80Jj;X;JuaXEtiOWT@xTQidWm0j7?mcEUKOQCgJl`5@R:LeEedHpUV<\7fw`vjP`ZDjw=\Ubn0?W57<Ek25bmQk_XRj"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,52
+572,53
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -91,6 +91,7 @@ nErrors = 0;
 
 EXECUTEPROCESS('}bedrock.server.dir.listcontents',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pSrcDir', pDataDir
   );
 

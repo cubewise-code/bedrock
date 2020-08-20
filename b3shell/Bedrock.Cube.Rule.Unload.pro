@@ -4,7 +4,7 @@
 586,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 585,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"mZiRwE>yIwK9ma]4l0P_:o\amea3P2OraesT?==G^IJZRXYTADCa`i>BALI7H:xhRiesHvX6lEqW\7kDxATDpQ3;ZZ[GuYt<y[U[g]nuBpke<\tFOJlKIT6GsyQ6jdTrJKR5Lx7B`>Jhzt^]mxuE;wA`j_7rv0xJ1uyr19VuKIB3LI[gQ\s@]@HQ2BjCIv_;nJv75sZV"
 559,1
 928,0
 593,
@@ -48,7 +48,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,65
+572,66
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -95,6 +95,7 @@ sProc = '}bedrock.cube.rule.manage';
 
 nRes = EXECUTEPROCESS( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pSourceCube,
   'pMode', 'UNLOAD',
   'pFileName', pRuleName

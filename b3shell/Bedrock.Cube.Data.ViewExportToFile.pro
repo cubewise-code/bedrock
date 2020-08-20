@@ -4,7 +4,7 @@
 586,"placeholder"
 585,"placeholder"
 564,
-565,"lgEqAFIN2c`Ra[OepZRJcOITsriH::f]n2G<cxptbn`;z5O8vNq]LRrSQ_DD5Scz867onDu5AGE7g5uWbMk6UfIn?T7TMQpGf=q\_Hb0Ch^aq;rYPhyuLX<<L=?c<4MQKt@GM6sUzAOZ[r>Na=QlEUKo@[HG=Q:]57>m1@s9eBpf8IF46b=sV^qsXqeeMB4Ps8usWTyt"
+565,"bAaf4tr[Kv\mr=`8gSn_wKm_0cgaWpN;\oV9HPapFzM4kA2UO?G2crmA;TTqVrqEqBSUDjaJYMBQAK`0;fv:diQD9B_Mi;jK\<b_rj1zBeq_4]`eX@9IwpbzbrZyMZpU0x;Kc8GSFc=00UQn^UFUg[XUMEaP_LtVCQ:O`m`Prs5aoYm:uzgF>xfZ7gEsaPX?RGHm>A_p"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,placeholderView
 571,
@@ -72,7 +72,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,92
+572,93
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -135,6 +135,7 @@ nCubeLogging = IF(sCubeLogging@='YES',1,0);
 sProc = '}bedrock.cube.data.export';
 nRet = ExecuteProcess( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCube,
   'pView', pView,
   'pFilter', '',

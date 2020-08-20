@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"sZhyKRJmq?T:c;IVr2UaSBU9]Q`=HDvft3R;wCMegUiQd]?4;9AE4Y3pMHQ7MsdN6rXLsxQ9zv7[wDGT;dP\sr8]QT_Fw\^OFLcuCscpMT`A17[36lb6DbUPw3_RDn`aqIOXQ_V8Pp`?Q`:EyL5Un[Swy2yPft<Nh9Z7fcy^g0=D0Jilq9alGMsRoL4fz6@;d?in>Z4i"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"Debug"
 581,0
 582,0
 603,0
-572,71
+572,72
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -110,6 +110,7 @@ ENDIF;
 sProc = '}bedrock.cube.viewandsubsets.delete';
 nRes = EXECUTEPROCESS( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCube,
   'pView', pView,
   'pSub', pSubset,

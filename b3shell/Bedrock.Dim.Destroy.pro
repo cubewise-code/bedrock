@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"oLDg7o1TIOA@:slaape39St\Gws2fKkO=E=ssY]j3u1sg1]PK2OB8n`7YBwUhRs4Y:x_CJWr=Jc>ndEtxqcu@A=IBz__oG3TfDjseaeZjDrNA3rbdqwJJLiV2NEsl@lwhR;?eOm@;n0Q7mA@Av7;pmOhCXstDCe?Lac6Q5sE\S_Hk9w]hS3NgvQ<0e8rYYiTL>ItHNxo"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,48
+572,49
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -80,6 +80,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.dim.delete',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling','1',
   'pDim', pDimension,
   'pDelim', '&'
   );

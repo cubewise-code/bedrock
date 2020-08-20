@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"dB\nan]FfL5BoLg@hA@qMmS37wRUnsr[PRR_\Chr:7UfgQ77t:sV=x;J5i0I5oy36OSJ?EGagnU9H2SPRa23jYFQ>6HBlvU@m8TczQ1SMreAyPZ;gIZ8knCuLirG3ahE0fR@fowHufbDiQR9wIWd<]iu2sxI4Y=w2YLWem5jg38]bL:3Hf>uZo:L8IwDY:_fnnosR^\f"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -60,7 +60,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,59
+572,60
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -114,6 +114,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.security.client.group.assign',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pClient', pClients,
   'pGroup', pGroups,
   'pDelim', pDelimiter,

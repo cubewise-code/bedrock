@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"m`Ug@l<rNJI2=aA2gWd[CM>8gdI87gIt2`EME40`i75pkqDUejUVHS0Z26Ogv?WOotW5fWE_yJ_ZDjZN]g`N6c7uasKlyE;=BznMXC1PfN>vCEAZyBh_tH>=y0hZXT]xhRLanTfB`yrAG2_5<s?ByJ[cS163MUDE:h8v`kafgJ57hu0YT[9I=yq;mBVLS\WT\bd=:TpE"
 559,1
 928,0
 593,
@@ -80,7 +80,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,82
+572,83
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -136,6 +136,7 @@ nCubeLogging = IF(sCubeLogging@='YES',1,0);
 sProc = '}bedrock.cube.data.import';
 nRet = ExecuteProcess( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pSrcDir', pSourceDir,
   'pSrcFile', pSourceFile,
   'pCube', pCube,

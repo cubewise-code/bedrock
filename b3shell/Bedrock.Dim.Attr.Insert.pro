@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"r[n0A:_CLm5G5V9NE>aHv1po>@g4lAIwxD0t=9fVR2M9]MMwmsl??wth<G1S=R_o8B3bbdgpC[e7ugEwW[E_yJC4zClnJWO2GeB?q20]sDm`0zpn9Oe:ZNvF<FO\=L5?CMP5NkpA@[d[9e9`]pHdIkEbMmetWj@=Xs=6Yj@t@NTzP<6_13^IqTP;qbTh0G@83LYRl]\7"
 559,0
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,50
+572,51
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -92,6 +92,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.dim.attr.create',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pPrevAttr', pPrevAttr,
   'pAttr', pAttribute,

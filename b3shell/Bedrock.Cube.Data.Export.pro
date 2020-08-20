@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"r4MUyZ6Tu]a86D=J4<aO1;8kJVknsGNdRloq;2WrXL>=u71LRvVAk0ELAmfCMw<F8fN10a\;afCqd=OKNo?LRd\7ryJGu:klr:r7=5CFt1yyhAT?HMfIHgp3R\o0dvtN=JV3lb]vmmzLMgWCwn9[28M^oC;[]Ya9@ntDi\3m4]Y2IVzRKvij@46;F:ZQk9U@BKTnxrh6"
+565,"lX@e=J@8S>\Na;U5QIdx:mytyJ8N75<l?V6=;Zk<rcVJ27ZVhMw`gLe>dG?eTl4[Dz@\lO0?cOt9Q8CQ]tjx@P321i@ueU[gRqwIu80V9ffH2evlcQ9S;cfHfVgZIXFVSJxY;n>p3Yg\9;Wx\[zVrC2Zu77iGeAam13zw[Ts6k?pGwZedAHl_^g9vFip8k\Rapg_8@^T"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,}TI_Dummy_View
 571,
@@ -96,7 +96,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,90
+572,91
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -155,6 +155,7 @@ nCubeLogging = IF(sCubeLogging@='YES',1,0);
 sProc = '}bedrock.cube.data.export';
 nRet = ExecuteProcess( sProc,
   'pLogOutput', 0,
+  'pStrictErrorHandling',1,
   'pCube', pCube,
   'pView', pView,
   'pFilter', pFilter,

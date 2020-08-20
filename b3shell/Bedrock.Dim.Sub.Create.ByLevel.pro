@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"qjBU>9L7r0lSk7A`_aMDfMi0gZkruny^5vxr65;oYlpT57uyf=XmhFMF=MUP6k4:<LeeLAg7bQ45P_TEefWgo^imNQz1e7X>iZYlRdN7RoqD8t6BCX]5HaK;ev]`@CpuI\X7uC6ti4hmjS5s2RRd1x4NHkvIZnPW6JagD;DpYrTQaQ9GEmqlSi^OD5Ep[]T@ChtMjw5<"
+565,"uB2?TQsfI[0=yt:UG6gp2a7axj6<4bJ`<7jZpj>19nI=[3QLO<lAFiUXeRwR:crcV6hAUaHLqBzsKqGlf9GbK1@;]trxyaq1Iv=x6h72TAWI5O\]P>8Aa9R90[fjucNR^@PJ9pGKjqtOYFBF98SrI1?nQ3^uLiWP=?o>LOX=Fco4N4tKOw:]V2`k=58NgkhK7?ez`c4o"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,53
+572,54
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -99,6 +99,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.hier.sub.create.bylevel',
   'pDim', pDimension,
+  'pStrictErrorHandling',1,
   'pHier', '',
   'pSort', pSort,
   'pConvertStatic', pConvertStatic,

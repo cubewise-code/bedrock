@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"y6`iolx\_u5mtH>E?Ij^8@x@8a4pmUW@SOnDaIlKqfP0Yb5?qm`HyPa[xHfHI2\uhv2o]ZioNaTej6GFf]sZnt2dB;]OI]nGQ7M=;8YiSb9AeD[SZ]owx2sBuIm8gZxB]Peephx^PQWB@LX]IDIHiMt2kP?Nl\q6j_kNRZ9yDN>u4^T2^Wvim9pQ7xCD3[bBVQjclyT2"
+565,"depJam=hm:mCyx2:JY\2lo6IM6jr2i>s^i>V6cK@:pf3bfpIP0KA7ayC1w9xMW8=9[faMUHSh?cMz;Z[q:BkUhWocjA739newGHS`8V7_yFLsUvW:oqmIhnP<iCe^D`08OiwE5TerXfSyx7:u@o5QDHHgK7yLglPbQwxk<anCOnO\F31hVpJ<SDar@7bP?<R4oLEUg=:"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"pDebug"
 581,0
 582,0
 603,0
-572,59
+572,60
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -100,6 +100,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.hier.sub.create.toplevelhierarchy',
   'pDim', pDimension,
+  'pStrictErrorHandling',1,
   'pHier', '',
   'pSub', pSubset,
   'pConvertToStatic', pConvertToStatic,

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"qR0MXPR3]qNkssv^zaHPrG^>QhF4eIjiTw=Sr<3`8GAW2\<VWFP>`nQ<rj6P`Ao@S[KlrkZa1uehnZRNm4o^Bs4ogEi=SZzUyFHu;48CIgI9f7A1ZfUT26=AahStwSTza=ozA]S1g=ikteLiTAQ\<mPRvRN]R:tNHPru5opH1MS3E0Tp9]@[W5R>76vyvbJnYc4IMH>8"
+565,"z>wX]ycSByez\T1ybuM0keQQR2ajDq?RKZv7Ch]C?:]7\?X4zUfkBVxX_rHtaAMi4ncp@72^4vXkd5bthYD[x15I7Gz1sL;eju7`bf>rGlA9DwIk:AoGjKhHVEOkwp<RIcB7VY@oL_ZYr;N^=\wYyp\ymC5;`k\OsP>hB183Q:lR@@zCuuGh1sLeF8ojMd\76NRg1rXq"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -64,7 +64,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,50
+572,51
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -105,6 +105,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.hier.sub.create.byelement',
   'pDim', pDimension,
+  'pStrictErrorHandling',1,
   'pHier', '',
   'pSub', pSubset,
   'pEle', pElements,
