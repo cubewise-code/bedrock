@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"kavuQ`zgTBjaMA6@<o`ox0mW9lN7HFU4]KR5y3MRqZ2yY:Wq6F8pcabpcQ<?Dl]Aq?o>L8p\L82@vbI9<=1BD\4\JGFnzLiWQBHst<I8MsqQ?j\5TJczylf06tnB^lN1hLji@zGaU8AxEMhSyD9>1Bs\pt0v2V[sm8K_:s>AckLkp7FWjav`VxVxHhrxCJV^qLZ6K^j7"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,56
+572,58
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -80,12 +80,14 @@ EndIf;
 If( pDebug >= 1 );
   nRet = EXECUTEPROCESS('}bedrock.hier.create',
   'pLogOutput', 1,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pHier', ''
   );
 Else;
   nRet = EXECUTEPROCESS('}bedrock.hier.create',
   'pLogOutput', 0,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pHier', ''
   );

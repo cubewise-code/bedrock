@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"rvcFUp]A\\VUjZH^TXa]]hDi>LJ:KuFYVZV72?F=2JivG9PslavY4xLmFuaBdZkA5cS69Yhe_Ue40d77Q?uf5oh@FB`qZukhnpLwzD\hCCvQDi48>v_;lC@AFwC2j6t=fS;DyTWDBimF[VfkWo^k2:iWefjiHXf[K<>=D6afvE_lAIFJ\tWpd>jZUX4F\0vu8`ha61xg"
+565,"ruG?kN1guM`hUzZIKdaPpCwmf2psm]MDsi7p^ob\60JiqSve6S4dDvWHgYt?Fisrv_>:QXx<i3Q_a2;Dw4?v:];eLp2EsKjh]W4p0y^\BZS3bAo>h2i>lqxJuFq>aS:CiFAX=xAn2nqNLQmhvUpea@\QLtBmrZY<W39umxC^T5ntYu?;elzgw[pV:v`A^d[LpeahxgM="
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,All
@@ -62,7 +62,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,53
+572,54
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -106,6 +106,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.hier.create.fromsubset',
   'pSrcDim', pSourceDim,
+  'pStrictErrorHandling',1,
   'pSrcHier', '',
   'pSubset', pSubset,
   'pTgtDim', pTargetDim,

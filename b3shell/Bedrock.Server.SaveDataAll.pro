@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"lnxkYx<yyR;2apIzR>i`SafYVkzoOG0?Io=YQA\pMoVP`zeYomW]k1[Q;sPr;RMWgT0QXcMF_Be?w\6sYNBQwa24VuLvGNyLA7meW=5S\>C4bw1db\_Ip>oX1NebyooEX:052`lzNgyuF6c8foxhnZPg<M5_o7;LQ1r=17<`NQ6GbfAX`n3K\_tUWOlm6O]B<y454vPd"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -40,7 +40,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,36
+572,37
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -73,8 +73,9 @@ If( pDebug >= 1 );
 EndIf;
 
 
-EXECUTEPROCESS('}bedrock.server.savedataall');
-
+ExecuteProcess('}bedrock.server.savedataall',
+  'pLogOutput',0,
+  'pStrictErrorHandling',1);
 
 ### End Prolog ###
 573,4

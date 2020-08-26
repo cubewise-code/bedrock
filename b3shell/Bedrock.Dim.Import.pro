@@ -4,7 +4,7 @@
 586,"C:\Users\adavis\Documents\Bedrock 3.0\Export\Column_Export.csv"
 585,"C:\Users\adavis\Documents\Bedrock 3.0\Export\Column_Export.csv"
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"l`ySTVgAT9P\aH6XOO3z4yQhCKQFofhh3_>o;Dd2PZlXjRe7RB7NwGEGyYoYHq91;prLnzSV[a=i?qe@=0qtM7HF8f`1Q^k[v:;tN]Ns5mH8=WSVNf^oFs4DJU<HXEu]w:;niDMBkh@7^Xg[ROHba@2Q5S3bwWOr]>WVaUTxAUSqTZSx2[>h:OYw@jVK8kPfyT<fCp\Z"
 559,1
 928,0
 593,
@@ -52,7 +52,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,54
+572,55
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -91,6 +91,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.hier.import',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pHier', '',
   'pSrcDir', pSourceDir,

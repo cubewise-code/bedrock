@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"k;[fo;sx[h4yM<IU:dQ6OGmC?hVc`07tphwxSn;@A5]3BHjnsBm\rU]eanTaDF:b>?\tZo3Ir:l1@yem0CgA9BojNaLL0OFu=0G3MTVe3JU512Fs1^9zE0g1bDR<@o=DQkb0@XH@eHXybS?aV2>:]sENyFV<J;OmGsauRn6AX[fwkyf@v?vtHAk>Hl?HZsV9VHosN8KG"
+565,"mV6@VXwqSfbu=y0vBIiBU;KSZ6X[EvTq`ipIt`6RxJqRlH:rbod1g0XfzjTAYr5RlY<:<=n7uoaB|5PXPZdQB6WgSCLTVtmmH11mXpcYG:wTFKsqzQaz@R:\<N7@?tjAkr4p@fl;d;uRYx`V?S3}fLMb10M@bhxBfcEvF5aO91oc9tjXF=RZJKRkI@^xvV5FoTf^`9Z"
 559,0
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,70
+572,71
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -91,6 +91,7 @@ nCubeLogging = IF(sCubeLogging@='YES',1,0);
     
 nRet =ExecuteProcess('}bedrock.cube.data.clear',
 	'pLogOutput',pDebug,
+  'pStrictErrorHandling',1,
 	'pCube',pCube,
 	'pView','',
 	'pFilter','',

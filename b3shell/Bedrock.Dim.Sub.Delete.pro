@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEy<[3X;iGmwppM>DLJqyKm8LIJ?FrJ9z;UANhTqxV9bNVPpjIDtmtjAmvEFzB[agvY_^ID\veLSz:35]^klfpu?O^HsArhD_7rhPfXhHoP;?nb0P]WpRJurR5M`fxa=mZ3E0@w\qG[3BvmenG01Ghy\hYId<J;brBkzMcLI1x6:6oEPJ5tM"
+565,"gk:yGWDyD9sf61eq1`WQC@hWc[l\gitu`rkDb\lnyx5==DJqWI7hySA13aT1\]4R;OIvZ1U9OBiQCrUwiqTteoW?aoELNAn^=E1>];bM5FFqc7Osq>g8\g>v6K@ADOA^^oR:@qTG8`g~B@dg6Su4}W^lKGfR3wPYdJ`5f2>1V9h^gYFk<XuqkOkSfxT0lv6<VTUjj[y`"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,74
+572,75
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -111,6 +111,7 @@ EndIf;
 
 nRet = ExecuteProcess( cB4Proc,
                        'pLogOutput', 0,
+                       'pStrictErrorHandling',1,
                        'pDim', pDimensions,
                        'pHier', '',
                        'pSub', pSubsets,

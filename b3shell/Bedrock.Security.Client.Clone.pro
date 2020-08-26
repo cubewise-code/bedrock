@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"de94adpTcQFwQP[cF`N_opnuyUrH0bib0^W190@Nl=P\`cJOwuM9ic_TLQngz4^pPeNXiJ4?rq9UG92Pl3y4KK6IE`xziR;?uZpt@cIJagQ1S@B_n5IPs4z24L_U09H8OIe^1Hdfs;FxzfUxVJR[63gVM9xhV7F;bJtl^Gx86ggdU\xi:_J4ar^_a9]qoevNmS]mLD7o"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,54
+572,55
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -104,6 +104,7 @@ EndIf;
   
 EXECUTEPROCESS('}bedrock.security.client.clone',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pSrcClient', pSourceClient,
   'pTgtClient', pTargetClient,
   'pMode', pMode,

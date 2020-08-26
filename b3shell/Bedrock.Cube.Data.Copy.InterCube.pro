@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"wuJT\H79p;q1tfhceu0^=Cbao=vYeC]ZCgv0vt[QzM=6`:_@l?b@Z1<yvUe]k8gB5;VN3?K6q=G;TJdTX^Up_6R>WO;6xA6u5bYE>6dktu9[pf1Oz\jxOI7chp<Gg7zyJW;7H;N]fwLx0VnYRj?e8P6;0D8s<0hxClFN@_g`AO`@;8DHMum\]6MfNT=qRPJITugU?TZY"
+565,"taPOx^_RmwDU=@d^jXMjaJjG_tBGwGnB2@9Sc<=[6;WxUWWCXZeif^Ppaw9<lbjHfzy`BkWa?FbkVCe1C0P2;s>zAgPtxP@4@kzrf2j`raJ?KzUpI5OQP4hA0z=8[^hOu7kH5HL]H\6[>b;T_Cc5]lEYcn^?CsLKoBpLBKWuu5ouWyb9obA95l_oVzEoTYbAgbIl>0<`"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,Default
 571,
@@ -104,7 +104,7 @@ pCopyDataViaClonedCube,"OPTIONAL: Copy via cloned cube. Only use if pSuppressRul
 581,0
 582,0
 603,0
-572,337
+572,342
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -267,6 +267,7 @@ If(pCopyDataViaClonedCube = 0);
   sProc = '}bedrock.cube.data.copy.intercube';
   nRet = ExecuteProcess( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pSrcCube', pSourceCube,
     'pFilter', pFilter,
     'pTgtCube', pTargetCube,
@@ -317,6 +318,7 @@ If(pCopyDataViaClonedCube = 1);
 
   nRes = EXECUTEPROCESS( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pSrcCube', pSourceCube,
     'pTgtCube', sClonedCube,
     'pIncludeRules', 0,
@@ -343,6 +345,7 @@ If(pCopyDataViaClonedCube = 1);
 
   nRet = ExecuteProcess( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pSrcCube', sClonedCube,
     'pFilter', pFilter,
     'pTgtCube', pTargetCube,
@@ -376,6 +379,7 @@ If(pCopyDataViaClonedCube = 1);
     sProc = '}bedrock.cube.data.clear';
     nRet = ExecuteProcess( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', pSourceCube,
     'pView', pView,
     'pFilter', pFilter,
@@ -425,6 +429,7 @@ If(pDropAndReattachRules = 1);
 
   nRes = EXECUTEPROCESS( sProc,
     'pLogOutput', pDebug,
+    'pStrictErrorHandling',1,
     'pCube', pTargetCube,
     'pMode', 'LOAD'
     );

@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Attr.Placeholder.csv"
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"hgRSAuB?a7NH@>P@ir27u1mS=7<[QV2>m305CB@U4K10U?J@L_<Bx:TSGmQ5ap:7Jp4?StTKn1qHfQXhclOJQuEXwo85_YfXkVPpFi2gBM;q^ALEdlEfG;rvZb=Q0YF_fQadTkcu^Nh1BCU^x`zX89aPG>Oyc<g[Azw>my3@ZSGo[eHXOpBS>SuW\Xnsfmld]AZDw39>"
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,73
+572,75
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -109,6 +109,7 @@ EndIf;
 If( pDebug >= 1 );
   nRet = EXECUTEPROCESS('}bedrock.dim.attr.importfromfile',
   'pLogOutput', 1,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pSrcDir', pSourceDir,
   'pSrcFile', pSourceFile,
@@ -119,6 +120,7 @@ If( pDebug >= 1 );
 Else;
   nRet = EXECUTEPROCESS('}bedrock.dim.attr.importfromfile',
   'pLogOutput', 0,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pSrcDir', pSourceDir,
   'pSrcFile', pSourceFile,

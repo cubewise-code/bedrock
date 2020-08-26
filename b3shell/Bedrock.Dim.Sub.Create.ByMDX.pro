@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"ql1GX@praO_I_5Zq@aYTm8UE:Q2LwkofJJ4zb2JVsHiJYun9Hb?;gFrBnaDixvNfix@HfPyP6HxOKt`nW`WALUL13zVdkqqRiCTe:EFX;fcqGDyQBXyMOSKl4SFL\MiowN=YW0D78FrjznW8l<Fo6R]5DCPVeS?BEAA]8k[:X1n530<J_ImkYzq2jQFf55\AV1YbZmx7"
+565,"fg6SU0aOZzuu8]1iy@huNAYd8:<6NAts[>hsrF;j4DBnhh_q1RDbSsQ<PtK10L][67c0DK:C_tcroJNL0ZjFvYK6ErXf>rH>yiaVSwiuABG9Ah]9TK49WK5gyx@VPi7j4OiNb5WviH1X7F75[8Bz<0hpv`LlqJ79Qd?R8;r3ZiBpnehANNNsPaYSN^MX_wX;@]zMpYOQ"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,55
+572,56
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -103,6 +103,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.hier.sub.create.bymdx',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pHier', '',
   'pSub', pSubset,

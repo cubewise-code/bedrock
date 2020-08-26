@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"sjHNbYdk[V9?FnB?fOMay;lJDiMw@kCjKI>y;8mDyCW6xuCNaFUvoTES1opRB9GEGv^IZSTYA;>=tNQdc<R1lkeAxvlDx_@atYDkv;twr0tyG]1m@3ud7s6vRuuZ`fcLU<n]wWHzFW[c9LFqLLPXbLpBV0^4h5gdcq4oN3aE]ym4cPnjns>L1WdBg;irL\gUHxghgMzG"
+565,"dlFKaY495ysp6dfW_hX4<ZSvxD8<jYLob_z^FzEsfEwxo8k2LUN;a7EZutPQ@Zi@Ck8SVF5ZCm[UzTblP=T6^ACgFoXx9eh1c;LYScGqQW]tQUjeIUso<Hy5>eChc1fgVMNyk0`1ect0qg>g:@MuCBGhb7uqmtPCrx2h5nXJ_^4_vFghXUj1wX\6g]3[]e85GtVMpXVm"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -44,7 +44,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,66
+572,67
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -97,6 +97,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.hier.sub.create.orphans',
   'pDim', pDimension,
+  'pStrictErrorHandling',1,
   'pHier', '',
   'pTemp', 0
   );
