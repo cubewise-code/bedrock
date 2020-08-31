@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aaA6uti35[8_z<n9B1sY0IO@Eo@E>InokY0ErPWIxMgeht^vi^08AHegQ6O^UWJ:c0QVTBUm\=w1l6yUbtq4tO^>q<]I;o5auxasGT07qSX?Okq;dHN\7srIi_2Sp_S`ZgIxcdrVyMD<tj7wmgg_H]]LWPINdVl?Pcw\K?QB<RCXX\uDQO5o9s?1Z_RRu0^gvZOx6Bkg"
+565,"vR42cY=Lg<Ho7XsFH\;QP6a>pY>LEzY`yL7zoK<eQkr<K4=]bWXn2:u59gfit^NZx94ixs4\cBic:qiuGW`Cn3V\2^?DWgUzCE<t^ktPm1gI`JV2ebSZ?3[6e@wDyMi:QpD3^IBlVYL`F:[;f6O^WZNhJansX1WuEcBGETs4m3XFceIU>:o]vYJIKFB62wUh3DZ;X`Gw"
 559,1
 928,0
 593,
@@ -52,7 +52,7 @@ pWait,"Wait for command to finish 0=false 1=true"
 581,0
 582,0
 603,0
-572,47
+572,55
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -100,6 +100,14 @@ EndIf;
 nWait = StringToNumber ( pWait );
 
 # Check if the pCommand parameter is enclosed in quotes and add if not
+sSubst = Subst ( pCommand, 1, 1 );
+If ( Subst ( pCommand, 1, 1 ) @<> '"' );
+  sCommand = Expand ( '"%pCommand%"' );
+Else;
+  sCommand = pCommand;
+EndIf;
+
+ExecuteCommand ( pCommand, nWait );
 573,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
