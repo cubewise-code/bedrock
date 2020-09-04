@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"d>kMa8gbG6tYMSVC[5CBJGvJq379taBg8c27\L6E5awJ8D@lHpeaYOyiM6v`ZrTtng2YW3:>mbQ8EmbsHC:tDt9`;8<L[[vob:wkzdZyEPWVcnpWJ<:LMoLs3OY9<kd1?Gja<ptkde993f]DHyd`DH`P?>_L3Pz3C^c1vVSLXE7NBGqDlRd5uv^25qdmyxjeVRgCG`p9"
+565,"qO5Xa]f2aD@Co0fuAafaFlDL3<1>PbdBASiCL4KVD<nW]=qF:5UcvqGm61ADp6H=IgRJ<Ae40\bKtypsYQSC\ZgJjq`yZ6@OR0eq9i4IIEln>H6\1pS5MlDAfrQSpmrjJE7?G4JM\zRPpGNwz_t9u1RPj6\dPULBYXXOG01?Ury;`MS>XFj]LU@n4HOrTrWQ79\ThQkh"
 559,1
 928,0
 593,
@@ -742,7 +742,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,379
+572,395
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1096,6 +1096,22 @@ Else;
           'pTemp', pTemp,
           'pSubN', pSubN
           );
+ 
+    # Validate Sandbox
+    If( TRIM( pSandbox ) @<> '' );
+      If( ServerSandboxExists( pSandbox ) = 0 );
+          SetUseActiveSandboxProperty( 0 );
+          nErrors = nErrors + 1;
+          sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+      Else;
+          ServerActiveSandboxSet( pSandbox );
+          SetUseActiveSandboxProperty( 1 );
+      EndIf;
+    Else;
+      SetUseActiveSandboxProperty( 0 );
+    EndIf;
+ 
   
   IF( nRet <> ProcessExitNormal() );
       sMessage = 'Error creating the view from the filter.';
