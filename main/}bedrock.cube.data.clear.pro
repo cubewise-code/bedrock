@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hSSt2wr^a^juzaGhCKzh0>7jEMcD_<9wU@]5SryH7qPIaT\wGsh<64h1yRjvsiLU5`:[b;sdMFbf@UMwfPGO>zqC4DOh7nVllZbBfn>CYgA0;nq\kEBHlS4A7HSgQjVI:NC9dLi\TyhcEwK>oTGV]VfJWwmuQ7?xh601DFxCTB<zFEQgKRCcF43iq>[alXB1x<UI[^3k"
+565,"n:jdhzE<jnKA4Qa^`><0>X8B><xNpcr@rp<:<xRqbgV4tMeaG@EtOllVj@YQhG0@BW5p7i36VkGBAu<uhh3OIKfb=DXAQtpd5OWpyZEa=9BmcZ2lNwP3o0m_]kQY3Sd?Yqm?r6p>rK@SF\h=cOsF0>aXfW2?obi[NLYl4ptpNoJOl?LLQOSDI:FqOi[iOZ?7EPsEPK>k"
 559,1
 928,0
 593,
@@ -92,7 +92,7 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,491
+572,523
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -334,7 +334,7 @@ While( nCubeDelimiterIndex <> 0 );
     	  ENDIF;
       Else;
         ## Validate the View & filter parameter
-        If( Trim( pView ) @= '' & Trim( pFilter ) @= '' );
+        If( Trim( pView ) @= '' & Trim( pFilter ) @= '' & Trim( pSandbox ) @= '' );
           sMessage  = Expand('No view OR filter specified so the entire %sCube% cube has been cleared.');
 	  IF( pLogoutput = 1 );
           	LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
@@ -379,6 +379,22 @@ While( nCubeDelimiterIndex <> 0 );
                     'pTemp', pTemp,
                     'pSubN', pSubN
                     );
+
+
+              # Validate Sandbox
+              If( TRIM( pSandbox ) @<> '' );
+              If( ServerSandboxExists( pSandbox ) = 0 );
+                SetUseActiveSandboxProperty( 0 );
+                nErrors = nErrors + 1;
+                sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+              Else;
+                ServerActiveSandboxSet( pSandbox );
+                SetUseActiveSandboxProperty( 1 );
+              EndIf;
+              Else;
+                 SetUseActiveSandboxProperty( 0 );
+              EndIf;
 
             ### Zero Out View ###
             If ( nRet = ProcessExitNormal() );
@@ -500,7 +516,7 @@ While( nCubeDelimiterIndex <> 0 );
     	  ENDIF;
         Else;
           ## Validate the View & filter parameter
-          If( Trim( pView ) @= '' & Trim( pFilter ) @= '' );
+          If( Trim( pView ) @= '' & Trim( pFilter ) @= '' & Trim( pSandbox ) @= '' );
             # Clear entire cube
             sMessage  = Expand('No view OR filter specified so the entire %sCube% cube has been cleared.');
 	    IF( pLogoutput = 1 );
@@ -540,6 +556,22 @@ While( nCubeDelimiterIndex <> 0 );
                   'pTemp', pTemp,
                   'pSubN', pSubN
                   );
+                  
+              # Validate Sandbox
+              If( TRIM( pSandbox ) @<> '' );
+              If( ServerSandboxExists( pSandbox ) = 0 );
+                SetUseActiveSandboxProperty( 0 );
+                nErrors = nErrors + 1;
+                sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+              Else;
+                ServerActiveSandboxSet( pSandbox );
+                SetUseActiveSandboxProperty( 1 );
+              EndIf;
+              Else;
+                 SetUseActiveSandboxProperty( 0 );
+              EndIf;
+                  
   
               ### Zero Out View ###
               IF ( nRet = ProcessExitNormal() );
