@@ -287,7 +287,7 @@ If( pReverse = 1 & HierarchyExists( sDim, cHierLeaves ) = 1 );
     nMaxLeaves = ElementCount( sDim, cHierLeaves );
     While ( nLeaf <= nMaxLeaves );
         sLeaf = ElementName( sDim, cHierLeaves, nLeaf );
-        sType = ElementType( sDim, sHier, sLeaf );
+        sType = ElementType( sDim, cHierLeaves, sLeaf );
         If ( ElementIndex( sDim, sHier, sLeaf ) = 0 );
             HierarchyElementInsert( sDim, sHier, '', cRollupOrphan, 'C' );
             HierarchyElementInsert( sDim, sHier, '', sLeaf, sType );
