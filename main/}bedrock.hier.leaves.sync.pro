@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"c0vy=UZd]C7bY]Rn?Y<=XpnWWi\cSX;UP=a^UN=T=@k4iKow?9WtC9kUe*[QsIpzNIUZQN^UA1~t;yq_xWQ`noKz9lYQ?PY9n?O6mLIMR1C6Occ\g\M2Cq6mkuW6eZvgm,[JR1zkaVZ{IAEoIAy=]3a:S@]GOEX@0R=wk1@9KjVH7yisty3rfu0hLf^NydQL33uF_1Y="
+565,"tY<TvN]\dKGAx9l7s9I[yr>;f@R:3Ad[@^MZPH`P0B5daAO5aohnk9?a\)[QyL~:nQpR1]@gJTyt:sQ9feSH7<][8GX1K<6jkpN6mOLPtU?eXml\GnTJqArJKrLdbJqIr%{Jbw]9^OU{90a`ig;0=6OtnAODdFaL@X2w2ZIii67x6iIa94<U;z`H=WNyvoAB3ax>8ODj"
 559,1
 928,0
 593,
@@ -237,7 +237,7 @@ DataSourceType = 'SUBSET';
 DatasourceDimensionSubset = cTempSub;
 
 ### END PROLOG
-573,80
+573,84
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -263,14 +263,15 @@ EndIf;
 nElems      = 0;
 nLeaves     = 0;
 
-# Add leaves in hierarchy but (somehow) not in Leaves hierarchy to Leaves
+# Add leaves which exist in hierarchy but (somehow) don't exist in Leaves hierarchy to Leaves
 nElem = 1;
 nMaxElem = ElementCount( sDim, sHier );
 While ( nElem <= nMaxElem );
     sElem = ElementName( sDim, sHier, nElem );
+    sType = ElementType( sDim, sHier, sElem );
     If ( ElementLevel( sDim, sHier, sElem ) = 0 & HierarchyExists( sDim, cHierLeaves ) = 1 );
-        If ( ElementIndex( sDim, cHierLeaves, sElem ) = 0 & ElementType( sDim, sHier, sElem ) @= 'N' );
-            HierarchyElementInsert( sDim, cHierLeaves, '', sElem, 'N' );
+        If ( ElementIndex( sDim, cHierLeaves, sElem ) = 0 & ( sType @= 'N' % sType @= 'S' ) );
+            HierarchyElementInsert( sDim, cHierLeaves, '', sElem, sType );
             nElems = nElems + 1;
             If ( pLogOutput <> 0 );
                 LogOutput( cMsgInfoLevel, Expand( 'Adding element [%sElem%] of [%sType%] type into [%cHierLeaves%], element was found in hierarchy [%sHier%].' ) );
@@ -286,10 +287,13 @@ If( pReverse = 1 & HierarchyExists( sDim, cHierLeaves ) = 1 );
     nMaxLeaves = ElementCount( sDim, cHierLeaves );
     While ( nLeaf <= nMaxLeaves );
         sLeaf = ElementName( sDim, cHierLeaves, nLeaf );
+        sType = ElementType( sDim, sHier, sLeaf );
         If ( ElementIndex( sDim, sHier, sLeaf ) = 0 );
             HierarchyElementInsert( sDim, sHier, '', cRollupOrphan, 'C' );
-            HierarchyElementInsert( sDim, sHier, '', sLeaf, 'N' );
-            HierarchyElementComponentAdd( sDim, sHier, cRollupOrphan, sLeaf, 1 );
+            HierarchyElementInsert( sDim, sHier, '', sLeaf, sType );
+            If( sType @= 'N' );
+                HierarchyElementComponentAdd( sDim, sHier, cRollupOrphan, sLeaf, 1 );
+            EndIf;
             nLeaves = nLeaves + 1;
             If ( pLogOutput <> 0 );
                 LogOutput( cMsgInfoLevel, Expand( 'Adding leaf [%sLeaf%] into hierarchy [%sHier%].' ) );
