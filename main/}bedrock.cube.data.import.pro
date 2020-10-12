@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"dCkNa3TpKFV0GEz@^VtA?9=Q:vM\bvPlwGJo;2fjXviRqrz3R6@z3N?opcPcqZjTekf]^VRVFVCqNA^sZqTdc:uR[Y1PWxEm^\MPXzF\XGM78`E]nJCXFkq7>YCJwK3]xG>b_mW42RXMV@w1@FHJao]k^Y\5XW`8ODwEz]jlLE=R0ky91:l9]gA`r7fT4=8tFGg7YBl_"
+565,"bZaH\<FhYEJ[q_6T71fy2]Gi3IOtjqPj56EpSVa:GZs2DzC\0oMYQ>SE2rhi=?r;CDuyxhH9ZEYzWY7AbSx\7a4qNMJJdRl<m@xD2[?yC_B@8O6EKt<u8w<;aNbfJ>Df`NDSCb3Zw?EJ3U]7[394d0`\g4Yi=??<f:Aja<cPDPKFgk@6HaTFl7>hX6zS<Zq;e0S[j@UX"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,2
 592,0
 599,1000
-560,19
+560,20
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -45,7 +45,8 @@ pMappingToNewDims
 pDimDelim
 pEleStartDelim
 pEleDelim
-561,19
+pCharacterSet
+561,20
 1
 1
 2
@@ -65,7 +66,8 @@ pEleDelim
 2
 2
 2
-590,19
+2
+590,20
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -85,7 +87,8 @@ pMappingToNewDims,""
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
-637,19
+pCharacterSet,"TM1CS_UTF8"
+637,20
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Target Cube"
@@ -105,6 +108,7 @@ pMappingToNewDims,"REQUIRED IF TARGET HAS DIMS NOT IN SOURCE: DimX¦InputElement
 pDimDelim,"OPTIONAL. Delimiter for start of Dimension/Element set"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list"
 pEleDelim,"OPTIONAL: Delimiter between elements"
+pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 577,30
 v1
 v2
@@ -292,7 +296,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,926
+572,927
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1217,6 +1221,7 @@ DatasourceNameForClient         = sFile;
 DatasourceASCIIHeaderRecords    = pTitleRows;
 DatasourceASCIIDelimiter        = pDelimiter;
 DatasourceASCIIQuoteCharacter   = pQuote;
+SetInputCharacterSet (pCharacterSet);
 
 ### End Prolog ###
 573,4
