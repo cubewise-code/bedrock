@@ -102,7 +102,7 @@ pQuote,""""
 pTitleRecord,1
 pSandbox,""
 pSubN,0
-pCharacterSet,""
+pCharacterSet,"TM1CS_UTF8"
 637,25
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
