@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"mJNVBo]@]\yu6ah7:p@2]MEFC`Lrze;IfF>`p0=U@duJl^W9<tPzTrxoj<]f<Rq\BY^ZXzlH^Mjq]>\CUFFg;cHV6UKekLClK>tAUkMku4G^\w5>w:@k9bS5muqHEQa8aaXFnm7O`IGb@dCrxB_S@qYfgGUQXuiBKtD>S;N3JGMV<>9pcw=[gjbPl:ndngY<_kP_TLpM"
+565,"wleeZe@zs7:tX9hx?u8=<0FaW__6<f1[8>oO_IW\i]GERwH5<CKC8MK:DxAhiO02`qR6];6X4ttLeDRQoRBwuVJqM3ci>`Hw`6q9e0r_mjF4dnqAvM0p`FzSI9dbQewiAIAJZ:9z]onUjR5yxbZv@p]FnptevOM8bUkkO_:U`O0w2PB^a5Co7ez`=R<qM4KckFPCuRxl"
 559,1
 928,0
 593,
@@ -25,32 +25,36 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pSrcHier
 pTgtDim
 pTgtHier
 pAttr
 pUnwind
-561,7
-1
-2
-2
-2
-2
+561,8
 1
 1
-590,7
+2
+2
+2
+2
+1
+1
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pSrcHier,""
 pTgtDim,""
 pTgtHier,""
 pAttr,0
 pUnwind,0
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
 pSrcHier,"REQUIRED: Source Hierarchy"
 pTgtDim,"REQUIRED: Target Dimension (can be the same as source)"
@@ -70,11 +74,12 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,217
+572,227
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.clone', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '',
     	'pTgtDim', '', 'pTgtHier', '',
     	'pAttr', 0, 'pUnwind', 0
@@ -119,6 +124,8 @@ cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = '%cThisProcName% : %sMessage% : %cUserName%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pAttr:%pAttr%, pUnwind:%pUnwind%.';
+cLangDim          = '}Cultures';
+nNumLang          = DimSiz( cLangDim );
 
 nProcessSameNamedHier = 0;
 sEpilogTgtHier = '';
@@ -213,7 +220,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Create target dimension Hierarchy ###
@@ -221,8 +232,9 @@ If( HierarchyExists( pTgtDim, pTgtHier) = 0 );
     HierarchyCreate( pTgtDim, pTgtHier );
 Else;
     IF(pUnwind = 1 );
-      ExecuteProcess('}bedrock.hier.unwind',
+      nRet = ExecuteProcess('}bedrock.hier.unwind',
         'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
         'pDim', pTgtDim,
         'pHier', pTgtHier,
         'pConsol', '*',
@@ -269,8 +281,10 @@ DatasourceDimensionSubset   = 'ALL';
 
 # Note: DType on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 
-sAttrDim = '}ElementAttributes_' | pSrcDim;
-sAttrTragetDim = '}ElementAttributes_' | pTgtDim;
+sAttrDim        = '}ElementAttributes_' | pSrcDim;
+sAttrLoc        = '}LocalizedElementAttributes_' | pSrcDim;
+sAttrTragetDim  = '}ElementAttributes_' | pTgtDim;
+sAttrLocTarget  = '}LocalizedElementAttributes_' | pTgtDim;
 
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
   nNumAttrs = DimSiz( sAttrDim );
@@ -288,7 +302,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
 
 ### End Prolog ###
-573,31
+573,35
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -301,7 +315,11 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Add Elements to target dimension ###
@@ -320,7 +338,7 @@ IF( sElType @= 'C' & ElementComponentCount( pSrcDim, pSrcHier, vEle  ) > 0 );
 EndIf;
 
 ### End MetaData ###
-574,51
+574,90
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -333,7 +351,11 @@ EndIf;
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Replicate Attributes ###
@@ -341,9 +363,9 @@ EndIf;
 
 If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 
-    nCount = 1;
-    While( nCount <= nNumAttrs );
-        sAttrName = DimNm( sAttrDim, nCount );
+    nAttr = 1;
+    While( nAttr <= nNumAttrs );
+        sAttrName = DimNm( sAttrDim, nAttr );
         sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
         
         If( sAttrType @= 'S' % sAttrType @= 'A' );
@@ -366,13 +388,48 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
                 EndIf;
             EndIf;  
         EndIf;
-        nCount = nCount + 1;
+        # check for localized attributes
+        If( CubeExists( sAttrLoc ) = 1 );
+            nLang = 1;
+            While( nLang <= nNumLang );
+                sLang       = DimNm( cLangDim, nLang );
+                If( sAttrType @= 'A' % sAttrType @= 'S' );
+                    sAttrVal    = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
+                    sAttrValLoc = ElementAttrSL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
+                    If( sAttrValLoc @= sAttrVal ); sAttrValLoc = ''; EndIf;
+                Else;
+                    nAttrVal    = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
+                    nAttrValLoc = ElementAttrNL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
+                EndIf;
+                If( CubeExists( sAttrLocTarget ) = 0 );
+                    If( sAttrType @= 'A' );
+                        ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
+                    ElseIf( sAttrType @= 'N' );
+                        ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                    Else;
+                        ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                    EndIf;
+                ElseIf(CubeExists( sAttrLocTarget ) = 1 );
+                    If( CellIsUpdateable( sAttrLocTarget, pTgtHier:vEle, sLang, sAttrName ) = 1 );
+                        If( sAttrType @= 'A' );
+                            ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
+                        ElseIf( sAttrType @= 'N' );
+                            ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                        Else;
+                            ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+                        EndIf;
+                    EndIf;
+                EndIf;
+                nLang   = nLang + 1;
+            End;
+        EndIf;
+        nAttr = nAttr + 1;
     End;
 
 EndIf;
 
 ### End Data ###
-575,50
+575,54
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -396,8 +453,9 @@ EndIf;
   
 ### If a new dimension has been created, call the process recursively to clone the alternate hierarchy, after the same named hierarchy has been processed
 If( nProcessSameNamedHier = 1 );
-  EXECUTEPROCESS('}bedrock.hier.clone',
+  nRet = EXECUTEPROCESS('}bedrock.hier.clone',
     'pLogOutput', pLogOutput,
+    'pStrictErrorHandling', pStrictErrorHandling,
     'pSrcDim', pSrcDim,
     'pSrcHier',pSrcHier,
     'pTgtDim', pTgtDim,
@@ -413,6 +471,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned the %pSrcDim%:%pSrcHier% dimension:hierarchy to %pTgtDim%:%pTgtHier%' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

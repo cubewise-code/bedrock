@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wwI90`zLY5wb=D9Odb0zd0HzKVmlwtutBh?FTj4cLUgbzPe_3Km5SswWk]i~DT6uNgiwfJt3mVW1CV1dorPGVzYqYZjCT>HoEJ?yQeOJrx3ZZEsu9e@dJF:Gh`:sRgT3m2`Ls_K8BnRM{Ix3Gyp^VYt0ZX^9LBx^R`Dd9NVqXrqSmXt0BaoCZDNd1frSmTVByp>RXO^5wwI90`zLY5wb=D9Odb0zd0HtKVmlwtu4Hh?FTj4cLUgbzPh_3Km5SswWk-?pDTfrNgiWaJt3mVg=C64dorPGVzYqYZzBT>HoEJ?Y[eOJrx3ZZEC45e@dJF:Gh`:sR@[3mbfl}_K8BnRmvIx3IypnPYt0ZX^9LBx^R`te9N6}XrqS-[t0BaoCZT@d1frSmTZBsp>RXO^5"
+565,"u]=JwkoZeoWZC<8;ghXI3zN7KwsgZGpB_=Ww@jVHehHNTEa]Ksh7Jb^oXi~Vi7ES2>qVrKR:`PQ>R1z7mHu3myrsrgc:O:UpJ=q1TEN2D7TR<{uIlA\UuWb^C7\Wg49_;PBSOaDe7oMkDh5GYjTF0G=WN\2INtC?=HdTXV1@48heXV6lkrmdD^9HH1bwQVF9XlFj6^Ku]=JwkoZeoWZC<8;ghXI3tN7KwsgZGp?H_=Ww@jVHehHNTHa]Ksh7Jb^o(ovVigBS2>QQrKR:``]>24z7mHu3myrsrwb:O:UpJ=a0TEN2D7TR<K4ElA\UuWb^C7\WX?9_kVb]OaDe7omfDhuIYjdE0G=WN\2INtC?=xeTX6=@48h%[V6lkrmdTP9HH1bwQZF3XlFj6^K"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -48,7 +48,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,52
+572,53
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -95,6 +95,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.security.cube.cellsecurity.create',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCube,
   'pDim', pDimensions
   );

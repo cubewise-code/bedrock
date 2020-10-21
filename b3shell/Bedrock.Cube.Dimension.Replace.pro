@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"qTUqEuTkF_grGGIsXylKS?6]o;[eTvqLQ43P]EmxQ[oT`[Y0nko4j\GvYmjgWm?TlhtZa0Xi<Ku7ZbXRT:r=D;o]y6xjEcCC;1m?}2cs5YYOuK126E8oM0lPY3ZPiaG64{bu7HPHPVotyX:dgYB1=xr5YL<xNJM5r2Ki_Ifbl2h8:vn_E9vy@Ij[ELG]XAB1P?Uo7a41"
+565,"oag?Ncli5:WZMdDy]omv=j4ea:ncphtGAjAC6Wq`[vFshS9s@07xw=dwqajWax84x><UqPr^sYrGEcX;wYci3F<uxD|:_M<h[S;>M_GuP6u0p492fEFGT1yZg<F0h1:<yzb}GCt;av0{Y8xcGE=?]]rD9:x9gPEUL7A9i6kRc4hL>6Fj<LJ=hHJR70;DFC2:@KHW3X<0"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,62
+572,63
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -97,6 +97,7 @@ EndIf;
 sProc = '}bedrock.cube.dimension.replace';
 nRes = EXECUTEPROCESS( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCube,
   'pSrcDim', pSourceDim,
   'pTgtDim', pTargetDim,

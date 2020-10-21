@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"yAK7H?;_h@ko^>cN?b<0t@5@pyAHLO7JJtiew?y_X8Tucrg0<U[KPbX;[5SAEOia3[roW^6PpsgOgK>qCEQ\9Q9]Hek3Y\k<^v?MbV^7FpcY\~BN7gN\j>19^J5UEV6?ujkD`?yOpjBNJB20e^>}3Zkf@DqpSo??Nh?gCTtdMsP'oDLFWR?Wo8zvVcgqFT`<f?JcY@C"
+565,"xS]2EwB`3:u>e\QYN;e^cnsFyemKp5uGjQa?nWdG]Y``yr7fr]h8h5l2n5SQ^xlA`65`G`idG5bo6Foew7=W7>R^5te;092izuo3m=a5yo59v1|B~9z1_ueD<trZPeZj2wzoTyyR]PjDNxP4Pju;}<3z_D0GN8CsLxezMYt=OvE+_`G5>o;[m8[1b5x@KTi|Cp`hOCZ"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,8
+560,11
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSrcDir
@@ -34,7 +35,10 @@ pSrcFile
 pDelim
 pQuote
 pLegacy
-561,8
+pUnwind
+pConsol
+561,11
+1
 1
 2
 2
@@ -43,8 +47,11 @@ pLegacy
 2
 2
 1
-590,8
+1
+2
+590,11
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSrcDir,""
@@ -52,8 +59,11 @@ pSrcFile,""
 pDelim,","
 pQuote,""""
 pLegacy,0
-637,8
+pUnwind,1
+pConsol,"*"
+637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pHier,"OPTIONAL: Target Hierarchy (defaults to dimension name if blank)"
 pSrcDir,"OPTIONAL: Source Directory Path (defaults to Error File Directory)"
@@ -61,6 +71,8 @@ pSrcFile,"OPTIONAL: Source File Name (defaults to 'Dimension Hierarchy _Export.c
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pLegacy,"OPTIONAL: 1 = Legacy format (bedrock v3) 0 or empty = new bedrock v4 format"
+pUnwind,"OPTIONAL: 1 = unwind elements 0 = like for like copy which may result in lost elements / data"
+pConsol,"OPTIONAL: Target Consolidation, accepts wildcards ( * will unwind ALL). Note: ignored if pUnwind=0"
 577,6
 V1
 V2
@@ -104,16 +116,17 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,237
+572,273
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.hier.import', 'pLogOutput', pLogOutput,
-    	'pDim', '', 'pHier', '',
-    	'pSrcDir', '', 'pSrcFile', '',
-    	'pDelim', ',', 'pQuote', '"',
-    	'pLegacy', 0
-	);
+ExecuteProcess( '}bedrock.hier.import', 'pLogOutput', pLogOutput
+    , 'pStrictErrorHandling', pStrictErrorHandling
+    , 'pDim', '', 'pHier', ''
+    , 'pSrcDir', '', 'pSrcFile', ''
+    , 'pDelim', ',', 'pQuote', '"'
+    , 'pLegacy', 0, 'pUnwind' , 1, 'pConsol', '*'
+);
 EndIf;
 #EndRegion CallThisProcess
 
@@ -145,6 +158,8 @@ EndIf;
 # Valid dimension name (pDim) is mandatory otherwise the process will abort.
 # If needed, custom delimiter might be used by specifying parameter pDelim value as either exactly one
 # character or as a 3-digit (decimal) ASCII code. For example to use TAB as a delimiter, use 009.
+# pUnwind provides the option to 1 (unwind) or 0 (delete) elements in the target dimension. Default is to unwind,
+# care should be taken when using option 0 otherwise data loss may occur.
 
 # Caution: Process was redesigned in Bedrock4 but is able to process dimension extracts from prior
 # versions of Bedrock in legacy mode (pLegacy = 1).
@@ -164,7 +179,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%.';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%, pUnwind:%pUnwind%, pConsol:%pConsol%';
 cLenASCIICode = 3;
 
 pDelim  = TRIM(pDelim);
@@ -251,6 +266,17 @@ If( FileExists( sFilename ) = 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate unwind
+If( pUnwind <> 0 );
+    pUnwind = 1;
+EndIf;
+
+# Validate consolidation to unwind
+If( pConsol @= '' );
+    # Only check if parameter is passed as empty as this is invalid. Validation in case of element not existng in dimension will be evaluated in the unwind sub-process
+    pConsol = '*';
+EndIf;
+
 # Validate file delimiter & quote character
 If( pDelim @= '' );
     pDelim = ',';
@@ -299,32 +325,54 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Prepare target dimension ###
 If( HierarchyExists( pDim, sHier ) = 1 );
-    ExecuteProcess('}bedrock.hier.unwind',
-	'pLogOutput',pLogOutput,
-	'pDim',pDim,
-	'pHier',sHier,
-	'pConsol','',
-	'pRecursive',1);
+    If( pUnwind = 1 );
+    ExecuteProcess('}bedrock.hier.unwind', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
+    	'pDim', pDim,
+    	'pHier', sHier,
+    	'pConsol', pConsol,
+    	'pRecursive', 1
+    );
+    ElseIf( pUnwind = 0 );
+        If( pDim @= pHier );
+            DimensionDeleteAllElements( pDim );
+        Else;
+            HierarchyDeleteAllElements( pDim, pHier );
+        EndIf;
+    EndIf;
 Else;
     ExecuteProcess('}bedrock.hier.create',
 	'pLogOutput',pLogOutput,
+	'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pDim,
 	'pHier',sHier);
 EndIf;
 
 If( nErrors = 0 );
     If( HierarchyExists( pDim, pHier ) = 1 );
-        sMessage = 'Dimension unwound: ' | pDim|':'|sHier;
+        IF ( pUnwind = 1 ) ;
+            sMessage = 'Dimension unwound: ' | pDim|':'|sHier;
+        ELSEIF ( pUnwind = 0 ) ;
+            sMessage = 'Dimension rebuilt: ' | pDim|':'|sHier;
+        ENDIF ;
     Else;
         sMessage = 'Dimension created: ' | pDim|':'|sHier;
     EndIf;
 Else;
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
 EndIf;
 
 ### CONSTANTS ###
@@ -342,7 +390,7 @@ DatasourceAsciiQuoteCharacter = pQuote;
 
 
 ##### End Prolog #####
-573,70
+573,74
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -353,7 +401,11 @@ DatasourceAsciiQuoteCharacter = pQuote;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 If( pDim @= sHier);
@@ -367,9 +419,9 @@ nMetaCount = nMetaCount + 1;
 
 sVar1 = v1;
 sVar2 = v2;
-sVar3 = If( pLegacy = 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
-sVar4 = If( pLegacy = 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
-sVar5 = If( pLegacy = 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
+sVar3 = If( pLegacy <> 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
+sVar4 = If( pLegacy <> 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
+sVar5 = If( pLegacy <> 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
 
 ## Set Dimension Sort Order
 IF( v1 @= 'Sort parameters :' );
@@ -413,7 +465,7 @@ ELSEIF( V1 @= 'P' );
 
 ENDIF;
 
-574,49
+574,59
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -424,7 +476,11 @@ ENDIF;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Data Count
@@ -432,9 +488,9 @@ nDataCount = nDataCount + 1;
 
 sVar1 = v1;
 sVar2 = v2;
-sVar3 = If( pLegacy = 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
-sVar4 = If( pLegacy = 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
-sVar5 = If( pLegacy = 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
+sVar3 = If( pLegacy <> 1, Subst( v3 , Scan( '-' , v3 ) + 1 , Long( v3 ) ), v3 );
+sVar4 = If( pLegacy <> 1, Subst( v4 , Scan( '-' , v4 ) + 1 , Long( v4 ) ), v4 );
+sVar5 = If( pLegacy <> 1, Subst( v5 , Scan( '-' , v5 ) + 1 , Long( v5 ) ), v5 );
 
 If( pDim @= sHier);
     sDim = pDim;
@@ -446,6 +502,9 @@ Endif;
 IF( V1 @= 'V' );
     sAttrType = DTYPE( sAttrDimName , sVar3 );
     IF ( pDim @<> sHier );
+        IF ( CellIsUpdateable ( '}ElementAttributes_' | pDim, sVar2, sVar3 ) = 0 ) ;
+            ItemSkip ;
+        ENDIF ;
         IF( sAttrType @= 'AN' );
             ElementAttrPUTN( StringToNumber( sVar4 ), pDim, sHier, sVar2, sVar3 );
         ELSEIF( sAttrType @= 'AA' );
@@ -454,6 +513,9 @@ IF( V1 @= 'V' );
             ElementATTRPUTS( sVar4, pDim, sHier, sVar2, sVar3 );
         ENDIF;
     ELSE;
+        IF ( CellIsUpdateable ( '}ElementAttributes_' | pDim , sVar2, sVar3 ) = 0 ) ;
+            ItemSkip ;
+        ENDIF ;
         IF( sAttrType @= 'AN' );
             AttrPUTN( StringToNumber( sVar4 ), pDim, sVar2, sVar3 );
         ELSEIF( sAttrType @= 'AA' );
@@ -463,7 +525,7 @@ IF( V1 @= 'V' );
         ENDIF;        
     ENDIF;
 ENDIF;
-575,26
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -478,7 +540,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code
@@ -490,7 +554,7 @@ If ( pLogoutput = 1 );
 EndIf;
 
 ### End Epilog ###
-576,
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
 930,0
 638,1
 804,0

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"k3R7R1`4I2SagG:FYgapakaETIo3;1Po`PstFM7uey]pTVZh_G<T:S4XUq`I:H0dsUaL\gLUE@;[omIew@St:qNEYwT62CkjXd8SG0\;^MC0:FY0Vo:mN6BmSsqoQHcAP?<0B[zZOlAg_r0jlMc<aRnXpZ^S6NtAgkJm;fL3Fss`8h[TAe\`lKTheJ=_?5Ah`FW`M=yo"
+565,"i=fNsvcXRax^MNkog0d3Y34vb_TpB1Y`Rtf?;U\n?1?gtIKCgge8d_nCSJzltxHVI347UAXI3KYB_q9[;zmnaPLdykKau3W03fO=v_T<ZeP[4kU]uYpWjVRTmrUs>Fz34ZL<2gb6nsW1_iDbd0_QYy9f:[IJJvC[stnlyuLfX7=SudwZ@BpUczb<dgXuXRV:g_\wQ\29"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -60,7 +60,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,67
+572,68
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -106,6 +106,7 @@ sProc = '}bedrock.cube.view.publish';
 
 nRes = EXECUTEPROCESS( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCube,
   'pView', pView,
   'pSubPublish', pSubPublish,

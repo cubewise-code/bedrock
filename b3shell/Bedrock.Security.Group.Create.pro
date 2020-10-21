@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"aaqLrh@<M]s9555ZYi@yuOm2^3@SL\LYoH^o6^6meP=14`=xh]Lx]ba8xGl82j5w89BuBoYSw?vL6YRhlO>WwcIDk;3`YT6V[=:jIcF9qEBl09<iExAg]x6dO1jgUESxVc_S;N<R1@<KcFB`BuvFiXErD731d1n<3LRh]D>4MPTG6YAz]OLVN>lrM4kIYGShb:zfOL[f"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -48,7 +48,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,47
+572,48
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -93,6 +93,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.security.group.create',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pGroup', pGroups,
   'pDelim', pDelimiter
   );

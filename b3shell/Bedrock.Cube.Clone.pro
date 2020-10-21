@@ -4,7 +4,7 @@
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"tdEPa[>ot0m73roSd_nxa:THZWF_jb8a6i8Bt\ru;^Z8EE@cu9\f4hfSqbneJ7PdyfruTDVR]F60v]mKd[yRiibHu4^BEoMTu7hc8avPz<00]zkNIqojcVGapx6H08L?CDS=8=I>93DziqvH`QnJ_jnha\Y88hEbGh`Bk\GYtGd_BfddyBv`iUHtLUb6Do6\xtQ>mxzK"
+565,"rOgXvg1K9T6YjD9sRfaOv6T[7Y5V60?r\bDW1ZjvkhDZK;NZBYSFvDhm^[ttX>6Tv4wPI\TBDMnJ4m^GRXgm[76SC[oG4x<iu6QrstS`hmUJ0Yb\;?S37MSkXm3k=I0KcQXdYqHm?R74p@A;U9cIx<lk<e_PiQRio39>s<=z_9kI@gIVn3tH>>H6dEcBrZ?WWQgn0lzr"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,Temp
 571,
@@ -64,7 +64,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,81
+572,82
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -120,6 +120,7 @@ nCubeLogging = IF(sCubeLogging@='YES',1,0);
     
 nRet = ExecuteProcess('}bedrock.cube.clone',
 	        'pSrcCube',pSourceCube,
+          'pStrictErrorHandling',1,
 	        'pTgtCube',pTargetCube,
         	'pIncludeRules',pIncludeRules,
         	'pIncludeData',pIncludeData,

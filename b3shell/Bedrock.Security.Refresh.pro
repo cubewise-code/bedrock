@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"kw0coUwQc5raPdeC2d2`A7ZtA653NiYSudltHPn_[7hiMY7EkA2N0_sxHB9SvcOgD7`<p60jvgi\J_l0c\OdHF@rO6fiYOjygt]Lx0z7Hf9sCN6:d15jd7iX3opbhVv8YVz1>yrl1De\bjOrCcc]@Bk17D_m5@7E4UH`c0jjMII=G;cmlhF`T<3lh]3OO?sZHeThDYon"
+565,"nefTU=lV_zcx?kaD]urpEt]lwSwf]oQ4a;GN7L0NhmbMHS2^be[pg3GHZQfVBEVv[Fm3Fm@\K11QNrrutYsjvI=eArTbRzB:3bX\FBZhwi0MmBx8MPF?=zGcm@eQWfMw]CaOA5?U1=H4x:xHQi<tKsS3RanmGSJA@lP[6GxXi][imxLDXp_z]h0xdNZBoo=]??RU=dxL"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -40,7 +40,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,42
+572,43
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -77,7 +77,8 @@ EndIf;
 
 
 EXECUTEPROCESS('}bedrock.security.refresh',
-  'pLogOutput', pDebug
+  'pLogOutput', pDebug,
+  'pStrictErrorHandling',1
   );
   
 

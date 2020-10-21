@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"riz_sMKTT<bv_7u7Pwao[i^^eZQ6=g_rFO2uVUNXa8uLNytJ4Xo7U^YQcvY\ZwObS3b\wj5Gq_k[qoCckx6mj1djDvfV`ogRZ4kdS=:hZ_Kvmi_;y<Y=W?l1vGTgkSvrn0w<1:u]TvRV0iLFdiuba:8IYh3IDC2Tze@2LwnrQ;`kVf9S3?N?1E2zxw:z6Iv3L6gb7xA0"
+565,"qJ8b0yU:j=DAH0^V]aV5Ke?V^xESG:lVAwWRKqX^oYCFEk=4@ZhN885`N=?HUc@Fdxrmse`yn1rB[v8XR:jIFjqVLmLq^hZ;KK:L^ly@eFSOiGBOQEAGAg;Zn<UY2:zo=U?[jkp5CMl_530SxLU0Q?Tf^ZQbHKCBp]rPSD\q;StlhHV>6O16DZNh_1OJkoY0vs9QzZbg"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,11
+560,13
 pLogOutput
+pStrictErrorHandling
 pDim
 pEle
 pDelim
@@ -37,7 +38,9 @@ pDimInfo
 pAttr
 pSub
 pAttrVal
-561,11
+pCharacterSet
+561,13
+1
 1
 2
 2
@@ -49,8 +52,10 @@ pAttrVal
 1
 1
 1
-590,11
+2
+590,13
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pEle,""
 pDelim,"&"
@@ -61,8 +66,10 @@ pDimInfo,1
 pAttr,1
 pSub,0
 pAttrVal,1
-637,11
+pCharacterSet,""
+637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Target Dimension or Hierarchy (as dim:hier), accepts wildcards (if = *, then all the dimensions)"
 pEle,"OPTIONAL: Target Element(s), accepts wildcards ( * will include ALL)"
 pDelim,"OPTIONAL: Delimiter character if list used for pDim, pHier or pEle"
@@ -73,6 +80,7 @@ pDimInfo,"OPTIONAL: Include dimension info section (SortOrder, HierarchyProperti
 pAttr,"OPTIONAL: Include creation of attributes"
 pSub,"OPTIONAL: Include subset definitions"
 pAttrVal,"OPTIONAL: Include attribute values (for selected elements in pEle)"
+pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 577,1
 vDim
 578,1
@@ -86,11 +94,12 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,207
+572,217
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.hier.export.script', 'pLogOutput', 0,
+    ExecuteProcess( '}bedrock.hier.export.script', 'pLogOutput', pLogOutput,
+         'pStrictErrorHandling', pStrictErrorHandling,
          'pDim', '', 'pEle', '', 'pDelim', '&', 
          'pTgtDir', '', 'pTitleRecord', 1,
          'pDimInfo', 1, 'pAttr', 1, 'pAttrVal', 1, 'pSub', 0
@@ -107,24 +116,24 @@ EndIf;
 
 #Region @DOC
 # Description:
-# This process exports a dimension hierarchies as _TurboIntegrator script_. Thas is rather than creating a CSV which can be read by a generic 
+# This process exports a dimension hierarchies as _TurboIntegrator script_. This is rather than creating a CSV which can be read by a generic 
 # TurboIntegrator process this process creates a _**hardcoded**_ TurboIntegrator process to create a dimension/hierarchy complete with rollup 
 # structure, attribute values, subsets and metadata information such as sort order, MDX hierarchy names and levels and captions.
 #
 # Use case:
 # The specific use case where this process will be useful is to automate the creation of TurboIntegrator script for promotion/migration purposes
-# as 100% stand-alone without need for data source o any parameters for the process. This can be useful in sutuations where DevOps has no file system access
+# as 100% stand-alone without need for data source o any parameters for the process. This can be useful in situations where DevOps has no file system access
 # to an environment and for manually defined dimensions such as measures.
 #
 # Note:
 # Several parameters control the scope of what is exported.
 # * pDim accepts wildcard and lists of dimensions and/or hierarchies to filter the **}Dimensions** dimension. There is no separate **pHier** parameter for this process
 # * pEle accepts wildcard and lists of _elements_. This can be used to limit the scope of the export of dimension structure and attribute values to a subset of elements
-# * pDimInfo 1/0 numeric Boolean whether to include metadata relevant to the dimensions/hierarches defined in pDim from }DimensionProperties, }HierarchyProperties and }DimensionAttributes
+# * pDimInfo 1/0 numeric Boolean whether to include metadata relevant to the dimensions/hierarchies defined in pDim from }DimensionProperties, }HierarchyProperties and }DimensionAttributes
 # * pAttr 1/0 numeric Boolean whether to include attribute creation
 # * pAttrVal 1/0 numeric Boolean whether to include attribute values (for the elements defined in pEle )
 # * pSub 1/0 numeric Boolean whether to include subset definitions for dynamic and static subsets
-# * There is no Boolean for exporting dimension structure, this is determined by pEle. To export all elements use pEle="*". To supress export of rollup structure (and attribute values) use pEle=""
+# * There is no Boolean for exporting dimension structure, this is determined by pEle. To export all elements use pEle="*". To suppress export of rollup structure (and attribute values) use pEle=""
 # * 2 scripts are produced. One to copy/paste into prolog and one for epilog as Direct functions are not used for creation of elements and parent-child relationships
 #
 # Caution: 
@@ -237,6 +246,11 @@ Else;
     EndIf;
 EndIf;
 
+# Validate Character Set
+If(Trim( pCharacterSet ) @= '' );
+  pCharacterSet = 'TM1CS_UTF8';
+EndIf;
+
 # Use no quote character 
 pQuote          = '';
 
@@ -251,7 +265,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through dimensions in pDim
@@ -299,7 +317,7 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,536
+574,544
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -307,6 +325,9 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 ################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
+
+# Set the output character set
+SetOutputCharacterSet( sFileName, pCharacterSet );
 
 ### Record Count
 nRecordCount = nRecordCount + 1;
@@ -325,49 +346,49 @@ sDimSub     = '}Subsets_' | sDim;
 ### Export Header Information
 If( nRecordCount = 1 & pTitleRecord = 1 );
     sHeader = Expand('# Export dimensions as script pDim=%pDim% pEle=%pEle% On %cTimeStampPrint%');
-    AsciiOutput( sFileName, sHeader );
+    TextOutput( sFileName, sHeader );
     If( ( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & pEle @<> '' ) % ( pSub = 1 & DimensionExists( sDimSub ) = 1 ) );
         sHeader = Expand('# Export dimensions as script pDim=%pDim% pEle=%pEle% On %cTimeStampPrint%');
-        AsciiOutput( sFileName2, sHeader );
+        TextOutput( sFileName2, sHeader );
     EndIf;
 EndIf;
 
 ### Dimension write open
-AsciiOutput( sFileName, '' );
-AsciiOutput( sFileName, cHashLine );
-AsciiOutput( sFileName, Expand('#Region Dimension/Hierarchy: %vDim%') );
+TextOutput( sFileName, '' );
+TextOutput( sFileName, cHashLine );
+TextOutput( sFileName, Expand('#Region Dimension/Hierarchy: %vDim%') );
 If( ( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & pEle @<> '' ) % ( pSub = 1 & DimensionExists( sDimSub ) = 1 ) );
-    AsciiOutput( sFileName2, '' );
-    AsciiOutput( sFileName2, cHashLine );
-    AsciiOutput( sFileName2, Expand('#Region Dimension/Hierarchy: %vDim% (EPILOG)') );
+    TextOutput( sFileName2, '' );
+    TextOutput( sFileName2, cHashLine );
+    TextOutput( sFileName2, Expand('#Region Dimension/Hierarchy: %vDim% (EPILOG)') );
 EndIf;
 
 #################################################################################################
 #Region Create Dimension (PROLOG)
-AsciiOutput( sFileName, '' );
-AsciiOutput( sFileName, Expand('sDimHier = ''%vDim%'';') );
-AsciiOutput( sFileName, Expand('sDim     = ''%sDim%'';') );
-AsciiOutput( sFileName, Expand('sHier    = ''%sHier%'';') );
-AsciiOutput( sFileName, Expand('sDimAttr = ''%sDimAttr%'';') );
-AsciiOutput( sFileName, 'If( DimensionExists( sDim ) = 0 );');
-AsciiOutput( sFileName, '    DimensionCreate( sDim );');
-AsciiOutput( sFileName, '    If( sDim @<> sHier );');
-AsciiOutput( sFileName, '        HierarchyCreate( sDim, sHier );');
-AsciiOutput( sFileName, '    EndIf;' );
-AsciiOutput( sFileName, 'ElseIf( sDim @<> sHier );');
-AsciiOutput( sFileName, '    If( HierarchyExists( sDim, sHier ) = 0 );');
-AsciiOutput( sFileName, '        HierarchyCreate( sDim, sHier );');
-AsciiOutput( sFileName, '    EndIf;' );
-AsciiOutput( sFileName, 'EndIf;' );
+TextOutput( sFileName, '' );
+TextOutput( sFileName, Expand('sDimHier = ''%vDim%'';') );
+TextOutput( sFileName, Expand('sDim     = ''%sDim%'';') );
+TextOutput( sFileName, Expand('sHier    = ''%sHier%'';') );
+TextOutput( sFileName, Expand('sDimAttr = ''%sDimAttr%'';') );
+TextOutput( sFileName, 'If( DimensionExists( sDim ) = 0 );');
+TextOutput( sFileName, '    DimensionCreate( sDim );');
+TextOutput( sFileName, '    If( sDim @<> sHier );');
+TextOutput( sFileName, '        HierarchyCreate( sDim, sHier );');
+TextOutput( sFileName, '    EndIf;' );
+TextOutput( sFileName, 'ElseIf( sDim @<> sHier );');
+TextOutput( sFileName, '    If( HierarchyExists( sDim, sHier ) = 0 );');
+TextOutput( sFileName, '        HierarchyCreate( sDim, sHier );');
+TextOutput( sFileName, '    EndIf;' );
+TextOutput( sFileName, 'EndIf;' );
 #EndRegion Create Dimension
 #################################################################################################
 
 #################################################################################################
 #Region Dimension Info (PROLOG)
 If( pDimInfo = 1 );
-    AsciiOutput( sFileName, '' );
-    AsciiOutput( sFileName, cHashLine );
-    AsciiOutput( sFileName, Expand('#Region Dimension Info: %vDim%') );
+    TextOutput( sFileName, '' );
+    TextOutput( sFileName, cHashLine );
+    TextOutput( sFileName, Expand('#Region Dimension Info: %vDim%') );
     sSORTELEMENTSTYPE   = CellGetS( '}DimensionProperties', vDim, 'SORTELEMENTSTYPE' );
     sSORTCOMPONENTSTYPE = CellGetS( '}DimensionProperties', vDim, 'SORTCOMPONENTSTYPE' );
     sSORTELEMENTSSENSE  = CellGetS( '}DimensionProperties', vDim, 'SORTELEMENTSSENSE' );
@@ -396,16 +417,16 @@ If( pDimInfo = 1 );
     sLevel018           = CellGetS( '}HierarchyProperties', vDim, 'hierarchy0', 'level018' );
     sLevel019           = CellGetS( '}HierarchyProperties', vDim, 'hierarchy0', 'level019' );
     sLevel020           = CellGetS( '}HierarchyProperties', vDim, 'hierarchy0', 'level020' );
-    AsciiOutput( sFileName, Expand('DimensionSortOrder( sDimHier, ''%sSORTCOMPONENTSTYPE%'', ''%sSORTCOMPONENTSSENSE%'', ''%sSORTELEMENTSTYPE%'', ''%sSORTELEMENTSSENSE%'' );') );
-    AsciiOutput( sFileName, Expand('CellPutS( ''%sDefHier%'', ''}DimensionProperties'', sDimHier, ''DEFAULT_HIERARCHY'' );') );
-    AsciiOutput( sFileName, Expand('CellPutS( ''%sDefMember%'', ''}HierarchyProperties'', sDimHier, ''hierarchy0'', ''defaultMember'' );') );
-    AsciiOutput( sFileName, Expand('CellPutN( %sHierLevels%, ''}HierarchyProperties'', sDimHier, ''hierarchy0'', ''LevelsToHierarchize'' );') );
+    TextOutput( sFileName, Expand('DimensionSortOrder( sDimHier, ''%sSORTCOMPONENTSTYPE%'', ''%sSORTCOMPONENTSSENSE%'', ''%sSORTELEMENTSTYPE%'', ''%sSORTELEMENTSSENSE%'' );') );
+    TextOutput( sFileName, Expand('CellPutS( ''%sDefHier%'', ''}DimensionProperties'', sDimHier, ''DEFAULT_HIERARCHY'' );') );
+    TextOutput( sFileName, Expand('CellPutS( ''%sDefMember%'', ''}HierarchyProperties'', sDimHier, ''hierarchy0'', ''defaultMember'' );') );
+    TextOutput( sFileName, Expand('CellPutN( %sHierLevels%, ''}HierarchyProperties'', sDimHier, ''hierarchy0'', ''LevelsToHierarchize'' );') );
     nCtr                = 0;
     While( nCtr         <= 20 );
         sLvl            = 'Level0' | If( nCtr < 10, '0', '' ) | NumberToString( nCtr ); 
         sLvlVal         = Expand('%'| Expand('s%sLvl%') |'%');
         If( sLvlVal     @<> '' );
-            AsciiOutput( sFileName, Expand('CellPutS( ''%sLvlVal%'', ''}HierarchyProperties'', sDimHier, ''hierarchy0'', ''%sLvl%'' );') );
+            TextOutput( sFileName, Expand('CellPutS( ''%sLvlVal%'', ''}HierarchyProperties'', sDimHier, ''hierarchy0'', ''%sLvl%'' );') );
         EndIf;
         nCtr            = nCtr + 1;
     End;
@@ -415,17 +436,17 @@ If( pDimInfo = 1 );
             sAttr       = DimNm( '}DimensionAttributes', nCtr );
             sAttrTyp    = SubSt( DType( '}DimensionAttributes', sAttr ), 2, 1 );
             sAttrVal    = If( sAttrTyp @= 'N', NumberToString( DimensionAttrN( vDim, sAttr ) ), DimensionAttrS( vDim, sAttr ) );
-            AsciiOutput( sFileName, Expand('DimensionAttrInsert( '''', ''%sAttr%'', ''%sAttrTyp%'' );') );
+            TextOutput( sFileName, Expand('DimensionAttrInsert( '''', ''%sAttr%'', ''%sAttrTyp%'' );') );
             If( sAttrTyp @= 'N' );
-                AsciiOutput( sFileName, Expand('DimensionAttrPutN( %sAttrVal%, sDimHier, ''%sAttr%'' );') );
+                TextOutput( sFileName, Expand('DimensionAttrPutN( %sAttrVal%, sDimHier, ''%sAttr%'' );') );
             Else;
-                AsciiOutput( sFileName, Expand('DimensionAttrPutS( ''%sAttrVal%'', sDimHier, ''%sAttr%'' );') );
+                TextOutput( sFileName, Expand('DimensionAttrPutS( ''%sAttrVal%'', sDimHier, ''%sAttr%'' );') );
             EndIf;
             nCtr        = nCtr + 1;
         End;
     EndIf;
-    AsciiOutput( sFileName, Expand('#EndRegion Dimension Info: %vDim%') );
-    AsciiOutput( sFileName, cHashLine );
+    TextOutput( sFileName, Expand('#EndRegion Dimension Info: %vDim%') );
+    TextOutput( sFileName, cHashLine );
 EndIf;
 #EndRegion Dimension Info
 #################################################################################################
@@ -434,9 +455,9 @@ EndIf;
 #Region Create Attributes (PROLOG)
 If( pAttr = 1 & DimensionExists( sDimAttr ) = 1 & Scan( sDim|pDelim, sAttrDone ) = 0 );
     sAttrDone       = sAttrDone | sDim | pDelim;
-    AsciiOutput( sFileName, '' );
-    AsciiOutput( sFileName, cHashLine );
-    AsciiOutput( sFileName, Expand('#Region Create Attributes: %sDim%') );
+    TextOutput( sFileName, '' );
+    TextOutput( sFileName, cHashLine );
+    TextOutput( sFileName, Expand('#Region Create Attributes: %sDim%') );
     nCtr            = 1;
     While( nCtr     <= DimSiz( sDimAttr ) );
         sAttr       = DimNm( sDimAttr, nCtr );
@@ -463,22 +484,22 @@ If( pAttr = 1 & DimensionExists( sDimAttr ) = 1 & Scan( sDim|pDelim, sAttrDone )
             nChar = nChar + 1;
         End;
         If( nCtr = 1 );
-            AsciiOutput( sFileName, 'If( DimensionExists( sDimAttr ) = 0 );');
-            AsciiOutput( sFileName, Expand('    AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
-            AsciiOutput( sFileName, 'EndIf;' );
+            TextOutput( sFileName, 'If( DimensionExists( sDimAttr ) = 0 % CubeExists( sDimAttr ) = 0 );');
+            TextOutput( sFileName, Expand('    AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
+            TextOutput( sFileName, 'EndIf;' );
         EndIf;
-        AsciiOutput( sFileName, Expand('If( DimIx( sDimAttr, ''%sAttrStrOut%'' ) = 0 );') );
-        AsciiOutput( sFileName, Expand('    AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
-        AsciiOutput( sFileName, 'Else;' );
-        AsciiOutput( sFileName, Expand('    If( DType( sDimAttr, ''%sAttrStrOut%'' ) @<> ''%sAttrTyp%'' );') );
-        AsciiOutput( sFileName, Expand('        AttrDelete( sDim, ''%sAttrStrOut%'' );') );
-        AsciiOutput( sFileName, Expand('        AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
-        AsciiOutput( sFileName, '    EndIf;' );
-        AsciiOutput( sFileName, 'EndIf;' );
+        TextOutput( sFileName, Expand('If( DimIx( sDimAttr, ''%sAttrStrOut%'' ) = 0 );') );
+        TextOutput( sFileName, Expand('    AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
+        TextOutput( sFileName, 'Else;' );
+        TextOutput( sFileName, Expand('    If( DType( sDimAttr, ''%sAttrStrOut%'' ) @<> ''A%sAttrTyp%'' );') );
+        TextOutput( sFileName, Expand('        AttrDelete( sDim, ''%sAttrStrOut%'' );') );
+        TextOutput( sFileName, Expand('        AttrInsert( sDim, '''', ''%sAttrStrOut%'', ''%sAttrTyp%'' );') );
+        TextOutput( sFileName, '    EndIf;' );
+        TextOutput( sFileName, 'EndIf;' );
         nCtr        = nCtr + 1;
     End;
-    AsciiOutput( sFileName, Expand('#EndRegion Create Attributes: %sDim%') );
-    AsciiOutput( sFileName, cHashLine );
+    TextOutput( sFileName, Expand('#EndRegion Create Attributes: %sDim%') );
+    TextOutput( sFileName, cHashLine );
 EndIf;
 #EndRegion Create Attributes
 #################################################################################################
@@ -503,9 +524,14 @@ If( pEle @<> '' );
                 sEle = Trim( SubSt( sEles, 1, nEleDelimiterIndex - 1 ) );
                 sEles = Trim( Subst( sEles, nEleDelimiterIndex + Long( pDelim ), Long( sEles ) ) );
             EndIf;
-            # Create MDX for subset of eles using Wildcard Pattern filter (means pEle entry MUST use principal name)
-            sEleExp = '"'|sEle|'"';
-            sMdxPart = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [%sDim%].[%sHier%] ), %sEleExp% )}');
+            If( Scan( '*', sEle ) > 0 % Scan( '?', sEle ) > 0 );
+                # Create MDX for subset of eles using Wildcard Pattern filter (means pEle entry MUST use principal name)
+                sEleExp = '"'|sEle|'"';
+                sMdxPart = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [%sDim%].[%sHier%] ), %sEleExp% )}');
+            Else;
+                # Create MDX of single element and all descendants
+                sMDXPart = Expand('{TM1DRILLDOWNMEMBER( {[%sDim%].[%sHier%].[%sEle%]}, ALL, RECURSIVE )}');
+            EndIf;
             If( sMDX @= ''); 
                 sMDX = sMdxPart; 
             Else;
@@ -520,9 +546,9 @@ If( pEle @<> '' );
     EndIf;
     nMax = SubsetGetSize( vDim, cTempSub );
     If( nMax >= 1 );
-        AsciiOutput( sFileName, '' );
-        AsciiOutput( sFileName, cHashLine );
-        AsciiOutput( sFileName, Expand('#Region Create Elements: %vDim%') );
+        TextOutput( sFileName, '' );
+        TextOutput( sFileName, cHashLine );
+        TextOutput( sFileName, Expand('#Region Create Elements: %vDim%') );
         nCtr = 1;
         While( nCtr <= nMax );
             # 1st insert all elements to get correct order
@@ -549,7 +575,7 @@ If( pEle @<> '' );
                 nChar = nChar + 1;
             End;
             sEleTyp = DType( vDim, sEle );
-            AsciiOutput( sFileName, Expand('DimensionElementInsert( sDimHier, '''', ''%sEleStrOut%'', ''%sEleTyp%'' );') );
+            TextOutput( sFileName, Expand('DimensionElementInsert( sDimHier, '''', ''%sEleStrOut%'', ''%sEleTyp%'' );') );
             nCtr    = nCtr + 1;
         End;
         nCtr = 1;
@@ -603,15 +629,15 @@ If( pEle @<> '' );
                 End;
                 sWht = NumberToString( ElWeight( vDim, sPar, sEle ) );
                 If( pEle @<> '*' );
-                    AsciiOutput( sFileName, Expand('DimensionElementInsert( sDimHier, '''', ''%sParStrOut%'', ''C'' );') );
+                    TextOutput( sFileName, Expand('DimensionElementInsert( sDimHier, '''', ''%sParStrOut%'', ''C'' );') );
                 EndIf;
-                AsciiOutput( sFileName, Expand('DimensionElementComponentAdd( sDimHier, ''%sParStrOut%'', ''%sEleStrOut%'', %sWht% );') );
+                TextOutput( sFileName, Expand('DimensionElementComponentAdd( sDimHier, ''%sParStrOut%'', ''%sEleStrOut%'', %sWht% );') );
                 nPar = nPar + 1;
             End;
             nCtr     = nCtr + 1;
         End;
-        AsciiOutput( sFileName, Expand('#EndRegion Create Elements: %vDim%') );
-        AsciiOutput( sFileName, cHashLine );
+        TextOutput( sFileName, Expand('#EndRegion Create Elements: %vDim%') );
+        TextOutput( sFileName, cHashLine );
     EndIf;
 EndIf;
 #EndRegion Create Structure
@@ -620,13 +646,13 @@ EndIf;
 #################################################################################################
 #Region Attribute Values (EPILOG)
 If( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & nMax >=1 );
-    AsciiOutput( sFileName2, '' );
-    AsciiOutput( sFileName2, cHashLine );
-    AsciiOutput( sFileName2, Expand('#Region Attribute Values: %vDim%') );
-    AsciiOutput( sFileName2, Expand('sDimHier = ''%vDim%'';') );
-    AsciiOutput( sFileName2, Expand('sDim     = ''%sDim%'';') );
-    AsciiOutput( sFileName2, Expand('sHier    = ''%sHier%'';') );
-    AsciiOutput( sFileName2, Expand('sDimAttr = ''%sDimAttr%'';') );
+    TextOutput( sFileName2, '' );
+    TextOutput( sFileName2, cHashLine );
+    TextOutput( sFileName2, Expand('#Region Attribute Values: %vDim%') );
+    TextOutput( sFileName2, Expand('sDimHier = ''%vDim%'';') );
+    TextOutput( sFileName2, Expand('sDim     = ''%sDim%'';') );
+    TextOutput( sFileName2, Expand('sHier    = ''%sHier%'';') );
+    TextOutput( sFileName2, Expand('sDimAttr = ''%sDimAttr%'';') );
     nCtr = 1;
     While( nCtr <= nMax );
         # loop elements again and internally loop attributes
@@ -720,25 +746,25 @@ If( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & nMax >=1 );
                     sAttrValStrOut = sAttrVal;
                 EndIf;
                 If( ( sDim @<> sHier & sEleTyp @<> 'N' ) & sAttrTyp @= 'N' );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutN( %sAttrValStrOut%, sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                    TextOutput( sFileName2, Expand('ElementAttrPutN( %sAttrValStrOut%, sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
                 ElseIf( sDim @<> sHier & sEleTyp @<> 'N' );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrValStrOut%'', sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                    TextOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrValStrOut%'', sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
                 ElseIf( sEleTyp @= 'N' & sAttrTyp @= 'N' & DimIx( sDim, sEle ) = 0 );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutN( %sAttrValStrOut%, sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                    TextOutput( sFileName2, Expand('ElementAttrPutN( %sAttrValStrOut%, sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
                 ElseIf( sEleTyp @= 'N' & DimIx( sDim, sEle ) = 0 );
-                    AsciiOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrValStrOut%'', sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                    TextOutput( sFileName2, Expand('ElementAttrPutS( ''%sAttrValStrOut%'', sDim, sHier, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
                 ElseIf( sAttrTyp @= 'N' );
-                    AsciiOutput( sFileName2, Expand('AttrPutN( %sAttrValStrOut%, sDim, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                    TextOutput( sFileName2, Expand('AttrPutN( %sAttrValStrOut%, sDim, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
                 Else;
-                    AsciiOutput( sFileName2, Expand('AttrPutS( ''%sAttrValStrOut%'', sDim, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
+                    TextOutput( sFileName2, Expand('AttrPutS( ''%sAttrValStrOut%'', sDim, ''%sEleStrOut%'', ''%sAttrStrOut%'' );') );
                 EndIf;
             EndIf;
             nAttr = nAttr + 1;
         End;
         nCtr    = nCtr + 1;
     End;
-    AsciiOutput( sFileName2, Expand('#EndRegion Attribute Values: %vDim%') );
-    AsciiOutput( sFileName2, cHashLine );
+    TextOutput( sFileName2, Expand('#EndRegion Attribute Values: %vDim%') );
+    TextOutput( sFileName2, cHashLine );
 EndIf;
 #EndRegion Attribute Values
 #################################################################################################
@@ -758,14 +784,14 @@ If( pSub = 1 & DimensionExists( sDimSub ) = 1 );
     EndIf;
     nMax = SubsetGetSize( sDimSub, cTempSub );
     If( nMax >= 1 );
-        AsciiOutput( sFileName2, '' );
-        AsciiOutput( sFileName2, cHashLine );
-        AsciiOutput( sFileName2, Expand('#Region Subsets: %vDim%') );
+        TextOutput( sFileName2, '' );
+        TextOutput( sFileName2, cHashLine );
+        TextOutput( sFileName2, Expand('#Region Subsets: %vDim%') );
         If( pAttrVal <> 1 % DimensionExists( sDimAttr ) = 0 % pEle @= '' );
-            AsciiOutput( sFileName2, Expand('sDimHier = ''%vDim%'';') );
-            AsciiOutput( sFileName2, Expand('sDim     = ''%sDim%'';') );
-            AsciiOutput( sFileName2, Expand('sHier    = ''%sHier%'';') );
-            AsciiOutput( sFileName2, Expand('sDimAttr = ''%sDimAttr%'';') );
+            TextOutput( sFileName2, Expand('sDimHier = ''%vDim%'';') );
+            TextOutput( sFileName2, Expand('sDim     = ''%sDim%'';') );
+            TextOutput( sFileName2, Expand('sHier    = ''%sHier%'';') );
+            TextOutput( sFileName2, Expand('sDimAttr = ''%sDimAttr%'';') );
         EndIf;
         nCtr = 1;
         While( nCtr <= nMax );
@@ -777,18 +803,18 @@ If( pSub = 1 & DimensionExists( sDimSub ) = 1 );
             # If MDX expression contains TM1SubsetBasis function then treat it as a static subset
             If( sMDX @<> '' & Scan( 'TM1SUBSETBASIS()', Upper( sMDX ) ) = 0 );
                 # create by MDX
-                AsciiOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
-                AsciiOutput( sFileName2, Expand('    SubsetCreatebyMDX( ''%sSub%'', ''%sMDX%'', sDimHier, 0 );') );
-                AsciiOutput( sFileName2, 'Else;' );
-                AsciiOutput( sFileName2, Expand('    SubsetMDXSet( sDimHier, ''%sSub%'', ''%sMDX%'' );') );
-                AsciiOutput( sFileName2, 'EndIf;' );
+                TextOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
+                TextOutput( sFileName2, Expand('    SubsetCreatebyMDX( ''%sSub%'', ''%sMDX%'', sDimHier, 0 );') );
+                TextOutput( sFileName2, 'Else;' );
+                TextOutput( sFileName2, Expand('    SubsetMDXSet( sDimHier, ''%sSub%'', ''%sMDX%'' );') );
+                TextOutput( sFileName2, 'EndIf;' );
             Else;
                 # loop members
-                AsciiOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
-                AsciiOutput( sFileName2, Expand('    SubsetCreate( sDimHier, ''%sSub%'' );') );
-                AsciiOutput( sFileName2, 'Else;' );
-                AsciiOutput( sFileName2, Expand('    SubsetDeleteAllElements( sDimHier, ''%sSub%'' );') );
-                AsciiOutput( sFileName2, 'EndIf;' );
+                TextOutput( sFileName2, Expand('If( SubsetExists( sDimHier, ''%sSub%'' ) = 0 );') );
+                TextOutput( sFileName2, Expand('    SubsetCreate( sDimHier, ''%sSub%'' );') );
+                TextOutput( sFileName2, 'Else;' );
+                TextOutput( sFileName2, Expand('    SubsetDeleteAllElements( sDimHier, ''%sSub%'' );') );
+                TextOutput( sFileName2, 'EndIf;' );
                 nEles   = SubsetGetSize( vDim, sSub );
                 nEle    = 1;
                 While( nEle <= nEles );
@@ -814,29 +840,29 @@ If( pSub = 1 & DimensionExists( sDimSub ) = 1 );
                         sEleStrOut = sEleStrOut | sChar;
                         nChar = nChar + 1;
                     End;
-                    AsciiOutput( sFileName2, Expand('SubsetElementInsert( sDimHier, ''%sSub%'', ''%sEleStrOut%'', 0 );') );
+                    TextOutput( sFileName2, Expand('SubsetElementInsert( sDimHier, ''%sSub%'', ''%sEleStrOut%'', 0 );') );
                     nEle = nEle + 1;
                 End;
             EndIf;
             nCtr        = nCtr + 1;
         End;
-        AsciiOutput( sFileName2, Expand('#EndRegion Subsets: %vDim%') );
-        AsciiOutput( sFileName2, cHashLine );
+        TextOutput( sFileName2, Expand('#EndRegion Subsets: %vDim%') );
+        TextOutput( sFileName2, cHashLine );
     EndIf;
 EndIf;
 #EndRegion Subsets
 #################################################################################################
 
 ### Dimension write close
-AsciiOutput( sFileName, '' );
-AsciiOutput( sFileName, Expand('#EndRegion Dimension/Hierarchy: %vDim%') );
-AsciiOutput( sFileName, cHashLine );
+TextOutput( sFileName, '' );
+TextOutput( sFileName, Expand('#EndRegion Dimension/Hierarchy: %vDim%') );
+TextOutput( sFileName, cHashLine );
 If( ( pAttrVal = 1 & DimensionExists( sDimAttr ) = 1 & pEle @<> '' ) % ( pSub = 1 & DimensionExists( sDimSub ) = 1 ) );
-    AsciiOutput( sFileName2, '' );
-    AsciiOutput( sFileName2, Expand('#EndRegion Dimension/Hierarchy: %vDim%') );
-    AsciiOutput( sFileName2, cHashLine );
+    TextOutput( sFileName2, '' );
+    TextOutput( sFileName2, Expand('#EndRegion Dimension/Hierarchy: %vDim%') );
+    TextOutput( sFileName2, cHashLine );
 EndIf;
-575,27
+575,29
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -852,7 +878,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code

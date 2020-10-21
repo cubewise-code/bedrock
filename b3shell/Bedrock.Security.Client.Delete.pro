@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"iVTBwpyh8afCAkecuxBb4rYBYmfRk8=MG527y@rNqi=n]b[F@Xi[HZ9ia5^=bVg:lx<r?fg8=bPcM@wns:k4lt2@joldb7==lS8CyVnJ=A9xLNMHL0Wu6U;eHuQYd0mgW`]I`Txe^HOPpO\[ddB0^822oaG8T\MwT1wAbgX^PN=DVW@Honx68U7<jo[vLe83?cdLHz[]"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -48,7 +48,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,51
+572,52
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -95,6 +95,7 @@ EndIf;
   
 EXECUTEPROCESS('}bedrock.security.client.delete',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pClient', pClients,
   'pDelim', pDelimiter
   );

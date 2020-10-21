@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"g90<D1va_Wp8yi;BiJKYwVH:]\GBEqTy\[3:VSHkJ`nCQQzHKS6`s\;aDRqCLX91@<n@IhP1Z`9xt_wANtJ7I0r@tW6md=1kPOru5^=aQQnC0ZagDQI[9wGl[EWNH[qJn0UR[i=W8zbKMQj<4Yfe2oRzG?p@;f1gDW8lrY[[Q>Xj0WPsmkHl<UjflmAci\G`^L\_6f@C"
+565,"ws[DLzmY5zCDD\CuCQpIHWSaPWY:g?v^cpsk<C>ZkdehZPtEU<SfMydu[7g]HJQ]V8k6>fU[1tSMs7`vVa:1b5dNNR@]t76NhvP?p[RSs?;xD<v0ZYQ=ASTWF\Op:_Wa[fLbS:\eo49t:Qi>SqWA^k:p^nW^5SJG:rTVz>OrD9Rfuuru4jnu_<_CZmL<z7<S:v=kD@pv"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pDim
 pAlias
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pAlias,""
-637,3
+637,4
 pLogOutput,"REQUIRED: True or False (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
 pAlias,"REQUIRED: Alias"
 577,0
@@ -48,11 +52,12 @@ pAlias,"REQUIRED: Alias"
 581,0
 582,0
 603,0
-572,109
+572,114
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.dim.attr.swapalias', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pDim', '', 'pAlias', ''
 	);
 EndIf;
@@ -151,7 +156,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Swap Dimension ###
@@ -170,7 +179,7 @@ SwapAliasWithPrincipalName( pDim, pAlias, 0 );
 
 
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -185,6 +194,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully swapped the principal element names of the %pDim% with the %pAlias% alias.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

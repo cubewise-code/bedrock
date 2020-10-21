@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEy<[3X;iGmwppM>DLJqyKm8LIJ?FrJ9z;UANhTqxV9bNVPpjIDtmtjAmvEFzB[agvY_^ID\veLSz:35]^klfpu?O^HsArhD_7rhPfXhHoP;?nb0P]WpRJurR5M`fxa=mZ3E0@w\qG[3BvmenG01Ghy\hYId<J;brBkzMcLI1x6:6oEPJ5tM"
+565,"oI_\gZYyakFxI\;yycOZH28dZfHGqMIt`jXHPCu=9GBr@FJVZ?FMWP1I_gTqMo2RP;a:XMi9tl1vsUAiQ[UR:61@kILBlAHT_P8=_TMz]A\rX@saf8kD\sJJuz7No:y2c28P9]Kee_yB9bgF:c>mLRT27NB8l[n8ja56X>Qd=x6n9knuRtUUH[qE_F5Grf6VKNIs=Xn"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -40,7 +40,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,42
+572,43
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -76,6 +76,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.server.deleteallpersistentfeeders',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pRun', 'Y'
   );
 

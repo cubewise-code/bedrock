@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"g31G\<BaKIpt;at0NQi0>>Q]zx:[@Pk83<rkJCp_0sySi\CaotaYCIy8K1@e?2WSISFR:<LaUyU`stQsEr2]TMO\PBGvR7sUusFUL\nwi=5ASOUZF<nL;[h3`sTj?Fqc9icI3KFVF1hnWNI5IQnSuyh4YlYagqN8eyX2p3dsIKrnz?Q>d@q]:PPJFy8oWFs4J\pU3b?V"
+565,"j`HZz]h8PhaJKrxh[Xw72m<:RL8SP:YsZxk0XUn9m9xy0hGfHI1T@ZuQTfmZ7;Nx4BM==GlfokDN[J:He\Ako5SraCrzhS9_U]PoCXXk6jb@oCX_FgQu6`l28BC^CC_Fj7UTlY31eMJlTGJZ\DHR`IEb0cpb4X:?OU77O]GpYxc:kbm>?O]]jCaDfuQ@Y?Z_;6uS>1`7"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,","
 568,""""
 570,
 571,All
@@ -52,7 +52,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,65
+572,67
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -105,10 +105,12 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.hier.unwind',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pDim', pDimension,
   'pHier', '',
   'pConsol', pConsol,
-  'pRecursive', pRecursive
+  'pRecursive', pRecursive,
+  'pDelim', '&'
   );
   
 IF(nRet <> 0);

@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"yZr<9gwt9WREIEkD9tywil<bUaU>[PO3m8nopzIt5X4>bKx8aXi^62w6hb?9[sS>aM7G0Y@:31O^h;44brqWgPY>nu_kbPVWTFx[g39Qq^7@aF]@QcU]rMpzcmyK4rVRHNGHaC@F^xK:19t2Sw];kxtjL^PfAJ9czJC`7?CsFsljdv`A:<393qg3X3l360w9^3rojX[i"
+565,"jLwo5u@][xazPFZ>Jn61@>Q?O2f`NrRq;iM8c3HhGOkz9MWxQXCydHDYMrdn=f@o2km?<FYohr^I[[W`_prevhE=U@ag6BXz:6dDH[P\JqJxRl8tJR5a[5wQ>kUMZ?6hcQ34LV3spmk62M_\rxqOBsH^oHNLyc\RzlH`JTVy5Dx22@2dxGvw1ma?GaH^ugsxBaA`8A<`"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,8
+560,10
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pSrcHier
 pSrcSub
@@ -34,7 +35,9 @@ pTgtDim
 pTgtHier
 pTgtSub
 pTemp
-561,8
+pAlias
+561,10
+1
 1
 2
 2
@@ -43,8 +46,10 @@ pTemp
 2
 2
 1
-590,8
+2
+590,10
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pSrcHier,""
 pSrcSub,""
@@ -52,8 +57,10 @@ pTgtDim,""
 pTgtHier,""
 pTgtSub,""
 pTemp,1
-637,8
+pAlias,""
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Dimension where the subset exists"
 pSrcHier,"OPTIONAL: Source Hierarchy (blank = same as source)"
 pSrcSub,"REQUIRED: Source Subset"
@@ -61,6 +68,7 @@ pTgtDim,"OPTIONAL: Target dimension (blank = same as source)"
 pTgtHier,"OPTIONAL: Target Hierarchy (blank = same as Target Dimension)"
 pTgtSub,"REQUIRED: Target Subset"
 pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
+pAlias,"Optional: Set Alias for Subset"
 577,1
 vEle
 578,1
@@ -74,11 +82,12 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,154
+572,186
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.clone', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '', 'pSrcSub', '',
     	'pTgtDim', '', 'pTgtHier', '', 'pTgtSub', '',
     	'pTemp', 1
@@ -120,7 +129,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pSrcSub:%pSrcSub%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pTgtSub:%pTgtSub%, pTemp:%pTemp%.' ; 
+cLogInfo        = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pSrcSub:%pSrcSub%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pTgtSub:%pTgtSub%, pTemp:%pTemp%, pAlias:%pAlias%.' ; 
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -208,9 +217,31 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate Alias exists
+If ( pAlias @<> '' & 
+    DimIx ( Expand ( '}ElementAttributes_%pTgtDim%' ), pAlias ) = 0
+);
+  nErrors = 1;
+  sMessage = 'Alias does not exist in dimension %pTgtDim%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;  
+
+# Validate alias attribute name is actually an alias
+If ( pAlias @<> '' & 
+    Dtype ( Expand ( '}ElementAttributes_%pTgtDim%' ), pAlias ) @<> 'AA'
+);
+  nErrors = 1;
+  sMessage = 'Attribute %pAlias% is not an alias in dimension %pTgtDim%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;  
+
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Create Target Subset ###
@@ -218,6 +249,15 @@ If( HierarchySubsetExists( pTgtDim, pTgtHier, pTgtsub ) = 1 );
     HierarchySubsetDeleteAllElements( pTgtDim, pTgtHier, pTgtsub );
 Else;
     HierarchySubsetCreate( pTgtDim, pTgtHier, pTgtsub, pTemp );
+EndIf;
+
+### Set Alias ###
+If ( pAlias @<> '' );
+    If ( pTgtDim @= pTgtHier );
+        SubsetAliasSet( pTgtDim, pTgtsub, pAlias);
+    Else;
+        SubsetAliasSet( pTgtDim | ':' | pTgtHier, pTgtsub, pAlias);
+    EndIf;
 EndIf;
 
 # HierarchySubsetMDXGet not returning anything. Thought it might also return alias used in source subset
@@ -253,7 +293,7 @@ HierarchySubsetElementInsert( pTgtDim , pTgtHier, pTgtSub , vEle , nElementPosit
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -268,6 +308,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned the %pTgtDim%:%pTgtHier%:%pTgtSub% subset from %pSrcDim%:%pSrcHier%:%pSrcSub%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

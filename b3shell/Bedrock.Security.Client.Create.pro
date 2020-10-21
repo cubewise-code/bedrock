@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"i<Cei>B`GanNsuHcOby[Dd@Mn_56525?[8?zGFU0@b50l;VTBoCaaJYIrwvbH^yUbeMjPl5Y09W0crhkQHN\8>Fw7RaH12y?0nd:;l=y9aUWElL2puAXHsdt``<zvnTq:AeIa4^f5@];2dJ>R0wwwjk6fcWnx5JYPxm>r9wPVtyIKfgLGJCb4jPm8nO1caDK:R0;Uq:4"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,48
+572,49
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -101,6 +101,7 @@ EndIf;
 
 EXECUTEPROCESS('}bedrock.security.client.create',
   'pLogOutPut', pDebug,
+  'pStrictErrorHandling',1,
   'pClient', pClients,
   'pPassword', pPassword,
   'pDelim', pDelimiter

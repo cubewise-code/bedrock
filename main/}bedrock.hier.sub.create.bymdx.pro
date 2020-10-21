@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"g[H8sIda9C:G]Y?M3uzUW7\NjdvY]3H2pt:LrWZTRtW2zp4Mmgs8i_K^ZZVnj8v_^HG5?qZUYE0uBfN^TOsS@is8?mNEpIoDLx9gmDnoxBoLuxar0Pu?>;=Ap0m\ZfDXzU3ba`L2]Oqa<[kC3a4AlMAen5VYW_i:hEzJDmadODaW=qTmYumx`aVH1C\:e]y7w=fG>T9V"
+565,"z2v`Yo0T4\BSgEB;R^zU;sEeUlajDd\GbOV@bvh[RQK02zZv8H>t^qlsLy\3h<S:S=JMLVzTA?<;F4AQYBnVMJb]e[uZbmFPZFRV2Ao9`KEhPlNn=53TMMEk[iZOrgVd;aX0u5Q8tmB^zwg9JXG>PpLf=AYCAmdfzBG[\6x3@1n;j4\\ughIS>omYHiv1>Fu[RM?`\s["
 559,1
 928,0
 593,
@@ -25,38 +25,46 @@
 569,0
 592,0
 599,1000
-560,7
+560,9
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSub
 pMDXExpr
 pConvertToStatic
 pTemp
-561,7
-1
-2
-2
-2
-2
+pAlias
+561,9
 1
 1
-590,7
+2
+2
+2
+2
+1
+1
+2
+590,9
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSub,""
 pMDXExpr,""
 pConvertToStatic,1
 pTemp,1
-637,7
-pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
-pDim,"REQUIRED: Dimension name"
-pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"REQUIRED: Subset name"
-pMDXExpr,"REQUIRED: Valid MDX Expression for Specified Dimension"
-pConvertToStatic,"OPTIONAL: Bolean: 1 = True (convert to static subset)"
-pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
+pAlias,""
+637,9
+pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
+pDim,"Required: Dimension name"
+pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"Required: Subset name"
+pMDXExpr,"Required: Valid MDX Expression for Specified Dimension"
+pConvertToStatic,"Optional: Bolean: 1 = True (convert to static subset)"
+pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
+pAlias,"Optional: Set Alias for Subset"
 577,0
 578,0
 579,0
@@ -64,11 +72,12 @@ pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,137
+572,166
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.bymdx', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pMDXExpr', '',
     	'pConvertToStatic', 1, 'pTemp', 1
@@ -110,7 +119,7 @@ cTempFile       = GetProcessErrorFileDirectory | cTempSub | '.csv';
 cUserName       = TM1User();
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%.' ;
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%, pAlias:%pAlias%.' ;
 sMDXExpr        = pMDXExpr;
 
 ## LogOutput parameters
@@ -183,6 +192,24 @@ IF( pTemp <> 0 & pTemp <> 1 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate Alias exists
+If ( pAlias @<> '' & 
+    DimIx ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) = 0
+);
+  nErrors = 1;
+  sMessage = 'Alias does not exist in dimension %pDim%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;  
+
+# Validate alias attribute name is actually an alias
+If ( pAlias @<> '' & 
+    Dtype ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) @<> 'AA'  
+);
+  nErrors = 1;
+  sMessage = 'Attribute %pAlias% is not an alias in dimension %pDim%.';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
 
 ### Create Subset ###
 If( nErrors = 0 );
@@ -199,7 +226,17 @@ If( nErrors = 0 );
         HierarchySubsetElementDelete( pDim, sHier, pSub, 1 );
     EndIf;
   EndIf;
+  
+  # Set Alias
+  If ( pAlias @<> '' );
+      If ( pDim @= sHier );
+          SubsetAliasSet( pDim, pSub, pAlias);
+      Else;
+          SubsetAliasSet( pDim | ':' | sHier, pSub, pAlias);
+      EndIf;
+  EndIf;
 EndIf;
+
 
 ### End Prolog ###
 573,5
@@ -213,7 +250,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,34
+575,37
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -238,6 +275,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %pSub% from dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

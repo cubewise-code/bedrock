@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"ayzP\w:QSolKcz@7sa=oJZak60nlBttUP3<?\g8ZzZ1s<Eojtt4YdqObt,[QPRq:U>sYqA]@Hpy4ZxAx]HGZzw7?G2_AykcqvZG:];to_jVC]qc\w:B<Q0etMYLAmjcHf {ORwjeSw>|yvyciBt9]we@nT0zMJ0Noj6Wg1MYs7OU0IPO550E^x@cq7Ajem1B32xm74CI"
+565,"tY<TvN]\dKGAx9l7s9I[yr>;f@R:3Ad[@^MZPH`P0B5daAO5aohnk9?a\)[QyL~:nQpR1]@gJTyt:sQ9feSH7<][8GX1K<6jkpN6mOLPtU?eXml\GnTJqArJKrLdbJqIr%{Jbw]9^OU{90a`ig;0=6OtnAODdFaL@X2w2ZIii67x6iIa94<U;z`H=WNyvoAB3ax>8ODj"
 559,1
 928,0
 593,
@@ -25,26 +25,34 @@
 569,0
 592,0
 599,1000
-560,4
+560,6
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pDelim
-561,4
+pReverse
+561,6
+1
 1
 2
 2
 2
-590,4
+1
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pDelim,"&"
-637,4
+pReverse,0
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension, accepts wildcards (all dimensions = *)"
 pHier,"OPTIONAL: Hierarchy, accepts wildcards (all hierarchies = *)"
 pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
+pReverse,"OPTIONAL: If true then also add any elements from the Leaves hierarchy not existing in the specified hierarchies to those hierarchies (under a consolidation bucket 'ORPHAN LEAVES')"
 577,1
 vDimHier
 578,1
@@ -58,12 +66,12 @@ vDimHier
 582,1
 VarType=32ColType=827
 603,0
-572,157
+572,170
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.hier.leaves.sync', 'pLogOutput', pLogOutput,
-	    'pDim', '', 'pHier', '', 'pDelim', '&'
+    ExecuteProcess( '}bedrock.hier.leaves.sync', 'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling,
+	    'pDim', '', 'pHier', '', 'pDelim', '&', 'pReverse', 0
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -112,7 +120,7 @@ cDimDimensions    = '}Dimensions';
 cCharAny          = '?';
 cStringAny        = '*';
 cHierLeaves       = 'Leaves';
-cSubMissing       = 'Missing';
+cRollupOrphan     = 'ORPHAN LEAVES';
 
 ### LogOutput parameters
 IF( pLogoutput >= 1 );
@@ -120,11 +128,12 @@ IF( pLogoutput >= 1 );
 ENDIF;
 
 ### Validate Parameters
-nErrors = 0;
-nDims = 0;
-nDimsChanged = 0;
-nElems = 0;
-sDimPrev = '';
+sDimPrev          = '';
+nErrors           = 0;
+nDims             = 0;
+nDimsChanged      = 0;
+nElems            = 0;
+nLeaves           = 0;
 
 If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( ':', pDim ) > 0 & pHier @= '' );
   # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy
@@ -144,9 +153,18 @@ If( Trim( pDim ) @= '' );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+### Validate reverse sync option
+If( pReverse <> 1 );
+  pReverse = 0;
+EndIf;
+
 ### If errors occurred terminate process with a major error status ###
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Handle All dimensions or a dimension list, including all available hierarchies
@@ -163,7 +181,7 @@ Else;
     EndIf;
     sSearchDim = TRIM( SUBST( sDimTokenizer, 1, nPos - 1 ) );
     If( sMDX @= '' );
-      sMDX = Expand( '{TM1FILTERBYPATTERN( {TM1SUBSETALL([%cDimDimensions%])}, "%sSearchDim%" )}' );
+      sMDX = Expand( '{TM1FILTERBYPATTERN( {TM1SUBSETALL([%cDimDimensions%])}, "%sSearchDim%*" )}' );
     Else;
       sMDX = Expand( '%sMDX% + {TM1FILTERBYPATTERN( {TM1SUBSETALL([%cDimDimensions%])}, "%sSearchDim%" )}' );
     EndIf;
@@ -180,7 +198,7 @@ If ( TRIM( pHier ) @= cAll );
 Else;
   sHierTokenizer = TRIM( pHier );
   If( sHierTokenizer @= '' );
-    # we need only same named hierarchies - that means to exclude elements that have : in their names
+    # if pHier blank then we need only same named hierarchies - that means to exclude elements that have : in their names
     sMDX = Expand( '{FILTER( %sMDX1%, INSTR([%cDimDimensions%].CurrentMember.Name, '':'' ) = 0 )}' );
   Else;
     sMDX = '';
@@ -203,6 +221,7 @@ Else;
   EndIf;
 EndIf;
 
+sMDX = Expand(' {EXCEPT( %sMDX%, {TM1FILTERBYPATTERN( {TM1SUBSETALL([%cDimDimensions%])}, "*:Leaves" )} )}');
 sMDXF = Expand( '{ORDER( %sMDX%, [%cDimDimensions%].CurrentMember.Name, ASC )}' );
 
 ### Create dimension:hierarchy subset
@@ -216,58 +235,99 @@ DatasourceNameForServer = cDimDimensions;
 DatasourceNameForClient = cDimDimensions;
 DataSourceType = 'SUBSET';
 DatasourceDimensionSubset = cTempSub;
-573,47
+
+### END PROLOG
+573,84
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-nDelimHier = SCAN( ':', vDimHier );
+# Get dimension & hierarchy from vDimHier
+nDelimHier  = SCAN( ':', vDimHier );
 If ( nDelimHier <> 0 );
-  sDim = SUBST( vDimHier, 1, nDelimHier - 1);
-  sHier = SUBST( vDimHier, nDelimHier + 1, LONG( vDimHier ) - nDelimHier );
+    sDim    = SUBST( vDimHier, 1, nDelimHier - 1);
+    sHier   = SUBST( vDimHier, nDelimHier + 1, LONG( vDimHier ) - nDelimHier );
 Else;
-  sDim = vDimHier;
-  sHier = vDimHier;
+    sDim    = vDimHier;
+    sHier   = vDimHier;
 EndIf;
 
-If ( sHier @= cHierLeaves );
-  ItemSkip;
+If ( sHier  @= cHierLeaves );
+    ItemSkip;
 EndIf;
 
-# Summary information printout
-If ( sDimPrev @<> sDim );
-  If ( sDimPrev @<> '' & nElems <> 0 );
-    sElems = NumberToString( nElems );
-    If ( pLogOutput <> 0 );
-      LogOutput( cMsgInfoLevel, Expand( 'Added [%sElems%] elements into [%cHierLeaves%] hierarchy of [%sDimPrev%] dimension.' ) );
-    EndIf;
-    nDimsChanged = nDimsChanged + 1;
-  EndIf;
-  nDims = nDims + 1;
-  nElems = 0;
-  sDimPrev = sDim;
+# Set check counters
+If( sDim @<> sDimPrev );
+    nDims   = nDims + 1;
 EndIf;
+nElems      = 0;
+nLeaves     = 0;
 
+# Add leaves which exist in hierarchy but (somehow) don't exist in Leaves hierarchy to Leaves
 nElem = 1;
 nMaxElem = ElementCount( sDim, sHier );
 While ( nElem <= nMaxElem );
-  sElem = ElementName( sDim, sHier, nElem );
-  If ( ElementLevel( sDim, sHier, sElem ) = 0 & HierarchyExists( sDim, cHierLeaves ) <> 0 );
-    If ( ElementIndex( sDim, cHierLeaves, sElem ) = 0 );
-      sType = ElementType( sDim, sHier, sElem );
-      HierarchyElementInsert( sDim, cHierLeaves, '', sElem, sType );
-      nElems = nElems + 1;
-      If ( pLogOutput > 1 );
-        LogOutput( cMsgInfoLevel, Expand( 'Adding element [%sElem%] of [%sType%] type into [%cHierLeaves%], element was found in hierarchy [%sHier%].' ) );
-      EndIf;
+    sElem = ElementName( sDim, sHier, nElem );
+    sType = ElementType( sDim, sHier, sElem );
+    If ( ElementLevel( sDim, sHier, sElem ) = 0 & HierarchyExists( sDim, cHierLeaves ) = 1 );
+        If ( ElementIndex( sDim, cHierLeaves, sElem ) = 0 & ( sType @= 'N' % sType @= 'S' ) );
+            HierarchyElementInsert( sDim, cHierLeaves, '', sElem, sType );
+            nElems = nElems + 1;
+            If ( pLogOutput <> 0 );
+                LogOutput( cMsgInfoLevel, Expand( 'Adding element [%sElem%] of [%sType%] type into [%cHierLeaves%], element was found in hierarchy [%sHier%].' ) );
+            EndIf;
+        EndIf;
     EndIf;
-  EndIf;
-  nElem = nElem + 1;
+    nElem = nElem + 1;
 End;
 
-574,2
+# Add leaves not existing in hierarchy to the 'ORPHAN LEAVES' consolidation
+If( pReverse = 1 & HierarchyExists( sDim, cHierLeaves ) = 1 );
+    nLeaf = 1;
+    nMaxLeaves = ElementCount( sDim, cHierLeaves );
+    While ( nLeaf <= nMaxLeaves );
+        sLeaf = ElementName( sDim, cHierLeaves, nLeaf );
+        sType = ElementType( sDim, cHierLeaves, sLeaf );
+        If ( ElementIndex( sDim, sHier, sLeaf ) = 0 );
+            HierarchyElementInsert( sDim, sHier, '', cRollupOrphan, 'C' );
+            HierarchyElementInsert( sDim, sHier, '', sLeaf, sType );
+            If( sType @= 'N' );
+                HierarchyElementComponentAdd( sDim, sHier, cRollupOrphan, sLeaf, 1 );
+            EndIf;
+            nLeaves = nLeaves + 1;
+            If ( pLogOutput <> 0 );
+                LogOutput( cMsgInfoLevel, Expand( 'Adding leaf [%sLeaf%] into hierarchy [%sHier%].' ) );
+            EndIf;
+        EndIf;
+        nLeaf = nLeaf + 1;
+    End;
+EndIf;
+
+# Summary information printout
+If( nElems  > 0 );
+    sElems  = NumberToString( nElems );
+    If ( pLogOutput <> 0 );
+        LogOutput( cMsgInfoLevel, Expand( 'Added [%sElems%] elements from hierarchy [%sHier%] into [%cHierLeaves%] hierarchy of [%sDim%] dimension.' ) );
+    EndIf;
+EndIf;
+If( nLeaves > 0 );
+    sLeaves = NumberToString( nLeaves );
+    If ( pLogOutput <> 0 );
+        LogOutput( cMsgInfoLevel, Expand( 'Added [%sLeaves%] leaves into hierarchy [%sHier%] of [%sDim%] dimension.' ) );
+    EndIf;
+EndIf;
+If( sDim @<> sDimPrev & (nElems + nLeaves) > 0 );
+    nDimsChanged = nDimsChanged + 1;
+EndIf;
+sDimPrev    = sDim;
+
+### END METADATA
+574,4
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,36
+
+575,37
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -281,15 +341,17 @@ If( nErrors <> 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );
-    ProcessError;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 EndIf;
 
 ### Return Code
 If ( nDims <> 0 );
   sDims = NumberToString( nDims );
   sDimsChanged = NumberToString( nDimsChanged );
-  If ( nDimsChanged <> 0 );
-    sProcessAction = Expand( 'Modified [%sDimsChanged%] dimensions out of [%sDims%] matching.' );
+  If ( nDimsChanged > 0 );
+    sProcessAction = Expand( 'Modified [%sDimsChanged%] dimensions out of [%sDims%] matching the filter.' );
   Else;
     sProcessAction = Expand( 'Scanned [%sDims%] dimensions, all are ok.' );
   EndIf;
@@ -302,8 +364,7 @@ If( pLogoutput <> 0 );
     LogOutput( cMsgInfoLevel, Expand( sProcessAction ) );   
 EndIf;
 
-
-
+### END EPILOG
 576,
 930,0
 638,1

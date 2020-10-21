@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"dD`caxL:xuu\;PLzGB2E0AqV`=G\bwSM4<5=JWu`qczWI02XS5I:z<:[5x8;=FO>=^:_xiKJR7bAlxJdBh`Av016niLIXEB5vu0Do?GtWUg78xIUGkcVz:W7F4hpo2aIQQmMzdOgX]AgrzpB6KFg64]8ceMVBw7:FLg^eRqO^yMT94UHQ_4DBQTA:lg@DhR@NzbISV?;"
+565,"etnZ1aHRvXgqg=DuWfm:wMFdwTMHlAldyxusaRaL=PLr_Q0Lg_QoC[S4^@L]TF?gY615oUngPK@2<srd4DwOjXOj9UgE3[a;c3NYCZ4na;7LMQyQy\bdJbqrH_z^N@@X`@AlVeENc32YoB^DOrjOhb]G2gl@\43RYP`_X``@V@o^pWB_<VhJ^L0kei:9UTCljfItvog_"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,All
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,55
+572,56
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -95,6 +95,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.dim.clone',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pSrcDim', pSourceDim,
   'pTgtDim', pTargetDim,
   'pHier', '*',

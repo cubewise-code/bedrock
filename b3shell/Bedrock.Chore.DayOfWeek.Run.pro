@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"m>s_^8=Jho76Da>eF567vzB5QMn:xDLgC3<oGOUeP81_2oPhy_0]De4^2:uLh_DJp7FApC\kAzmC?A<K[V70^2vx7U]P8kjXkcZTKNmOQWdc_yGTzz>tbtAXjBoz8>x9hYlM[D41gv081_WZi1_N1s4U@OeAWZqymauM990TjM1Cvq9@nOUuM7vD\zAMLb]QRWC:S01H"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -68,7 +68,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,140
+572,141
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -199,6 +199,7 @@ EndIf;
 #Call v4 TI
 EXECUTEPROCESS('}bedrock.chore.execution.check',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pMonthDays', '',
   'pWeekDays', sWeekDays,
   'pDelim', '&',

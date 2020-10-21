@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"k2JdJRpXkRRarC\F94AEy?Kc6verIob7eH@3RC7JHM7=k8mc9=7urQ[XQMI;vX6X@tfBQ\plpb>y`UYv<NhtFi[T2gMnbVkWy;MoI3HbTiQ_CfbkolP6t1SW_UvWz_VuESz@?]PE_EXa=:CCF9=7YGC?PVOp=KY]y3=RuJbPNRqI4=D;v7FMvW<\@2ORjWdlYi1xsIUZ"
+565,"qzZERad=e^MvL`8jjaIphw2wgVSYDUyl_ka@b>9Y1Mn[UOSL\<Yu:kG1LoA3LeEjH=_V6RBL47Xi3T?xlqSP1FqjMau2n8r3PW0KLZ:zfQ\I2axDaG[lS@gw3PDK@u`xO<5v[ZF8sMQN8B6El[RZo;mqAV9@<pFU\[uovHeqEsSbPC4QGuEN3HEq9:eUDjZo3JckwGKD"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pSrcDir
 pTgtDir
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDir,"."
 pTgtDir,""
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDir,"REQUIRED: Source Directory to Backup"
 pTgtDir,"REQUIRED: Destination Directory for Backup"
 577,0
@@ -48,11 +52,12 @@ pTgtDir,"REQUIRED: Destination Directory for Backup"
 581,0
 582,0
 603,0
-572,138
+572,143
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.dir.backup', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDir', '.', 'pTgtDir', ''
     );
 EndIf;
@@ -145,11 +150,15 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Save the model to disk
-ExecuteProcess( '}Bedrock.Server.SaveDataAll');
+ExecuteProcess( '}Bedrock.Server.SaveDataAll', 'pStrictErrorHandling', pStrictErrorHandling );
 sMessage = 'TM1 Save Data All Complete.';
 LogOutput('INFO', sMessage ); 
 
@@ -197,7 +206,7 @@ LogOutput('INFO', sMessage );
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,60
+575,63
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -247,6 +256,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully Backed up Dir %pSrcDir% to dir %pTgtDir%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

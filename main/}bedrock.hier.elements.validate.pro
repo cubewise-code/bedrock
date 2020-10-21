@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"l1EFaKMhTMFfav4W1ZMhfkKuXPgt<h6IxZCGCMp00G^ftQrjoVSnjFRfAQ8Nk:kZcVAzeZ]mVq>Ml4BT?0pDVH:]dK2LDKkwpX:en_RCNg`OZiMvhH=On4_6Hs5HPWH3ANj64qN]?dl1=JWk@NhwRAClvHiBgTPvuTbbpL=:_on]r7uStlO57D1WRXxu6?m;Aa^CATtv"
+565,"kfPhY_H84e<aC=5xUBT;fkUBK\1CmT^=_]QrR>e3>f22T8=_AZ7MSYDCR@cs^vwD6[npUFY9pcru0glx[J8:uHync9`EXUKe8aLErhah88nT4tQlhCh9ibTQBGki9rCD=K:XBrDyFN@0[w56_;51sJKyQSUCqC2m:wl\sIN7:S=TztvVz\r271NR\1k\ae2Ar1LowyfA"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pFirst
 pDelim
-561,5
+561,6
+1
 1
 2
 2
 1
 2
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,"*"
 pFirst,1
 pDelim,"&"
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"OPTIONAL: Dimension name or list? (accepts wildcards). Will process ALL if = *"
 pHier,"OPTIONAL: Hierarchy name or list? (accepts wildcards). Will process ALL if = *"
 pFirst,"OPTIONAL: 0 = Ignore 1st character requirements, 1 = Validate 1st character more stringently than other characters (e.g. for MDX no ""+"" as 1st character)"
@@ -62,11 +66,12 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,265
+572,268
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.elements.validate', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '*', 
     	'pFirst', 1, 'pDelim', '&'
 	);
@@ -298,18 +303,20 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
-
-# Script used to validate subset of }Dimensions dimension
-SubsetDestroy(cDim, 'aa' );SubsetCreatebyMDX('aa', sMDX , 0 );Processbreak;
 
 # Create temporary subset
 SubsetCreatebyMDX(cSubset, sMDX , 1 );
 
 # Create subset using MDX
 #nRet = ExecuteProcess( '}bedrock.hier.sub.create.bymdx',
-#    3'pLogOutput', pLogOutput,
+#    'pLogOutput', pLogOutput,
+#    'pStrictErrorHandling', pStrictErrorHandling,
 #    'pDim', cDim,
 #    'pHier', '',
 #    'pSub', cSubset,
@@ -409,7 +416,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,30
+575,32
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -423,7 +430,9 @@ If( nErrors <> 0 );
   sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% incurred at least 1 major error and consequently aborted.' );
   nProcessReturnCode = 0;
   LogOutput( 'ERROR', Expand( sProcessReturnCode | ' Please see above lines in this file for more details.' ) );
-  ProcessError;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  EndIf;
 EndIf;
 
 ### Destroy Source Subset ###

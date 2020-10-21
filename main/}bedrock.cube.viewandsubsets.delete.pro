@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"dFy5aE:fOqjsg3bLK8E72=6FMGyrv2qjoS3UP2g45kY6`\[Ui0osH=LrtE<Dym^dX>NoxyJk<;CG?sJtaM^na;ggX1V8tSt`5o]BlFSeg^kG\Ylv=F]ubxD;Y1AZGX]302yF<5:lBVdzyICd6trLR:k?cfetzLJb_LIF0g4uoh[TSt<FjTxLWu_Z;NVDi[a`s^`QqVy="
+565,"keV=<Gae3GwaRE7_FRc2Hji<1z7OJ=p9K<F2;0Y7g2hFxRf:`wB8Ecq@VS\D6bdNrPYDrzuupVy@ukmjN@k]U2B38ELhPlbe3I9fp5mXW_L;]IUC_zyZ=1?pJE_Acp1@53mnuI4`0R@5p_abDPg`4CBt55N_mtnaU?dRc=ypgOy5h[]azbnCWFlizIOQT1fG7S8Zn[Ry"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pSub
 pMode
-561,5
+561,6
+1
 1
 2
 2
 2
 1
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pSub,""
 pMode,1
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pView,"REQUIRED: View Name"
 pSub,"OPTIONAL: Subset Name (will default to pView if left blank)"
@@ -56,11 +60,12 @@ pMode,"REQUIRED: Delete temporary view and Subset (0 = Delete View and Subsets i
 581,0
 582,0
 603,0
-572,138
+572,144
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.viewandsubsets.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pCube', '', 'pView', '', 'pSub', '', 'pMode', 1
 	);
 EndIf;
@@ -156,7 +161,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors     > 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Clean up view
@@ -173,6 +182,7 @@ If( pMode       <= 1 );
             If( pMode = 0 );
                 # "indirect" deletion
                  nRet = ExecuteProcess( '}bedrock.hier.sub.delete',
+                  'pStrictErrorHandling', pStrictErrorHandling,
                 	'pLogOutput', pLogOutput,
                 	'pDim', sDimName,
                 	'pHier','',
@@ -205,7 +215,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -221,6 +231,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted views and subsets for cube  %pCube%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

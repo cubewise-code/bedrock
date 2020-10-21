@@ -1,10 +1,10 @@
 ﻿601,100
-602,"}bedrock.server.savedataall"
+602,"}bedrock.server.executecommand"
 562,"NULL"
 586,
 585,
 564,
-565,"gW2C7U\a8H[<[_wEmrDr;rHEQKumqeNhDIegjx_mWSNzcPOWPAYYuQzg>4pGkYaVSEILUa=Fp0w:K[2j:W^U;kjrB7UjScuZ7vvnwTNG@oE3TtZxMj?D0jSgXdu1euG1jLxrm@PGyw5X[W1=AjGVMRYr;@is6UGOH4XLCO9Beo<fhTqopYB`Wz2L6QjJmG9Ij8uQf]i_"
+565,"vR42cY=Lg<Ho7XsFH\;QP6a>pY>LEzY`yL7zoK<eQkr<K4=]bWXn2:u59gfit^NZx94ixs4\cBic:qiuGW`Cn3V\2^?DWgUzCE<t^ktPm1gI`JV2ebSZ?3[6e@wDyMi:QpD3^IBlVYL`F:[;f6O^WZNhJansX1WuEcBGETs4m3XFceIU>:o]vYJIKFB62wUh3DZ;X`Gw"
 559,1
 928,0
 593,
@@ -25,18 +25,26 @@
 569,0
 592,0
 599,1000
-560,2
+560,4
 pLogOutput
 pStrictErrorHandling
-561,2
+pCommand
+pWait
+561,4
 1
 1
-590,2
+2
+2
+590,4
 pLogOutput,0
 pStrictErrorHandling,0
-637,2
-pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pCommand,""
+pWait,"0"
+637,4
+pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
+pCommand,"The full command line string to execute"
+pWait,"Wait for command to finish 0=false 1=true"
 577,0
 578,0
 579,0
@@ -44,14 +52,7 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 581,0
 582,0
 603,0
-572,54
-#Region CallThisProcess
-# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
-If( 1 = 0 );
-    ExecuteProcess( '}bedrock.server.savedataall', 'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling );
-EndIf;
-#EndRegion CallThisProcess
-
+572,55
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -61,13 +62,12 @@ EndIf;
 
 #Region @DOC
 # Description:
-# This process will Save All Data to disk.
+# This process will run the TI ExecuteCommand function.
 
 # Use case: Intended for production.
-# 1/ This could be run mulitple times a day during the planning cycle.
+# 1/ To run an executeCommand function from any part of the model, including RushTI or third party system without direct access to TI Editor.
+# 2/ To remove the requirement of creating a one off process to use this function
 
-# Note:
-# Depending on how long since the last data save this could take several seconds if not minutes so schedule if over lunch break.
 #EndRegion @DOC
 
 ### Global Variables
@@ -76,41 +76,45 @@ NumericGlobalVariable('nProcessReturnCode');
 nProcessReturnCode= 0;
 
 ### Constants ###
-cThisProcName     = GetProcessName();
-cUserName         = TM1User();
-cMsgErrorLevel    = 'ERROR';
-cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
+cThisProcName = GetProcessName();
+cUserName = TM1User();
+cMsgErrorLevel = 'ERROR';
+cMsgErrorContent = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 
 ## LogOutput parameters
-
-
-### Validate Parameters ###
-
-nErrors = 0;
-
-### LogOutput ###
 If( pLogOutput = 1 );
-    sLogInfo = Expand('Process:%cThisProcName% commenced.'); 
-    LogOutput( 'INFO', sLogInfo );
-    nStart   = Now();
+  sLogInfo = Expand('Process:%cThisProcName% run with parameters: pCommand: %pCommand%, pWait: %pWait%'); 
+  LogOutput ( 'INFO', sLogInfo );
+  nStart = Now();
 EndIf;
 
-### Save Data ###
+### Validate Parameters ###
+nErrors = 0;
+If ( pCommand @= '' );
+  sMessage = 'parameter pCommand is blank';
+  LogOutput ( 'ERROR', sMessage );
+  ProcessQuit;
+EndIf;
 
-SaveDataAll;
+### ExecuteCommand ###
+nWait = StringToNumber ( pWait );
 
-573,4
+# Check if the pCommand parameter is enclosed in quotes and add if not
+sSubst = Subst ( pCommand, 1, 1 );
+If ( Subst ( pCommand, 1, 1 ) @<> '"' );
+  sCommand = Expand ( '"%pCommand%"' );
+Else;
+  sCommand = pCommand;
+EndIf;
 
+ExecuteCommand ( pCommand, nWait );
+573,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
-574,4
-
+574,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
-575,31
-
+575,30
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -132,7 +136,7 @@ If( nErrors > 0 );
         ProcessQuit; 
     EndIf;
 Else;
-    sProcessAction = Expand( 'Process:%cThisProcName% successfully saved all cube data.' );
+    sProcessAction = Expand( 'Process:%cThisProcName% completed successfully.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
@@ -141,11 +145,11 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0
+576,
 930,0
 638,1
 804,0
-1217,1
+1217,0
 900,
 901,
 902,

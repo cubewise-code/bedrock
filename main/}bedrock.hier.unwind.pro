@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"dX[3a@W_PdA`UQu>GRShKHnhfLwJ@\t7DA^8p<A=KVg\?xJ<HIvWAHHAisaOI^Jqg0nFuxgp8Hv`t4[ARBQtoqt5Sd>dxGx>KO=^Sz65zWVBMkF<1j15w1qM<yd>;:g<7b>A0N4hxq98[w]yv2ZECzoeXy]S=1`>p9CWazFTE:Sw5lJ;f`d@`za[7srVnhCP1o9p<5=8"
+565,"n@H_nfn_@rNFm\aNVlNS^;<OjMnxDDKfje_a;eXU]F;QCkwnbC@\ZFlX3up<IEj1SCa4YRVn5rU3;jJIKYYg1A4EiO4Y:ZzUVBwGAOyywjg`jk?YvFFfND0J?OkD5B`PAJVpF:;f^vY<ip@Cvt[rdAKGDUrvmm@WS]vW7qG[XRe2QfD9r\:p88@1uGNGNzceL4pnNhG3"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pConsol
 pRecursive
 pDelim
-561,6
+561,7
+1
 1
 2
 2
 2
 1
 2
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pConsol,"*"
 pRecursive,0
 pDelim,"&"
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Target Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"OPTIONAL: Target Hierarchy (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
 pConsol,"OPTIONAL: Target Consolidation, accepts wildcards ( * will unwind ALL)"
@@ -66,11 +70,12 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,397
+572,403
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.unwind', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pConsol', '*',
     	'pRecursive', 0, 'pDelim', '&'
 	);
@@ -193,7 +198,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### If there is no separator and wildcard in the parameters, execute the unwind of the specific consolidated element
@@ -442,6 +451,7 @@ Else;
                                         LogOutput( 'INFO', Expand( 'Process called recursively for "%sElement%" in hierarchy "%sDim%:%sCurrHierName%".' ) );
                                     EndIf;
                                     ExecuteProcess( cThisProcName, 'pLogOutput', pLogOutput,
+                                        'pStrictErrorHandling', pStrictErrorHandling,
                                         'pDim', sDim, 'pHier', sCurrHierName,
                                         'pConsol', sElement, 'pRecursive', pRecursive,
                                         'pDelim', pDelim
@@ -464,7 +474,7 @@ Else;
 EndIf;
 
 ### End Prolog ###
-573,58
+573,62
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -475,7 +485,11 @@ EndIf;
 
 ### Check for errors in prolog ###
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### If Leaf or already unwound then skip
@@ -528,7 +542,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,47
+575,50
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -566,6 +580,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully unwound the appropriate consolidated items the %pDim%:%pHier% dimension:hierarchy.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

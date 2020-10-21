@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"y9S?>mXb2M=s7>Ybcj6SjJykOa[AZ8?`eW8^XGZ9`f\kXz?fOm@:wUK?e]0tJ_W;]LJN06A@kg1KNU^a<2gBpAdma_a5VS\zZoAL`Xs_7Ac2Ypq_LbFK8avGKwatC4N[Gd7OWfD<7hhBniy=B:^et6Qb\^a>QYN^wvhoZx;yL==9s9m48O<1UHh;92vi:PH0V4naMy1n"
+565,"j3166_Ksj6aCi0bBBA6>cBjcr=XXTeeLYfpA9N@BGT1eXWEp=bI<^8JcgGxNN?I<hkYUv21Ph8_\iCC7KQG:z3j3NR]kW@YqzB1Jrm9h3id01LrlQL\otG?@sL]3\3iU@s`j2O6H=PyJxU\drM48sLp2lJ8xX@RmYdHKiwR6Uyde7W?tafNuUJevtLtwbnH2Tv4@0k4u"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pDim
 pAttr
 pPrevAttr
 pAttrType
 pDelim
-561,6
+561,7
+1
 1
 2
 2
 2
 2
 2
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pAttr,""
 pPrevAttr,""
 pAttrType,""
 pDelim,"&"
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name, parameter accepts delimited list and wildcards"
 pAttr,"REQUIRED: attribute name, parameter accepts delimited list (separate with delimiter for multiple item e.g. Type&Active )"
 pPrevAttr,"OPTIONAL: insert position (previous attribute) (Defaults to blank)"
@@ -60,11 +64,12 @@ pDelim,"OPTIONAL: delimiter character for attribute list. (Defaults to & if blan
 581,0
 582,0
 603,0
-572,201
+572,214
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.dim.attr.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pAttr', '',
     	'pPrevAttr', '', 'pAttrType', '',
     	'pDelim', '&'
@@ -149,7 +154,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through dimensions in pDim and attributes in pAttr
@@ -173,7 +182,11 @@ While( nDimDelimiterIndex <> 0 );
             nErrors = 1;
             sMessage = Expand( 'Dimension "%sDim%" does not exist.' );
             LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
-            ProcessBreak;
+            If( pStrictErrorHandling = 1 ); 
+                ProcessQuit; 
+            Else;
+                ProcessBreak;
+            EndIf;
         Else;
             # Loop through attributes in pAttr  
             sAttrs = pAttr;
@@ -224,7 +237,11 @@ While( nDimDelimiterIndex <> 0 );
                 nErrors = 1;
                 sMessage = Expand( 'Dimension "%sDim%" does not exist.' );
                 LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
-                ProcessBreak;
+                If( pStrictErrorHandling = 1 ); 
+                    ProcessQuit; 
+                Else;
+                    ProcessBreak;
+                EndIf;
             Else;
             # Loop through attributes in pAttr 
                 sAttrs = pAttr;
@@ -272,7 +289,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,20
+575,23
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -283,6 +300,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created attribute %pAttr% in dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

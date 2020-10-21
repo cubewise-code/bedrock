@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tqmulcplXWE?lfNc<5k6aN9Ge\_]V<HG7vnpoUGo[5GSB^EGzv]d3z_Vg?h7I@qZT2oL5<Hlx5a?BP0t2>;^ZEO:x^_r6I5yJMH0Yye`qQL[m5lI7ygMkBdObcPHqua5wqLIIy>^@A<xl^]xMumKGN[5AOu2SN=p3kh_zt;lZd9FNgcaa2d350E1Ozso1P:[MEy4Z35l"
+565,"qAOz?RO4uaFy]U=`Na]Vy1_e5hHBSlvEy<qVpsyNKyBO=BDen^Z][LQd]SU\>Cf0dpF^76z73lC:HRndjssqAMsm^rFOBfPzc;BOd`6<jQ03@C6f=R5u[5tJYrBnc0LLp8VktxlyfrQN5Q3J8j?]00KsNoIqdL_U0gdTKOXIs?MJW6XXNIBOpv0D5\FlT;=qn1O=qtHk"
 559,1
 928,0
 593,
@@ -25,14 +25,18 @@
 569,0
 592,0
 599,1000
-560,1
+560,2
 pLogOutput
-561,1
+pStrictErrorHandling
+561,2
 1
-590,1
+1
+590,2
 pLogOutput,0
-637,1
+pStrictErrorHandling,0
+637,2
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 577,0
 578,0
 579,0
@@ -44,7 +48,7 @@ pLogOutput,"OPTIONAL: Write parameters and action summary to server message log 
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.security.refresh', 'pLogOutput', pLogOutput );
+    ExecuteProcess( '}bedrock.security.refresh', 'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling );
 EndIf;
 #EndRegion CallThisProcess
 
@@ -103,7 +107,7 @@ SecurityRefresh;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -118,6 +122,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully refreshed security.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

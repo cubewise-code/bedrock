@@ -4,7 +4,7 @@
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-565,"wDIP0A^cp^WvjxX8t=FR@1hah2eYw7;?5wyka`XPfh^p3KWf>7LqehaG]@4kPUL2UnMcxxc<bXPQV;=PTCuGKA6?wZPcN?1b6eN=LaarV:@wsR2?xjgm=En24MFLm=xN>dxkJI;=;phb2RC`^67YDy[L?y;`3ou^D<hv>XSRQt6WnD8q1BgGrPzcMMEOD``mFH`NNTkI"
+565,"jXY;MR]Q<@aRTN7yiYNrCuHH9f5Y>u@81xlC_5_q`D6Zq^r;1pVmPc0yv@R8`GzHl7aNJhs9p=iUPZ8`xVJH3hkZ<25;ZTLCEvS<YNAr:tGTxeeFP52<j2U@ug<Vv>uIQd6>nin16ka_pMXTh=3`hxJv6?ohQ2kQWHFwZRM8GBRKu3W83wg;ki\X>hC\YMLwN9;Gi;ft"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,10
+560,11
 pLogOutput
+pStrictErrorHandling
 pDim
 pSrcHier
 pTgtHier
@@ -36,7 +37,8 @@ pPrefix
 pSuffix
 pSkipBlank
 pUnallocated
-561,10
+561,11
+1
 1
 2
 2
@@ -47,8 +49,9 @@ pUnallocated
 2
 1
 2
-590,10
+590,11
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pSrcHier,""
 pTgtHier,""
@@ -58,8 +61,9 @@ pPrefix,""
 pSuffix,""
 pSkipBlank,0
 pUnallocated,"Undefined <pAttr>"
-637,10
+637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pSrcHier,"OPTIONAL: Source Hierarchy, If not specified takes the default Hierarchy"
 pTgtHier,"OPTIONAL: Target Hierarchy, If not specified, takes the same name as attribute."
@@ -94,11 +98,12 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,188
+572,197
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.create.fromattribute', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pSrcHier', '', 'pTgtHier', '', 'pAttr', '',
     	'pTopNode', 'Total <pAttr>', 'pPrefix', '', 'pSuffix', '',
     	'pSkipBlank', 0, 'pUnallocated', 'Undefined <pAttr>'
@@ -168,7 +173,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Validate Hierarchy
@@ -224,7 +233,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Modify attribute for hierarchy name
@@ -283,9 +296,7 @@ DatasourceNameForServer   = pDim|':'|pSrcHier;
 DatasourceNameForClient   = pDim|':'|pSrcHier;
 DataSourceType            = 'SUBSET';
 DatasourceDimensionSubset = 'ALL';
-
-### End Prolog ###
-573,47
+573,51
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -298,7 +309,11 @@ DatasourceDimensionSubset = 'ALL';
 ### Check for errors in prolog ###
 
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Skip if the Element is not leaf element
@@ -337,7 +352,7 @@ EndIf;
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -353,6 +368,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created the %sTargetHierarchy% hierarchy in the %pDim% dimension.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

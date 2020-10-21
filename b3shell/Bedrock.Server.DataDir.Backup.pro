@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"hLq1rLEIaz6V28z^hvkAVdxi86:mayR:ypXXz8?i8qhsGOtcG]Ibib<em]9qEzYS<QO9yKU@YdIl23AiAWof9A1r\4CIh0ItI<xdC`;0@L??gNqu?LfEt^^X?jQ0ZH4OBo>2D@gaTV7Sa`2YIhDSmVYV29v\5j`pp?Owa>62cI?HQAjFJxf>JFjO9vtOzIy@7x3v<oCJ"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -48,7 +48,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,63
+572,64
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -93,6 +93,7 @@ sProc = '}bedrock.server.dir.backup';
 
 nRes = EXECUTEPROCESS( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pSrcDir', pDataDir,
   'pTgtDir', pBackupDir
   );

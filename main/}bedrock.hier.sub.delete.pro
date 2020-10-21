@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"eF7tVavAp;OVJZ_<KIos\5SA::;oMEipLtZ<<rwFcTTl]Rb9?PBS_=GdMR:gHhiu2ZyarnUs^nVjY]]MwR0OcGgWaeP]k=KeWMqRKb@^BF7v`MI]nXuDzjPA[EZOVOrM?:svYvVqTEHcgRTvdA4CMEp?`o;7C2mf90E<UjMnADZs5D[s7:X[2UuLFjK^K];gL:cq0lmh"
+565,"pNND;W`g=up2?_y?anTV7965x3^6T[yD_rj9\H_ptAiQYM=OO5JNGYoUHX\nyb6hwIX?<yyHkyIU`=o`ocT_:VhHiVUq9dr2I[WvAIBPDM;L8BGy[w@lf7q2?QkuK5X_T=L3[q^paMxfKlj;bvIgZBXMB]hJgME:2qf1Xlu;kr3pE=l7y9t>:6CT`nL8nsefrhoEE^ap"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pSub
 pDelim
 pMode
-561,6
+561,7
+1
 1
 2
 2
 2
 2
 1
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSub,"}Bedrock*"
 pDelim,"&"
 pMode,0
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"OPTIONAL: Dimension name (if * then ALL dimensions )"
 pHier,"OPTIONAL: Hierarchy name (if * then ALL hierarchies for the specified dimensions)"
 pSub,"REQUIRED: Filter on subsets (delimiter separated list of subset names, accepts wildcards)"
@@ -60,11 +64,12 @@ pMode,"OPTIONAL: <=1 destroy subset, 2 delete all elements"
 581,0
 582,0
 603,0
-572,315
+572,337
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.delete', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pDelim', '&', 'pMode', 0
 	);
@@ -175,7 +180,11 @@ If( Trim( pDim ) @= '' );
   nErrors = 1;
   sMessage = 'No dimension specified';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 If( SCAN( cCharAny, pDim ) = 0 & SCAN( cStringAny, pDim ) = 0 & SCAN( pDelim, pDim ) = 0 & SCAN( cCharDimHier, pDim ) > 0 & pHier @= '' );
     pHier = SubSt( pDim, SCAN( cCharDimHier, pDim ) + 1, Long( pDim ) );
@@ -199,7 +208,11 @@ If( Trim( pSub ) @= '' );
   nErrors = 1;
   sMessage = 'No subsets specified';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Destroy subset if exactly specified in parameters - important for recursive calls
@@ -210,19 +223,31 @@ If ( SCAN( cCharAny, pDim ) = 0 & SCAN( cStringAny, pDim ) = 0 & SCAN( pDelim, p
     nErrors = 1;
     sMessage = Expand( 'Dimension %pDim% doesn''t exist.' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
   EndIf;
   If ( pHier @<> '' & HierarchyExists( pDim, pHier ) = 0 );
     nErrors = 1;
     sMessage = Expand( 'Hierarchy %pHier% doesn''t exist in dimension %pDim%.' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
   EndIf;
   If ( HierarchySubsetExists( pDim, pHier, pSub ) = 0 );
     nErrors = 1;
     sMessage = Expand( 'Subset %pSub% doesn''t exist in hierarchy %pHier% of dimension %pDim%.' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
   EndIf;
   If ( pHier @= '' );
     pHier = pDim;
@@ -356,6 +381,7 @@ If ( nSkipParsing = 0 );
         If ( pMode <= 1 );
           ### Recursive call to consume process error in this process and not to broadcast it to the parent caller process
           ExecuteProcess( cThisProcName,
+            'pStrictErrorHandling', pStrictErrorHandling,
             'pLogOutput', pLogOutput,
             'pDim', sCurDim,
             'pHier', sHierarchy,
@@ -386,7 +412,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -401,6 +427,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted subset %pSub% from dimension %pDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

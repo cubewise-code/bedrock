@@ -4,7 +4,7 @@
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"cY8yQlU[?Xx<I@ULBU47dVVcitve9FX?FoD2u8RiyE[[\ni[@xp;`hCGGSugdY|vGOaxZvuig1FZN[9aS\tksau_Y7HBZv]f0GK1]?NxDjxo4LclXIfSyu8Gk2VZ\2Z6QrEIblqU:L<S`ONaGFP6mRduxoos2SW3]LbmrF}ZvlMelTlH6ddxZMrniBt?CJf[@B\U1Gu`"
+565,"x^Xbkd]qSGLA4Mh>uTu07_x?y4LNEzj7FhbZ33<POICe<bI>jBFIMc>J9\ugpUvVhnM~z1o]X`Hzj^iy<NqM_;6sc:B2l7]=G283MKL`e<yYUyelXGa6nX8fCB<[UrhbWweL2tAr??q]pu4oGfE<m;[260_58=UlXXc]DhqZuyiY`Dm>2vNN1H26OX97WGvTpIMc<tIP"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,12
+560,13
 pLogOutput
+pStrictErrorHandling
 pSrcCube
 pTgtCube
 pIncludeRules
@@ -38,21 +39,23 @@ pEleDelim
 pSuppressRules
 pTemp
 pCubeLogging
-561,12
-1
-2
-2
+561,13
 1
 1
 2
 2
+1
+1
+2
+2
 2
 2
 1
 1
 1
-590,12
+590,13
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcCube,""
 pTgtCube,""
 pIncludeRules,1
@@ -64,8 +67,9 @@ pEleDelim,"+"
 pSuppressRules,1
 pTemp,1
 pCubeLogging,0
-637,12
+637,13
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Source Cube"
 pTgtCube,"OPTIONAL: Target Cube to create/re-create (Source cube_clone if left blank)"
 pIncludeRules,"REQUIRED: Include cube rules? (Boolean Yes = 1)"
@@ -76,7 +80,7 @@ pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if
 pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
 pSuppressRules,"REQUIRED: Skip rule values? (1=skip)"
 pTemp,"REQUIRED: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 577,28
 v1
 v2
@@ -252,11 +256,12 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,168
+572,183
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.clone', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcCube' ,'', 'pTgtCube', '',
     	'pIncludeRules', 1, 'pIncludeData', 0,
     	'pFilter', '',
@@ -371,12 +376,17 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 sProc = '}bedrock.cube.create';
 nRet = ExecuteProcess( sProc,
   'pLogOutput', pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pCube', pTgtCube,
   'pDims', sDimsString,
   'pRecreate', 1,
@@ -387,7 +397,11 @@ IF(nRet <> 0);
   sMessage = 'Error creating the target cube.';
   nErrors = 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 ENDIF;
 
 
@@ -395,15 +409,16 @@ ENDIF;
 If( pIncludeData = 1 );
 nRet = ExecuteProcess('}bedrock.cube.data.copy.intercube',
     'pLogOutput', pLogOutput,
-	'pSrcCube',pSrcCube,
-	'pFilter',pFilter,
-	'pTgtCube',pTgtCube,
-	'pMappingToNewDims','',
-	'pSuppressConsol',1,
-	'pSuppressRules',pSuppressRules,
-	'pZeroTarget',0,
-	'pZeroSource',0,
-	'pFactor',1,
+    'pStrictErrorHandling', pStrictErrorHandling,
+  	'pSrcCube',pSrcCube,
+  	'pFilter',pFilter,
+  	'pTgtCube',pTgtCube,
+  	'pMappingToNewDims','',
+  	'pSuppressConsol',1,
+  	'pSuppressRules',pSuppressRules,
+  	'pZeroTarget',0,
+  	'pZeroSource',0,
+  	'pFactor',1,
     'pDimDelim', pDimDelim,
     'pEleStartDelim', pEleStartDelim,
     'pEleDelim', pEleDelim,
@@ -414,7 +429,11 @@ nRet = ExecuteProcess('}bedrock.cube.data.copy.intercube',
     sMessage = 'Error copying data.';
     nErrors = nErrors + 1;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ProcessBreak;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
   ENDIF;
 
 EndIf;
@@ -434,7 +453,7 @@ EndIf;
 
 
 
-575,34
+575,37
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -459,6 +478,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned the %pSrcCube% cube to %pTgtCube%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

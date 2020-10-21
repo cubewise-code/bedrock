@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"fhmbJRahGdtkFHAZxV]Hwh8_sf>Qp7O:\5d>McbkUdjb3FDop?`cr1E9X>=BrZ30hA@fE4DNTmD@4dqAafuB7AkrJwWFFKk0[dH7AdRhy6<hqi83flQZV?LeK^P`cm@fsV\3ZvU;c3zvlUNy1sdCF[eHXXTfc8`BUtgynRukpuM4:Xb57Ui\n@p]Cf``21crI1FypOKq"
+565,"gzJ<p57a8SyeAcD>_IrLN_pKhhu44BOQGbU=py0[k3CR]6HKe4FRiU=rUGWC;XRC1^<P?BGiSyVo:`As7l\50Lp25UOYiEHIRC1cp`@Pg<pX9NuVgQ@kTJ\s7K\C?CIJFOBWY;kq\Dv41hi\p@<GZrB:rw8y3R5i^\Pvm5wl@[BU6heLFcaeZLr2k7a2DA`QwjQ6mtKv"
 559,1
 928,0
 593,
@@ -25,25 +25,22 @@
 569,0
 592,0
 599,1000
-560,12
+560,14
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pFilter
 pSuppressZero
 pSuppressConsol
 pSuppressRules
+pSuppressConsolStrings
 pDimDelim
 pEleStartDelim
 pEleDelim
 pTemp
 pSubN
-561,12
-1
-2
-2
-2
-1
+561,14
 1
 1
 2
@@ -51,27 +48,38 @@ pSubN
 2
 1
 1
-590,12
+1
+1
+2
+2
+2
+1
+1
+590,14
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pFilter,""
 pSuppressZero,1
 pSuppressConsol,1
 pSuppressRules,1
+pSuppressConsolStrings,-1
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSubN,0
-637,12
+637,14
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pView,"REQUIRED: Name of the View"
 pFilter,"OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations"
 pSuppressZero,"REQUIRED: Suppress Zero Data (Skip = 1)"
 pSuppressConsol,"REQUIRED: Suppress Consolidations (Skip = 1)"
 pSuppressRules,"REQUIRED: Suppress Rules (Skip = 1)"
+pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1, Include = 0) (Default [Skip] = -1 for backward compatibility)"
 pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
 pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
@@ -84,13 +92,14 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,403
+572,444
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.view.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '', 'pFilter', '',
-    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
     	'pTemp', 1, 'pSubN', 0
     );
@@ -127,6 +136,7 @@ EndIf;
 ### Global Variables
 StringGlobalVariable ('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
+StringGlobalVariable('sBedrockViewCreateParsedFilter');
 sProcessReturnCode = '';
 nProcessReturnCode = 0;
 
@@ -142,7 +152,7 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoLevel     =  'INFO';
 cMsgInfoContent   = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%.' ;  
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSuppressConsolStrings:%pSuppressConsolStrings%.' ;  
 
 
 sSubset           = pView;
@@ -204,14 +214,20 @@ EndIf;
 
 ### If errors occurred terminate process with a major error status ###
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
   
 # Reset all of the subsets that may be attached to the view in the case that dimensions not in the filter
 If( ViewExists( pCube, pView ) = 1 );
     ### Reset View ###
     sMessage = 'Resetting view ' | pView | ' on cube ' | pCube;
-    LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    IF ( pLogoutput = 1 );
+       LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    EndIf;
     nCount = 1;
     While( TabDim( pCube, nCount ) @<> '' );
         sCubeDimName = TabDim( pCube, nCount );
@@ -229,17 +245,23 @@ If( ViewExists( pCube, pView ) = 1 );
 Else;
     ### Create View ###
     sMessage = Expand('Creating view %pView% in cube %pCube%');
-    LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    IF ( pLogoutput = 1 );
+       LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+    EndIf;
     ViewCreate( pCube, pView, pTemp );
 EndIf;
 
 ViewExtractSkipCalcsSet( pCube, pView, pSuppressConsol );
 ViewExtractSkipZeroesSet( pCube, pView, pSuppressZero );
 ViewExtractSkipRuleValuesSet( pCube, pView, pSuppressRules );
-
+# Fix of issue #141, https://github.com/cubewise-code/bedrock/issues/141
+If( pSuppressConsolStrings <> -1 );
+    ViewExtractSkipConsolidatedStringsSet( pCube, pView, pSuppressConsolStrings );
+EndIf;
 
 ### Split filter and create subsets ###
 sFilter = TRIM( pFilter );
+sParsedFilter = '';
 nChar = 1;
 nCharCount = LONG( sFilter );
 sWord = '';
@@ -285,6 +307,7 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         sDimension = sWord;
+        nOneDimEleAdded = 0;
         
         If( DimensionExists( sDimension ) = 0 );
             # The dimension does not exist in the model. Cancel process
@@ -320,6 +343,13 @@ WHILE (nChar <= nCharCount);
 
         # Attach to the view
         ViewSubsetAssign( pCube, pView, sDimension, sSubset );
+        
+        #Add to the Parsed filter
+        IF(sParsedFilter@='');
+          sParsedFilter=sDimension;          
+        Else;
+          sParsedFilter=sParsedFilter|sDelimDim|sDimension;
+        Endif;  
 
         nIndex = 1;
         sLastDelim = sChar;
@@ -393,14 +423,16 @@ WHILE (nChar <= nCharCount);
               LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
               #ProcessError();
           EndIf;
-
+          
+          sElement = DimensionElementPrincipalName(sDimension,sElement);
 
           If ( pSuppressConsol = 1 & DTYPE( sDimension, sElement) @= 'C'  );
               # Add all N level elements to the subset
               # Loop through all elements and check if it is an ancestor
               sMessage = 'Element ' | sElement | ' is consolidated' ;
-              LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
-              
+              IF ( pLogoutput = 1 );
+                LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+              EndIf;
               nElCount = DIMSIZ ( sDimension );
               n = 1;
               WHILE ( n <= nElCount );
@@ -410,10 +442,23 @@ WHILE (nChar <= nCharCount);
                   EndIf;
                   n = n + 1;
               END;
+              
+              # Add the consolidated element to the subset as well to export strings, if necessary
+              If ( pSuppressConsolStrings = 0 );
+                SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+              EndIf;
 
           Else;
               # Add the element to the subset
               SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+          EndIf;
+          
+          #Add to the Parsed filter
+          If( nOneDimEleAdded = 0 );
+            sParsedFilter=sParsedFilter|pEleStartDelim|sElement;
+            nOneDimEleAdded = nOneDimEleAdded + 1;
+          Else;
+            sParsedFilter=sParsedFilter|sDelimElem|sElement;
           EndIf;
 
           nIndex = nIndex + 1;
@@ -432,62 +477,66 @@ WHILE (nChar <= nCharCount);
     nChar = nChar + nAddExtra + 1;
 
 END;
+sBedrockViewCreateParsedFilter = sParsedFilter;
 
 # creating N level subset for all dim not included in pFilter 
 # useful when suppress consolidation is not on
 If(pSubN = 1);
-  
+    
     nCountDimC = 1;
     While( TabDim( pCube, nCountDimC ) @<> '' );
-    sDimC = TabDim( pCube, nCountDimC );
-    sDimString = sDimC;
-  
-    # filters created by other bedrock processes skip spaces from dim names and between separators
-    While(Scan(' ',sDimString)>0);
-      sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
-    End; 
-    sTFilter = sFilter;
-    While(Scan(' ',sTFilter)>0);
-      sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
+        sDimC = TabDim( pCube, nCountDimC );
+        sDimString = sDimC;
+        
+        # filters created by other bedrock processes skip spaces from dim names and between separators
+        While(Scan(' ',sDimString)>0);
+            sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
+        End; 
+        sTFilter = sFilter;
+        While(Scan(' ',sTFilter)>0);
+            sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
+        End;
+        
+        # to make sure that the name of the dim is not part of the name of another dim
+        If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
+            sProc   = '}bedrock.hier.sub.create';
+            nRet    = ExecuteProcess( sProc,
+                'pLogOutput', pLogOutput,
+                'pStrictErrorHandling', pStrictErrorHandling,
+                'pDim', sDimC,
+                'pHier', '',
+                'pSub', sSubset,
+                'pConsol', '',
+                'pAttr', '',
+                'pAttrValue', '',
+                'pLevelFrom', 0,
+                'pLevelTo', 0,
+                'pExclusions', '',
+                'pDelim', pEleDelim,
+                'pAddToSubset', 0,
+                'pAlias', '',
+                'pTemp', pTemp
+            );
+            
+            IF(nRet <> 0);
+                sMessage = 'Error creating the view from the filter.';
+                nErrors = nErrors + 1;
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                If( pStrictErrorHandling = 1 ); 
+                    ProcessQuit; 
+                Else;
+                    ProcessBreak;
+                EndIf;
+            ENDIF;
+            
+            ViewSubsetAssign( pCube, pView, sDimC, sSubset );
+        
+        EndIf;
+        
+        nCountDimC = nCountDimC + 1;
     End;
-  
-    # to make sure that the name of the dim is not part of the name of another dim
-    If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
-      sProc   = '}bedrock.hier.sub.create';
-      nRet    = ExecuteProcess( sProc,
-      'pLogOutput', pLogOutput,
-      'pDim', sDimC,
-      'pHier', '',
-      'pSub', sSubset,
-      'pConsol', '',
-      'pAttr', '',
-      'pAttrValue', '',
-      'pLevelFrom', 0,
-      'pLevelTo', 0,
-      'pExclusions', '',
-      'pDelim', pEleDelim,
-      'pAddToSubset', 0,
-      'pAlias', '',
-      'pTemp', pTemp
-      );
 
-    IF(nRet <> 0);
-        sMessage = 'Error creating the view from the filter.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
-    ENDIF;
-    
-    ViewSubsetAssign( pCube, pView, sDimC, sSubset );
-
-    Endif;
-
-    nCountDimC = nCountDimC + 1;
-    End;
-
-  Endif;  
-
-
+  EndIf;  
 573,4
 
 #****Begin: Generated Statements***
@@ -498,7 +547,7 @@ If(pSubN = 1);
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,26
+575,31
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -514,6 +563,11 @@ If( nErrors <> 0 );
     nProcessReturnCode = 0;
     LogOutput( 'ERROR' , Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    Else;
+        ProcessBreak;
+    EndIf;
 Else; 
 
     sProcessAction      = Expand( 'Process:%cThisProcName% successfully created View %pView% in Cube %pCube%.' );
@@ -557,7 +611,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0

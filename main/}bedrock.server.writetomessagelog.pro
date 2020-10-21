@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"qt^AOS3zx9y5ra\8vanYWKTZGwM[vp430lsEIp^[DOEneX2fDigvhaXVjXT2F\GEjlheFu_TCYj68MT^FnTIexSw30N2HFjDZ:=euGC]wfTkN03Y_p6es_7H9K7ph1f]KTMVs22?a]kfafJc>m8?1J675CL4Aw8ldacGpTkJ;ISyf`<b4N^pk4eOIx:REzF=sqp\r=`n"
+565,"wualONoC=68\T7SooqMx9Oaa9UbF781rNZNW2iu6aA?]8wU=zIbYeQDq<zFJfobWwP;RIWKB7fxrVT_@SsvArxsl@DkMKDOACxq[j@OB]Na>Z?SEE5:?>8l`oB`Fi<]pApB`XAen5>sf[wLf^iXelyd8@74TCyAfua6>x1xiC\;rEvxJH]asajQ7dZQCoBI<t0@Rh6Y6"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pLevel
 pMessage
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pLevel,""
 pMessage,""
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pLevel,"REQUIRED: Severity of the message - INFO, DEBUG or ERROR"
 pMessage,"REQUIRED: Message to display in TM1 server Message Log"
 577,0
@@ -48,11 +52,12 @@ pMessage,"REQUIRED: Message to display in TM1 server Message Log"
 581,0
 582,0
 603,0
-572,64
+572,69
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.writetomessagelog', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pLevel', '', 'pMessage', ''
     );
 EndIf;
@@ -107,7 +112,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Action ###
@@ -123,7 +132,7 @@ LogOutput ( sType , pMessage );
 #****End: Generated Statements****
 
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -138,6 +147,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully wrote message type %pLevel% with message %pMessage%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

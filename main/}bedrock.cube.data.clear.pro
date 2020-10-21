@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"sN<>uTKiGFAx_E[QE6BaIgpHrG;7P<5VgRiB2:2v]HvsgNG6eq\YJ6HIqMcuBFqSmXqrrUThsGOI@@ZUng80VMmCJ`lw6jbhT9cTO6O5f7>9qN:ygbp\<8FIxVyf6mSUO5AEteOJuuso;F]BD0m54mWnn@lIc?kGfKo?39huY1oL`L;jlgih4C[mZquY\nk50;LMdo5?"
+565,"n:jdhzE<jnKA4Qa^`><0>X8B><xNpcr@rp<:<xRqbgV4tMeaG@EtOllVj@YQhG0@BW5p7i36VkGBAu<uhh3OIKfb=DXAQtpd5OWpyZEa=9BmcZ2lNwP3o0m_]kQY3Sd?Yqm?r6p>rK@SF\h=cOsF0>aXfW2?obi[NLYl4ptpNoJOl?LLQOSDI:FqOi[iOZ?7EPsEPK>k"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,12
+560,14
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pFilter
@@ -38,21 +39,25 @@ pEleDelim
 pCubeLogging
 pTemp
 pSandbox
-561,12
+pSubN
+561,14
+1
+1
+2
+2
+2
+2
 1
 2
 2
 2
-2
-1
-2
-2
-2
 1
 1
 2
-590,12
+1
+590,14
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pFilter,""
@@ -64,8 +69,10 @@ pEleDelim,"+"
 pCubeLogging,0
 pTemp,1
 pSandbox,""
-637,12
+pSubN,0
+637,14
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name (wildcard * and/or cube1 & cube2 list)"
 pView,"OPTIONAL: View name to be cleared (uses pFilter if pView not specified else clears entire cube)"
 pFilter,"Optional but ignored if view is specified: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations"
@@ -74,9 +81,10 @@ pParallelThreads,"OPTIONAL: Ignored if pFilterParallel is empty. Maximum number 
 pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
 pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
-pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pTemp,"OPTIONAL: Make Views and subsets Temporary (1=Temporary)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 577,0
 578,0
 579,0
@@ -84,15 +92,16 @@ pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid
 581,0
 582,0
 603,0
-572,454
+572,523
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.data.clear', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pCubeLogging', 0, 'pTemp', 1, 'pSandbox', pSandbox
+    	'pCubeLogging', 0, 'pTemp', 1, 'pSandbox', pSandbox, 'pSubN', 0
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -178,7 +187,7 @@ If( Trim( pFilter ) @<> '' );
 EndIf;   
 
 # Validate cubelogging parameter
-If( pCubeLogging <> 0 & pCubeLogging <> 1);
+If( pCubeLogging <> 0 & pCubeLogging <> 1 & pCubeLogging <> 2);
   sMessage = 'The cube logging parameter incorrect';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -226,7 +235,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Loop through cubes in pCube
@@ -253,7 +266,11 @@ While( nCubeDelimiterIndex <> 0 );
       nErrors     = 1;
       sMessage    = Expand( 'Cube %sCube% does not exist.' );
       LogOutput( 'ERROR', Expand( cMsgErrorContent ) );
-      ProcessBreak;
+      If( pStrictErrorHandling = 1 ); 
+          ProcessQuit; 
+      Else;
+          ProcessBreak;
+      EndIf;
     Else;
       If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         nDim = 1;
@@ -317,9 +334,11 @@ While( nCubeDelimiterIndex <> 0 );
     	  ENDIF;
       Else;
         ## Validate the View & filter parameter
-        If( Trim( pView ) @= '' & Trim( pFilter ) @= '' );
+        If( Trim( pView ) @= '' & Trim( pFilter ) @= '' & Trim( pSandbox ) @= '' );
           sMessage  = Expand('No view OR filter specified so the entire %sCube% cube has been cleared.');
-          LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	  IF( pLogoutput = 1 );
+          	LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	  ENDIF;
           CubeClearData( sCube );
         Else;
           # Use different view/subset for different cubes
@@ -345,8 +364,9 @@ While( nCubeDelimiterIndex <> 0 );
 
             ### Create View using filter (temp view, therefore no need to destroy) ###
             sProc = '}bedrock.cube.view.create';
-            nRes = ExecuteProcess( sProc,
+            nRet = ExecuteProcess( sProc,
                     'pLogOutput', pLogOutput,
+                    'pStrictErrorHandling', pStrictErrorHandling,
                     'pCube', sCube,
                     'pView', cView,
                     'pFilter', pFilter,
@@ -356,27 +376,54 @@ While( nCubeDelimiterIndex <> 0 );
                     'pDimDelim', pDimDelim,
                     'pEleStartDelim', pEleStartDelim,
                     'pEleDelim', pEleDelim,
-                    'pTemp', pTemp
+                    'pTemp', pTemp,
+                    'pSubN', pSubN
                     );
 
+
+              # Validate Sandbox
+              If( TRIM( pSandbox ) @<> '' );
+              If( ServerSandboxExists( pSandbox ) = 0 );
+                SetUseActiveSandboxProperty( 0 );
+                nErrors = nErrors + 1;
+                sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+              Else;
+                ServerActiveSandboxSet( pSandbox );
+                SetUseActiveSandboxProperty( 1 );
+              EndIf;
+              Else;
+                 SetUseActiveSandboxProperty( 0 );
+              EndIf;
+
             ### Zero Out View ###
-            If ( nRes = ProcessExitNormal() );
-              sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-              CubeSetLogChanges( sCube, pCubeLogging);
+            If ( nRet = ProcessExitNormal() );
+              If ( pCubeLogging <= 1 );
+                sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+                CubeSetLogChanges( sCube, pCubeLogging);
+              EndIf;
               ViewZeroOut( sCube, cView );
               sMessage = Expand( 'Succeeded in creating the %cView% view in the %sCube% cube and data has been cleared.' );
-              LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
-              CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+	      IF( pLogoutput = 1 );
+              	LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	      ENDIF;
+              If ( pCubeLogging <= 1 );
+                CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+              EndIf;
             Else;
               nErrors = nErrors + 1;
               sMessage = Expand( 'Creating view by %sProc% has failed. Nothing has been cleared in the %sCube% cube.' );
               LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
             EndIf;
           Else;
-            sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-            CubeSetLogChanges( sCube, pCubeLogging);
+            If ( pCubeLogging <= 1 );
+              sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+              CubeSetLogChanges( sCube, pCubeLogging);
+            EndIf;
             ViewZeroOut( sCube, cView );
-            CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+            If ( pCubeLogging <= 1 );
+              CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+            EndIf;
           Endif;
         Endif;
       EndIf;
@@ -469,10 +516,12 @@ While( nCubeDelimiterIndex <> 0 );
     	  ENDIF;
         Else;
           ## Validate the View & filter parameter
-          If( Trim( pView ) @= '' & Trim( pFilter ) @= '' );
+          If( Trim( pView ) @= '' & Trim( pFilter ) @= '' & Trim( pSandbox ) @= '' );
             # Clear entire cube
             sMessage  = Expand('No view OR filter specified so the entire %sCube% cube has been cleared.');
-            LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	    IF( pLogoutput = 1 );
+            	LogOutput( 'INFO' , Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+	    ENDIF;
             CubeClearData( sCube );
           Else;
             # Clear view cView
@@ -492,8 +541,9 @@ While( nCubeDelimiterIndex <> 0 );
   
               ### Create View using filter (temp view, therefore no need to destroy) ###
               sProc = '}bedrock.cube.view.create';
-              nRes = ExecuteProcess( sProc,
+              nRet = ExecuteProcess( sProc,
                   'pLogOutput', pLogOutput,
+                  'pStrictErrorHandling', pStrictErrorHandling,
                   'pCube', sCube,
                   'pView', cView,
                   'pFilter', pFilter,
@@ -503,27 +553,54 @@ While( nCubeDelimiterIndex <> 0 );
                   'pDimDelim', pDimDelim,
                   'pEleStartDelim', pEleStartDelim,
                   'pEleDelim', pEleDelim,
-                  'pTemp', pTemp
+                  'pTemp', pTemp,
+                  'pSubN', pSubN
                   );
+                  
+              # Validate Sandbox
+              If( TRIM( pSandbox ) @<> '' );
+              If( ServerSandboxExists( pSandbox ) = 0 );
+                SetUseActiveSandboxProperty( 0 );
+                nErrors = nErrors + 1;
+                sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+              Else;
+                ServerActiveSandboxSet( pSandbox );
+                SetUseActiveSandboxProperty( 1 );
+              EndIf;
+              Else;
+                 SetUseActiveSandboxProperty( 0 );
+              EndIf;
+                  
   
               ### Zero Out View ###
-              IF ( nRes = ProcessExitNormal() );
-                sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-                CubeSetLogChanges( sCube, pCubeLogging);
+              IF ( nRet = ProcessExitNormal() );
+                If ( pCubeLogging <= 1 );
+                  sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+                  CubeSetLogChanges( sCube, pCubeLogging);
+                EndIf;
                 ViewZeroOut( sCube, cView );
                 sMessage = Expand( 'Succeeded in creating the %cView% view in the %sCube% cube and data has been cleared.' );
-                LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
-                CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+		IF( pLogoutput = 1 );
+                    LogOutput( 'INFO', Expand( 'Process:%cThisProcName% Message:%sMessage%' ) );
+		ENDIF;
+                If ( pCubeLogging <= 1 );
+                  CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) );  
+                EndIf;
               ELSE;
                 nErrors = nErrors + 1;
                 sMessage = Expand( 'Creating view by %sProc% has failed. Nothing has been cleared in the %sCube% cube.' );
                 LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
               ENDIF;
             Else;
-              sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
-              CubeSetLogChanges( sCube, pCubeLogging);
+              If ( pCubeLogging <= 1 );
+                sCubeLogging = CellGetS('}CubeProperties', sCube, 'LOGGING' );
+                CubeSetLogChanges( sCube, pCubeLogging);
+              EndIf;
               ViewZeroOut( sCube, cView );
-              CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+              If ( pCubeLogging <= 1 );
+                CubeSetLogChanges( sCube, IF(sCubeLogging@='YES',1,0) ); 
+              EndIf;
             Endif;
           EndIf;
         EndIf;
@@ -549,7 +626,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -564,6 +641,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cleared data out of the %pCube% cube(s).' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

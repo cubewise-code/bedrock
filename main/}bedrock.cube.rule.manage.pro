@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"onA>7v10mNgNl>NaT4pR@QLFpYmdDsO]]XcwHNwyqqnRyeV:Vua^jfBXmFykEbyA=?qkaoiw<OLs8mFYA_Ln8zg`06yF0ktPimo;fg[L]iDyOKtZSL6NkZoOwnT1ox?hsS:HLghko0lyl>JB2oeZf=9fNo@085FlW^>lyoez9ac;u?TnNYlFpj\^RWwus_9<yfECyORH"
+565,"eQA@?aLba3gMdBLo^@]2V1NcbmZfC63ajpZt8_HXHFv5D=]Rt2D5bV@[v]xy2;dzpjLrM::J>D1t][1zEL]<Z_dYZ`s8<:=gw@UFre8cCVBQlzw8lz;T1>LRmxPE9mp2tQ8?8J:XXYlHTS=6dsv0ZhJmuQJPt=VcbkQy\bBsf>hD[?CDfePs?;dYpdK262V<`sQ`NwAF"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pCube
 pMode
 pFileName
 pDelim
 pPath
-561,6
+561,7
+1
 1
 2
 2
 2
 2
 2
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pMode,""
 pFileName,""
 pDelim,"&"
 pPath,""
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name to Load/Unload rule (Separated by Delimiter, Accepts Wild card)"
 pMode,"REQUIRED: Load/Unload the cube rule (=Load, the file name should be available in the data directory with the required file name Suffix)"
 pFileName,"OPTIONAL: Full file name for storing the rule (if empty = cube name.txt)"
@@ -60,11 +64,12 @@ pPath,"OPTIONAL: Saves the file and the backup of the existing rule in this loca
 581,0
 582,0
 603,0
-572,228
+572,242
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.rule.manage', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pMode', '',
     	'pFileName', '', 'pDelim','&', 
     	'pPath', ''
@@ -196,6 +201,7 @@ While( nCubeDelimIndex <> 0 );
   sProc = '}bedrock.hier.sub.create.bymdx';
   ExecuteProcess( sProc,
     'pLogOutput', pLogOutput,
+    'pStrictErrorHandling', pStrictErrorHandling,
     'pDim', cDimCubes,
     'pHier', '',
     'pSub', cTempSub,
@@ -241,7 +247,11 @@ While( nCubeDelimIndex <> 0 );
           sMessage = Expand('Backup of rule file (%cCubeRuleFileName%) has failed, rule was not loaded.');
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          ProcessBreak;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
         EndIf;
       Else;
         ##Unloading the Rule###
@@ -258,7 +268,11 @@ While( nCubeDelimIndex <> 0 );
           sMessage = Expand('Backup of rule file (%cCubeRuleFileName%) has failed, rule was not unloaded.');
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          ProcessBreak;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
         EndIf;
         If( sOS @= 'Windows');
           sCmd = 'cmd /c "copy """' | cCubeRuleFileName | '"""  """' | cStoreDirFile |'""" "';
@@ -273,7 +287,11 @@ While( nCubeDelimIndex <> 0 );
           sMessage = Expand('Copy of rule file (%cCubeRuleFileName%) has failed, rule was not unloaded.');
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          ProcessBreak;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
         EndIf;
       Endif;
       
@@ -299,7 +317,7 @@ End;
 #****End: Generated Statements****
 
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -315,6 +333,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully %pMode% cube rule from cube %pCube% .' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"mn4\`t2UqL3L_agi00]NhTCxlLuwMJXBLAnBEWV209:6`TPeYtZTr=6hfpSn2p8z2E>g6WrHcme^h;R4>AQu_>hk`kvWH<127fDTZe0r0nZZhHLCtIhcVc]P6EV0?lQJVG]Rly`v7mxt[s1ObejEU9IJljVpiG<\sWCKY2Cfgex60?:[ob=`dyuFAF<4DwUEdmoy\R`p"
+565,"l==^Z@pa=T\pa<XddYIX2Kyk:V0?k0^SsiBw]7u:3SONID0Yty`w8evNZcjBo`W=_O4l_g`^7wS:EOg`Tzrf0sVpcdHWoIbKy4:NUOx]DRNrihkIB2fo5KCrjM9N:I^1O`bN:3ySBNAxJYXa@1Z;j]a4JzD@0qIYcd1fSgu;iao:C0kS;sVK_NKF0FhFc@0Y=7IU:Wzb"
 559,1
 928,0
 593,
@@ -25,15 +25,17 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pGroup
 pObjectType
 pObject
 pSecurityLevel
 pSecurityRefresh
 pDelim
-561,7
+561,8
+1
 1
 2
 2
@@ -41,16 +43,18 @@ pDelim
 2
 2
 2
-590,7
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pGroup,""
 pObjectType,""
 pObject,""
 pSecurityLevel,""
 pSecurityRefresh,"No"
 pDelim,"&"
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pGroup,"REQUIRED: List of Groups Separated by Delimiter"
 pObjectType,"REQUIRED: Type of Object to Assign Security To (Application/Cube/Dimension/Process/Chore)"
 pObject,"REQUIRED: List of Objects Separated by Delimiter"
@@ -64,11 +68,12 @@ pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,320
+572,325
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.security.object.assign', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pGroup', '', 'pObjectType', '', 'pObject', '',
     	'pSecurityLevel', '', 'pSecurityRefresh', 'No', 'pDelim', '&'
 	);
@@ -209,7 +214,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Assign Application Security ###
@@ -395,7 +404,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -410,6 +419,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully assigned object %pObject% of type %pObjectType% security level %pSecurityLevel% for group %pGroup%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

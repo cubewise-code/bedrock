@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vX_fwSWUsa]vzJX\EE`>EEa<[3X;iGmgwpM>DLJqyKm8LiB?FrJ9z;UANxPxxV9jNVP0bIDtmtZEm6LFzB[agvY_^ItSveLSz:35Q^klfpu?O^xuBrhD_7rhPfXhHeP;?NmPZ]WpRJu2X5MPjxa=hZ3E0@w\qG[3BvmnnG`8Ghy\hRId<J;brbczMcLI1H?j5oEPJ5tM"
+565,"u\VOY7d@mGS6m4Jy@voT=aJ`9U>euSa>egd8n7m\;gP9@=kZri];By]\xgjZQNWTKkqFx[0is1orrihM]msQbaw7?qovIQPhXZZ@mkzOe^SEmlsr9p]Ll_uNrIvlV^?wl_bU6mS90[unTE_7_y:w=i4iqy]Cg0WEM^W>x[]tr9r\b\nLzGa:r?9ch^SLP_EcR0ZJQ@bS"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,
@@ -52,7 +52,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,65
+572,66
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -98,6 +98,7 @@ sProc = '}bedrock.cube.view.delete';
 
 nRes = EXECUTEPROCESS( sProc,
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pCube', pCubes,
   'pView', pViews,
   'pDelim',pDelimiter

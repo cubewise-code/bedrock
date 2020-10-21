@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"kWr]DERCtHCat_Cj]P2v3QMAJA0gWwE7fPOe7yMGoOGaWwYcS2@mU98AowBhaILxOP@l@Zb>PjKygDqFy<Rbdn4EuedfZxmQE3j78BeS5Z@vc6quHR7qID376aJ;BDt@vx^UVwXdigB_W8_O1Zsd2HoeyTsKQ<F>fp?D`f=]gs@chrR\<1[wj>8PU9nQZuTX[YGQNvcr"
+565,"aaHPtYhlk9Sd5wlRBCVDXwrK9]Veezm^H5ZNn^]wfvA@g3W0j`0FL_KNx?GRfeXK^>N?4ZaTzCKH>uoHpFSSVvN\0d=xAkR0T@C3kcw3adtCcSPMn:[Nh1Ln5Ccf2^qT?xawvaRp:^o\hi==Bo:WOvXDJmuxY5OlOSD_Y6z]=1=Joltrmv8:;:@rDD0qF@y33e;PjYfl"
 559,1
 928,0
 593,
@@ -25,29 +25,33 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
+pStrictErrorHandling
 pMonthDays
 pWeekDays
 pDelim
 pStartTime
 pEndTime
-561,6
+561,7
+1
 1
 2
 2
 2
 1
 1
-590,6
+590,7
 pLogOutput,0
+pStrictErrorHandling,0
 pMonthDays,""
 pWeekDays,""
 pDelim,"&"
 pStartTime,0
 pEndTime,24
-637,6
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pMonthDays,"OPTIONAL: Delimited string of days in month as dd e.g. 01 & 02 & 30 & 31 (Blank=All)"
 pWeekDays,"OPTIONAL: Delimited string of days in week as ddd e.g. MON & WED (Blank=All)"
 pDelim,"OPTIONAL: String array delimiter. Only 1 character allowed (Blank=&)"
@@ -60,11 +64,12 @@ pEndTime,"OPTIONAL: Time to finish chore being able to start in 24 hr time (Blan
 581,0
 582,0
 603,0
-572,196
+572,197
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.chore.execution.check', 'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
         'pMonthDays', '', 
         'pWeekDays', '',
         'pDelim', '&',
@@ -265,7 +270,7 @@ EndIf;
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,20
+575,23
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -276,6 +281,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% completed normally' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 585,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 564,
-565,"htTBe>B<aZxNGBD=G:w65Xus@y:rX@DL0fHYX65w\Kaq;TYPT[HFma3jCiP:tiv?cG?fgL8SM:=t7y::kz3CzCUx;iL6J^:0]9Tbeq@gheYn;uLzxC1n>9OuEkb@rV@KIaCzFGrn:L3]DURuicbsWbh\SJAnJvwa@5bmv;D0[MZ@O23Plcvbei=BNbS[NFo67m^rjgrl"
+565,"kTY;VjZ]XQ7a5fZEewosQ_0Jcl>K;3FF^g8aWmUgtbRB9cU=M<sS@jQ3XHA;0\iTXDcR?MvQu169>;eND`B_>yoXFm;2VgKdtiXqD^T_uU9@eTvQ8Zi\N9tKms=HElwuH8dCOW>SUaG42fYC_blutX]oFH\LlT]DJ=0Y9Qp_ERiLHlmnS;l`v24CkmtdfC?pxysES\Ke"
 559,1
 928,0
 593,
@@ -25,15 +25,17 @@
 569,1
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pDim
 pSrcDir
 pSrcFile
 pTitleRows
 pDelim
 pQuote
-561,7
+561,8
+1
 1
 2
 2
@@ -41,16 +43,18 @@ pQuote
 1
 2
 2
-590,7
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pSrcDir,""
 pSrcFile,""
 pTitleRows,1
 pDelim,","
 pQuote,""""
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name"
 pSrcDir,"REQUIRED: Source Directory"
 pSrcFile,"REQUIRED: Source File Name"
@@ -76,11 +80,12 @@ vAttrType
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,154
+572,159
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.dim.attr.importfromfile', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pSrcDir', '', 'pSrcFile', '',
     	'pTitleRows', 1, 'pDelim', ',', 'pQuote', '"'
 	);
@@ -218,7 +223,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Assign Datasource ###
@@ -265,7 +274,7 @@ AttrInsert( pDim, '', vAttr, sAttrType );
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -280,6 +289,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created attributes in %pDim% from file %pSrcFile%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"lvVc0v50WaR4a4j@?BTD4FMv@J^bwbn@W8uwY\OzE5kHRKIG1QWfr9qTa@6f90MZ2jCjY\oK32w90qA6;O8l;V82e4k?Wp?3E8`jVGnirvCX^TD4NHacJfP:WwisPSM@QHml\;:clzf5_KxHGTYBgEj7aSdSe]C8dOEQtkg0lO:Mlv[2i8mQYyl>ChhDZ@rixS1RG<Sd"
+565,"iQsN9NRXYaSc3<LxC0NZ[CE7J3pkMZJZYTkox@Q2pFW;2@xXt3xDjE;]>t\bU>Lm>BIlu:Bjm[gTYI=`F0w;38NxJw]UxGkOU[c0l[ej50Hb916OCaq0RJk?u_VZLimI>Fi<>NEE7<vmojZ<q><3nb_iqWp^K:IE\oi^d_p@LznoGm1i>7ZyIG7h0?`jJ<Ua@2e<Mdnq"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pClient
 pDelim
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pClient,""
 pDelim,"&"
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pClient,"REQUIRED: Clients (Separated by delimiter (e.g. Client1&Client2), Accepts Wild card (e.g. *Client,*Client*, Client*))"
 pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
@@ -48,11 +52,12 @@ pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,193
+572,222
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
 	ExecuteProcess( '}bedrock.security.client.delete', 'pLogOutput', pLogOutput,
+	    'pStrictErrorHandling', pStrictErrorHandling,
 	    'pClient', '', 'pDelim', '&'
 	);
 EndIf;
@@ -137,12 +142,25 @@ While( nDelimiterIndex <> 0 );
     If( sClient @<> '' );
       If( DimIx( cClientDim, sClient ) <> 0 );
         sClient = DimensionElementPrincipalName(cClientDim,sClient);
-        DeleteClient( sClient );
+        If( sClient @<> 'Admin' & sClient @<> TM1User() );
+            DeleteClient(sClient);
+        ElseIf( sClient @= 'Admin' );
+            nErrors = 1;
+            sMessage = 'Skipping attempt to delete Admin user.';
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ElseIf( sClient @= TM1User() );
+            nErrors = 1;
+            sMessage = 'Skipping attempt to delete self.';
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        EndIf;
       Else;
         nErrors = 1;
-        sMessage = 'Client: ' | sClient | ' does not exists';
+        sMessage = 'Client: ' | sClient | ' does not exist.';
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
       Endif;
+      If( nErrors > 0 );
+          ItemReject( Expand( cMsgErrorContent ) );
+      EndIf;
     Endif;  
   Else;
   # Wildcard search string
@@ -173,14 +191,19 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cClientDim, 1 );
         EndIf;
         
-        nCount = 1;
         nHier_Sub_Size = HierarchySubsetGetSize(cClientDim, cClientHier, cTempSub);
-        While (nCount <= nHier_Sub_Size);
-          nSubsetIndex = 1;
-          sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', nSubsetIndex);
+        nCount = nHier_Sub_Size;
+        While (nCount >= 1);
+          sTemp = HierarchySubsetElementGetIndex(cClientDim, cClientHier, cTempSub, '', 1);
           sElement = HierarchySubsetGetElementName(cClientDim, cClientHier, cTempSub, nCount);
-          HierarchyElementDelete( cClientDim, cClientHier,sElement );
-          nCount = nCount +1;
+          If( sElement @<> 'Admin' & sElement @<> TM1User() );
+              DeleteClient(sElement);
+          ElseIf( sElement @= 'Admin' );
+              LogOutput( 'WARN', 'Skipping attempt to delete Admin user.' );
+          ElseIf( sElement @= TM1User() );
+              LogOutput( 'WARN', 'Skipping attempt to delete self.' );
+          EndIf;
+          nCount = nCount -1;
         End;
         ##If the wilcardsearch is String*, below code will get executed
         ElseIf(Subst(sClient,Long(sClient),1) @= '*');
@@ -198,14 +221,19 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cClientDim, 1 );
         EndIf;
 
-        nCount = 1;
         nHier_Sub_Size = HierarchySubsetGetSize(cClientDim, cClientHier, cTempSub);
-        While (nCount <= nHier_Sub_Size);
-          nSubsetIndex = 1;
-          sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', nSubsetIndex);
+        nCount = nHier_Sub_Size;
+        While (nCount >= 1);
+          sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', 1);
           sElement = HierarchySubsetGetElementName(cClientDim, cClientHier, cTempSub, nCount);
-          HierarchyElementDelete( cClientDim, cClientHier,sElement );
-          nCount = nCount +1;
+          If( sElement @<> 'Admin' & sElement @<> TM1User() );
+              DeleteClient(sElement);
+          ElseIf( sElement @= 'Admin' );
+              LogOutput( 'WARN', 'Skipping attempt to delete Admin user.' );
+          ElseIf( sElement @= TM1User() );
+              LogOutput( 'WARN', 'Skipping attempt to delete self.' );
+          EndIf;
+          nCount = nCount -1;
         End;
       Endif;
     Else;
@@ -223,14 +251,19 @@ While( nDelimiterIndex <> 0 );
             SubsetCreatebyMDX( cTempSub, sMDX, cClientDim, 1 );
       EndIf;
 
-      nCount = 1;
       nHier_Sub_Size = HierarchySubsetGetSize(cClientDim, cClientHier, cTempSub);
-      While (nCount <= nHier_Sub_Size);
-        nSubsetIndex = 1;
-        sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', nSubsetIndex);
+      nCount = nHier_Sub_Size;
+      While (nCount >= 1);
+        sTemp = HierarchySubsetElementGetIndex (cClientDim, cClientHier, cTempSub, '', 1);
         sElement = HierarchySubsetGetElementName(cClientDim, cClientHier, cTempSub, nCount);
-        HierarchyElementDelete( cClientDim, cClientHier,sElement );
-        nCount = nCount +1;
+          If( sElement @<> 'Admin' & sElement @<> TM1User() );
+              DeleteClient(sElement);
+          ElseIf( sElement @= 'Admin' );
+              LogOutput( 'WARN', 'Skipping attempt to delete Admin user.' );
+          ElseIf( sElement @= TM1User() );
+              LogOutput( 'WARN', 'Skipping attempt to delete self.' );
+          EndIf;
+        nCount = nCount -1;
       End;
     Endif;
   EndIf;
@@ -252,7 +285,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,24
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -267,6 +300,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted Client %pClient% from dimension %cClientDim%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

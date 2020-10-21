@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"j^uv]3FQrAan6vS=oLHT<YjJ80q9c2w]Mgd<TZUmQnihWY3Sx^cto:\7=tN^CFP;ZhPenR<NRGJ\Tmkv5R;]usqG8Y8avr]iAnboYg7^5tyBA?9;RMRwC<as9p>?z^chwfv90=<[QA?=XaJ;BvQI6G99Ty:yrQVmlpS6lw<lQEXRd]w9jZwL9lsSg5I[K5U_gKsbHaDJ"
+565,"diYfaU;V\dQ=dKb3NsCRYm2Ps9HJ?8YgXEmSsrYUr;X]8uWn_nf3sutPBOqlQ6>mE0NtxL@8Z6JdC9_iX^R2e8aXqCKKiYRmNZ[d5V>kU8PuDu:>`oRu6=AV[g[zdp<TdVYv1C<Ns?<UO=[KO_2j]2LJr7z_<`2]_\I`_p5yyphIyAEeS3?v6sMM6X:>9NFhqZr5C[Qm"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,10
+560,11
 pLogOutput
+pStrictErrorHandling
 pSrcDim
 pSrcHier
 pConsol
@@ -36,19 +37,21 @@ pAttr
 pUnwind
 pRemove
 pAliasSwap
-561,10
-1
-2
-2
-2
-2
-2
-1
+561,11
 1
 1
 2
-590,10
+2
+2
+2
+2
+1
+1
+1
+2
+590,11
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDim,""
 pSrcHier,""
 pConsol,""
@@ -58,8 +61,9 @@ pAttr,1
 pUnwind,2
 pRemove,0
 pAliasSwap,""
-637,10
+637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
 pSrcHier,"OPTIONAL: Source Hierarchy (blank = same name as source dimension)"
 pConsol,"REQUIRED: Cons element in source dim to create root element in target"
@@ -76,11 +80,12 @@ pAliasSwap,"REQUIRED: Name of the attribute with names to be swapped"
 581,0
 582,0
 603,0
-572,206
+572,222
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.create.fromrollup.aliasswap', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '', 'pConsol', '',
     	'pTgtDim', '', 'pTgtHier', '',
     	'pAttr', 1, 'pUnwind', 2, 'pRemove', 0,
@@ -164,7 +169,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Validate source Hierarchy
@@ -196,7 +205,11 @@ Endif;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ## Validate target Dimension
@@ -220,6 +233,7 @@ EndIf;
 #create subset
 ExecuteProcess('}bedrock.hier.sub.create',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pSrcDim,
 	'pHier', pSrcHier,
 	'pSub', cTempSub,
@@ -231,6 +245,7 @@ cTempDim = pSrcDim|'_'| cTimeStamp |'_'| cRandomInt;
 
 ExecuteProcess('}bedrock.hier.create.fromsubset',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pSrcDim',pSrcDim,
   'pSrcHier', pSrcHier,
   'pSubset', cTempSub,
@@ -242,6 +257,7 @@ ExecuteProcess('}bedrock.hier.create.fromsubset',
 
 ExecuteProcess('}bedrock.dim.attr.create',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pDim',cTempDim,
   'pAttr', cTempDim,
   'pAttrType','A'
@@ -249,18 +265,21 @@ ExecuteProcess('}bedrock.dim.attr.create',
 
 ExecuteProcess('}bedrock.cube.data.copy',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pCube', '}ElementAttributes_'|cTempDim,
   'pEleMapping','}ElementAttributes_'|cTempDim|':'|pAliasSwap|'->'|cTempDim
 );
 
 ExecuteProcess('}bedrock.dim.attr.swapalias',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pDim',cTempDim,
   'pAlias', cTempDim
 );
 
 ExecuteProcess('}bedrock.hier.sub.create',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim', cTempDim,
 	'pHier', cTempDim,
 	'pSub', cTempSub,
@@ -271,6 +290,7 @@ ExecuteProcess('}bedrock.hier.sub.create',
 
 ExecuteProcess('}bedrock.hier.create.fromsubset',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pSrcDim', cTempDim,
   'pSrcHier', cTempDim,
   'pSubset', cTempSub,
@@ -296,19 +316,21 @@ ExecuteProcess('}bedrock.hier.create.fromsubset',
 
 
 
-575,50
+575,57
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 ExecuteProcess('}bedrock.dim.attr.delete',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
   'pDim', pTgtDim,
   'pAttr', cTempDim
 );
 
 ExecuteProcess('}bedrock.dim.delete',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim', cTempDim
 );
 
@@ -316,6 +338,7 @@ ExecuteProcess('}bedrock.dim.delete',
 IF(pRemove = 1);
   ExecuteProcess('}bedrock.hier.unwind',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pSrcDim,
 	'pHier', pSrcHier,
 	'pConsol', pConsol,
@@ -324,6 +347,7 @@ IF(pRemove = 1);
 
   ExecuteProcess('}bedrock.hier.emptyconsols.delete',
   'pLogOutput',pLogOutput,
+  'pStrictErrorHandling', pStrictErrorHandling,
 	'pDim',pSrcDim,
 	'pHier', pSrcHier
 );
@@ -337,6 +361,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned dimension:hierarchy %pSrcDim%:%pSrcHier% to %pTgtDim%:%pTgtHier% based on the %pConsol% consolidated element.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

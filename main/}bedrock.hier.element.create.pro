@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"kto0Rts7LziaHphD^i77U8b0rvyqf:XD=roVK3^>bboJZHqq0RTR0co>^1d^>?qXmRZhV;K41AY^A=Ye\s6_57I;mh\FQ=:GMnAA[h27SKULk2tb@hh<Pl@Ieatn5F`]Z6nImwzjg_M?3bjxV>ucUN=m?6WN92a:^Am;m6AEG<@NeBT32D]9?_7I9MgD3[DC9Np@\5Rm"
+565,"wx4Y=\3\XFcvz1^MK8`zN:AazHxaxHyAf_6hWuoUiNeaXc2ye@<Ckkt=mU=NK_1eV_0fZQ5n5;v43Tnp384FZ<MFO2jb\XG>e^e_;jAw<ca1GlEcS0WKShV=iVXpe;pdla9pgDBet@xPQzJKTy]fHgkWu>j?y?ZIdYP_RpWH<W?tiMusK4YhEebXbjqk9Gc7C^^Az2uL"
 559,1
 928,0
 593,
@@ -25,15 +25,17 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
+pStrictErrorHandling
 pDim
 pHier
 pEle
 pEleType
 pInsertionPoint
 pDelim
-561,7
+561,8
+1
 1
 2
 2
@@ -41,16 +43,18 @@ pDelim
 2
 2
 2
-590,7
+590,8
 pLogOutput,0
+pStrictErrorHandling,0
 pDim,""
 pHier,""
 pEle,""
 pEleType,""
 pInsertionPoint,""
 pDelim,"&"
-637,7
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name, accepts wildcards (if = *, then all the dimensions)"
 pHier,"OPTIONAL: hierarchy (default value same named hierarchy as dimension), accepts wildcards (if = *, then all hierarchies)"
 pEle,"REQUIRED: element name, accepts delimited list"
@@ -64,11 +68,12 @@ pDelim,"OPTIONAL: delimiter character for element list. (default value if blank 
 581,0
 582,0
 603,0
-572,276
+572,281
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.element.create', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
       'pDim', '', 'pHier', '', 'pEle', '',
       'pEleType', '', 'pInsertionPoint', '',
       'pDelim', '&'
@@ -162,7 +167,11 @@ EndIf;
  
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
  
  
@@ -351,7 +360,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -366,6 +375,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction     = Expand( 'Process:%cThisProcName% inserted element(s) %pEle% with type %pEleType% into %pDim%:%pHier%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

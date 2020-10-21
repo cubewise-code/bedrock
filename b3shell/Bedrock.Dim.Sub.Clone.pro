@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"vAxr[N?2^EwDzk:cX`<FM3a]EC?ws=edR<Y1Zsf1d044a^5bw>hsLiC_ku8JF4gbnu`2<m<_VS=glqdWBsCs:eV`TfimJmWXbrspHnIDdStI:DEY9oh_OLUSyHyQuX>Q3HJ9UVk=db6cy@PrXbmx?Lc^L0?[1J[yh@Gr?GqT;BBTi>\RtuYqYUCYt@\jF`LtgU0Nu9<5"
+565,"jIr_LZvo[ua?=D<OgL<8:x`;dSr^2EYVFKo4^e_H0MS>4l6?ympE=pqjT4Tzmr1_3Fl8W:rQ_4ILvFJRT0rfY2ZJGVzFY=1vBIxNxOP7v;\>WQT2bAZ?ue``blILZd;nddlMfmG1AI:GP1xSS]nEbw0Cmyl8Wf@vMvGwU\j^zI_Ik>TqULtr?MfPm:Takw]G`l_7]Je7"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,All
@@ -56,7 +56,7 @@ pDebug,"Optional: Debug Mode"
 581,0
 582,0
 603,0
-572,57
+572,58
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -95,6 +95,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.hier.sub.clone',
   'pLogOutput', pDebug,
+  'pStrictErrorHandling',1,
   'pSrcDim', pDimension,
   'pSrcHier', '',
   'pSrcSub', pSourceSub,

@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"lhY;;ksGmRv5as5[RA?2PV9DU93xhC6z^gzqiVDvMxx;oTp]uHr:dOPZ6<arh5jbIv91u?t;`m\j]V>aNg2j4;T7waEzs[fp`yu@EBMU1?f;EZh^WAZW^YT2^7;8`qHv>2j@@d]KlCR:tm5@jtw[\O4BojK:XGLY8NV_JLrt<f3LpyIMHT5Wy]71n^qalQ>I2[XF@6>?"
+565,"eYcSKagXR9cw[]GW\lAg5KD^>W=[kWd5TKLSqNoc:oO:8Zhj_cl[j>h<iBPIcHeu=c=eO0lP3RASAIS50yBqUSe_yndvzWWxT]wP^_o@OV8BLNyRDg8OSZUUX9c^21lksN?_FOxsyN=_nmr=pe8vD^NILpvGHVUaiST]LmwIp;^0Mb9WJrHO>Q^wSk768HXSSV3z`r`h"
 559,1
 928,0
 593,
@@ -25,26 +25,30 @@
 569,0
 592,0
 599,1000
-560,5
+560,6
 pLogOutput
+pStrictErrorHandling
 pCube
 pView
 pMDXExpr
 pTemp
-561,5
+561,6
+1
 1
 2
 2
 2
 1
-590,5
+590,6
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pView,""
 pMDXExpr,""
 pTemp,1
-637,5
+637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
 pView,"REQUIRED: View Name"
 pMDXExpr,"REQUIRED: Valid MDX Expression"
@@ -56,11 +60,12 @@ pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 581,0
 582,0
 603,0
-572,114
+572,119
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.view.create.bymdx', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '',
     	'pMDXExpr', '',
     	'pTemp', 1
@@ -160,7 +165,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ### Create View ###
@@ -182,7 +191,7 @@ ViewCreatebyMDX ( pCube , pView , sMDXExpr, pTemp ) ;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,25
+575,28
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -197,6 +206,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully created view %pView% in cube %pCube%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

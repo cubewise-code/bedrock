@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"kZgYXnSpZ7SaY1>3]\pcDyhqMJqwOU9\oC@N1hwPc\t?r=3w]2b<z35?cNzwXCK?3kbqDxqe>0]dWeq[gsLZ^IK`m[\jH`rdwb?Isy:CJhA8LCSi1GcVI?Tht7IvYexS:Io8xaX=XuxHN_ewgPjbXi=oekjyzH2kOAQ@vtSWul9?zuod>D98AK8Pg5c_BVPxTT7hK5Xy"
+565,"gh@<6@\aP3;go:Ep7pAq57fsr8WricYs2By>s55_iCseiGcbgv<>n>_tBMD[ZJ^IP_gxA<fUo0GuurDS:mzFzmX;VinSW><elCTp]cM8Mzj13Pdzk6360OEaK\Ob>Aq\8as`rF3y7axF86\6]b^NtgNc9?`asE3@B2rl7kDB4LkFo`7gLY=22l9?AEn[rSRvqO@a6[xC"
 559,1
 928,0
 593,
@@ -25,8 +25,9 @@
 569,0
 592,0
 599,1000
-560,22
+560,25
 pLogOutput
+pStrictErrorHandling
 pCube
 pSrcView
 pTgtView
@@ -47,14 +48,11 @@ pZeroSource
 pTemp
 pCubeLogging
 pSandbox
+pFile
+pSubN
 pThreadMode
-561,22
+561,25
 1
-2
-2
-2
-2
-2
 1
 2
 2
@@ -62,6 +60,12 @@ pThreadMode
 2
 2
 1
+2
+2
+2
+2
+2
+1
 1
 1
 1
@@ -71,8 +75,11 @@ pThreadMode
 1
 2
 1
-590,22
+1
+1
+590,25
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pSrcView,""
 pTgtView,""
@@ -93,16 +100,19 @@ pZeroSource,0
 pTemp,1
 pCubeLogging,0
 pSandbox,""
+pFile,0
+pSubN,0
 pThreadMode,0
-637,22
+637,25
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
 pSrcView,"OPTIONAL: Temporary view name for source"
 pTgtView,"OPTIONAL: Temporary view name for target"
 pFilter,"OPTIONAL: Filter Unmapped Dimensions using format: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget etc"
 pFilterParallel,"OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter"
 pParallelThreads,"Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )"
-pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy:SourceElement->TargetElement & Dim2ToCopy:Source Element->TargetElement etc"
+pEleMapping,"REQUIRED: Map source elements to target elements using format Dim1ToCopy¦SourceElement->TargetElement & Dim2ToCopy¦Source Element->TargetElement etc"
 pMappingDelim,"OPTIONAL: Delimiter between source element and target element in pEleMapping  (default value if blank = '->')"
 pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
@@ -114,8 +124,10 @@ pCumulate,"OPTIONAL: 1 = Add source to existing value in target (if zero out tar
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
 pZeroSource,"OPTIONAL: Zero out Source Element AFTER Copy? (Boolean 1=True)"
 pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"OPTIONAL: Cube Logging (0 = No transaction logging, 1 = Logging of transactions)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
+pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 577,51
 V1
@@ -430,18 +442,19 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,797
+572,901
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.data.copy', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pSrcView', '', 'pTgtView', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pEleMapping', '', 'pMappingDelim', '->',
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
     	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pCumulate', 0,
     	'pZeroTarget', 1, 'pZeroSource', 0,
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', ''
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0, 'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -491,7 +504,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%';   
+cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';   
 cDefaultView    = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 
 ## LogOutput parameters
@@ -509,6 +522,23 @@ cPrefixElementAttributes = '}ElementAttributes_';
 cDimCountMax    = 27;
 sDimCountMax    = NumberToString( cDimCountMax );
 nFactor = If( pFactor = 0, 1, pFactor );
+  
+## check operating system
+If( Scan('/', GetProcessErrorFileDirectory)>0);
+#  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+#  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
+## File location for indirect data copy
+cDir    = '.' | sOSDelim;
+cFileName = pCube | cTimeStamp | cRandomInt | '.csv';
+cFile   = cDir | cFileName;
+cTitleRows = 1;
+cDelimiter = ',';
+cQuote = '"';
 
 # nMappedDimX is a binary switch used to keep track of which dimensions have been mapped from the source to the target
 nMappedDim1 = 0;
@@ -688,7 +718,11 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-    ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 ########## pEleMapping ######################################################
@@ -701,7 +735,6 @@ sDelimDim           = TRIM( pDimDelim );
 sFilter             = TRIM( pFilter);
 sTargetFilter       = '';
 nSuppressConsol     = pSuppressConsol;
-nSubN               = 0;
 nChar               = 1;
 nCharCount          = LONG( sElementMapping );
 
@@ -892,7 +925,11 @@ If( nCharCount > 0 );
           
           ### Check for errors before continuing
           If( nErrors <> 0 );
-            ProcessBreak;
+              If( pStrictErrorHandling = 1 ); 
+                  ProcessQuit; 
+              Else;
+                  ProcessBreak;
+              EndIf;
           EndIf;
 
           If ( DTYPE( sDimension, sElement) @= 'C' );
@@ -900,7 +937,7 @@ If( nCharCount > 0 );
                 If( pSuppressConsol <> 1 );
                   nSuppressConsol = 0;
                 EndIf;
-                nSubN = 1;
+                pSubN = 1;
               Else;
                 sMessage = Expand( 'Target element: %sElement% for dimension %sDimension% is consolidated' );
                 nErrors = nErrors + 1;
@@ -1105,7 +1142,11 @@ END;
 ### Check for errors before continuing
 If( nErrors <> 0 );
   DataSourceType = 'NULL';
-  ProcessBreak;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 # Branch depending on whether to do recursive calls to self on independent threads or run all in this thread
@@ -1145,7 +1186,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
       	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
       	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pCumulate', pCumulate,
-      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
+      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
       );
   	  nThreadElCounter = 0;
   	  sFilter = '';
@@ -1158,7 +1199,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
     	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
     	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pCumulate', pCumulate,
-    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pThreadMode', 1
+    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
     );
   ENDIF;
   DataSourceType = 'NULL';
@@ -1171,6 +1212,7 @@ Else;
     sProc = '}bedrock.cube.data.clear';
     nRet = ExecuteProcess( sProc,
     'pLogOutput', pLogOutput,
+    'pStrictErrorHandling', pStrictErrorHandling,
     'pCube', pCube,
     'pView', cViewTarget,
     'pFilter', sTargetFilter,
@@ -1186,43 +1228,117 @@ Else;
         sMessage = 'Error clearing the target view.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
+        Else;
+            ProcessBreak;
+        EndIf;
     ENDIF;
 
   Endif;
   
-  ### Create View of Source ###
+  If ( pCubeLogging <= 1 );
+    sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
+    CubeSetLogChanges( pCube, pCubeLogging);
+  EndIf;
   
-  nRet = ExecuteProcess('}bedrock.cube.view.create',
-    'pLogOutput', pLogOutput,
-    'pCube', pCube,
-    'pView', cViewSource,
-    'pFilter', sFilter,
-    'pSuppressZero', 1,
-    'pSuppressConsol', nSuppressConsol,
-    'pSuppressRules', pSuppressRules,
-    'pDimDelim', pDimDelim,
-    'pEleStartDelim', pEleStartDelim,
-    'pEleDelim', pEleDelim ,
-    'pTemp', pTemp,
-    'pSubN', nSubN
-    );
+  If( pFile = 0 );
+  
+    ### Create View of Source ###
     
-  IF(nRet <> 0);
-        sMessage = 'Error creating the view from the filter.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessBreak;
-  ENDIF;
+    nRet = ExecuteProcess('}bedrock.cube.view.create',
+      'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
+      'pCube', pCube,
+      'pView', cViewSource,
+      'pFilter', sFilter,
+      'pSuppressZero', 1,
+      'pSuppressConsol', nSuppressConsol,
+      'pSuppressRules', pSuppressRules,
+      'pDimDelim', pDimDelim,
+      'pEleStartDelim', pEleStartDelim,
+      'pEleDelim', pEleDelim ,
+      'pTemp', pTemp,
+      'pSubN', pSubN
+      );
+      
+    IF(nRet <> 0);
+          sMessage = 'Error creating the view from the filter.';
+          nErrors = nErrors + 1;
+          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
+    ENDIF;
+    
   
-  sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
-  CubeSetLogChanges( pCube, pCubeLogging);
-  ### Assign Datasource ###
-  DataSourceType          = 'VIEW';
-  DatasourceNameForServer = pCube;
-  DatasourceNameForClient = pCube;
-  DatasourceCubeView      = cViewSource;
-  nThreadMode = 1;
+    ### Assign Datasource ###
+    DataSourceType          = 'VIEW';
+    DatasourceNameForServer = pCube;
+    DatasourceNameForClient = pCube;
+    DatasourceCubeView      = cViewSource;
+    nThreadMode = 1;
+  Else;
+    ### Export Data to file ###
+    
+    nRet = ExecuteProcess('}bedrock.cube.data.export',
+       'pLogoutput', pLogOutput,
+       'pStrictErrorHandling', pStrictErrorHandling,
+       'pCube', pCube,
+       'pView', cViewSource,
+       'pFilter', sFilter,
+       'pFilterParallel', '',
+       'pParallelThreads', 0,
+       'pDimDelim', pDimDelim,
+       'pEleStartDelim', pEleStartDelim,
+       'pEleDelim', pEleDelim,
+       'pSuppressZero', 1,
+       'pSuppressConsol', nSuppressConsol,
+       'pSuppressRules', pSuppressRules,
+       'pZeroSource', 0,
+       'pCubeLogging', pCubeLogging,
+       'pTemp', pTemp,
+       'pFilePath', cDir,
+       'pFileName', cFileName,
+       'pDelim', cDelimiter,
+       'pQuote', cQuote,
+       'pTitleRecord', cTitleRows,
+       'pSandbox', pSandbox
+      );
+      
+    IF(nRet <> 0);
+          sMessage = 'Error exporting data to file.';
+          nErrors = nErrors + 1;
+          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
+          Else;
+              ProcessBreak;
+          EndIf;
+    ENDIF;
+    
+    If(FileExists(cFile) = 0);
+      # If the file does not exist, it means that nothing got exported, so there is nothing to import
+      If( pLogoutput = 1 );
+        LogOutput('INFO', Expand( 'Process:%cThisProcName% is skipping import as export file %cFile% was not found.' ) );     
+      EndIf;
+      DataSourceType = 'NULL';
+    Else;
+      ### Assign Datasource ###
+      DataSourceType                  = 'CHARACTERDELIMITED';
+      DatasourceNameForServer         = cFile;
+      DatasourceNameForClient         = cFile;
+      DatasourceASCIIHeaderRecords    = cTitleRows;
+      DatasourceASCIIDelimiter        = cDelimiter;
+      DatasourceASCIIQuoteCharacter   = cQuote;
+    EndIf;
+    
+    nThreadMode = 1;
+  
+  EndIf;
+
 EndIf;
 
 ### End Prolog ###
@@ -1233,7 +1349,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,447
+574,457
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1243,6 +1359,11 @@ EndIf;
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
+If( pFile > 0 );
+  v0 = v1; v1 = v2; v2 = v3;  v3 = v4; v4 = v5; v5 = v6; v6 = v7; v7 = v8; v8 = v9; v9 = v10; v10 = v11; v11 = v12; v12 = v13; v13 = v14; v14 = v15; 
+  v15 = v16; v16 = v17; v17 = v18; v18 = v19; v19 = v20; v20 = v21; v21 = v22; v22 = v23; v23 = v24; v24 = v25; v25 = v26; v26 = v27; v27 = v28;  v28 = v29;
+EndIf;
+  
 v1 = IF(nMappedDim1 = 1, IF(v1 @= sSourceDim1 % elisanc(sDim1,sSourceDim1,v1)=1, sTargetDim1, v1), v1);
 v2 = IF(nMappedDim2 = 1, IF(v2 @= sSourceDim2 % elisanc(sDim2,sSourceDim2,v2)=1, sTargetDim2, v2), v2);
 v3 = IF(nMappedDim3 = 1, IF(v3 @= sSourceDim3 % elisanc(sDim3,sSourceDim3,v3)=1, sTargetDim3, v3), v3);
@@ -1283,10 +1404,15 @@ v27 = IF(nMappedDim27 = 1, IF(v27 @= sSourceDim27 % elisanc(sDim27,sSourceDim27,
 If( nDimensionCount = 2 );
     If( CellIsUpdateable( pCube, v1, v2 ) = 1 );
         sElType = DType( sDim2, v2 );
-        IF( sElType @= 'AS' % sElType @= 'AA');
-            CellPutS( v3, pCube, v1, v2 );
+        IF( SubSt( pCube, 1, 17 ) @= '}ElementSecurity_');
+            v3 = IF( v3 @= '', 'NONE', v3 );
+            ElementSecurityPut( v3, sDim1, v1, v2 );
+        ELSEIF( sElType @= 'AA' );
+            AttrPutS( v3, sDim1, v1, v2, 1 );
+        ELSEIF( sElType @= 'AS' );
+            AttrPutS( v3, sDim1, v1, v2 );
         ELSEIF( sElType @= 'AN' );
-            CellPutN( Numbr( v3) * nFactor, pCube, v1, v2 );
+            AttrPutN( Numbr( v3) * nFactor, sDim1, v1, v2 );
         ElseIf( sElType @= 'S' );
             CellPutS( v3, pCube, v1, v2 );
         Else;
@@ -1681,7 +1807,7 @@ ElseIf( nDimensionCount = 27 );
 
 
 ### End Data ###
-575,53
+575,62
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1691,33 +1817,39 @@ ElseIf( nDimensionCount = 27 );
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 ################################################################################################# 
 
-If( nThreadMode <> 0 );
-  # Zero out source cube #    
-  IF( pZeroSource = 1 & nErrors = 0 );
+# Zero out source cube #    
+IF( pZeroSource = 1 & nErrors = 0 );
     sProc = '}bedrock.cube.data.clear';
     nRet = ExecuteProcess( sProc,
-    'pLogOutput', pLogOutput,
-    'pCube', pCube,
-    'pView', cViewSource,
-    'pFilter', sFilter,
-    'pDimDelim', pDimDelim,
-    'pEleStartDelim', pEleStartDelim,
-    'pEleDelim', pEleDelim,
-    'pTemp', pTemp,
-    'pCubeLogging', pCubeLogging,
-    'pSandbox', pSandbox
+        'pLogOutput', pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
+        'pCube', pCube,
+        'pView', cViewSource,
+        'pFilter', sFilter,
+        'pDimDelim', pDimDelim,
+        'pEleStartDelim', pEleStartDelim,
+        'pEleDelim', pEleDelim,
+        'pTemp', pTemp,
+        'pCubeLogging', pCubeLogging,
+        'pSandbox', pSandbox
     );
-  EndIf;
+    If(nRet <> 0);
+        sMessage = 'Error clearing the source view.';
+        nErrors = nErrors + 1;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ProcessError();
+    EndIf;
+EndIf;
 
-  IF(nRet <> 0);
-      sMessage = 'Error clearing the source view.';
-      nErrors = nErrors + 1;
-      LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-      ProcessError();
-  ENDIF;
 
-Else;
-  CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+If( pCubeLogging <= 1 );
+    CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+EndIf;
+
+### Delete export file if used
+If( pFile = 1 );
+  TM1RunCmd = 'CMD.EXE /C "DEL "' | cFile | '" "';
+  EXECUTECOMMAND ( TM1RunCmd , 0 );
 EndIf;
 
 ### Return code & final error message handling
@@ -1726,6 +1858,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully copied data from %pSrcView% view to the %pTgtView% view in the %pCube% cube.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

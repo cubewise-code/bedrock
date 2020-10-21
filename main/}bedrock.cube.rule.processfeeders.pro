@@ -4,7 +4,7 @@
 586,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 585,"C:\TM1Data\Bedrock3\Data\Excel.RUX"
 564,
-565,"r@DZxop]<T0aq?^PLByMSSOHzo2wGoU\3<9;If8BIfYOMYBeIYP?IafCOAmg3Xb=luZFjxfKn4@dYmwhYNI5Lbcrx;1sLiYY5H`<}T;[1lBVFVG/kECxaiRHS\][kkjZ@XajK=6yQUXMM_3p2DG6MT1S1tG=2jZzNcCgpIk\5F=:JJ:d62A:3J}wT<0?@hO(;7_4nr2]"
+565,"iz13ydO3pyNWPxv;_ZDRUHNTdGmz=bnSCs8wD[SQouyR>TbW4@>Mfu>4nKmG>fk]idlFzBx3V]Jd`kG?5Ncaw\0<`W6CO0JtwGA==1;Q[LnvggL/{Csa9f`RMzyLg[8`MRam[xNgATuF]cYz2cH:=PM4Mhf6qml[K?DwW7kl;Z2VGJjZfVw?FA}ZEnoQRgO$KQzB9@9F"
 559,1
 928,0
 593,
@@ -25,20 +25,24 @@
 569,0
 592,0
 599,1000
-560,3
+560,4
 pLogOutput
+pStrictErrorHandling
 pCube
 pDelim
-561,3
+561,4
+1
 1
 2
 2
-590,3
+590,4
 pLogOutput,0
+pStrictErrorHandling,0
 pCube,""
 pDelim,"&"
-637,3
+637,4
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Process feeders for this cube (Separated by Delimiter, Accepts Wild card)"
 pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 577,0
@@ -48,11 +52,12 @@ pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 581,0
 582,0
 603,0
-572,127
+572,133
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.rule.processfeeders', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pCube', '', 'pDelim', '&'
     );
 EndIf;
@@ -112,6 +117,11 @@ If( Trim( pCube ) @= '' );
   sMessage = 'No cubes specified';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
+  Else;
+      ProcessBreak;
+  EndIf;
 EndIf;
 
 
@@ -186,7 +196,7 @@ End;
 #****End: Generated Statements****
 
 
-575,21
+575,24
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -197,6 +207,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully processed feeders for cube %pCube% .' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

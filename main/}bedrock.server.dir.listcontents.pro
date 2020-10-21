@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"m0`fSxh\=_^38aHQbgp7GMCLRs6GYG5]R\k3ep\Qo7Rea2GqORmQkxxpdfke63>fOO5?;QL[Z:2V[o22a9fMnfiPl[ef_Pz=ffWWpAucz:iS[cOpG`8iP^_Pp7sy?R2ePjG<]t6nX7Sq7Vqf48n0`7ogR5@1sqGMvnxi0@JI=7=XB5ZXAySsV6FB1>QGCCUMVHD]Zh:f"
+565,"xIdxky[`g@bp3hkfxH:i?6sSadU=Qmu?nxPtms0L^Z4TSp3Ik^Q<=3hAo`p]9[<t6c]80nw^BM0pJMFq[nn6w>0M[;_ruRRBUW4AKK6cy_Tu:M3kmNkKPcIqgPFu2H8p=3u7QHz8cb[vYy4iTESY^x>zCZ`H\:eLHtxVui\:bn[VhflKNZT>nc\jO@8N051UlCl^vSXP"
 559,1
 928,0
 593,
@@ -25,17 +25,21 @@
 569,0
 592,0
 599,1000
-560,2
+560,3
 pLogOutput
+pStrictErrorHandling
 pSrcDir
-561,2
+561,3
+1
 1
 2
-590,2
+590,3
 pLogOutput,0
+pStrictErrorHandling,0
 pSrcDir,""
-637,2
+637,3
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
+pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDir,"OPTIONAL: Data Directory (Leave Blank to use TM1 Settings)"
 577,0
 578,0
@@ -44,11 +48,12 @@ pSrcDir,"OPTIONAL: Data Directory (Leave Blank to use TM1 Settings)"
 581,0
 582,0
 603,0
-572,115
+572,116
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.dir.listcontents', 'pLogOutput', pLogOutput,
+      'pStrictErrorHandling', pStrictErrorHandling,
 	    'pSrcDir', ''
 	);
 EndIf;
@@ -170,7 +175,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,44
+575,47
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -205,6 +210,9 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
+    EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully listed contents from %pSrcDir% .' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );

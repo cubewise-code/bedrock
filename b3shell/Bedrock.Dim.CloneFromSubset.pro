@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"k6b1yVf<iB9a5O`r>GVJyURb5gncnI0G?G[QcO4[7Bp2QV;4zy>au1XRMNnx7h8jM\@r]djg6E]vRN<v]gx=JEU8Wna@ptkRF\Ps[j;?J@rZiy\GK:hWfAd5XCdZAyfqIl`O]TLc[JPnc;kSD8;=7lN9pIVxr?0q@>t`3p?ge=;WPmIZmj[LZ[Ku:]RVLwp?cSGG1UZZ"
+565,"okVsw8]KfRz_bKwa[RjvlIcq\B9Q@sUmgRRbvRNO8NMQ>ZO;>jQGm2Iz\n]hVJY?O3iI_e3bS?avQ;K]SvVaDRGaP@zQL@tqUIvxm944\MU\AU7ExZ3oRRpXg`sV8iF1W0UCPKo5rR_Go;McgWPed@vAQx\0wG3ID4:BFkWQ?Twd<9]=5E3R^RXNvg[]04iuyWzrbr2X"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,
+589,"."
 568,""""
 570,
 571,All
@@ -60,7 +60,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,62
+572,64
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -91,6 +91,7 @@ cAttrVal          = 'Descendant';
 If( pDebug >= 1 );
   nRet = EXECUTEPROCESS('}bedrock.hier.create.fromsubset',
   'pLogOutput', 1,
+  'pStrictErrorHandling',1,
   'pSrcDim', pSourceDim,
   'pSrcHier', '',
   'pSubset', pSubset,
@@ -103,6 +104,7 @@ If( pDebug >= 1 );
 Else;
   nRet = EXECUTEPROCESS('}bedrock.hier.create.fromsubset',
   'pLogOutput', 0,
+  'pStrictErrorHandling',1,
   'pSrcDim', pSourceDim,
   'pSrcHier', '',
   'pSubset', pSubset,
