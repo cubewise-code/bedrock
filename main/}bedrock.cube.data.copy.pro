@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.copy"
 562,"VIEW"
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"gh@<6@\aP3;go:Ep7pAq57fsr8WricYs2By>s55_iCseiGcbgv<>n>_tBMD[ZJ^IP_gxA<fUo0GuurDS:mzFzmX;VinSW><elCTp]cM8Mzj13Pdzk6360OEaK\Ob>Aq\8as`rF3y7axF86\6]b^NtgNc9?`asE3@B2rl7kDB4LkFo`7gLY=22l9?AEn[rSRvqO@a6[xC"
+565,"qT<RB=Mu[>la4Wou>yjB3xfy`K[Jp3J8aC4e[zG_I2qRG`y:`[A<=f8`\4Fq9uO;FXD4Q^yQ]iiAPwSYj4`2KmN@n5~JIwmDPn8<]M__FM>V\IqWH9YEiQy1Xh1aFMzRB@;U79^IILAvfLpUt57:=p>NDE_kMAEnpt4hKKj8AY3EH:^52ixJ=E]E5xvgbr@bBfL0;g1u"
 559,1
 928,0
 593,
@@ -1152,7 +1152,7 @@ EndIf;
 # Branch depending on whether to do recursive calls to self on independent threads or run all in this thread
 If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
   sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
-  sElementList = SubSt( pFilterParallel, Scan( pEleStartDelim, pFilterParallel ) + 1, Long( pFilterParallel ) );
+  sElementList = SubSt( pFilterParallel, Scan( pEleStartDelim, pFilterParallel ) + Long( pEleStartDelim ), Long( pFilterParallel ) );
   If( SubSt( sElementList, Long( sElementList ), 1 ) @<> pEleDelim );
       sElementList = sElementList | pEleDelim;
   EndIf;
@@ -1161,7 +1161,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
   nElements = 0;
   While( Scan( pEleDelim, sElementListCount ) > 0 );
     nElements = nElements + 1;
-    sElementListCount = SubSt( sElementListCount, Scan( pEleDelim, sElementListCount ) + 1, Long( sElementListCount ) );
+    sElementListCount = SubSt( sElementListCount, Scan( pEleDelim, sElementListCount ) + Long( pEleDelim ), Long( sElementListCount ) );
   End;
   IF( Mod( nElements, nMaxThreads ) = 0 );
     nElemsPerThread = INT( nElements / nMaxThreads );
@@ -1171,7 +1171,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
   nThreadElCounter = 0;
   While( Scan( pEleDelim, sElementList ) > 0 );
     sSlicerEle = SubSt( sElementList, 1, Scan( pEleDelim, sElementList ) - 1 );
-    sElementList = SubSt( sElementList, Scan( pEleDelim, sElementList ) + 1, Long( sElementList ) );
+    sElementList = SubSt( sElementList, Scan( pEleDelim, sElementList ) + Long( pEleDelim ), Long( sElementList ) );
     # Do recursive process call with new RunProcess function
     nThreadElCounter = nThreadElCounter + 1;
     sDimDelim = If(pFilter @= '', '', pDimDelim );
