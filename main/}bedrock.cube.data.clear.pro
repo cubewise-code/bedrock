@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"n:jdhzE<jnKA4Qa^`><0>X8B><xNpcr@rp<:<xRqbgV4tMeaG@EtOllVj@YQhG0@BW5p7i36VkGBAu<uhh3OIKfb=DXAQtpd5OWpyZEa=9BmcZ2lNwP3o0m_]kQY3Sd?Yqm?r6p>rK@SF\h=cOsF0>aXfW2?obi[NLYl4ptpNoJOl?LLQOSDI:FqOi[iOZ?7EPsEPK>k"
+565,"psyCnunMK]dK9]Maat^j>TGcpDl]r@UMdw6Jrd2k>;NEIREfz:D8i?xHHXVM;PMGves:0H:yznu2j@G@SLFC?t9NJH?WhdHP6bRC<;WXkA[6p7Ld^vdPsbWp58kkAZYhNCbvNgI2a0Y7^@d<[j^;HWzi7];OZkqRomZiZ2=KB[VJ:I]jZs]_Z6uqMYF2BRmKqmlno[b2"
 559,1
 928,0
 593,
@@ -92,7 +92,7 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,523
+572,525
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -373,6 +373,7 @@ While( nCubeDelimiterIndex <> 0 );
                     'pSuppressZero', 1,
                     'pSuppressConsol',1,
                     'pSuppressRules',1,
+                    'pSuppressConsolStrings',0,
                     'pDimDelim', pDimDelim,
                     'pEleStartDelim', pEleStartDelim,
                     'pEleDelim', pEleDelim,
@@ -550,6 +551,7 @@ While( nCubeDelimiterIndex <> 0 );
                   'pSuppressZero', 1,
                   'pSuppressConsol',1,
                   'pSuppressRules',1,
+                  'pSuppressConsolStrings',0,
                   'pDimDelim', pDimDelim,
                   'pEleStartDelim', pEleStartDelim,
                   'pEleDelim', pEleDelim,
