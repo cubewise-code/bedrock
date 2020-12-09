@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"i>wrx[O0uawW9xMDvyqcf6k?\zQnM@^AvxXAsfmlNpOPijTUT2hi7]1zpEBgapY[Xc;`dI1v?dS0<BjkvdE2R[9SWu:1T=h`uDD6q1LM__:wkP2\VTjlzLbOoQ?_uZ6haHXAm>C>qh6l`2`TOJSSmelaMbJU?2DGtbdqbN078STOZofYj@U=SlZEbF2lp5tMI?B4V8z?"
+565,"xMXN??k3:\ftw0SF_=1gDmy7a?wlaSQ17wMrw\ZSs2W5Rj@x`9=AEELoiLXLltZ7bPU<:YZ8TZBbYG1QOXgPyasl;EvwraK3iinH;Kcs7Xp<w6KvI5S^ErC0^W<xIffTtUS>fdbPEppWds2ba6axq1?45BH[SA>HxhYZsPjLp?TeajX8c8h8>I1\Z69`>4=6mDGvBrT^"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,22
+560,24
 pLogOutput
 pStrictErrorHandling
 pSrcCube
@@ -35,7 +35,9 @@ pParallelThreads
 pTgtCube
 pMappingToNewDims
 pSuppressConsol
+pSuppressConsolStrings
 pSuppressRules
+pSuppressZero
 pZeroTarget
 pZeroSource
 pFactor
@@ -48,7 +50,7 @@ pSandbox
 pFile
 pSubN
 pThreadMode
-561,22
+561,24
 1
 1
 2
@@ -62,16 +64,18 @@ pThreadMode
 1
 1
 1
-2
-2
-2
 1
 1
 2
+2
+2
+1
+1
+2
 1
 1
 1
-590,22
+590,24
 pLogOutput,0
 pStrictErrorHandling,0
 pSrcCube,""
@@ -81,7 +85,9 @@ pParallelThreads,0
 pTgtCube,""
 pMappingToNewDims,""
 pSuppressConsol,1
+pSuppressConsolStrings,0
 pSuppressRules,1
+pSuppressZero,1
 pZeroTarget,1
 pZeroSource,0
 pFactor,1
@@ -94,7 +100,7 @@ pSandbox,""
 pFile,0
 pSubN,0
 pThreadMode,0
-637,22
+637,24
 pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
@@ -104,7 +110,9 @@ pParallelThreads,"Maximum number of threads to run when parallel processing is e
 pTgtCube,"REQUIRED: Name of cube to copy the values to"
 pMappingToNewDims,"REQUIRED IF TARGET HAS DIMS NOT IN SOURCE: DimX¦InputElementForDimX & DimY¦InputElementForDimY (specify an N level element for each new dim)"
 pSuppressConsol,"OPTIONAL: Suppress Consolidations (Skip = 1) Only use 0 for strings"
+pSuppressConsolStrings,"OPTIONAL: Suppress Consolidated String Cells (Skip = 1)"
 pSuppressRules,"OPTIONAL: Suppress Rules (Skip = 1)"
+pSuppressZero,"OPTIONAL: Suppress Null Cells (Skip = 1)"
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True) Clears combination of pFilter and pMappingToNewDims"
 pZeroSource,"OPTIONAL: Zero out Source Element AFTER Copy? (Boolean 1=True). If pFilter is blank the whole source cube is cleared!"
 pFactor,"OPTIONAL: Multiply source value by factor (1 keeps the value as is). To modify existing values make the target element the same as the source with pZeroTarget = 0"
@@ -298,7 +306,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1384
+572,1387
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -307,7 +315,7 @@ If( 1 = 0 );
     	'pSrcCube', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pTgtCube', '', 'pMappingToNewDims', '',
-    	'pSuppressConsol', 1, 'pSuppressRules', 1,
+    	'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 
     	'pZeroTarget', 1, 'pZeroSource', 0,
     	'pFactor', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
@@ -374,7 +382,7 @@ cTimeStamp          = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcCube:%pSrcCube%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pTgtCube:%pTgtCube%, pMappingToNewDims:%pMappingToNewDims%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pFactor:%pFactor%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%, pThreadMode:%pThreadMode%.'; 
+cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcCube:%pSrcCube%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pTgtCube:%pTgtCube%, pMappingToNewDims:%pMappingToNewDims%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pFactor:%pFactor%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%, pThreadMode:%pThreadMode%.'; 
 
 sDelimDim           = TRIM(pDimDelim);
 sElementStartDelim  = TRIM(pElEStartDelim);
@@ -1504,7 +1512,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       IF( nThreadElCounter >= nElemsPerThread );
         RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
         	'pSrcCube', pSrcCube, 'pFilter', sFilter, 'pFilterParallel', '', 'pTgtCube', pTgtCube, 'pMappingToNewDims', pMappingToNewDims,
-        	'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
+        	'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
           'pFactor', pFactor, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
           'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
         );
@@ -1516,7 +1524,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
   IF( sFilter @<> '' );
     RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
     	'pSrcCube', pSrcCube, 'pFilter', sFilter, 'pFilterParallel', '', 'pTgtCube', pTgtCube, 'pMappingToNewDims', pMappingToNewDims,
-    	'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
+    	'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource,
       'pFactor', pFactor, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
       'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
     );
@@ -1533,9 +1541,10 @@ Else;
           'pCube', pTgtCube,
           'pView', sTargetView ,
           'pFilter', sTargetFilter,
-          'pSuppressZero', 1,
+          'pSuppressZero', pSuppressZero,
           'pSuppressConsol', pSuppressConsol,
           'pSuppressRules', pSuppressRules,
+          'pSuppressConsolStrings', pSuppressConsolStrings, 
           'pDimDelim', pDimDelim,
           'pEleStartDelim', pEleStartDelim,
           'pEleDelim', pEleDelim ,
@@ -1594,9 +1603,10 @@ Else;
       'pCube', pSrcCube,
       'pView', sView,
       'pFilter', pFilter,
-      'pSuppressZero', 1,
+      'pSuppressZero', pSuppressZero,
       'pSuppressConsol', pSuppressConsol,
       'pSuppressRules', pSuppressRules,
+      'pSuppressConsolStrings', pSuppressConsolStrings, 
       'pDimDelim', pDimDelim,
       'pEleStartDelim', pEleStartDelim,
       'pEleDelim', pEleDelim ,
@@ -1634,9 +1644,10 @@ Else;
        'pDimDelim', pDimDelim,
        'pEleStartDelim', pEleStartDelim,
        'pEleDelim', pEleDelim,
-       'pSuppressZero', 1,
+       'pSuppressZero', pSuppressZero,
        'pSuppressConsol', pSuppressConsol,
        'pSuppressRules', pSuppressRules,
+       'pSuppressConsolStrings', pSuppressConsolStrings, 
        'pZeroSource', 0,
        'pCubeLogging', pCubeLogging,
        'pTemp', pTemp,
