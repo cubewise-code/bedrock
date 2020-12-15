@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.server.dir.backup"
 562,"NULL"
 586,
 585,
 564,
-565,"qzZERad=e^MvL`8jjaIphw2wgVSYDUyl_ka@b>9Y1Mn[UOSL\<Yu:kG1LoA3LeEjH=_V6RBL47Xi3T?xlqSP1FqjMau2n8r3PW0KLZ:zfQ\I2axDaG[lS@gw3PDK@u`xO<5v[ZF8sMQN8B6El[RZo;mqAV9@<pFU\[uovHeqEsSbPC4QGuEN3HEq9:eUDjZo3JckwGKD"
+565,"d>26at:HafhTuJa>juwF=Az;2v2R3V@irXW^wwlc^WbVrq88VYqC<kFPhMxiYE?7UTn]kJQM4GqW\bXE^o`ff;YM^dq4MU_Jywl@CYXXG:GJYl2@o=C@kwgeXPB:J:?T]m85KrT5;1lX5LHj0ju2UnEO=3^D@_oD0I?YY\H;rfA;N9O:ATb\K31\RhL6ef0\IQY;3rv2"
 559,1
 928,0
 593,
@@ -25,26 +25,38 @@
 569,0
 592,0
 599,1000
-560,4
+560,7
 pLogOutput
 pStrictErrorHandling
 pSrcDir
 pTgtDir
-561,4
+pExcludeFilter
+pDelim
+pSubDirCopy
+561,7
 1
 1
 2
 2
-590,4
+2
+2
+1
+590,7
 pLogOutput,0
 pStrictErrorHandling,0
 pSrcDir,"."
 pTgtDir,""
-637,4
+pExcludeFilter,".log & .cfg & .csv & .cmal & .txt & .feeders"
+pDelim,"&"
+pSubDirCopy,1
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDir,"REQUIRED: Source Directory to Backup"
 pTgtDir,"REQUIRED: Destination Directory for Backup"
+pExcludeFilter,"OPTIONAL: Exclude filter (To include all files use pFilterExclude = """")"
+pDelim,"OPTIONAL: Delimiter"
+pSubDirCopy,"OPTIONAL: Include subdirectories? (Boolean True = 1), WIN only"
 577,0
 578,0
 579,0
@@ -52,13 +64,13 @@ pTgtDir,"REQUIRED: Destination Directory for Backup"
 581,0
 582,0
 603,0
-572,143
+572,169
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.dir.backup', 'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
-    	'pSrcDir', '.', 'pTgtDir', ''
+    	'pSrcDir', '.', 'pTgtDir', '','pExcludeFilter', '.cub & .dim', 'pDelim', pDelim, 'pSubDirCopy ', 1
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -94,7 +106,7 @@ cTimeStamp          = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% Message:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pTgtDir:%pTgtDir%.' ;  
+cLogInfo            = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pTgtDir:%pTgtDir%, pExcludeFilter:%pExcludeFilter%.' ;  
 #cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
 
 ## LogOutput parameters
@@ -160,7 +172,9 @@ EndIf;
 ### Save the model to disk
 ExecuteProcess( '}Bedrock.Server.SaveDataAll', 'pStrictErrorHandling', pStrictErrorHandling );
 sMessage = 'TM1 Save Data All Complete.';
-LogOutput('INFO', sMessage ); 
+If( pLogoutput = 1 );
+	LogOutput('INFO', sMessage ); 
+EndIf;
 
 ### Create batch files
 DatasourceASCIIQuoteCharacter='';
@@ -173,41 +187,58 @@ If(sOS @= 'Windows');
 EndIf;
 
 ### Create Exclude File ###
-sFileName = 'Excludes.txt';
-ASCIIOUTPUT( sFileName, '.log');
-ASCIIOUTPUT( sFileName, '.cfg');
-ASCIIOUTPUT( sFileName, '.csv');
-ASCIIOUTPUT( sFileName, '.cmal');
-ASCIIOUTPUT( sFileName, '.txt');
-ASCIIOUTPUT( sFileName, '.feeders');
+sFileNameExclude = 'Excludes' | cTimeStamp | cRandomInt| '.txt';
+pExcludeFilter = TRIM(pExcludeFilter);
+
+# parse pExcludeFilter to get file extensions
+If(pExcludeFilter @<> '' & SCAN(pDelim, pExcludeFilter) > 0);
+	While(LONG(pExcludeFilter) > 0);
+    	If(SCAN(pDelim, pExcludeFilter) > 0);
+    		sExcludePart = TRIM(SUBST(pExcludeFilter, 1, SCAN(pDelim, pExcludeFilter) - 1));
+            pExcludeFilter = TRIM(DELET(pExcludeFilter, 1,SCAN(pDelim, pExcludeFilter) + LONG(pDelim) - 1));
+        Else;
+    		sExcludePart = pExcludeFilter;
+            pExcludeFilter = '';
+        EndIf;
+    	ASCIIOUTPUT( sFileNameExclude, sExcludePart);
+    End;
+Else;
+	# output single exclusion
+	ASCIIOUTPUT( sFileNameExclude, pExcludeFilter);
+EndIf;
 
 ### Create Batch File ###
 sFileName = 'Bedrock.Server.DataDir.Backup.bat';
 If(sOS @= 'Windows');
-  sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c /s /e /y /exclude:Excludes.txt';
+  If(pSubDirCopy = 1);
+  	cSubDirCopy = '/s /e';
+  Else;
+  	cSubDirCopy = '';
+  EndIf;
+  sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c ' | cSubDirCopy | ' /y /exclude:' | sFileNameExclude;
   ASCIIOUTPUT( sFileName, '@ECHO OFF');
   ASCIIOUTPUT( sFileName, sText );
 Else;
-  sText = 'rsync -rt --exclude-from=excludes.txt "' | pSrcDir | '" "' | sBackupDir |'"';
+  If(pSubDirCopy = 1);
+  	cSubDirCopy = 'r';
+  Else;
+  	cSubDirCopy = '';
+  EndIf;
+  sText = 'rsync -' | cSubDirCopy | 't --exclude-from=' | sFileNameExclude | ' "' | pSrcDir | '" "' | sBackupDir |'"';
 EndIf;
 
 
 sMessage = 'Command Line: ' | sText;
-LogOutput('INFO', sMessage ); 
+If( pLogoutput = 1 );
+	LogOutput('INFO', sMessage ); 
+EndIf;
 
 ### End Prolog ###
-573,4
+573,1
 
-#****Begin: Generated Statements***
-#****End: Generated Statements****
+574,1
 
-574,4
-
-#****Begin: Generated Statements***
-#****End: Generated Statements****
-
-575,63
-
+575,64
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -244,11 +275,13 @@ sFileName = 'Bedrock.Server.DataDir.Backup.bat' ;
 ASCIIDelete( LOWER(sFileName) );
 sFileName = 'Bedrock.MkDir.bat';
 ASCIIDelete( LOWER(sFileName) );
-sFileName = 'Excludes.txt';
-ASCIIDelete( LOWER(sFileName) );
+sFileName = sFileNameExclude;
+ASCIIDelete( LOWER(sFileNameExclude) );
 
 sMessage = 'Temporary files deleted.';
-LogOutput('INFO', sMessage ); 
+If( pLogoutput = 1 );
+ 	LogOutput('INFO', sMessage ); 
+EndIf;
 
 ### Return code & final error message handling
 If( nErrors > 0 );
@@ -270,7 +303,7 @@ EndIf;
 
 
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0
+576,_ParameterConstraints=e30=
 930,0
 638,1
 804,0
