@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"d>26at:HafhTuJa>juwF=Az;2v2R3V@irXW^wwlc^WbVrq88VYqC<kFPhMxiYE?7UTn]kJQM4GqW\bXE^o`ff;YM^dq4MU_Jywl@CYXXG:GJYl2@o=C@kwgeXPB:J:?T]m85KrT5;1lX5LHj0ju2UnEO=3^D@_oD0I?YY\H;rfA;N9O:ATb\K31\RhL6ef0\IQY;3rv2"
+565,"ttrEfOn=8?R=AKCwFOWuajI<5GU<e=6=]^pN=bKT=RDWBqZ\pD2RV51\Q>8xT<C1q^:9_rAP]Ie@yIW8G1tyyGCzgCZ9<m\MkbcqSr]uJx514SQLHOFi8jGWlgalD2gxh3T0SyE8H`4`>f<]t=AiX<2W038S<d<Cmwiu6C;8G6Ftz9]1XJHLNhtPm;zZZ:b`sFwqhplv"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
 pStrictErrorHandling
 pSrcDir
@@ -33,7 +33,8 @@ pTgtDir
 pExcludeFilter
 pDelim
 pSubDirCopy
-561,7
+pRobocopy
+561,8
 1
 1
 2
@@ -41,7 +42,8 @@ pSubDirCopy
 2
 2
 1
-590,7
+1
+590,8
 pLogOutput,0
 pStrictErrorHandling,0
 pSrcDir,"."
@@ -49,14 +51,16 @@ pTgtDir,""
 pExcludeFilter,".log & .cfg & .csv & .cmal & .txt & .feeders"
 pDelim,"&"
 pSubDirCopy,1
-637,7
+pRobocopy,0
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDir,"REQUIRED: Source Directory to Backup"
 pTgtDir,"REQUIRED: Destination Directory for Backup"
 pExcludeFilter,"OPTIONAL: Exclude filter (To include all files use pFilterExclude = """")"
 pDelim,"OPTIONAL: Delimiter"
-pSubDirCopy,"OPTIONAL: Include subdirectories? (Boolean True = 1), WIN only"
+pSubDirCopy,"OPTIONAL: Include subdirectories? (Boolean True = 1)"
+pRobocopy,"OPTIONAL: Use robocopy? (Boolean True = 1), WIN only"
 577,0
 578,0
 579,0
@@ -64,13 +68,13 @@ pSubDirCopy,"OPTIONAL: Include subdirectories? (Boolean True = 1), WIN only"
 581,0
 582,0
 603,0
-572,169
+572,183
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.server.dir.backup', 'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
-    	'pSrcDir', '.', 'pTgtDir', '','pExcludeFilter', '.cub & .dim', 'pDelim', pDelim, 'pSubDirCopy ', 1
+    	'pSrcDir', '.', 'pTgtDir', '','pExcludeFilter', '.cub & .dim', 'pDelim', '&', 'pSubDirCopy ', 1, 'pRobocopy ', 1
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -106,8 +110,7 @@ cTimeStamp          = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% Message:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pTgtDir:%pTgtDir%, pExcludeFilter:%pExcludeFilter%.' ;  
-#cDebugFile = GetProcessErrorFileDirectory | cProcess | '.' | cTimeStamp | '.' | sRandomInt ;
+cLogInfo            = 'Process:%cThisProcName% run with parameters pSrcDir:%pSrcDir%, pTgtDir:%pTgtDir%, pExcludeFilter:%pExcludeFilter%, pDelim:%pDelim%, pSubDirCopy:%pSubDirCopy%, pRobocopy:%pRobocopy%.' ;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -187,24 +190,35 @@ If(sOS @= 'Windows');
 EndIf;
 
 ### Create Exclude File ###
-sFileNameExclude = 'Excludes' | cTimeStamp | cRandomInt| '.txt';
+If(pRobocopy = 1);
+	# robocopy uses different file format with rcj file and * wildcard character
+	sFileNameExclude =  pSrcDir | sOSDelim | 'Excludes' | cTimeStamp | cRandomInt| '.rcj';
+    ASCIIOUTPUT( sFileNameExclude, '/xf');
+    sExcludeWCPrefix = '*';
+Else;
+	sFileNameExclude =  'Excludes' | cTimeStamp | cRandomInt| '.txt';
+    sExcludeWCPrefix = '';
+EndIf;
 pExcludeFilter = TRIM(pExcludeFilter);
 
-# parse pExcludeFilter to get file extensions
-If(pExcludeFilter @<> '' & SCAN(pDelim, pExcludeFilter) > 0);
-	While(LONG(pExcludeFilter) > 0);
-    	If(SCAN(pDelim, pExcludeFilter) > 0);
-    		sExcludePart = TRIM(SUBST(pExcludeFilter, 1, SCAN(pDelim, pExcludeFilter) - 1));
-            pExcludeFilter = TRIM(DELET(pExcludeFilter, 1,SCAN(pDelim, pExcludeFilter) + LONG(pDelim) - 1));
-        Else;
-    		sExcludePart = pExcludeFilter;
-            pExcludeFilter = '';
-        EndIf;
-    	ASCIIOUTPUT( sFileNameExclude, sExcludePart);
-    End;
+If(pExcludeFilter @<> ''); 
+    If( SCAN(pDelim, pExcludeFilter) > 0);
+        # parse multiple exclusions
+        While(LONG(pExcludeFilter) > 0);
+            If(SCAN(pDelim, pExcludeFilter) > 0);
+                sExcludePart = TRIM(SUBST(pExcludeFilter, 1, SCAN(pDelim, pExcludeFilter) - 1));
+                pExcludeFilter = TRIM(DELET(pExcludeFilter, 1,SCAN(pDelim, pExcludeFilter) + LONG(pDelim) - 1));
+            Else;
+                sExcludePart = pExcludeFilter;
+                pExcludeFilter = '';
+            EndIf;
+            ASCIIOUTPUT( sFileNameExclude, sExcludeWCPrefix | sExcludePart);
+        End;
+    Else;
+        ASCIIOUTPUT( sFileNameExclude, sExcludeWCPrefix | pExcludeFilter);
+    EndIf;
 Else;
-	# output single exclusion
-	ASCIIOUTPUT( sFileNameExclude, pExcludeFilter);
+    ASCIIOUTPUT( sFileNameExclude, '');
 EndIf;
 
 ### Create Batch File ###
@@ -215,7 +229,11 @@ If(sOS @= 'Windows');
   Else;
   	cSubDirCopy = '';
   EndIf;
-  sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c ' | cSubDirCopy | ' /y /exclude:' | sFileNameExclude;
+  If(pRobocopy = 1);
+  	sText = 'robocopy "'| pSrcDir |'" "'| sBackupDir | '" '  | cSubDirCopy | ' /job:"'| sFileNameExclude | '"';
+  Else;
+  	sText = 'XCOPY "'| pSrcDir |'" "'| sBackupDir|'" /i /c '| cSubDirCopy |' /y /exclude:'| sFileNameExclude;
+  EndIf;
   ASCIIOUTPUT( sFileName, '@ECHO OFF');
   ASCIIOUTPUT( sFileName, sText );
 Else;
