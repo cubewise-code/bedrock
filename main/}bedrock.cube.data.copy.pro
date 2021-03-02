@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"p8vj<_hjFO[]:pN0y^TM[ds1C:WfYE@1a3cEwburz6y<Ji9CBYu:Csw>R:FqAmMK3JG3Q^a6^cc1Ux317kFuOsUde1rZrKBpQrC9}iJf4zngW4tW8T]XyqWp?xHNJmsQ_K{Q7ot1[yuzf9TQT@M6mOb:HqqI@l4Q<e2898e8C`:NEjrKaADBVH}@Y3a@ds`fBLOU8td6"
+565,"s5HHk]6gAmaNv__U0o[y`5=h9oXGx`j>qesIZS9cUUUOGeYTj:wG<^DSJ<F1l7Ak:Z`6a:8@?Hl1euc5wWxR]26?>bqJmVc@yZW8Mb[HRg<Txc}WH?kM;FiSvb]3C=LB5@[PW2hc74rvFm6^TcC1MZ6mSS1=jnAO:r0XtEbHH:47CjRS:;3=HO];O>icrr0n2^=auRS;"
 559,1
 928,0
 593,
@@ -132,7 +132,7 @@ pCumulate,"OPTIONAL: 1 = Add source to existing value in target (if zero out tar
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
 pZeroSource,"OPTIONAL: Zero out Source Element AFTER Copy? (Boolean 1=True)"
 pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken, parameter does not work with Parrarel thread))"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
@@ -450,7 +450,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,903
+572,910
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -519,6 +519,13 @@ cDefaultView    = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
+
+#Disable logic for pCubeLogic for prararrel thread
+IF (pParallelThreads > 0);
+  pCubeLogging = 2;
+Endif;  
+
+  
 
 # Variables
 nDataCount      = 0;
