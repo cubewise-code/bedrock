@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"wq]Uk?tpJnK0zI=sNP?QaRsacW_V\YKnz2dj=<Ak6afZkl8h5l>uxzeIkBBwsGD1RmjHbWbxs5i3?AU]uYZmx4G5S4NXEetvYasC[M6x4ZpCiXo<OrFldPlY=Ue42b[RHVmCh]I[_?DqJru2fDvy14z5U4c<6[^8pquoC66u^aoegmkuV<J22LbnGaZZ9@VNf_=QPj]5"
+565,"hA`mpdQqaR:pmEbAo^piAEWOVw@7N2Du3BwwUDQcsY]<ksXEE1ahxxh1^CrPLQjhy2DST:sgX5;UJe9P9eOwVl9UuKpXkXyH\ACkwQrgxwq0UqUbmWznfruob:UBT0q2tmhTGa8b[GMl8=m=dQQZxzO^qib6mA?2?;t>EpHstUeym5gqUekvvycGnPWz7IhP\bND:Ets"
 559,1
 928,0
 593,
@@ -711,11 +711,11 @@ WHILE (nChar <= nCharCount);
         # Add the extra characters
         sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
         # Move to the end of the delimter
-        nAddExtra = nCount;
+
       EndIf;
 
       If( sDelim @= sElementStartDelim );
-
+        nAddExtra = nCount;
         sChar = sDelim;
 
         If( sLastDelim @<> '' & sLastDelim @<> sDelimDim );
