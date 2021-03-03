@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"msuMRYM]F@vc`aLjU5Q7Vdg:;uLkw6EeoS1j3vlHh<PL@cxgl`g9p^_yne3dCCApm=jyPbdmKcyOM^3Xzc0XQgfzAayEWKo8`]WN77W0x@5M:R9T`tf3yl8gwfV:G=BVd:lXIIBku0WWgK;NvHU9V1UhrXIc>cfGXP0Hd<zoFX?OBz?5Qxm?<S7V4dhMfYEDEDfFYGO5"
+565,"d[stavWs7VVGSB>SSfCJ9]x;X9`m\msM99fM?Kki0F;SC;W?DzTymT\4\Zm3AzDR^HwkSGHAa8[;biPnU4^1w36k=dn]6tUS>GKln2BLeS]Fy9h=IHIpwzseg23I_TF_euR4a1?NPP?_Bni;]Yvj4XI_[1NSn\6]NIgqVEjxYBpsd?Rjgbhu6lDdo9B^AmX]jEvsF49C"
 559,1
 928,0
 593,
@@ -25,34 +25,38 @@
 569,0
 592,0
 599,1000
-560,6
+560,7
 pLogOutput
 pStrictErrorHandling
 pSrcClient
 pTgtClient
 pMode
 pDelim
-561,6
+pPassword
+561,7
 1
 1
 2
 2
 2
 2
-590,6
+2
+590,7
 pLogOutput,0
 pStrictErrorHandling,0
 pSrcClient,""
 pTgtClient,""
 pMode,"REPLACE"
 pDelim,"&"
-637,6
+pPassword,""
+637,7
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcClient,"REQUIRED: Source Client"
 pTgtClient,"REQUIRED: List of Target Clients Separated by Delimiter"
 pMode,"OPTIONAL: Mode REPLACE or ADD (default = REPLACE)"
 pDelim,"OPTIONAL: Delimiter (Use for a list of target users. Defaults to & if blank.)"
+pPassword,"OPTIONAL: Initial Password"
 577,0
 578,0
 579,0
@@ -201,7 +205,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,63
+575,69
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -225,6 +229,12 @@ While( nDelimiterIndex <> 0 );
         sClients    = Trim( Subst( sClients, nDelimiterIndex + Long(pDelim), Long( sClients ) ) );
     EndIf;
     If( DimIx( '}Clients', sClient ) >= 1 );
+        IF (pPassword @<>'');
+          sPassExists = CellGetS('}ClientProperties', sClient, 'PASSWORD');
+          IF (sPassExists @='');
+            AssignClientPassword( sClient, pPassword );
+          EndIf;  
+        EndIf;
         sClient     = DimensionElementPrincipalName( '}Clients', sClient );
         # loop all security groups
         nGroupIndex = 1;
