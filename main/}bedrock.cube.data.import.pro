@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"bZaH\<FhYEJ[q_6T71fy2]Gi3IOtjqPj56EpSVa:GZs2DzC\0oMYQ>SE2rhi=?r;CDuyxhH9ZEYzWY7AbSx\7a4qNMJJdRl<m@xD2[?yC_B@8O6EKt<u8w<;aNbfJ>Df`NDSCb3Zw?EJ3U]7[394d0`\g4Yi=??<f:Aja<cPDPKFgk@6HaTFl7>hX6zS<Zq;e0S[j@UX"
+565,"wq]Uk?tpJnK0zI=sNP?QaRsacW_V\YKnz2dj=<Ak6afZkl8h5l>uxzeIkBBwsGD1RmjHbWbxs5i3?AU]uYZmx4G5S4NXEetvYasC[M6x4ZpCiXo<OrFldPlY=Ue42b[RHVmCh]I[_?DqJru2fDvy14z5U4c<6[^8pquoC66u^aoegmkuV<J22LbnGaZZ9@VNf_=QPj]5"
 559,1
 928,0
 593,
@@ -296,7 +296,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,927
+572,928
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -801,12 +801,13 @@ WHILE (nChar <= nCharCount);
           # Add the extra characters
           sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
           # Move to the end of the delimter
-          nAddExtra = nCount;
+          
         EndIf;
 
         If( sDelim @= sDelimDim );
           nIsDelimiter = 1;
           sChar = sDelim;
+          nAddExtra = nCount;
         EndIf;
 
         If ( nIsDelimiter = 1 );
