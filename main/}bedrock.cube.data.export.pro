@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"qO5Xa]f2aD@Co0fuAafaFlDL3<1>PbdBASiCL4KVD<nW]=qF:5UcvqGm61ADp6H=IgRJ<Ae40\bKtypsYQSC\ZgJjq`yZ6@OR0eq9i4IIEln>H6\1pS5MlDAfrQSpmrjJE7?G4JM\zRPpGNwz_t9u1RPj6\dPULBYXXOG01?Ury;`MS>XFj]LU@n4HOrTrWQ79\ThQkh"
+565,"k^qhV?f^7M1aZgAzW;ksx\oUM_A50zKnu5zb:4I7B28mbJL_V:=^NaGxi]A@db452mNt?X2cmIvRq7DT:Stg1pY6_etMn0A<qyUJwGhFFPpo5Pu<\u?UMhxD83j2rgeg:Yj[vU?bD:Q^y>Uu0d>[4eCKYCadnF5U[elx[Q;J_Mt<tLMRgquEiM7Hn64BItQ\t1]vVC_2"
 559,1
 928,0
 593,
@@ -935,7 +935,7 @@ Else;
     If ( nValid<>0 );
       pFieldDelim=CHAR(StringToNumber( pFieldDelim ));
     Else;
-      pFieldDelim = SubSt( Trim( pFieldDelim ), 1, 1 );
+#      pFieldDelim = SubSt( Trim( pFieldDelim ), 1, 1 );
     EndIf;
 EndIf;
 If( pQuote @= '' );
