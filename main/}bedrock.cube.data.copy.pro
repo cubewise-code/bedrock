@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"seU:BVp36]^UuSZ0Br?yGMC2TF=7FI2>QwNl21m=w_5AYnY<guWWlNNKW3FAbAIk5;t?QEgJMshasr38Pb0?SiOZP@pZsjsQC>W=MrKTjdID`YzWhCusVu<4414kLMJnHL;ZWaRqITrxv\?U4z_==IPS0Qy^aqtQ0]:HOmahm4hG@j7i>SvZDLmshA7JwqpcR8pLiNoW"
+565,"q]WB0GgQBvAss=uEfyyyVYmjtrDgV\]7q^jIU[iq054Dji98BpJ<ZPuva2Fa5`F{`pj>A<4^Fpo1qSOJlvF>E_V;CJns`w5nz4}O[Q?i9sWLWH^\P:@ruIjR7D=^ReE[\G7tH>O>yfG=R4y_1m[:hP0pt7<TUl_28_;ihCKWtOJBdxBxwbNMRurDp@{@mR2R\hjKV"
 559,1
 928,0
 593,
@@ -132,7 +132,7 @@ pCumulate,"OPTIONAL: 1 = Add source to existing value in target (if zero out tar
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
 pZeroSource,"OPTIONAL: Zero out Source Element AFTER Copy? (Boolean 1=True)"
 pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken, parameter does not work with Parrarel thread))"
+pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken, parameter does not work with Parallel thread))"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
