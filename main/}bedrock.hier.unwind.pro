@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"aag0xaNj2M`@Dh]DYmJ4:Y4r0gxgWq\44uYoQsHGzN^:LkPVVw4r3YeWDf2to>;N>bSszDmx4:AW4NLD7^lQC8>OSP<hHvE[;^IcTXfmgaWJ197cVgCm:DBHY7ud?xU=MFJDAnU\IalCW369^S5G<uAn3<_>AXE8U:5C6XQGcBc5aVj1vkta:f8Rg0c@MN[MSiQ6ODnw"
+565,"wMY\NTmNi34[q0JNJ7B6`b>awZBick>f]wC[PNJnDfUMKdKL[P?<b1;W[rNhuMAqbDdke0eIy:m`:[sCecOdE\adhwbEBCfg3?2hJ@L[OB1[vFqI^ERsHJZ88KdSs^B5<2Un7:e4@\qC^Qe^EZM:tF<h3Fm6qhKZJRGKB<w2O=kt909tczkpnh`NKSSk81^A`rV:;nOw"
 559,1
 928,0
 593,
@@ -205,7 +205,7 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
-IF (DNLEV(pDim) <> 0);
+IF (DNLEV(pDim) > 1);
 
 ### If there is no separator and wildcard in the parameters, execute the unwind of the specific consolidated element
 If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 );
