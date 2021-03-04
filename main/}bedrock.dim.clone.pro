@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"cmCaKjI1Cd>i^>_sXLQkOx]eFmgvMCjf`qElH_KL`T>86:sMK\<F0BckkuyX82XRSw3Y1;LPOm_vpg8<9ZwcKU0HRFcXX\CJOxY=[a]L=6qCVveJf:>PEBe<YkyyiF7`9@d<@9I]vj5]I^G@O;fn3hgxtO>c`I99gk\gP^SG]gs:f6WJ199>DfYBU>anD^rV8BSVVnuA"
+565,"nT4f42xVljepJea91<yObea7UmcTspBuBw1E\a@92>ce1FGnLybD79RF6i_Sw53?g@wU2?1g=MQkW;]^;FrshsnS`n[=f5@GF2tTTAxBztxc?S;Wb4LP=38N@lHIR0d;:Xi1IGlA8tmpRrJ_\sWcS8R<THl@=IOnX6B7@ZUQO1ejyoUG51lngrin>Q@TxJrtQ:V7m6z`"
 559,1
 928,0
 593,
@@ -74,7 +74,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,178
+572,183
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -239,7 +239,12 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
   nCount = 1;
   While( nCount <= nNumAttrs );
     sAttrName = DimNm( sAttrDim, nCount );
-    sAttrType = SubSt(DType( sAttrDim, sAttrName ), 2, 1 );
+    sAttCheck = SubSt( DTYPE( sAttrDim, sAttrName ), 1, 1 );
+    IF (sAttCheck @= 'A');
+    sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
+    Else;
+    sAttrType = sAttcheck;
+    EndIf; 
       
       If ( DimensionExists( sAttrTargetDim ) = 0);
          AttrInsert(pTgtDim,'',sAttrName,sAttrType );
@@ -288,7 +293,7 @@ IF( sElType @= 'C' & ElCompN( pSrcDim, vEle ) > 0 );
 EndIf;
 
 ### End MetaData ###
-574,90
+574,102
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -316,10 +321,21 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
     nAttr = 1;
     While( nAttr <= nNumAttrs );
         sAttrName = DimNm( sAttrDim, nAttr );
+        sAttCheck = SubSt( DTYPE( sAttrDim, sAttrName ), 1, 1 );
+        IF (sAttCheck @= 'A');
         sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
+        Else;
+        sAttrType = sAttcheck;
+        sMessage = pSrcDim | ' dimension contains invalid attribute - ' | sAttrName ;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        If( pStrictErrorHandling = 1 );
+          ItemReject(Expand( cMsgErrorContent ));
+        EndIf;  
+        EndIf;
         If( CellIsUpdateable( sAttrTargetDim, vEle, sAttrName ) = 1 );
             If( sAttrType @= 'S' % sAttrType @= 'A' );
-                sAttrVal = AttrS( pSrcDim, vEle, sAttrName );
+                #sAttrVal = AttrS( pSrcDim, vEle, sAttrName );
+                sAttrVal = CellgetS('}ElementAttributes_'| pSrcDim, vEle, sAttrName);
                 If( sAttrVal @<> '' );
                     If( sAttrType @= 'A' );
                         AttrPutS( sAttrVal, pTgtDim, vEle, sAttrName, 1 );
@@ -328,7 +344,8 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
                     EndIf;
                 EndIf;
             Else;
-                nAttrVal = AttrN( pSrcDim, vEle, sAttrName );
+                #nAttrVal = AttrN( pSrcDim, vEle, sAttrName );
+                nAttrVal = CellgetN('}ElementAttributes_'| pSrcDim, vEle, sAttrName);
                 If( nAttrVal <> 0 );
                     AttrPutN( nAttrVal, pTgtDim, vEle, sAttrName );
                 EndIf;
