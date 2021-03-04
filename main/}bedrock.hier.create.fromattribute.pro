@@ -4,7 +4,7 @@
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-565,"jXY;MR]Q<@aRTN7yiYNrCuHH9f5Y>u@81xlC_5_q`D6Zq^r;1pVmPc0yv@R8`GzHl7aNJhs9p=iUPZ8`xVJH3hkZ<25;ZTLCEvS<YNAr:tGTxeeFP52<j2U@ug<Vv>uIQd6>nin16ka_pMXTh=3`hxJv6?ohQ2kQWHFwZRM8GBRKu3W83wg;ki\X>hC\YMLwN9;Gi;ft"
+565,"cf6aqz8TfSLMrgfPVr3fMuR6w?^WUwtc^hq\c9j9B<XiqbAize7r6fJ]a>?_bZKtuco]:8U?p^e\9^T;UVNwrFypL?BdN2NHt[7nTH<CrpnYZ=Kki>JBmuejORpMT\E5hxrKdCRYxRimIlg[P4T00M^2ao3D3ZO_6yaS@Hx[AEq8sGt2Hw2Un0z<4s<f<weFiK]1D5Iz"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,11
+560,12
 pLogOutput
 pStrictErrorHandling
 pDim
@@ -37,7 +37,8 @@ pPrefix
 pSuffix
 pSkipBlank
 pUnallocated
-561,11
+pUnwind
+561,12
 1
 1
 2
@@ -49,7 +50,8 @@ pUnallocated
 2
 1
 2
-590,11
+1
+590,12
 pLogOutput,0
 pStrictErrorHandling,0
 pDim,""
@@ -61,7 +63,8 @@ pPrefix,""
 pSuffix,""
 pSkipBlank,0
 pUnallocated,"Undefined <pAttr>"
-637,11
+pUnwind,0
+637,12
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
@@ -73,6 +76,7 @@ pPrefix,"OPTIONAL: Prefix before the attribute value"
 pSuffix,"OPTIONAL: Suffix after the attribute value"
 pSkipBlank,"OPTIONAL: To manage empty attribute: 0= Skip,  1=Send to unallocated node (by default blank attribute values are skipped)"
 pUnallocated,"OPTIONAL: Naming convention for rollup if attribute is empty (eg. Unallocated <pAttr>, No <pAttr>, Undefined <pAttr>)"
+pUnwind,"OPTIONAL: Unwind target hierarchy hierarchy"
 577,3
 vEle
 vAttr
@@ -98,7 +102,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,197
+572,214
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -159,6 +163,12 @@ If( Scan( ':', pDim ) > 0 & pSrcHier @= '' );
     pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );
 EndIf;
 
+IF( Trim ( pSrcHier ) @= Trim ( pTgtHier ));
+    nErrors = 1;
+    sMessage = 'Source and target Herarchy can not be the same';
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;    
+    
 ## Validate dimension
 If( Trim( pDim ) @= '' );
     nErrors = 1;
@@ -265,6 +275,17 @@ EndIf;
 If( HierarchyExists( pDim, sTargetHierarchy ) = 0 );
     HierarchyCreate( pDim, sTargetHierarchy );
 Else;
+  IF ( pUnwind = 1 );
+    ExecuteProcess('}bedrock.hier.unwind',
+       'pLogOutput', pLogOutput,
+       'pStrictErrorHandling', pStrictErrorHandling,
+       'pDim', pDim,
+       'pHier', sTargetHierarchy,
+       'pConsol', '*',
+       'pRecursive', 0,
+       'pDelim', '&'
+      );
+  EndIf;    
     HierarchyDeleteAllElements( pDim, sTargetHierarchy );
 EndIf;
 
