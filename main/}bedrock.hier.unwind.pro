@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"n@H_nfn_@rNFm\aNVlNS^;<OjMnxDDKfje_a;eXU]F;QCkwnbC@\ZFlX3up<IEj1SCa4YRVn5rU3;jJIKYYg1A4EiO4Y:ZzUVBwGAOyywjg`jk?YvFFfND0J?OkD5B`PAJVpF:;f^vY<ip@Cvt[rdAKGDUrvmm@WS]vW7qG[XRe2QfD9r\:p88@1uGNGNzceL4pnNhG3"
+565,"aag0xaNj2M`@Dh]DYmJ4:Y4r0gxgWq\44uYoQsHGzN^:LkPVVw4r3YeWDf2to>;N>bSszDmx4:AW4NLD7^lQC8>OSP<hHvE[;^IcTXfmgaWJ197cVgCm:DBHY7ud?xU=MFJDAnU\IalCW369^S5G<uAn3<_>AXE8U:5C6XQGcBc5aVj1vkta:f8Rg0c@MN[MSiQ6ODnw"
 559,1
 928,0
 593,
@@ -70,7 +70,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,403
+572,407
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -204,6 +204,8 @@ If( nErrors <> 0 );
       ProcessBreak;
   EndIf;
 EndIf;
+
+IF (DNLEV(pDim) <> 0);
 
 ### If there is no separator and wildcard in the parameters, execute the unwind of the specific consolidated element
 If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 );
@@ -472,6 +474,8 @@ Else;
         nCountDim = nCountDim - 1;
     End;
 EndIf;
+
+Endif;
 
 ### End Prolog ###
 573,62
