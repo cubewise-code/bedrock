@@ -4,7 +4,7 @@
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-565,"cf6aqz8TfSLMrgfPVr3fMuR6w?^WUwtc^hq\c9j9B<XiqbAize7r6fJ]a>?_bZKtuco]:8U?p^e\9^T;UVNwrFypL?BdN2NHt[7nTH<CrpnYZ=Kki>JBmuejORpMT\E5hxrKdCRYxRimIlg[P4T00M^2ao3D3ZO_6yaS@Hx[AEq8sGt2Hw2Un0z<4s<f<weFiK]1D5Iz"
+565,"s5UFcXC8LWTfkBAvYctaVI\9PDgfbBdBL=4G;W:OJ0pZg`n2@d6vICO9`PR@G<y6lsrUJj9Obn^^F@cT1?\`1TU77IkLAdJdgfT\[sJ_pzoaDn4yHmuyuLX^UijHzY3<y^GhcJJqqxMjT[BTUEIJj3=r5g5?n>47^EguXwiXjTNampiOttcJ`s@0nYfiZml1SoOAK5Yk"
 559,1
 928,0
 593,
@@ -102,7 +102,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,214
+572,215
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -285,8 +285,9 @@ Else;
        'pRecursive', 0,
        'pDelim', '&'
       );
-  EndIf;    
+  Else;   
     HierarchyDeleteAllElements( pDim, sTargetHierarchy );
+  Endif;  
 EndIf;
 
 #Target consol does not exist then add element to dimension.
