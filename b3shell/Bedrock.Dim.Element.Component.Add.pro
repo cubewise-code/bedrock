@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"htv@9ngya[5u56e_tlDPY18olB`B7HiCrV?r;KGEvrdah`Ykb<zjf8EKHL4pn8Zu=BEm9>?=hprj3<qI1=b\e3kt:jG;cYX^@QccSYVi15\HZp9uURs:e[7CfUh1MfaD>KQIsC=^OV:CV>=j4]=A1T;SFKfQUuySQ0IxIC4f\tRjuJgx@;[:wmz^`hwi:z3CXaz>5sna"
+565,"upj:B\WI:iJ`hFTV6yQDVa5UZKyb9Eyxxj`1i2=@OpGcBjqOpMfobriKUi9[dlqc`l_lncXevu`LWJ;h5LbxXxNnnz=sukD9V>S9c;x>5E;ASF12]lHClwze_KW<GBn]xNb]<O<fj77`e>XwAayzjlUg\8Q9l6xy5Xf11_`:0uq]nwie>iTK6;oY4Y0RhcYKC_Kfui@j"
 559,1
 928,0
 593,
@@ -96,7 +96,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.hier.element.move',
   'pLogOutput', pDebug,
-  'pStrictErrorHandling','1',
+  'pStrictErrorHandling', 1,
   'pDim', pDimension,
   'pHier', '',
   'pEle', pElement,

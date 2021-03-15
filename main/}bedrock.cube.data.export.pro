@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"bxa9KWb>7F1^]wakSdC1ek?DfBfYYv?eiI^@UK`A3wsu^jSSsa0ik]^h@V2zThr;KT8u3>beL7XV03EAtz:wu`fP:Uc[l2[2=?ReAC>c3fVYViTdP4;f9m\y`wW;hy[?Fsmg>WMWyGC@okhlv<?RbR6;TBE;fVoIY3qpCA\0209fhka?MzCmg:D39Ch\0WjaClFw?[LV"
+565,"uy30;`w7eCnQ<uj=l=Ek8aM>[^JWN]QLPe5W\Ga8h]kxm56_z<_0z8Hnqu^Q;U_vac\S:ZB9Em0AI9yqg;=I;e1kyyN]zZFJ3<4F0pFkMw1Cm]bJxqT>K9TZF_i4aur7cSinv\LB37x9O^]rv\cA5K@Top6L:NbTGpv4C`x]KtQam@L;iPL92Qv6Vr1F<6gF:mx7WNf_"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,25
+560,26
 pLogoutput
 pStrictErrorHandling
 pCube
@@ -51,7 +51,8 @@ pTitleRecord
 pSandbox
 pSubN
 pCharacterSet
-561,25
+pCubeNameExport
+561,26
 1
 1
 2
@@ -77,7 +78,8 @@ pCharacterSet
 2
 1
 2
-590,25
+1
+590,26
 pLogoutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -103,7 +105,8 @@ pTitleRecord,1
 pSandbox,""
 pSubN,0
 pCharacterSet,"TM1CS_UTF8"
-637,25
+pCubeNameExport,1
+637,26
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
@@ -129,7 +132,8 @@ pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
-577,101
+pCubeNameExport,"OPTIONAL: Skip cube name from export file, including header (Skip = 0) (Default = 1)"
+577,104
 V1
 V2
 V3
@@ -231,7 +235,10 @@ V98
 V99
 V100
 Value
-578,101
+NVALUE
+SVALUE
+VALUE_IS_STRING
+578,104
 2
 2
 2
@@ -333,7 +340,10 @@ Value
 2
 2
 2
-579,101
+1
+2
+1
+579,104
 1
 2
 3
@@ -435,10 +445,10 @@ Value
 99
 100
 101
-580,101
 0
 0
 0
+580,104
 0
 0
 0
@@ -537,7 +547,16 @@ Value
 0
 0
 0
-581,101
+0
+0
+0
+0
+0
+0
+581,104
+0
+0
+0
 0
 0
 0
@@ -742,7 +761,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,395
+572,420
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1061,23 +1080,48 @@ Else;
   # Determine number of dims in source cube & create strings to expand on title and rows 
   nCount = 1;
   nDimensionIndex = 0;
-  sTitle = '%pQuote%Cube%pQuote%';
-  sRow = '%pQuote%%pCube%%pQuote%';
-  While( TabDim( pCube, nCount ) @<> '' );
-      sDimension = TabDim( pCube, nCount );
-      
-      ## Determine title string for the source cube
-      sTitle = sTitle|'%pFieldDelim%%pQuote%'|sDimension|'%pQuote%';
-      # Determine row string for the source cube
-      sRow = sRow|'%pFieldDelim%%pQuote%%V'| numbertostring(nCount) |'%%pQuote%';
-      
-      nCount = nCount + 1;
-  End;
-  nDimensionCount = nCount - 1;
-  
-  # Finish off the strings
-  sTitle = sTitle|'%pFieldDelim%%pQuote%Value%pQuote%';
-  sRow = sRow|'%pFieldDelim%%pQuote%%sValue%%pQuote%';
+
+  ## Skip cube name from export
+  IF (pCubeNameExport = 0);
+    sTitle = '';
+    sRow = '';
+
+    While( TabDim( pCube, nCount ) @<> '' );
+        sDimension = TabDim( pCube, nCount );
+
+        ## Determine title string for the source cube
+        sTitle = sTitle|'%pQuote%'|sDimension|'%pQuote%%pFieldDelim%';
+        # Determine row string for the source cube
+        sRow = sRow|'%pQuote%%V'| numbertostring(nCount) |'%%pQuote%%pFieldDelim%';
+
+        nCount = nCount + 1;
+    End;
+    nDimensionCount = nCount - 1;
+
+    # Finish off the strings 
+    sTitle = sTitle|'%pQuote%Value%pQuote%';
+    sRow = sRow|'%pQuote%%sValue%%pQuote%';
+
+  ELSE;
+    sTitle = '%pQuote%Cube%pQuote%';
+    sRow = '%pQuote%%pCube%%pQuote%';
+
+    While( TabDim( pCube, nCount ) @<> '' );
+        sDimension = TabDim( pCube, nCount );
+
+        ## Determine title string for the source cube
+        sTitle = sTitle|'%pFieldDelim%%pQuote%'|sDimension|'%pQuote%';
+        # Determine row string for the source cube
+        sRow = sRow|'%pFieldDelim%%pQuote%%V'| numbertostring(nCount) |'%%pQuote%';
+
+        nCount = nCount + 1;
+    End;
+    nDimensionCount = nCount - 1;
+
+    # Finish off the strings
+    sTitle = sTitle|'%pFieldDelim%%pQuote%Value%pQuote%';
+    sRow = sRow|'%pFieldDelim%%pQuote%%sValue%%pQuote%';
+  ENDIF;
   
   # Create Processing View for source version 
   nRet = ExecuteProcess('}bedrock.cube.view.create',

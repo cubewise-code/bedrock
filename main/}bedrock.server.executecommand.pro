@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vR42cY=Lg<Ho7XsFH\;QP6a>pY>LEzY`yL7zoK<eQkr<K4=]bWXn2:u59gfit^NZx94ixs4\cBic:qiuGW`Cn3V\2^?DWgUzCE<t^ktPm1gI`JV2ebSZ?3[6e@wDyMi:QpD3^IBlVYL`F:[;f6O^WZNhJansX1WuEcBGETs4m3XFceIU>:o]vYJIKFB62wUh3DZ;X`Gw"
+565,"lDc1Ak<yqDuEa5BF\J?[f5vL__jT[6@@<G:NnzVuFvMgQqlpLFjvteWhIxL9YHw=aUJEyIr=_fsTNGMPZxq1bTL`TG3sYxQDpSunBtD6>g7=:;y0<dj]yY<?:yj_>YJJErG`WfT:7Uw;2cHJbOpwhyRUA8>U@?S2M=>FqTDtK9Ps[vc>uVQfj`Fd<ZR9O<Lj>t:0lYU>"
 559,1
 928,0
 593,
@@ -149,7 +149,7 @@ EndIf;
 930,0
 638,1
 804,0
-1217,0
+1217,1
 900,
 901,
 902,

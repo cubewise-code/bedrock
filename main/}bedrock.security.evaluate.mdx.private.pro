@@ -4,7 +4,7 @@
 586,"Admin\store}subs\Euros.sub"
 585,"Admin\store}subs\Euros.sub"
 564,
-565,"y1VLm_ho5jIU6JNk@R8Kq[BuFaNHL_>E5z^3jS4y;pOvp]:Ar`OY37sgZouHEcIxckM68vZp8OA:]P:YgL4e=uHg4L2Eg;r02ocVhf1QM<u8]W6D\vj0IZUmubqZQ7Gp:R\:fNumssKvU;HqV8AWQ[y7>?eVkF@i9ZDmW;kCl1T@Rfe]dMooFMkvlh36rO>QMqRAGiSm"
+565,"ieUfkI;Wja<VHDFBtuExl\eT^<Ut\iHF1arPOwpO^kJO0jdHnNkgm0sfuSw:V8RtI3`i7Ju=w0;ER83tzZ_a9Lxu8GtZ0\>ef7T4_S9eUqkR?wIPY6rldYs@_RYTTqAXH3t6L6mw7\Zv;5td5nfrmMbdtMPa]QX57M`sr^@GgZWn_AdkU@I]Jvg:BpPEWV5EiHhoe?_x"
 559,1
 928,0
 593,
@@ -519,7 +519,7 @@ EndIf;
 930,0
 638,1
 804,0
-1217,0
+1217,1
 900,
 901,
 902,
