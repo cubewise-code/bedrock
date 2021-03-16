@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"seU:BVp36]^UuSZ0Br?yGMC2TF=7FI2>QwNl21m=w_5AYnY<guWWlNNKW3FAbAIk5;t?QEgJMshasr38Pb0?SiOZP@pZsjsQC>W=MrKTjdID`YzWhCusVu<4414kLMJnHL;ZWaRqITrxv\?U4z_==IPS0Qy^aqtQ0]:HOmahm4hG@j7i>SvZDLmshA7JwqpcR8pLiNoW"
+565,"pMcE:d=B_zUqkId<y1TNUmyb:ft\>617QyKOfsCv_bIBle9h2I:WLK1Gv7F1N[G[MfI?141K88`1]SXWW49SP1\5jv:Df9v538:}?^;djWdohwW8yJ<SUm>pvQ:B}eknC;^g6EbgFf{Ftt]D>@4Mmz`Jz?kr>68V>38WAahK[j_BZKAf4?B<C};0de?3z`lB?L=:fjx"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,27
+560,29
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -53,7 +53,9 @@ pSandbox
 pFile
 pSubN
 pThreadMode
-561,27
+pThreadControlFile
+pMaxWaitSeconds
+561,29
 1
 1
 2
@@ -81,7 +83,9 @@ pThreadMode
 1
 1
 1
-590,27
+2
+1
+590,29
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -109,7 +113,9 @@ pSandbox,""
 pFile,0
 pSubN,0
 pThreadMode,0
-637,27
+pThreadControlFile,""
+pMaxWaitSeconds,1800
+637,29
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
@@ -137,6 +143,8 @@ pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
+pThreadControlFile,"DO NOT USE: Internal parameter only, please don't use"
+pMaxWaitSeconds,"OPTIONAL: Used with parallel to define wait time"
 577,51
 V1
 V2
@@ -450,7 +458,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,910
+572,922
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -497,6 +505,11 @@ EndIf;
 #   and passed to a recursive call of the process being added to pFilter.
 #EndRegion @DOC
 
+
+If( pThreadControlFile @<> '' );
+    LogOutput( 'INFO', 'Executed as subTI with Thread Control File: ' | pThreadControlFile );
+EndIf;
+
 ##Global Variables
 StringGlobalVariable('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
@@ -524,7 +537,6 @@ ENDIF;
 IF (pParallelThreads > 0);
   pCubeLogging = 2;
 Endif;  
-
   
 
 # Variables
@@ -1196,15 +1208,23 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       sFilter = Expand('%sFilter%%pEleDelim%%sSlicerEle%');
     ENDIF;
     IF( nThreadElCounter >= nElemsPerThread );
+            nThreadID = INT( RAND( ) * 10000 + 1) + Numbr(cTimeStamp);
+      sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID) | '_' | cTimeStamp;
+      AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
+      LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
       RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
       	'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
       	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
       	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
       	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
+      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
       );
   	  nThreadElCounter = 0;
   	  sFilter = '';
+  	  nThreadID = INT( RAND( ) * 10000 ) + 1;
+        sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID);
+        AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
+        LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
   	 ENDIF;
   End;
   ## Process last elements - only when filter is not empty (there are still elements)
@@ -1214,7 +1234,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
     	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
     	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1
+    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
     );
   ENDIF;
   DataSourceType = 'NULL';
@@ -1822,7 +1842,7 @@ ElseIf( nDimensionCount = 27 );
 
 
 ### End Data ###
-575,61
+575,84
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -1864,6 +1884,29 @@ EndIf;
 If( pFile = 1 );
   TM1RunCmd = 'CMD.EXE /C "DEL "' | cFile | '" "';
   EXECUTECOMMAND ( TM1RunCmd , 0 );
+EndIf;
+
+### Delete thread control file if used
+If( pThreadControlFile @<> '' );
+    LogOutput( 'INFO', 'Removing thread control file: ' | pThreadControlFile );
+    ASCIIDelete( cDir | pThreadControlFile | '.txt' );
+EndIf;
+
+### Wait for all parallel threads to finish if using pFilterParallel
+If( pFilterParallel @<> '' );
+    sThreadFilePattern = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | '*.txt';
+    LogOutput( 'INFO', 'Checking for: ' | sThreadFilePattern );
+    i = 1;
+    While( i < pMaxWaitSeconds );
+        sThreadCheck = WildcardFileSearch( cDir | sThreadFilePattern, '' );
+        If( sThreadCheck @<> '' );
+            Sleep( 1 );
+        Else;
+            Break;
+        EndIf;
+    
+    i = i + 1;
+    End;
 EndIf;
 
 ### Return code & final error message handling
