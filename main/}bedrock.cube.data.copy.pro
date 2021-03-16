@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"h\5cK_7Iy@nWO05r_Lrs8JO=NK_SXq8>Au9Ge2:UR]k`?`9tD?@kEcwFt8FqzUK;G:\7AcN\?Io1^pcLy`q\=?ke?D{ZwByuP>69=Wc>;l@YLVpWX?ua:@rWqO9cHmXrYFKZ78<ltin~v9OWd60<=m6wvZTG9PiYbT?heaf80<:;JJeD;yodJ@}anFXCXvPdB6;8fpgX"
+565,"pMcE:d=B_zUqkId<y1TNUmyb:ft\>617QyKOfsCv_bIBle9h2I:WLK1Gv7F1N[G[MfI?141K88`1]SXWW49SP1\5jv:Df9v538:}?^;djWdohwW8yJ<SUm>pvQ:B}eknC;^g6EbgFf{Ftt]D>@4Mmz`Jz?kr>68V>38WAahK[j_BZKAf4?B<C};0de?3z`lB?L=:fjx"
 559,1
 928,0
 593,
@@ -114,7 +114,7 @@ pFile,0
 pSubN,0
 pThreadMode,0
 pThreadControlFile,""
-pMaxWaitSeconds,0
+pMaxWaitSeconds,1800
 637,29
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
