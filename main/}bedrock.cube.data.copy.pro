@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"lacA^JJ`_kCsyH6wFKx9oSqz0i8l[s111hyFu`@mt0sm[gimedqX46W=s4FataC;Ect;QHOD0lhATusYLhFaJ5HHp:JwGaBsG:4]@pbLEXmQkvWhXW<vV1tDwD0K=ryaD[UWPq\yTFVMXUT3>1=a]y_L@?aZXizZ<8n1gX07KIIZ6f9Q:OP@}Xth_H_qpe2s[fMzAU"
+565,"h\5cK_7Iy@nWO05r_Lrs8JO=NK_SXq8>Au9Ge2:UR]k`?`9tD?@kEcwFt8FqzUK;G:\7AcN\?Io1^pcLy`q\=?ke?D{ZwByuP>69=Wc>;l@YLVpWX?ua:@rWqO9cHmXrYFKZ78<ltin~v9OWd60<=m6wvZTG9PiYbT?heaf80<:;JJeD;yodJ@}anFXCXvPdB6;8fpgX"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,28
+560,29
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -54,7 +54,8 @@ pFile
 pSubN
 pThreadMode
 pThreadControlFile
-561,28
+pMaxWaitSeconds
+561,29
 1
 1
 2
@@ -83,7 +84,8 @@ pThreadControlFile
 1
 1
 2
-590,28
+1
+590,29
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -112,7 +114,8 @@ pFile,0
 pSubN,0
 pThreadMode,0
 pThreadControlFile,""
-637,28
+pMaxWaitSeconds,0
+637,29
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
@@ -141,6 +144,7 @@ pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use 
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 pThreadControlFile,"DO NOT USE: Internal parameter only, please don't use"
+pMaxWaitSeconds,"OPTIONAL: Used with parallel to define wait time"
 577,51
 V1
 V2
@@ -454,7 +458,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,923
+572,922
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -533,7 +537,6 @@ ENDIF;
 IF (pParallelThreads > 0);
   pCubeLogging = 2;
 Endif;  
-
   
 
 # Variables
@@ -1205,8 +1208,8 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       sFilter = Expand('%sFilter%%pEleDelim%%sSlicerEle%');
     ENDIF;
     IF( nThreadElCounter >= nElemsPerThread );
-            nThreadID = INT( RAND( ) * 10000 + 1);
-      sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID);
+            nThreadID = INT( RAND( ) * 10000 + 1) + Numbr(cTimeStamp);
+      sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID) | '_' | cTimeStamp;
       AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
       LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
       RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
@@ -1894,7 +1897,7 @@ If( pFilterParallel @<> '' );
     sThreadFilePattern = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | '*.txt';
     LogOutput( 'INFO', 'Checking for: ' | sThreadFilePattern );
     i = 1;
-    While( i < 100000 );
+    While( i < pMaxWaitSeconds );
         sThreadCheck = WildcardFileSearch( cDir | sThreadFilePattern, '' );
         If( sThreadCheck @<> '' );
             Sleep( 1 );

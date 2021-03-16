@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"gzJ<p57a8SyeAcD>_IrLN_pKhhu44BOQGbU=py0[k3CR]6HKe4FRiU=rUGWC;XRC1^<P?BGiSyVo:`As7l\50Lp25UOYiEHIRC1cp`@Pg<pX9NuVgQ@kTJ\s7K\C?CIJFOBWY;kq\Dv41hi\p@<GZrB:rw8y3R5i^\Pvm5wl@[BU6heLFcaeZLr2k7a2DA`QwjQ6mtKv"
+565,"oN8^^6ijFcf?AZhafw:13SQeJkN>e4sS1sxRFCpf[mOLD0[PW9ejB?QUxrp5fRc8`j7V2Qyy^8]aUEBgqVoi@lwByzw[I[2]CRqgnVm;0QHwBA[DIl6g[@5w<a_bTqK:5tEaNiO:cwD2lZj;DLb<GxlejlL4be^0HTqi@B5J;e6<PgapEa`;0zAzCoEkjXwPnQ<H]4Sc"
 559,1
 928,0
 593,
@@ -486,13 +486,13 @@ If(pSubN = 1);
     nCountDimC = 1;
     While( TabDim( pCube, nCountDimC ) @<> '' );
         sDimC = TabDim( pCube, nCountDimC );
-        sDimString = sDimC;
+        sDimString = lower(sDimC);
         
         # filters created by other bedrock processes skip spaces from dim names and between separators
         While(Scan(' ',sDimString)>0);
             sDimString = subst(sDimString, 1, Scan(' ',sDimString)-1)|subst(sDimString,Scan(' ',sDimString)+1,long(sDimString));
         End; 
-        sTFilter = sFilter;
+        sTFilter = lower(sFilter);
         While(Scan(' ',sTFilter)>0);
             sTFilter = subst(sTFilter, 1, Scan(' ',sTFilter)-1)|subst(sTFilter,Scan(' ',sTFilter)+1,long(sTFilter));
         End;
