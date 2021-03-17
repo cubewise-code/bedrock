@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"lX@e=J@8S>\Na;U5QIdx:mytyJ8N75<l?V6=;Zk<rcVJ27ZVhMw`gLe>dG?eTl4[Dz@\lO0?cOt9Q8CQ]tjx@P321i@ueU[gRqwIu80V9ffH2evlcQ9S;cfHfVgZIXFVSJxY;n>p3Yg\9;Wx\[zVrC2Zu77iGeAam13zw[Ts6k?pGwZedAHl_^g9vFip8k\Rapg_8@^T"
+565,"z42K\2ba\uj8XfgZ_[3R2a98@GaJ]Ec?i@\=NwVKlpe41C[gSs03>q\cs6h^8M=qxV4lpaPVHcZe?^ig=>H1W4wGpyO>=hc=9xdad1363sg>n?K<sY:SP0_YK;Bd=>7IF>eDB]UHozg@ylOE=Ph[q:lFu=wDFB_?JlodE@^:9mUgTAlH`ftp=67?[<:js\DQmj9>TCkq"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,15
+560,18
 pCube
 pView
 pFilter
@@ -41,7 +41,10 @@ pFileName
 pDelimiter
 pQuote
 pDebug
-561,15
+pCubeNameExport
+pTitleRecord
+pSuppressZero
+561,18
 2
 2
 2
@@ -57,7 +60,10 @@ pDebug
 2
 2
 1
-590,15
+1
+1
+1
+590,18
 pCube,""
 pView,""
 pFilter,""
@@ -73,7 +79,10 @@ pFileName,""
 pDelimiter,","
 pQuote,""""
 pDebug,0
-637,15
+pCubeNameExport,1
+pTitleRecord,1
+pSuppressZero,1
+637,18
 pCube,"Cube"
 pView,"Temporary view name"
 pFilter,"Filter: Year: 2006 + 2007 & Scenario: Actual + Budget & Organization: North America Operations"
@@ -89,6 +98,9 @@ pFileName,"Export Filename (If Left Blank Defaults to cube_dim_ele_export.csv)"
 pDelimiter,"AsciiOutput delimiter character"
 pQuote,"AsciiOutput quote character"
 pDebug,"Debug Mode"
+pCubeNameExport,"Skip cube name from export file, including header (Skip = 0) (Default = 1)"
+pTitleRecord,"Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)"
+pSuppressZero,"Suppress Zero Values (1=Suppress)"
 577,0
 578,0
 579,0
@@ -96,7 +108,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,91
+572,95
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -144,6 +156,9 @@ If( pDebug >= 1 );
   AsciiOutput( sDebugFile, '            pFileName:          ' | pFileName );
   AsciiOutput( sDebugFile, '            pDelimiter:         ' | pDelimiter );
   AsciiOutput( sDebugFile, '            pQuote:             ' | pQuote );
+  AsciiOutput( sDebugFile, '            pCubeNameExport:	 ' | NumberToString( pCubeNameExport ) );
+  AsciiOutput( sDebugFile, '            pTitleRecord:		 ' | NumberToString( pTitleRecord ) );
+  AsciiOutput( sDebugFile, '            pSuppressZero:		 ' | NumberToString( pSuppressZero ) );
   AsciiOutput( sDebugFile, '' );
   AsciiOutput( sDebugFile, '' );
 EndIf;
@@ -162,7 +177,7 @@ nRet = ExecuteProcess( sProc,
   'pDimDelim', pDimensionDelim,
   'pEleStartDelim', pElementStartDelim,
   'pEleDelim', pElementDelim,
-  'pSuppressZero', 1,
+  'pSuppressZero', pSuppressZero,
   'pSuppressConsol', pSkipCons,
   'pSuppressRules', pSkipRules,
   'pZeroSource', pZeroSource,
@@ -172,7 +187,8 @@ nRet = ExecuteProcess( sProc,
   'pFileName', pFileName,
   'pDelim', pDelimiter,
   'pQuote', pQuote,
-  'pTitleRecord', 1
+  'pTitleRecord', pTitleRecord, 
+  'pCubeNameExport', pCubeNameExport
 );
 
 IF ( nRet <> ProcessExitNormal() );
