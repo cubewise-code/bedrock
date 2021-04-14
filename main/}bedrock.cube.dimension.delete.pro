@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aaOfbVyjWSkE486lrqzuNWEz7:wcF3TArASo9xJng^4ZyuEsFLDYq0=^fZ3O=<RA\JM0E2=83UhijdTNal??d3x1=\x`h71>UO8Kk5>mENBFxm1zeI?SQ[X68Eup9;lR]0`^c8Lwk?=JhY:GKzz0:E3PHnl]eDRHceouL1dY@=Jm34zbv<HjvsE8lgMX>OeR5<OPFma9"
+565,"fmPzaWa4MfMvC\ajJi9RVbEkK?KWmHO6F<kBw3p5Y`W;r:>5FaTLXNis[J0]Xhh2e]sEZ3V7UZYVX;=[ei\lE2zNl6KW=B;nCQy<V?Z_sSyViMLBqy`H;XUzK0Zm=_1i\ze?RdZ9eVdZ6IQzaHXp\_Ql2_<NA[GB_HGZ8acyD7Jw6LIU@W4`V]AjS6<WZ@6MOk]X<U9l"
 559,1
 928,0
 593,
@@ -68,7 +68,7 @@ pTemp,"REQUIRED: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,338
+572,341
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -117,12 +117,15 @@ cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pDim:%pDim%, pIncludeData:%pIncludeData%, pIncludeRules:%pIncludeRules%, pCtrlObj:%pCtrlObj%, pTemp:%pTemp%.';
 
-## Check Operating System
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+## check operating system
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
@@ -164,7 +167,7 @@ EndIf;
 
 
 IF(pIncludeRules = 1 % pIncludeRules = 2);
-    cCubeRuleFileName = '.' | sOSDelim |pCube | '.RUX';
+    cCubeRuleFileName = '.' | sOSDelim | pCube | '.RUX';
     If(FileExists(cCubeRuleFileName) = 0);
         pIncludeRules = 0;
         LogOutput( 'INFO', Expand( 'No rule found for %pCube%.' ) );

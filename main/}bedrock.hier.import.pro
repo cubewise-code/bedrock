@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"xS]2EwB`3:u>e\QYN;e^cnsFyemKp5uGjQa?nWdG]Y``yr7fr]h8h5l2n5SQ^xlA`65`G`idG5bo6Foew7=W7>R^5te;092izuo3m=a5yo59v1|B~9z1_ueD<trZPeZj2wzoTyyR]PjDNxP4Pju;}<3z_D0GN8CsLxezMYt=OvE+_`G5>o;[m8[1b5x@KTi|Cp`hOCZ"
+565,"vR2MSHkH:w[@tC9?Bl5gD3yVUH;\YG;I:SQ@E@VXmU@=LrWCJpG8WwwFD4SQFWdA9`<`w3ur^[iO:O_n4qAJu2iGI]l;Sc`SCXv>]Z;xa\HH7e}B>N=CCccDeb<nVUshtxJdTdi:GagH~PM:@1y6]_p:j`Yc\I3>U0h?\dW410LY#?OBDo6Qgi8X`q`;VO4k|PgdWJIv"
 559,1
 928,0
 593,
@@ -116,7 +116,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,273
+572,279
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -222,11 +222,14 @@ ElseIf( sHier @= 'Leaves' );
 EndIf;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
@@ -235,13 +238,16 @@ If( Trim( pSrcDir ) @= '' );
     pSrcDir     = GetProcessErrorFileDirectory;
     sMessage    = 'Source folder defaulted to error file directory.';
     LogOutput( 'INFO', Expand( cMsgErrorContent ) );
-ElseIf( FileExists( pSrcDir ) = 0 );
+EndIf;
+If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= sOSDelim );
+    pSrcDir = SubSt( pSrcDir, 1, Long( pSrcDir ) -1 );
+EndIf;
+If( FileExists( pSrcDir ) = 0 );
     nErrors     = 1;
     sMessage    = 'Invalid source path specified. Folder does not exist.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @<> sOSDelim );
-    pSrcDir     = pSrcDir | sOSDelim;
 EndIf;
+pSrcDir         = pSrcDir | sOSDelim;
 
 # Validate legacy file format
 If( pLegacy <> 1 );
@@ -262,7 +268,7 @@ sAttrDimName    = '}ElementAttributes_' | pDim ;
 
 If( FileExists( sFilename ) = 0 );
     nErrors     = 1;
-    sMessage    = 'Invalid path\file specified. It does not exist.';
+    sMessage    = 'Invalid path or file name specified. It does not exist.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 

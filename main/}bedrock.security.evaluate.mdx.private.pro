@@ -4,7 +4,7 @@
 586,"Admin\store}subs\Euros.sub"
 585,"Admin\store}subs\Euros.sub"
 564,
-565,"y1VLm_ho5jIU6JNk@R8Kq[BuFaNHL_>E5z^3jS4y;pOvp]:Ar`OY37sgZouHEcIxckM68vZp8OA:]P:YgL4e=uHg4L2Eg;r02ocVhf1QM<u8]W6D\vj0IZUmubqZQ7Gp:R\:fNumssKvU;HqV8AWQ[y7>?eVkF@i9ZDmW;kCl1T@Rfe]dMooFMkvlh36rO>QMqRAGiSm"
+565,"vM^eFAvfUMhZPyySj_kg]YaoBMgOjc]gvm0>^CL8G7m6YxaEptc8ls^qV>Mh<xL[e?Pg65cP>9Z?xBnCLF6aN5omeQa?Qt3Y7c:xnvknv:3Gn0]nJSGJAEQ7PvP2xKYU;mT\`APRF18Q9i6kQXAW@6GVlQO:eqkCYI6L?0_ywyM[fgwH0kdw0QnAz^H1SVb8Y2lGJ1?n"
 559,1
 928,0
 593,
@@ -86,7 +86,7 @@ vLine
 582,1
 VarType=32ColType=827
 603,0
-572,230
+572,231
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -117,7 +117,6 @@ EndIf;
 # This process will find out PRIVATE dynamic subsets of dimensions having security on them - element security - and evaluate expressions impacted by the latest MDX security changes 
 
 # Use case: Intended for development or production.
-
 
 # Note:
 # 
@@ -195,28 +194,30 @@ IF( pSubset @= '' % Scan( pSubset, pSubsetFile ) = 0  );
 ENDIF;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
 # Validate file path
 If(Trim( pFilePath ) @= '' );
     pFilePath = GetProcessErrorFileDirectory;
-Else;
-    If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );
-        pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );
-    EndIf;
-    If(  FileExists( pFilePath ) = 0 );
-        sMessage = Expand('Invalid export directory: %pFilePath%');
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    EndIf;
-    pFilePath = pFilePath | sOSDelim;
 EndIf;
+If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );
+    pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );
+EndIf;
+If(  FileExists( pFilePath ) = 0 );
+    sMessage = Expand('Invalid export directory: %pFilePath%');
+    nErrors = nErrors + 1;
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+pFilePath = pFilePath | sOSDelim;
 
 # Validate file name
 If( pFileName @= '' );
@@ -320,7 +321,7 @@ EndIF;
 573,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,148
+574,144
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -435,7 +436,7 @@ If ( Subst ( vLine, 1, 3 ) @= '278' );
                             ENDIF;
                         ENDIF;
                         IF( pLogoutput = 1 );
-                            sMessage = 'Private subset ' | pSubset | ' contains a keyword and a specific element ' | sElement | ' that the user ' | sAlias | ' do not have access to';
+                            sMessage = Expand('Private subset %pSubset% contains a keyword and a specific element %sElement% that the user %sAlias% do not have access to');
                             LogOutput('INFO', Expand( cMsgInfoContent ) );
                         ENDIF;
                     EndIf;
@@ -465,11 +466,7 @@ EndIf;
 If ( Subst ( vLine, 1, 3 ) @= '275' );
     nMDXFlag = 1;
 EndIf;
-
-
-
-
-575,45
+575,43
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -511,8 +508,6 @@ Else;
         LogOutput('INFO', Expand( sProcessAction ) );   
     EndIf;
 EndIf;
-
-
 
 ### End Epilog ###
 576,

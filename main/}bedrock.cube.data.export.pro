@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"uy30;`w7eCnQ<uj=l=Ek8aM>[^JWN]QLPe5W\Ga8h]kxm56_z<_0z8Hnqu^Q;U_vac\S:ZB9Em0AI9yqg;=I;e1kyyN]zZFJ3<4F0pFkMw1Cm]bJxqT>K9TZF_i4aur7cSinv\LB37x9O^]rv\cA5K@Top6L:NbTGpv4C`x]KtQam@L;iPL92Qv6Vr1F<6gF:mx7WNf_"
+565,"fq22Lramjox_rzqlg^:<LJq;5Hrz?Jk40B1@wB>2SLR1zcNpo8WjRqxzy>gCe19Sk59c`rK9j5LoTG9<F^cO7TTI1y`73L`d9mDpI?3eO@<kMJ]RE\4wglTqM_RrfhCcZ;60s<pRMqA=Z:KZ`cQA1A?d4SSq@XU?zW;w^eBSd76fgqkpXOgfKmSEMHJWMsN[;w9^Xe;i"
 559,1
 928,0
 593,
@@ -133,7 +133,7 @@ pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 pCubeNameExport,"OPTIONAL: Skip cube name from export file, including header (Skip = 0) (Default = 1)"
-577,104
+577,101
 V1
 V2
 V3
@@ -235,10 +235,7 @@ V98
 V99
 V100
 Value
-NVALUE
-SVALUE
-VALUE_IS_STRING
-578,104
+578,101
 2
 2
 2
@@ -340,10 +337,7 @@ VALUE_IS_STRING
 2
 2
 2
-1
-2
-1
-579,104
+579,101
 1
 2
 3
@@ -445,10 +439,10 @@ VALUE_IS_STRING
 99
 100
 101
+580,101
 0
 0
 0
-580,104
 0
 0
 0
@@ -547,16 +541,7 @@ VALUE_IS_STRING
 0
 0
 0
-0
-0
-0
-0
-0
-0
-581,104
-0
-0
-0
+581,101
 0
 0
 0
@@ -761,7 +746,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,420
+572,422
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -876,28 +861,30 @@ EndIf;
 cSubset = cView;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
 # Validate file path
 If(Trim( pFilePath ) @= '' );
     pFilePath = GetProcessErrorFileDirectory;
-Else;
-    If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );
-        pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );
-    EndIf;
-    If(  FileExists( pFilePath ) = 0 );
-        sMessage = Expand('Invalid export directory: %pFilePath%');
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    EndIf;
-    pFilePath = pFilePath | sOSDelim;
 EndIf;
+If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );
+    pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );
+EndIf;
+If(  FileExists( pFilePath ) = 0 );
+    sMessage = Expand('Invalid export directory: %pFilePath%');
+    nErrors = nErrors + 1;
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+pFilePath = pFilePath | sOSDelim;
 
 # Validate file name
 If( pFileName @= '' );
@@ -1025,9 +1012,9 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     sElementListCount = SubSt( sElementListCount, Scan( pEleDelim, sElementListCount ) + 1, Long( sElementListCount ) );
   End;
   IF( Mod( nElements, nMaxThreads ) = 0 );
-    nElemsPerThread = INT( nElements / nMaxThreads );
+    nElemsPerThread = INT( nElements \ nMaxThreads );
   ELSE;
-    nElemsPerThread = INT( nElements / nMaxThreads ) + 1;
+    nElemsPerThread = INT( nElements \ nMaxThreads ) + 1;
   ENDIF;
   nThreadElCounter = 0;
   While( Scan( pEleDelim, sElementList ) > 0 );

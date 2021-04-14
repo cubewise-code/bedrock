@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"lQbTM@iXxXk6aj6_;<hU?1akXsCgiA\4s0I>MNors4^?H>raCjFGLa<\mGh[cjqe;CPc<G3sXkq<]4x8q[4=d[INgq]`Sh9AjI]Qc]Jbi84Gq8flMUv@MA<5=EdZxDJ6NSy?W4X3@hj=Vo`4sWT8>YWYxc]J8w:2MLFA6pC=@_[]Ptyo<W3r\rfoAbNUkgCfY5_LXn@B"
+565,"rNys]@VeyoqBPNH0AtaJGL1;C@spRL0=jzGHcKc5W>qlCRFR>>GfWKOzhqS9j@X8zXi@4IOQGynon;7F\hOXB=V1m[m`LX=_uSK@lA5`kaCVn4LbhAuESsJO1;4^@Vq;R_GRWy6cMi]mj3ZbwW5I8FbGzgl5\?^Y\QbUp>]ll\V6UROXI6AG0XvQnwyoP3A7p[kGfOKe"
 559,1
 928,0
 593,
@@ -86,7 +86,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,235
+572,243
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -198,11 +198,14 @@ If( HierarchySubsetExists( pDim, pHier, pSub ) = 0 );
 EndIf;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
@@ -217,6 +220,7 @@ If( FileExists( pTgtDir ) = 0 );
   DataSourceType = 'NULL';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
+pTgtDir = pTgtDir | sOSDelim;
 
 # Validate file delimiter & quote character
 If( pDelim @= '' );
@@ -265,16 +269,20 @@ Else;
 EndIf;
 
 # Validate filename
-# If no file name then default to Dimension.Subset.Export.csv
+# If no file name then default to Dimension.Subset.Export.csv (or Dimension.Hierarchy.Subset.Export.csv in case of alternate hierarchy usage)
 If( pTgtFile @= '' );
-  pTgtFile = pDim |'.'| pSub |'.Export.csv';
+  If( pHier @= pHier );
+    pTgtFile = pDim |'.'| pSub |'.Export.csv';
+  Else;
+    pTgtFile = pDim |'.'| pHier |'.'| pSub |'.Export.csv';
+  EndIf;
 Else;
   If( Scan( '.', pTgtFile ) = 0 );
     # No file extension specified
     pTgtFile = pTgtFile | '.csv';
   EndIf;
 EndIf;
-sFile = pTgtDir | sOSDelim | pTgtFile;
+sFile = pTgtDir | pTgtFile;
 
 # Validate Character Set
 If(Trim( pCharacterSet ) @= '' );
@@ -327,7 +335,7 @@ DatasourceAsciiQuoteCharacter = pQuote;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,110
+574,108
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -434,8 +442,6 @@ EndIf;
     sParent5,
     sWeight5
   );
-
-
 
 ### End Data ###
 575,27

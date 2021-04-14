@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"hMh`]<fSyzHifF@CB=]T:O>MT6fVhG1M1S6PCscC`;aRIUi<=8m<[^c93ijWqT34Y_iQQL:oWtpG2i8TXySnHYwz`ntJV0qx9z^6Mr:VuxykW;92fv\d:\RrU4p_bA3K:u2zgPGe54Dz9ySag^Q9MW><w7eyHGs8=q@i`<bRIw]c0ff^]Ik`fJ:w]Wk<;Eb4p]g;Xtu^"
+565,"tlmbLj`kWaM=<earLs3Iy4uljzDNQCrJQwSj6byaZFH1E[idgS:1NdF3:njGav14S9X^A<oDf3rGyehpNmLARr6dmSwjwyQJeS00]5Q[\CRENW>26kEoG5U\K1@JjAcR=wr~G3W?kSyvyN>b7`X:M>WZi6;9ef6VxFAiz]obILak9vWB2v_?9HjGnCQ;0G23@9yZF4b0"
 559,1
 928,0
 593,
@@ -76,7 +76,7 @@ pTemp,"REQUIRED: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,376
+572,379
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -136,12 +136,15 @@ cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage
 cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcDim:%pSrcDim%, pTgtDim:%pTgtDim%, pIncludeData:%pIncludeData%, pEle:%pEle%, pIncludeRules:%pIncludeRules%, pCtrlObj:%pCtrlObj%, pTemp:%pTemp%.' ;   
 cDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 
-## Check Operating System
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+## check operating system
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 

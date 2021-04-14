@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"d;J6aKH2\^[;=HIfgX\:qlDNQHDfuPd2<:;ON\@Z7L3AaFn:3Eur@PUx`x@`WdxwPIrBB?olJvf_Ld<UzqXBL@atD9<OFe?=G2k9`A1OKKMCFqBH8<Tv=eLQZJnxBxVQjsi]@5Cg5NYpjpbteT4uq1XENt;P[wznLtoxz[<0F\i0kXw`FuDZoAbs:5tpAwsehd\V95<O"
+565,"dOn<aGenlMg;R<_7X\`k=@yqCMmj9VvWspV<oS^UFCZQVu^uS5cMVyIhM`6EfmPm1OR_[p2XZU6PMHqCVSeU3=>jmmQNjLTud7<LD@GP7AIzgXkvb9[_7NkgWvLgud^^J8]p8ilADgO_7^`JG[_GrHHKt_zZPLR_^ok2:Y[Qqy86]R]dYHx1ld32tj6pusTAESf5tV:b"
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pCSVDays,"REQUIRED: The number of days to retain CSV files"
 581,0
 582,0
 603,0
-572,118
+572,121
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -106,8 +106,11 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pTgtDir:%pTgtDir%, pLogDays:%pLogDays%, pErrorDays:%pErrorDays%, pBedrockDays:%pBedrockDays%, pCSVDays:%pCSVDays%.' ;  
 
-## Check Operating System
-If( Scan('/', GetProcessErrorFileDirectory)>0);
+## check operating system
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
   sOS = 'Linux';
   sOSDelim = '/';
 Else;
@@ -164,7 +167,7 @@ ExecuteProcess( '}bedrock.server.savedataall', 'pStrictErrorHandling', pStrictEr
 DatasourceASCIIQuoteCharacter='';
 
 If( sOS @= 'Windows');
-  sFileName = 'Bedrock Remove Logs.bat';
+  sFileName = GetProcessName() | '.bat';
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m tm1s*.log -d -' | sLogDays | ' -c "cmd /c del @path"' );
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m tm1auditstore*.log -d -' | sLogDays | ' -c "cmd /c del @path"' );
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m TM1ProcessError*.log -d -' | sErrorDays | ' -c "cmd /c del @path"' );
@@ -173,7 +176,7 @@ If( sOS @= 'Windows');
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.cma -d -' | sCSVDays | ' -c "cmd /c del @path"' );
   ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.txt -d -' | sCSVDays | ' -c "cmd /c del @path"' );
 Else;
-  sFileName = 'bedrock.remove.logs.sh';
+  sFileName = GetProcessName() | '.sh';
   ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sLogDays |' -name "tm1s*.log" -exec rm {}\;');
   ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sLogDays |' -name "tm1auditstore*.log" -exec rm {}\;');
   ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sErrorDays |' -iname "TM1ProcessError*.log" -exec rm {}\;');

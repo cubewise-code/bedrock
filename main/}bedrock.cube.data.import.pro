@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"hA`mpdQqaR:pmEbAo^piAEWOVw@7N2Du3BwwUDQcsY]<ksXEE1ahxxh1^CrPLQjhy2DST:sgX5;UJe9P9eOwVl9UuKpXkXyH\ACkwQrgxwq0UqUbmWznfruob:UBT0q2tmhTGa8b[GMl8=m=dQQZxzO^qib6mA?2?;t>EpHstUeym5gqUekvvycGnPWz7IhP\bND:Ets"
+565,"ixEHiDJ;\anLjVM?utpjMBWiQjlYZP54t2`Mt49ZPYmAi7;1UWRxDSA3nN;YN0qNhBU`ZrEDB]fCPFu03Ql?u2Q^rv;[wX;9gb5H=0f]OvVC0>O9eR<B<4qpW2;y5L4]<M]US1h`>p\<IeXZJ3nh9`8T92C9<C_@8DDKB`^zpKRW7?7oU1m6B`eIOB=s\Z1UA^:9AI@D"
 559,1
 928,0
 593,
@@ -296,7 +296,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,928
+572,933
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -385,25 +385,30 @@ pSourceDir    = TRIM(pSrcDir);
 pSourceFile   = TRIM(pSrcFile);
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
 # Validate source directory
 If(Trim( pSourceDir ) @= '' );
     pSourceDir = GetProcessErrorFileDirectory;
-ElseIf( FileExists( pSourceDir ) = 0 );
-  sMessage = 'Invalid source directory specified: folder does not exist.';
-  nErrors = nErrors + 1;
-  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 If( SubSt( pSourceDir, Long( pSourceDir ) - 1, 1 ) @= sOSDelim );
   pSourceDir = SubSt( pSourceDir, 1, Long( pSourceDir ) - 1 );
+EndIf;
+
+If( FileExists( pSourceDir ) = 0 );
+  sMessage = 'Invalid source directory specified: folder does not exist.';
+  nErrors = nErrors + 1;
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 If( pSourceFile @= '' );

@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.server.dir.backup"
 562,"NULL"
 586,
 585,
 564,
-565,"ttrEfOn=8?R=AKCwFOWuajI<5GU<e=6=]^pN=bKT=RDWBqZ\pD2RV51\Q>8xT<C1q^:9_rAP]Ie@yIW8G1tyyGCzgCZ9<m\MkbcqSr]uJx514SQLHOFi8jGWlgalD2gxh3T0SyE8H`4`>f<]t=AiX<2W038S<d<Cmwiu6C;8G6Ftz9]1XJHLNhtPm;zZZ:b`sFwqhplv"
+565,"zau=kBQo@r95WR]@:T<q?rth8aaz7x=gyDsiyc\eIqikxzVo;eHSVEkboR<@NM8HakZuIo_Ap5WBytZi[B:<Lj=r[m^<9XC8L2j8DTA<9O4Pfs:0Hjw4td5wC6PTP<0@M4sx=^djlc<26GLo@Sk4i7z1r4[BW:?VFwd028Me13eKwl<V`6=zu0eHz6KOUWLC[HgyFrro"
 559,1
 928,0
 593,
@@ -68,7 +68,7 @@ pRobocopy,"OPTIONAL: Use robocopy? (Boolean True = 1), WIN only"
 581,0
 582,0
 603,0
-572,183
+572,186
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -125,7 +125,10 @@ pSrcDir             = Trim( pSrcDir );
 pTgtDir             = Trim( pTgtDir );
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
   sOS = 'Linux';
   sOSDelim = '/';
 Else;
@@ -173,7 +176,7 @@ If( nErrors <> 0 );
 EndIf;
 
 ### Save the model to disk
-ExecuteProcess( '}Bedrock.Server.SaveDataAll', 'pStrictErrorHandling', pStrictErrorHandling );
+ExecuteProcess( '}bedrock.server.savedataall', 'pStrictErrorHandling', pStrictErrorHandling );
 sMessage = 'TM1 Save Data All Complete.';
 If( pLogoutput = 1 );
 	LogOutput('INFO', sMessage ); 
@@ -237,6 +240,7 @@ If(sOS @= 'Windows');
   ASCIIOUTPUT( sFileName, '@ECHO OFF');
   ASCIIOUTPUT( sFileName, sText );
 Else;
+  #sOS is Linux
   If(pSubDirCopy = 1);
   	cSubDirCopy = 'r';
   Else;
@@ -244,7 +248,6 @@ Else;
   EndIf;
   sText = 'rsync -' | cSubDirCopy | 't --exclude-from=' | sFileNameExclude | ' "' | pSrcDir | '" "' | sBackupDir |'"';
 EndIf;
-
 
 sMessage = 'Command Line: ' | sText;
 If( pLogoutput = 1 );
@@ -256,7 +259,7 @@ EndIf;
 
 574,1
 
-575,64
+575,63
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -318,7 +321,6 @@ Else;
         LogOutput('INFO', Expand( sProcessAction ) );   
     EndIf;
 EndIf;
-
 
 ### End Epilog ###
 576,_ParameterConstraints=e30=
