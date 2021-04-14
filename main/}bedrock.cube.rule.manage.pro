@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"eQA@?aLba3gMdBLo^@]2V1NcbmZfC63ajpZt8_HXHFv5D=]Rt2D5bV@[v]xy2;dzpjLrM::J>D1t][1zEL]<Z_dYZ`s8<:=gw@UFre8cCVBQlzw8lz;T1>LRmxPE9mp2tQ8?8J:XXYlHTS=6dsv0ZhJmuQJPt=VcbkQy\bBsf>hD[?CDfePs?;dYpdK262V<`sQ`NwAF"
+565,"aaDD6nFzvwBH15u>[EkOSRByUq<Bpbn@o3SUpQhmZ6_OrJi;DdMY4kiza;Mf^RkqL<[utHN8tttJNG>ul_m7D?CFwdMuLhAXou]MwNd]HKd\l;5sWJkZfCNc@15Fm<3XHyccY`hu4jKMTSUCb<Bhj`__TJp>[YeRQf4fgaG;q<;7ASIPAsO_x^@opZZ4bct7:HXriE>M"
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pPath,"OPTIONAL: Saves the file and the backup of the existing rule in this loca
 581,0
 582,0
 603,0
-572,242
+572,243
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -118,8 +118,11 @@ cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessa
 cLogInfo            = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pMode:%pMode%, pFileName:%pFileName%, pDelim:%pDelim%, pPath:%pPath%.' ;  
 cDimCubes           = '}Cubes';
 
-## Check Operating System
-If( Scan('/', GetProcessErrorFileDirectory)>0);
+## check operating system
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
   sOS = 'Linux';
   sOSDelim = '/';
 Else;
@@ -139,7 +142,6 @@ DatasourceASCIIDelimiter = '';
 DatasourceASCIIQuoteCharacter = '';
 
 ##Validate Mode
-
 If(upper(pMode) @<> 'LOAD' & upper(pMode) @<> 'UNLOAD');
     sMessage = Expand('Invalid Mode: %pMode%. Valid Modes are Load or Unload');
     nErrors = nErrors + 1;
@@ -147,7 +149,6 @@ If(upper(pMode) @<> 'LOAD' & upper(pMode) @<> 'UNLOAD');
 Endif;
 
 ##Validate Cube
-
 If( Trim(pCube) @= '' );
     sMessage = Expand('No cube specified');
     nErrors = nErrors + 1;
@@ -161,12 +162,12 @@ EndIf;
 
 # define backupdir
 If(pPath @<> '');
-    If(Subst(pPath,long(pPath),1) @= '\' % Subst(pPath,long(pPath),1) @= '/' );
+    If(Subst(pPath,long(pPath),1) @= sOSDelim );
         sPath = pPath;
     Else;
         sPath = pPath | sOSDelim;
     Endif;
-else;
+Else;
   sPath = '.' | sOSDelim;
 Endif;
 

@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"c:5z^pvRyLxU<mw7jw[\>;TFUs:mUwX{20<7vUiW3]P>CQu1ydXeC4MTbQi~@M750ZRu64`?QOUQZX1v^;QIoeP38qa3Eyl<;PRxAy55oR]2<usuiaMsC`;?nf<XRgDJd8`F3pAwHxAE;ae97t]Zfy;SKrdUh4Y180HdwtQQ4J6_aXb]ZZ3RnCNrh`1t>S6J9GkkQqhNc:5t^pvRyLxU<mw7jw[\>;TFUs:mUwX;80<7vUiW3]P>CQx1ydXeC4MTb!?r@Mg20ZRU14`?QOe]Z84v^;QIoeP38qq2Eyl<;PR8Jy55oR]2<uC4eaMsC`;?nf<X2pFJdhff=pAwHxAe6aeY<t]Zly;SKrdUh4Y180xewt1]4J6_![b]ZZ3RnS@rh`1t>S:J3GkkQqhN"
+565,"xtJj<Ly^BP^AUI2xAV\;?W9kzj4BfbN~b=eUq8jmHrPg3VEeMRe`mbzkfSi>qe450d:yVo>`hXVAyP1ozW>9iJ1H1PiSptS`de5vQ_J2A6tul0uuimLpCB[C?vgv\gTaT0`JCrYTk0:KKX14GOUWflcxar5HoUnDV3@Tl1Qai1vGdhXLT4c6;AndNG`HCT6BIViKaxJ;xtJj<Ly^BP^AUI2xAV\;?W9ktj4BfbN>h=eUq8jmHrPg3VHeMRe`mbzkf#o4qed20d:YQo>`hXfMy04ozW>9iJ1H1PyRptS`de5vR_J2A6tul0E4emLpCB[C?vgvlX^aT`fjMrYTk0:kFX1dGOU7`lcxar5HoUnDV3pUl11mi1vG$kXLT4c6;Q`dNG`HCT:BCViKaxJ;"
 559,1
 928,0
 593,
@@ -52,7 +52,7 @@ pDelim,"OPTIONAL: Delimiter (Defaults to & if left blank.)"
 581,0
 582,0
 603,0
-572,134
+572,145
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -102,6 +102,18 @@ cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, 
 IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
+
+## check operating system
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
 
 ### Validate Parameters ###
 nErrors = 0;
@@ -158,7 +170,7 @@ While( nDelimiterIndex <> 0 );
         Endif;
     Else;
         # Wildcard search string
-        sSearch                     = '.\' | sCube | '.cub';
+        sSearch                     = Expand('.%sOSDelim%%sCube%.cub');
 
         # Find all Cubes that match search string
         sFilename                   = WildcardFileSearch( sSearch, '' );
@@ -184,7 +196,6 @@ While( nDelimiterIndex <> 0 );
     EndIf;
 
 End;
-
 
 ### End Prolog ###
 573,4

@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"xMXN??k3:\ftw0SF_=1gDmy7a?wlaSQ17wMrw\ZSs2W5Rj@x`9=AEELoiLXLltZ7bPU<:YZ8TZBbYG1QOXgPyasl;EvwraK3iinH;Kcs7Xp<w6KvI5S^ErC0^W<xIffTtUS>fdbPEppWds2ba6axq1?45BH[SA>HxhYZsPjLp?TeajX8c8h8>I1\Z69`>4=6mDGvBrT^"
+565,"pX<AdDHjxpVUM5jYaK9BeN:^74R[[h12HIR6z^]WRTpD5M@T]0jNzTMRgtxYOozfx;bSyvr<N;8uEEL;BQ5joNkSjwm2N=vgJIcw=5FSzyT<GH`bt8a7JIpISAYj@P><9;qQb7];0VamcNOluL;mUp@<yZ@[v4NmOm=lOAU\MF2yY:yXxaMP:n`u82js6YKlVoicVyDW"
 559,1
 928,0
 593,
@@ -306,7 +306,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1387
+572,1390
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -403,11 +403,14 @@ sTargetView         = 'Target '| sView;
 sTargetSubset       = sTargetView;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 

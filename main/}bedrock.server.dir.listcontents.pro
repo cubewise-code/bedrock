@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"xIdxky[`g@bp3hkfxH:i?6sSadU=Qmu?nxPtms0L^Z4TSp3Ik^Q<=3hAo`p]9[<t6c]80nw^BM0pJMFq[nn6w>0M[;_ruRRBUW4AKK6cy_Tu:M3kmNkKPcIqgPFu2H8p=3u7QHz8cb[vYy4iTESY^x>zCZ`H\:eLHtxVui\:bn[VhflKNZT>nc\jO@8N051UlCl^vSXP"
+565,"k6XiY;YB:l=a5Z<vIN1x88^ZKKmXR\3]2boedbYCNd[gLG_oOJIywCi[xN<Z3ngRzp0j^]lTde>U3CBl]FhWzz1sVFCo@YuCpLzFd@xf;vj_=S7Z@4ql9rl55Yn<Lgb4n_:d;?QrfwrH=wOjj1qhELllHZ4HU?gWd_S458@8lk@3pG`QZH7bUB>FVGay^z7WJmQ2o3hw"
 559,1
 928,0
 593,
@@ -48,7 +48,7 @@ pSrcDir,"OPTIONAL: Data Directory (Leave Blank to use TM1 Settings)"
 581,0
 582,0
 603,0
-572,116
+572,122
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -104,13 +104,20 @@ IF( pLogoutput = 1 );
 ENDIF;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
   sOS = 'Linux';
   sOSDelim = '/';
-  cBatchFile = LOWER(cThisProcName) | '.sh';
 Else;
   sOS = 'Windows';
   sOSDelim = '\';
+EndIf;
+
+If( sOS @= 'Linux' );
+  cBatchFile = LOWER(cThisProcName) | '.sh';
+Else;
   cBatchFile = cThisProcName | '.bat';
 EndIf;
 
@@ -162,7 +169,6 @@ Else;
   ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.vue" > List_All_Views.txt ;');
   ASCIIOUTPUT( sCommand, 'find "$PWD" -type f -name "*.sub" > List_All_Subsets.txt ;');
 EndIf;
-
 
 ### End Prolog ###
 573,4

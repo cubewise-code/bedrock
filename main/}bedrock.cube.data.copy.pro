@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"pMcE:d=B_zUqkId<y1TNUmyb:ft\>617QyKOfsCv_bIBle9h2I:WLK1Gv7F1N[G[MfI?141K88`1]SXWW49SP1\5jv:Df9v538:}?^;djWdohwW8yJ<SUm>pvQ:B}eknC;^g6EbgFf{Ftt]D>@4Mmz`Jz?kr>68V>38WAahK[j_BZKAf4?B<C};0de?3z`lB?L=:fjx"
+565,"fPV<G@yejygLtZvjUuTdmhKF1hTEfGT5qT[CVuXXhxrATf9]wfm8jaYo66FA:xIK;;L:quA@jxmqUxsgz?e2]AOzpa{Zc?PO2UQ=mhiyDJn^czzWX[Acpvu@XX2oJ=<\ZA{^7rJhOFh|V<=S4\15=oG7f6Bf;Q<KI<0xf7eXp;qfG:=Ew[1KBC]e`h>jVy`mRTtF:E05"
 559,1
 928,0
 593,
@@ -458,7 +458,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,922
+572,924
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -505,7 +505,6 @@ EndIf;
 #   and passed to a recursive call of the process being added to pFilter.
 #EndRegion @DOC
 
-
 If( pThreadControlFile @<> '' );
     LogOutput( 'INFO', 'Executed as subTI with Thread Control File: ' | pThreadControlFile );
 EndIf;
@@ -551,11 +550,14 @@ sDimCountMax    = NumberToString( cDimCountMax );
 nFactor = If( pFactor = 0, 1, pFactor );
   
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 

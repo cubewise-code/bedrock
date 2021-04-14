@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"f@=wElah>1:D28KdU?pqem:DP?tFRiulgMpBYa[ei<YF=TV9NmSmm1Y:uagqtWTf1sro^?EjPDsmy3?zu@3=9UOWJ<MysnQ;HxnB[[wLn@2Jmb6AND_xKPWsi7sjZTDO\yl3gwH:lE6O?=JnfmQi>Ek>Z<?bV9MrJu=\4wO6`0dV^65<E\]2S8Uj:H^Y[hCAy;?8MPZ;"
+565,"dr=Ca1=d\1qg?u0upeZhjAyUfFStPL?s3<H6YM9YNBSR<JP\5y>y7ga5`d^bhXo:o:dsXdwL<Ds@Qfit=nsYoVOq_YQDGPL72tbb;s?uTvlcmTxyu3;K\^nz8u1sZlCNJ0N5K\8b`AN`h;G<K:mS05>cIfrc1PoS_YjZ3Rb=T=[ERXPNKZEMM[7>Of1doFYcXwqNv58>"
 559,1
 928,0
 593,
@@ -60,7 +60,7 @@ pSourceFile,"REQUIRED: Source file to be processed"
 pDestPath,"REQUIRED: Directory where to store encrypted files, blank = logging directory"
 pConfigLocation,"REQUIRED: Path to tm1crypt.config file"
 pTM1CryptLocation,"REQUIRED: Path to tm1crypt.exe"
-pAction,"REQUIRED: 5 = unencrypt 4 = encrypt"
+pAction,"REQUIRED: 5 = unencrypt, 4 = encrypt"
 577,0
 578,0
 579,0
@@ -68,7 +68,7 @@ pAction,"REQUIRED: 5 = unencrypt 4 = encrypt"
 581,0
 582,0
 603,0
-572,154
+572,158
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -127,14 +127,16 @@ ENDIF;
 ### Validate Parameters ###
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
-
 
 ## Validate the action
 sAction = '';
@@ -218,10 +220,12 @@ EndIf;
 DatasourceASCIIQuoteCharacter= '';
 
 sBat = '"' | pTM1CryptLocation | '" -i "' | pConfigLocation | '" -action ' | sAction | ' -filesrc "' | sFileSrc | '" -filedest "' | sFileDest |'"';
-sBatFile = sDestPath | pSourceFile | '.bat';
-
+If( sOS @= 'Windows' );
+    sBatFile = sDestPath | pSourceFile | '.bat';
+Else;
+    sBatFile = sDestPath | pSourceFile | '.sh';
+EndIf;
 ASCIIOutput( sBatFile, sBat);
-
 
 573,2
 #****Begin: Generated Statements***
@@ -229,15 +233,20 @@ ASCIIOutput( sBatFile, sBat);
 574,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,26
+575,31
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 ### Run that bat file
 
-ExecuteCommand( sBatfile ,1);
-ASCIIDelete( sBatFile );
-
+If( nErrors = 0 );
+  If(sOS @= 'Windows');
+    ExecuteCommand( sBatfile, 1 );
+  Else;
+    ExecuteCommand ( 'sh ' | sBatfile, 1 );
+  EndIf;
+  ASCIIDelete( sBatFile );
+EndIf;
 
 ### Return code & final error message handling
 If( nErrors > 0 );

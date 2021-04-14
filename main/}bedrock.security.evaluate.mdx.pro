@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tx;<yTQ=m?^bQ7y::Yk8aK`E;4ng_YI<kaeRL0_IUy?uv=0Fok?iTiS314wEF34:f\VwSo[q2pvyo]stYjVONep3arenYMeHNtSCuWeh=LZd>ayb=rU=ibmYGUH<6M8C[ABW9vVRrUK\0pxKg`ydelSWogpk^@K_lOr9vuYvFEJoidg<NdaGh=4ng3?RUkjtzw[Z>d1e"
+565,"kCgymiY_B_^a;wAKGh3nKvjJa]RXHXLaVcDAa@:zD=Ww<7cBHlpw6^FVx[:HIS>Ujum_Ld<6cI7AINK:2GEGf0^b4OKji3]mH_slUKy\=aivvhmAB168AmFgV18=TRyv\d]Jtv=2KKnFmmgkOp<`ry[<ZdmTAr[?e[dL`V4RWDW?zLD4aU3U1A>@N3HIaswi>cO:p0B]"
 559,1
 928,0
 593,
@@ -149,28 +149,30 @@ If( pNameSpace <> 0 & pNameSpace <> 1 );
 EndIf;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
 # Validate file path
 If(Trim( pFilePath ) @= '' );
     pFilePath = GetProcessErrorFileDirectory;
-Else;
-    If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );
-        pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );
-    EndIf;
-    If(  FileExists( pFilePath ) = 0 );
-        sMessage = Expand('Invalid export directory: %pFilePath%');
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    EndIf;
-    pFilePath = pFilePath | sOSDelim;
 EndIf;
+If( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );
+    pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );
+EndIf;
+If(  FileExists( pFilePath ) = 0 );
+    sMessage = Expand('Invalid export directory: %pFilePath%');
+    nErrors = nErrors + 1;
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+pFilePath = pFilePath | sOSDelim;
 
 # Validate file name
 If( pFileName @= '' );
@@ -283,26 +285,27 @@ While ( iDim <= nMaxDim );
             sNamespacePrefix = '';
             # if CAMId is used folder structure is different
             If ( pNamespace = 1 );
+                # this \ or / is hardcoded as it is the CAMID }TM1_DefaultDisplayValue alias which sometimes uses back- and sometimes forward-slash. We aren't sanning for directory separator.
                 nEnd = Scan( '/', sAlias);
                 If ( nEnd = 0 );
                     nEnd = Scan ( '\', sAlias );
                 EndIf;    
                 sNamespace = SubSt ( sAlias, 1, nEnd - 1 );
                 sAlias = SubSt ( sAlias, nEnd + 1, Long ( sAlias ) - nEnd );
-                sNamespacePrefix = sNameSpace | '\';
+                sNamespacePrefix = sNameSpace | sOSDelim;
             EndIf;    
-            sSubset = WildcardFileSearch( sNameSpacePrefix | sAlias | '\' | sDim | '}subs\*.sub' , '');
+            sSubset = WildcardFileSearch( Expand('%sNameSpacePrefix%%sAlias%%sOSDelim%%sDim%}subs%sOSDelim%*.sub') , '');
             # loop through all subsets
             While ( sSubset @<> '' );
                 sSubsetName = Subst ( sSubset, 1, LONG ( sSubset ) - 4 );
-                sFile = sNameSpacePrefix | sAlias | '\' | sDim |'}subs\' | sSubset ;
+                sFile = Expand('%sNameSpacePrefix%%sAlias%%sOSDelim%%sDim%}subs%sOSDelim%%sSubset%') ;
                 IF( pLogoutput = 1 );
-                    sMessage = 'Private subset called ' | sSubsetName | ' found for user ' | sAlias | ' in dimension ' | sDim | '. File = ' | sFile;
+                    sMessage = Expand('Private subset called %sSubsetName% found for user %sAlias% in dimension %sDim%. File = %sFile%');
                     LogOutput('INFO', Expand( cMsgInfoContent ) );
                 ENDIF;
                 # run the sub process to evaluate the MDX
                 If ( sSubset @<> '' );
-                    nRet = ExecuteProcess('}bedrock.security.evaluate.subset.mdx.statement',
+                    nRet = ExecuteProcess('}bedrock.security.evaluate.mdx.private',
                                'pLogOutput', pLogOutput,
                                'pStrictErrorHandling', pStrictErrorHandling,
                                'pUser', sUser,
@@ -322,7 +325,7 @@ While ( iDim <= nMaxDim );
                     EndIf;
 
                 EndIf;  
-                sSubset = WildcardFileSearch( sNameSpacePrefix | sAlias | '\' | sDim | '}subs\*.sub' , sSubset);                
+                sSubset = WildcardFileSearch( Expand('%sNameSpacePrefix%%sAlias%%sOSDelim%%sDim%}subs%sOSDelim%*.sub') , sSubset);                
             End;    
             iUser = iUser + 1;
         End;   
@@ -362,7 +365,7 @@ While ( iDim <= nMaxDim );
                 End;
                 sRow = '%pQuote%%sDim%%pQuote%%pFieldDelim%%pQuote%Y%pQuote%%pFieldDelim%%pQuote%%sSubsetName%%pQuote%%pFieldDelim%%pQuote%NO%pQuote%%pFieldDelim%%pQuote%%sMDX%%pQuote%';
                 IF( pLogoutput = 1 );
-                    sMessage = 'Public subset called ' | sSubsetName | ' found in dimension ' | sDim | ' with MDX ' | sMDX;
+                    sMessage = Expand('Public subset called %sSubsetName% found in dimension %sDim% with MDX %sMDX%');
                     LogOutput('INFO', Expand( cMsgInfoContent ) );
                 ENDIF;
                 # now parse the MDX 
@@ -471,7 +474,7 @@ While ( iDim <= nMaxDim );
                                             ENDIF;
                                         ENDIF;
                                         IF( pLogoutput = 1 );
-                                            sMessage = 'Public subset ' | sSubsetName | ' contains a keyword and a specific element ' | sElement | ' that the user ' | sUser | ' do not have access to';
+                                            sMessage = Expand('Public subset %sSubsetName% contains a keyword and a specific element %sElement% that the user %sUser% do not have access to');
                                             LogOutput('INFO', Expand( cMsgInfoContent ) );
                                         ENDIF;
                                     EndIf;
@@ -497,9 +500,6 @@ While ( iDim <= nMaxDim );
     EndIf;    
     iDim = iDim + 1;
 End;
-
-
-
 573,3
 
 #****Begin: Generated Statements***

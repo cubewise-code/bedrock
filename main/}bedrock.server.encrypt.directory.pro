@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"tXF1h;oJLY4O\H88k1I;a5lwUUGV6U^Qq`ba8Y_ff9983yTu>zK3Esf4c5KT1fgpXn9M_TPnRO9e7_tnxSEFYrd>8Vh_ULwCjs8Xwkb]FfqMT:F:3U7d1l[AY`iwJ\D_xXU0KCi65zVejYbLYhZ;HbkPtrj5\Tt:xzst[=n51F8@\1sc5=uyTZnWnpmVoji_xRMKU?Mg"
+565,"r<INDWGgg`t:>5_`8DaR17u>ipMAnYxqfL5K@[=q95Q_^y>SNMYzJ?g\P\Zn8C8OhDBD9llhV9=r1BNbUcSFWSOt3u]]\\=BjXV6m?z<1R\tNg^rIAZSl1L:lfJ2?a>iwM_A[Vs6HrXQ7LnS^oY9xjd:sUg4SHEApBKMS0o<67EwxJ<HO^PRo3:WKAn=@]JGOk]P2fgj"
 559,1
 928,0
 593,
@@ -60,7 +60,7 @@ pDirectory,"REQUIRED: Source directory to be processed"
 pDestPath,"REQUIRED: Directory where to store encrypted files, blank = logging directory"
 pConfigLocation,"REQUIRED: Path to tm1crypt.config file"
 pTM1CryptLocation,"REQUIRED: Path to tm1crypt.exe"
-pAction,"REQUIRED: 5 = unencrypt 4 = encrypt"
+pAction,"REQUIRED: 5 = unencrypt, 4 = encrypt"
 577,0
 578,0
 579,0
@@ -68,7 +68,7 @@ pAction,"REQUIRED: 5 = unencrypt 4 = encrypt"
 581,0
 582,0
 603,0
-572,155
+572,158
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -128,11 +128,14 @@ ENDIF;
 ### Validate Parameters ###
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 

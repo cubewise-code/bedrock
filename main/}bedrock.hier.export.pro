@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"gSXxXY;a>bPuBUZ2qmWzxKlQt=sl?Pq@HJ==8j0d[o8j^=[;LZfs5FzQj0z<_DGnLz5HiUW=K_I7v9f;mZ7MM6@N11<jDqn;:_K2ciSSdprYuFw?8m]gWum7n@8n^lK3s7rNsQNA6acaAvpSybCHa;e>;atRLheEHUz2:]Jpj\zK38=gEAGbjH4rcYvH]KVuKZwXYhN@"
+565,"fbAq<Xa:0`I;ZJ1NvElTI>1DdpG_kQmX3RLwcKf`;V2[;48aRo>YO3FaW_\YAjdAkw2e4v]pYATpe<AOmE<\dPE<2v2czzz<dQNXT7A\9A_^<\9k]F_UtIzveBN[cI\OSYOz6adsla:hRo12X_os10meTd7eErbuy=Tvl6VODb[dsiaxdzWQvR0joKuMJ1>oUj2WTS>8"
 559,1
 928,0
 593,
@@ -86,7 +86,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,217
+572,223
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -202,11 +202,14 @@ If( HierarchyExists( pDim, sHier ) = 0 );
 EndIf;
 
 ## check operating system
-If( Scan('/', GetProcessErrorFileDirectory)>0);
-#  sOS = 'Linux';
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
   sOSDelim = '/';
 Else;
-#  sOS = 'Windows';
+  sOS = 'Windows';
   sOSDelim = '\';
 EndIf;
 
@@ -215,13 +218,16 @@ If( Trim( pTgtDir ) @= '' );
     pTgtDir     = GetProcessErrorFileDirectory;
     sMessage    = 'Target folder defaulted to error file directory.';
     LogOutput( 'INFO', Expand( cMsgErrorContent ) );
-ElseIf( FileExists( pTgtDir ) = 0 );
+EndIf;
+If( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= sOSDelim );
+    pTgtDir = SubSt( pTgtDir, 1, Long( pTgtDir ) -1 );
+EndIf;
+If( FileExists( pTgtDir ) = 0 );
     nErrors     = 1;
     sMessage    = 'Invalid export path specified. Folder does not exist.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @<> sOSDelim );
-    pTgtDir     = pTgtDir | sOSDelim;
 EndIf;
+pTgtDir         = pTgtDir | sOSDelim;
 
 # Validate export filename
 If( pTgtFile @= '' );

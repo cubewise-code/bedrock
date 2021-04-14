@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 585,"D:\TM1Models\Bedrock.v4\Data\Attribute.csv"
 564,
-565,"kTY;VjZ]XQ7a5fZEewosQ_0Jcl>K;3FF^g8aWmUgtbRB9cU=M<sS@jQ3XHA;0\iTXDcR?MvQu169>;eND`B_>yoXFm;2VgKdtiXqD^T_uU9@eTvQ8Zi\N9tKms=HElwuH8dCOW>SUaG42fYC_blutX]oFH\LlT]DJ=0Y9Qp_ERiLHlmnS;l`v24CkmtdfC?pxysES\Ke"
+565,"wmyp_`HpJWAKw]3K`f8:GhkaaYPM;xKW9@R5370uh2:cb4f;R9f_5L1EPRMEEcQ`nn^TuiNFZOcJ]aQr1f;_]a3[_i2P4ehSi2uy6v3zZGE_XD<pZKfyBnUn7bfYr3sJ=zhqDjoNasRi4b=\8S4OC=tA?y<;;xjYInLPnRHQM`WftPgr4d<5a<?UF:vYm^^36YKYju7v"
 559,1
 928,0
 593,
@@ -80,7 +80,7 @@ vAttrType
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,159
+572,174
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -127,7 +127,6 @@ cLenASCIICode = 3;
 
 pDelimiter        = TRIM(pDelim);
 
-
 ## LogOutput parameters
 IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
@@ -139,16 +138,32 @@ nMetaDataCount = 0;
 
 nErrors = 0;
 
+## check operating system
+If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+  sOS = 'Windows';
+  sOSDelim = '\';
+ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+  sOS = 'Linux';
+  sOSDelim = '/';
+Else;
+  sOS = 'Windows';
+  sOSDelim = '\';
+EndIf;
+
 # Validate source dir
+If(Trim( pSrcDir ) @= '' );
+    pSrcDir = GetProcessErrorFileDirectory;
+EndIf;
+If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= sOSDelim );
+    pSrcDir = SubSt( pSrcDir, 1, Long( pSrcDir ) -1 );
+EndIf;
 If( FileExists( pSrcDir ) = 0 );
     nErrors = 1;
     sMessage = 'Invalid source directory specified: folder does not exist.';
     DataSourceType = 'NULL';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
-If( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @<> '\' );
-    pSrcDir = pSrcDir | '\';
-EndIf;
+pSrcDir = pSrcDir | sOSDelim;
 
 # Validate source file
 sFile = pSrcDir | pSrcFile;
@@ -159,7 +174,7 @@ IF ( Trim ( pSrcFile ) @= '' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ElseIf( FileExists( sFile ) = 0 );
     nErrors = 1;
-    sMessage = 'Invalid path/source file specified: It does not exist in directory.';
+    sMessage = 'Invalid path or source file specified: It does not exist.';
     DataSourceType = 'NULL';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
