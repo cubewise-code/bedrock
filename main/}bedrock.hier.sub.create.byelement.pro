@@ -208,7 +208,7 @@ EndIf;
 # Validate expand consolidations
 If( pExpandConsol <> 0 & pExpandConsol <> 1 & pExpandConsol <> 2 );
   nErrors = 1;
-  sMessage = 'Invalid value for pExpandConsol: ' | NumberToString( pExpandConsol ) | '. Valid values are 0 and 1';
+  sMessage = 'Invalid value for pExpandConsol: ' | NumberToString( pExpandConsol ) | '. Valid values are 0, 1 and 2';
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
