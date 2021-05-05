@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.hier.sub.create.byelement"
 562,"NULL"
 586,
 585,
 564,
-565,"lQktBJeV1rbpaP`6i78DTokRGQDyBX_i<MIoFWoVjj0tSLvRtPOT_MXOjgqUSh?pZ53NUZu;yY:pcWS\q<oFr\:7Dv[v]Kx`5R[RKF6Y2ERav^Y5YKyXf]^SwqkSciyF9k>Z?m2q@RrIe]axotUCZv@:s^JKaG]?0Y;LI2@DgBZDotR2RQM[B7glQ;KLmi:xVBFUkiZW"
+565,"neFc^VT`n6p0ooa14f<FnA0t8Lk6R;BZT8MK9>?OhQVr683@9d0gk0y9Pz^NiuXyVgrz>d4COqE^`AfO6tjZHpTGPJT3l02Kw0PVNwT85pXmY7NMFPb;aancrX54PnX=H^5Rmi7G@LcO>e6yuGhkI3`0DbC`jS]trVgJHI=oHz_qpaNWAz4<mgLUe3d8o=Gksp_3:I4X"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,10
+560,11
 pLogOutput
 pStrictErrorHandling
 pDim
@@ -34,9 +34,10 @@ pSub
 pEle
 pDelim
 pAddToSubset
+pExpandConsol
 pAlias
 pTemp
-561,10
+561,11
 1
 1
 2
@@ -45,9 +46,10 @@ pTemp
 2
 2
 1
+1
 2
 1
-590,10
+590,11
 pLogOutput,0
 pStrictErrorHandling,0
 pDim,""
@@ -56,9 +58,10 @@ pSub,""
 pEle,""
 pDelim,"&"
 pAddToSubset,0
+pExpandConsol,1
 pAlias,""
 pTemp,1
-637,10
+637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension name"
@@ -67,6 +70,7 @@ pSub,"REQUIRED: Subset name"
 pEle,"REQUIRED: Elements Separated by Delimiter"
 pDelim,"OPTIONAL: Delimiter character"
 pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
+pExpandConsol,"OPTIONAL: Replace consolidations with their descendants or their leaf level descendants (0=No 1=Descendants 2=Leaf Level Descendants)"
 pAlias,"OPTIONAL: Set Alias for Subset"
 pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
@@ -76,7 +80,7 @@ pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 581,0
 582,0
 603,0
-572,211
+572,239
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -84,7 +88,8 @@ If( 1 = 0 );
       'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '', 'pSub', '',
     	'pEle', '', 'pDelim', '&',
-    	'pAddToSubset', 0, 'pAlias', '', 'pTemp', 1
+    	'pAddToSubset', 0, 'pExpandConsol', 1,
+    	'pAlias', '', 'pTemp', 1
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -104,6 +109,8 @@ EndIf;
 # Note:
 # - pAddToSubset: If the specified subset already exists then this parameter will control whether elements will
 #                 be added to the existing subset (value 1) or a new subset will be created (value 0).
+# - pExpandConsol: If the specified list of elements contains consolidated elements they will be replaced with 
+#                 their leaf level descendants
 # Caution: Process doesn't accept wildcards in element names.
 #EndRegion @DOC
 
@@ -120,7 +127,7 @@ cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pEle:%pEle%, pDelim:%pDelim%, pAddToSubset:%pAddToSubset%, pAlias:%pAlias%, pTemp:%pTemp%.'; 
+cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pEle:%pEle%, pDelim:%pDelim%, pAddToSubset:%pAddToSubset%, pExpandConsol:%pExpandConsol%, pAlias:%pAlias%, pTemp:%pTemp%.'; 
 cAttributeDim       = '}ElementAttributes_' | pDim;
 
 ## LogOutput parameters
@@ -198,6 +205,13 @@ If( pAddToSubset <> 0 & pAddToSubset <> 1 );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
+# Validate expand consolidations
+If( pExpandConsol <> 0 & pExpandConsol <> 1 & pExpandConsol <> 2 );
+  nErrors = 1;
+  sMessage = 'Invalid value for pExpandConsol: ' | NumberToString( pExpandConsol ) | '. Valid values are 0 and 1';
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
 ## Validate Alias
 sDimAttr = '}ElementAttributes_' | pDim;
 IF(pAlias @<> '' );
@@ -265,7 +279,8 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
   If( ElementIndex( pDim, pHier, sElement ) <> 0 );
     If( nErrors = 0 );
       IF(ElementLevel( pDim, pHier, sElement) > 0);
-         ExecuteProcess('}bedrock.hier.sub.create',
+        If( pExpandConsol = 1 );
+          ExecuteProcess('}bedrock.hier.sub.create',
                          'pStrictErrorHandling', pStrictErrorHandling,
                          'pDim', pDim,
                          'pHier',pHier,
@@ -277,7 +292,24 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
                          'pAlias', '',
                          'pTemp', pTemp
                         );
-
+        ElseIf( pExpandConsol = 2 );
+          ExecuteProcess('}bedrock.hier.sub.create',
+                         'pStrictErrorHandling', pStrictErrorHandling,
+                         'pDim', pDim,
+                         'pHier',pHier,
+                         'pSub', pSub,
+                         'pConsol', sElement,
+                         'pLevelFrom', 0,
+                         'pLevelTo', 0,
+                         'pExclusions', '',
+                         'pDelim', pDelim,
+                         'pAddToSubset', 1,
+                         'pAlias', '',
+                         'pTemp', pTemp
+                        );
+        Else;
+          HierarchySubsetElementInsert( pDim, pHIer, pSub, sElement, nSubsetIndex );
+        EndIf;
       ELSE;
         HierarchySubsetElementInsert( pDim, pHIer, pSub, sElement, nSubsetIndex );
       ENDIF;
@@ -358,7 +390,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0
