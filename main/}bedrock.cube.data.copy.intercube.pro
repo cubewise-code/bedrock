@@ -1594,7 +1594,7 @@ Else;
   
   If( pFile = 0 );
     ### Create View of Source ###
-    IF(pSuppressConsol = 0);
+    IF(pSuppressConsol = 0 & pSuppressConsolStrings = 1);
       pSubN=1;
     else;
       pSubN=0;
