@@ -51,8 +51,6 @@ pTemp
 pCubeLogging
 pSandbox
 pFile
-pDecimalSeparator
-pThousandSeparator
 pSubN
 pThreadMode
 pThreadControlFile
@@ -113,8 +111,6 @@ pTemp,1
 pCubeLogging,0
 pSandbox,""
 pFile,0
-pDecimalSeparator,"."
-pThousandSeparator,","
 pSubN,0
 pThreadMode,0
 pThreadControlFile,""
@@ -145,8 +141,6 @@ pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken, parameter does not work with Parallel thread))"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
-pDecimalSeparator,"OPTIONAL: Decimal separator for conversion of number to string and string to number if is used pFile (default value if blank = '.')"
-pThousandSeparator,"OPTIONAL: Thousand separator for conversion of number to string and string to number if is used pFile (default value if blank = ',')"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 pThreadControlFile,"DO NOT USE: Internal parameter only, please don't use"
@@ -476,7 +470,7 @@ If( 1 = 0 );
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
     	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pCumulate', 0,
     	'pZeroTarget', 1, 'pZeroSource', 0,
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0, pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0, 'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -484,13 +478,13 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-#################################################################################################
+################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-#################################################################################################
+################################################################################################# 
 
 #Region @DOC
 # Description:
-# This TI is intended to copy data from one element of a dimension to another in the same cube.
+# This TI is intended to copy data from one element of a dimension to another in the same cube. 
 
 # Use case: Mainly used in production environments.
 # 1/ Typically, this would be used to archive a Budget or Forecast element of a version dimension.
@@ -530,19 +524,19 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';   
 cDefaultView    = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
-    LogOutput('INFO', Expand( cLogInfo ) );
+    LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
 
 #Disable logic for pCubeLogic for prararrel thread
 IF (pParallelThreads > 0);
   pCubeLogging = 2;
-Endif;
-
+Endif;  
+  
 
 # Variables
 nDataCount      = 0;
@@ -554,7 +548,7 @@ cPrefixElementAttributes = '}ElementAttributes_';
 cDimCountMax    = 27;
 sDimCountMax    = NumberToString( cDimCountMax );
 nFactor = If( pFactor = 0, 1, pFactor );
-
+  
 ## check operating system
 If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
   sOS = 'Windows';
@@ -651,12 +645,6 @@ EndIf;
 If( pMappingDelim     @= '' );
     pMappingDelim     = '->';
 EndIf;
-If( pDecimalSeparator @= '' );
- 	pDecimalSeparator = '.';
-EndIf;
-If( pThousandSeparator @= '' );
- 	pThousandSeparator = ',';
-EndIf;
 
 # Validate cube
 If( Trim( pCube ) @= '' );
@@ -740,7 +728,7 @@ If( TRIM( pEleMapping ) @<> '' & TRIM( pMappingDelim) @= '');
     nErrors = nErrors + 1;
     sMessage = 'Mapping Delimiter & Element Mapping can not both be empty.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-Endif;
+Endif; 
 
 # Validate Sandbox
 If( TRIM( pSandbox ) @<> '' );
@@ -759,8 +747,8 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  If( pStrictErrorHandling = 1 );
-      ProcessQuit;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
   Else;
       ProcessBreak;
   EndIf;
@@ -773,8 +761,6 @@ sElementMapping     = TRIM( pEleMapping );
 sMappingDelimiter   = TRIM( pMappingDelim );
 sElementStartDelim  = TRIM( pEleStartDelim );
 sDelimDim           = TRIM( pDimDelim );
-sDecimalSeparator   = TRIM(pDecimalSeparator);
-sThousandSeparator  = TRIM(pThousandSeparator);
 sFilter             = TRIM( pFilter);
 sTargetFilter       = '';
 nSuppressConsol     = pSuppressConsol;
@@ -783,7 +769,7 @@ nCharCount          = LONG( sElementMapping );
 
 # If there's no element mapping then the process can be used to multiply existing value by a factor
 If( nCharCount > 0 );
-
+  
   sWord = '';
   sLastDelim = '';
 
@@ -834,7 +820,7 @@ If( nCharCount > 0 );
             sMessage = Expand( 'Dimension: %sDimension% does not exist');
             nErrors = nErrors + 1;
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
+            #ProcessError();            
         EndIf;
 
         # Check that the dimension is in the cube
@@ -858,7 +844,7 @@ If( nCharCount > 0 );
             sMessage = Expand( 'Dimension %sDimension% does not exist in this cube');
             nErrors = nErrors + 1;
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
+            #ProcessError(); 
         EndIf;
 
         ### Dimension exists so add it to the filters
@@ -888,7 +874,7 @@ If( nCharCount > 0 );
 
         nElementCount = 1;
         sLastDelim = sChar;
-
+        
         # Clear the word
         sWord = '';
 
@@ -900,7 +886,7 @@ If( nCharCount > 0 );
         ### Check both dim delimiter and element delimiter ###
         nIsDelimiter = 0;
 
-        # Check dim delim
+        # Check dim delim 
         # If the delimiter is more than 1 character peek ahead the same amount
         # Ignore the first character
         sDelim = sChar;
@@ -965,11 +951,11 @@ If( nCharCount > 0 );
           # Consolidations may be made allowable
           # so that you can copy strings between c levels
           # or copy from a consolidated source element to an n level target element
-
+          
           ### Check for errors before continuing
           If( nErrors <> 0 );
-              If( pStrictErrorHandling = 1 );
-                  ProcessQuit;
+              If( pStrictErrorHandling = 1 ); 
+                  ProcessQuit; 
               Else;
                   ProcessBreak;
               EndIf;
@@ -986,9 +972,9 @@ If( nCharCount > 0 );
                 nErrors = nErrors + 1;
                 LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
                 #ProcessBreak;
-              Endif;
-          Endif;
-
+              Endif;  
+          Endif;    
+        
           # Add the element to the source or target depending on whether it's the first or the second element
           # Get principal name
           # in case source element and this element are using different aliases
@@ -1008,7 +994,7 @@ If( nCharCount > 0 );
             sTargetFilter = sTargetFilter | sElement;
 
           Else;
-
+ 
             sMessage = Expand( 'There should only be 2 elements per dimension: %sDimension% , a source and a target');
             nErrors = nErrors + 1;
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -1185,8 +1171,8 @@ END;
 ### Check for errors before continuing
 If( nErrors <> 0 );
   DataSourceType = 'NULL';
-  If( pStrictErrorHandling = 1 );
-      ProcessQuit;
+  If( pStrictErrorHandling = 1 ); 
+      ProcessQuit; 
   Else;
       ProcessBreak;
   EndIf;
@@ -1233,8 +1219,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
       	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
       	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
-        'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
+      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
       );
   	  nThreadElCounter = 0;
   	  sFilter = '';
@@ -1251,17 +1236,16 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
     	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
     	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
-      'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
+    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
     );
   ENDIF;
   DataSourceType = 'NULL';
 Else;
   ### Create View of target to zero out
   ### Check that there's something in sTargetFilter so the cube doesn't accidentally get wiped out
-
+  
   If(pZeroTarget = 1 & LONG(sTargetFilter)> 0);
-
+    
     sProc = '}bedrock.cube.data.clear';
     nRet = ExecuteProcess( sProc,
     'pLogOutput', pLogOutput,
@@ -1274,31 +1258,31 @@ Else;
     'pEleDelim', pEleDelim,
     'pCubeLogging', pCubeLogging,
     'pTemp', pTemp,
-    'pSandbox', pSandbox
+    'pSandbox', pSandbox 
     );
-
+  
     IF(nRet <> 0);
         sMessage = 'Error clearing the target view.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        If( pStrictErrorHandling = 1 );
-            ProcessQuit;
+        If( pStrictErrorHandling = 1 ); 
+            ProcessQuit; 
         Else;
             ProcessBreak;
         EndIf;
     ENDIF;
 
   Endif;
-
+  
   If ( pCubeLogging <= 1 );
     sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
     CubeSetLogChanges( pCube, pCubeLogging);
   EndIf;
-
+  
   If( pFile = 0 );
-
+  
     ### Create View of Source ###
-
+    
     nRet = ExecuteProcess('}bedrock.cube.view.create',
       'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
@@ -1315,19 +1299,19 @@ Else;
       'pTemp', pTemp,
       'pSubN', pSubN
       );
-
+      
     IF(nRet <> 0);
           sMessage = 'Error creating the view from the filter.';
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          If( pStrictErrorHandling = 1 );
-              ProcessQuit;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
           Else;
               ProcessBreak;
           EndIf;
     ENDIF;
-
-
+    
+  
     ### Assign Datasource ###
     DataSourceType          = 'VIEW';
     DatasourceNameForServer = pCube;
@@ -1336,7 +1320,7 @@ Else;
     nThreadMode = 1;
   Else;
     ### Export Data to file ###
-
+    
     nRet = ExecuteProcess('}bedrock.cube.data.export',
        'pLogoutput', pLogOutput,
        'pStrictErrorHandling', pStrictErrorHandling,
@@ -1358,28 +1342,26 @@ Else;
        'pFilePath', cDir,
        'pFileName', cFileName,
        'pDelim', cDelimiter,
-       'pDecimalSeparator', sDecimalSeparator,
-       'pThousandSeparator', sThousandSeparator,
        'pQuote', cQuote,
        'pTitleRecord', cTitleRows,
        'pSandbox', pSandbox
       );
-
+      
     IF(nRet <> 0);
           sMessage = 'Error exporting data to file.';
           nErrors = nErrors + 1;
           LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          If( pStrictErrorHandling = 1 );
-              ProcessQuit;
+          If( pStrictErrorHandling = 1 ); 
+              ProcessQuit; 
           Else;
               ProcessBreak;
           EndIf;
     ENDIF;
-
+    
     If(FileExists(cFile) = 0);
       # If the file does not exist, it means that nothing got exported, so there is nothing to import
       If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( 'Process:%cThisProcName% is skipping import as export file %cFile% was not found.' ) );
+        LogOutput('INFO', Expand( 'Process:%cThisProcName% is skipping import as export file %cFile% was not found.' ) );     
       EndIf;
       DataSourceType = 'NULL';
     Else;
@@ -1391,9 +1373,9 @@ Else;
       DatasourceASCIIDelimiter        = cDelimiter;
       DatasourceASCIIQuoteCharacter   = cQuote;
     EndIf;
-
+    
     nThreadMode = 1;
-
+  
   EndIf;
 
 EndIf;
@@ -1410,15 +1392,15 @@ EndIf;
 #****End: Generated Statements****
 
 
-#################################################################################################
+################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-#################################################################################################
+################################################################################################# 
 
 If( pFile > 0 );
-  v0 = v1; v1 = v2; v2 = v3;  v3 = v4; v4 = v5; v5 = v6; v6 = v7; v7 = v8; v8 = v9; v9 = v10; v10 = v11; v11 = v12; v12 = v13; v13 = v14; v14 = v15;
+  v0 = v1; v1 = v2; v2 = v3;  v3 = v4; v4 = v5; v5 = v6; v6 = v7; v7 = v8; v8 = v9; v9 = v10; v10 = v11; v11 = v12; v12 = v13; v13 = v14; v14 = v15; 
   v15 = v16; v16 = v17; v17 = v18; v18 = v19; v19 = v20; v20 = v21; v21 = v22; v22 = v23; v23 = v24; v24 = v25; v25 = v26; v26 = v27; v27 = v28;  v28 = v29;
 EndIf;
-
+  
 v1 = IF(nMappedDim1 = 1, IF(v1 @= sSourceDim1 % elisanc(sDim1,sSourceDim1,v1)=1, sTargetDim1, v1), v1);
 v2 = IF(nMappedDim2 = 1, IF(v2 @= sSourceDim2 % elisanc(sDim2,sSourceDim2,v2)=1, sTargetDim2, v2), v2);
 v3 = IF(nMappedDim3 = 1, IF(v3 @= sSourceDim3 % elisanc(sDim3,sSourceDim3,v3)=1, sTargetDim3, v3), v3);
@@ -1467,15 +1449,15 @@ If( nDimensionCount = 2 );
         ELSEIF( sElType @= 'AS' );
             AttrPutS( v3, sDim1, v1, v2 );
         ELSEIF( sElType @= 'AN' );
-            AttrPutN( StringToNumberEx( v3, sDecimalSeparator, sThousandSeparator ) * nFactor, sDim1, v1, v2 );
+            AttrPutN( Numbr( v3) * nFactor, sDim1, v1, v2 );
         ElseIf( sElType @= 'S' );
             CellPutS( v3, pCube, v1, v2 );
         Else;
             IF( pCumulate = 1);
                 nObal = CellGetN( pCube, v1, v2 );
-                nCbal = nObal + StringToNumberEx( v3, sDecimalSeparator, sThousandSeparator ) * nFactor;
+                nCbal = nObal + Numbr( v3 ) * nFactor;
             ELSE;
-                nCbal = StringToNumberEx( v3, sDecimalSeparator, sThousandSeparator ) * nFactor;
+                nCbal = Numbr( v3 ) * nFactor;
             Endif;
             CellPutN( nCbal, pCube, v1, v2 );
         EndIf;
@@ -1486,9 +1468,9 @@ ElseIf( nDimensionCount = 3 );
         If( sElType @<> 'S' );
             IF( pCumulate = 1);
                 nObal = CellGetN( pCube, v1, v2, v3 );
-                nCbal = nObal + StringToNumberEx( v4, sDecimalSeparator, sThousandSeparator ) * nFactor;
+                nCbal = nObal + Numbr( v4 ) * nFactor;
             ELSE;
-                nCbal = StringToNumberEx( v4, sDecimalSeparator, sThousandSeparator ) * nFactor;
+                nCbal = Numbr( v4 ) * nFactor;
             Endif;
             CellPutN( nCbal, pCube, v1, v2, v3 );
         Else;
@@ -1501,9 +1483,9 @@ ElseIf( nDimensionCount = 4 );
         If( sElType @<> 'S' );
             IF( pCumulate = 1);
                 nObal = CellGetN( pCube, v1, v2, v3, v4);
-                nCbal = nObal + StringToNumberEx( v5, sDecimalSeparator, sThousandSeparator ) * nFactor;
+                nCbal = nObal + Numbr( v5 ) * nFactor;
             ELSE;
-                nCbal = StringToNumberEx( v5, sDecimalSeparator, sThousandSeparator ) * nFactor;
+                nCbal = Numbr( v5 ) * nFactor;
             Endif;
             CellPutN( nCbal, pCube, v1, v2, v3, v4);
         Else;
@@ -1516,9 +1498,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF(pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5 );
-          nCbal = nObal + StringToNumberEx( v6, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v6 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v6, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v6 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5 );
       Else;
@@ -1531,9 +1513,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6 );
-          nCbal = nObal + StringToNumberEx( v7, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v7 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v7, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v7 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6 );
       Else;
@@ -1546,9 +1528,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7 );
-          nCbal = nObal + StringToNumberEx( v8, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v8 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v8, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v8 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7 );
       Else;
@@ -1561,9 +1543,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
-          nCbal = nObal + StringToNumberEx( v9, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v9 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v9, sDecimalSeparator, sThousandSeparator )* nFactor;
+          nCbal = Numbr( v9 )* nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
       Else;
@@ -1576,9 +1558,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
-          nCbal = nObal + StringToNumberEx( v10, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v10 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v10, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v10 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
       Else;
@@ -1591,9 +1573,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
-          nCbal = nObal + StringToNumberEx( v11, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v11 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v11, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v11 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
       Else;
@@ -1606,9 +1588,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
-          nCbal = nObal + StringToNumberEx( v12, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v12 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v12, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v12 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
       Else;
@@ -1621,9 +1603,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
-          nCbal = nObal + StringToNumberEx( v13, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v13 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v13, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v13 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
       Else;
@@ -1636,9 +1618,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
-          nCbal = nObal + StringToNumberEx( v14, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v14 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v14, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v14 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
       Else;
@@ -1651,9 +1633,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
-          nCbal = nObal + StringToNumberEx( v15, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v15 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v15, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v15 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
       Else;
@@ -1666,9 +1648,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
-          nCbal = nObal + StringToNumberEx( v16, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v16 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v16, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v16 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
       Else;
@@ -1681,9 +1663,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
-          nCbal = nObal + StringToNumberEx( v17, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v17 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v17, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v17 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
       Else;
@@ -1696,9 +1678,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
-          nCbal = nObal + StringToNumberEx( v18, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v18 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v18, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v18 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
       Else;
@@ -1711,9 +1693,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
-          nCbal = nObal + StringToNumberEx( v19, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v19 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v19, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v19 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
       Else;
@@ -1726,9 +1708,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
-          nCbal = nObal + StringToNumberEx( v20, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v20 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v20, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v20 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
       Else;
@@ -1741,9 +1723,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
-          nCbal = nObal + StringToNumberEx( v21, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v21 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v21, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v21 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
       Else;
@@ -1756,9 +1738,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
-          nCbal = nObal + StringToNumberEx( v22, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v22 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v22, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v22 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
       Else;
@@ -1771,9 +1753,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
-          nCbal = nObal + StringToNumberEx( v23, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v23 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v23, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v23 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
       Else;
@@ -1787,9 +1769,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate >= 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
-          nCbal = nObal + StringToNumberEx( v24, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v24 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v24, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v24 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
       Else;
@@ -1802,9 +1784,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
-          nCbal = nObal + StringToNumberEx( v25, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v25 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v25, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v25 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
       Else;
@@ -1817,9 +1799,9 @@ ElseIf( nDimensionCount = 5 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
-          nCbal = nObal + StringToNumberEx( v26, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v26 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v26, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v26 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
       Else;
@@ -1833,9 +1815,9 @@ ElseIf( nDimensionCount = 26 );
       If( sElType @<> 'S' );
         IF( pCumulate = 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
-          nCbal = nObal + StringToNumberEx( v27, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v27 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v27, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v27 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
       Else;
@@ -1848,9 +1830,9 @@ ElseIf( nDimensionCount = 27 );
       If( sElType @<> 'S' );
         IF( pCumulate >= 1);
           nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
-          nCbal = nObal + StringToNumberEx( v28, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = nObal + Numbr( v28 ) * nFactor;
         ELSE;
-          nCbal = StringToNumberEx( v28, sDecimalSeparator, sThousandSeparator ) * nFactor;
+          nCbal = Numbr( v28 ) * nFactor;
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
       Else;
@@ -1867,11 +1849,11 @@ ElseIf( nDimensionCount = 27 );
 #****End: Generated Statements****
 
 
-#################################################################################################
+################################################################################################# 
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-#################################################################################################
+################################################################################################# 
 
-# Zero out source cube #
+# Zero out source cube #    
 IF( pZeroSource = 1 & nErrors = 0 );
     sProc = '}bedrock.cube.data.clear';
     nRet = ExecuteProcess( sProc,
@@ -1924,7 +1906,7 @@ If( pFilterParallel @<> '' );
         Else;
             Break;
         EndIf;
-
+    
     i = i + 1;
     End;
 EndIf;
@@ -1935,15 +1917,15 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
-    If( pStrictErrorHandling = 1 );
-        ProcessQuit;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
     EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully copied data from %pSrcView% view to the %pTgtView% view in the %pCube% cube.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( sProcessAction ) );
+        LogOutput('INFO', Expand( sProcessAction ) );   
     EndIf;
 EndIf;
 ### End Epilog ###
