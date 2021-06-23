@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"nT4f42xVljepJea91<yObea7UmcTspBuBw1E\a@92>ce1FGnLybD79RF6i_Sw53?g@wU2?1g=MQkW;]^;FrshsnS`n[=f5@GF2tTTAxBztxc?S;Wb4LP=38N@lHIR0d;:Xi1IGlA8tmpRrJ_\sWcS8R<THl@=IOnX6B7@ZUQO1ejyoUG51lngrin>Q@TxJrtQ:V7m6z`"
+565,"nJ6LUM@hTfZK@4aY2[p7xQmdHOmH=dbfiZAH8EDTbbR\070[v=4PmGsVMH7Ja\wScI>y8H\XYmH:VF^?AXwIE?o3WWlm:Ps02ADS2XILJU6DN6xNT:mdAhyCXU38aXk?@oQsXF^Z6PFwckQbdN>7oE2\MY_adtAAo7ZRmMxe1Ut?b89KxEoYcs7C1FJ@O=\c^E8vz;WU"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,8
+560,9
 pLogOutput
 pStrictErrorHandling
 pSrcDim
@@ -34,7 +34,8 @@ pHier
 pAttr
 pUnwind
 pDelim
-561,8
+pSub
+561,9
 1
 1
 2
@@ -43,7 +44,8 @@ pDelim
 1
 1
 2
-590,8
+1
+590,9
 pLogOutput,0
 pStrictErrorHandling,0
 pSrcDim,""
@@ -52,7 +54,8 @@ pHier,"*"
 pAttr,0
 pUnwind,0
 pDelim,"&"
-637,8
+pSub,0
+637,9
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
@@ -61,6 +64,7 @@ pHier,"REQUIRED: Hierarchies to be included (will use default is left blank), ac
 pAttr,"REQUIRED: Include Attributes? (Boolean 1=True)"
 pUnwind,"REQUIRED: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
 pDelim,"OPTIONAL: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
+pSub,"OPTIONAL: if 1 = Clone subsets"
 577,1
 vEle
 578,1
@@ -396,7 +400,7 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
 EndIf;
 
 ### End Data ###
-575,215
+575,237
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -592,6 +596,28 @@ ElseIf( Trim( pHier ) @<> '' );
     End;
 Endif;
 
+### Clone dimension subsets
+If( pSub = 1);
+  nCountSubs = DimSiz ('}Subsets_' | sDim);
+  While ( nCountSubs >= 1 );
+    sCurrSub = If( Scan( ':', DimNm ('}Subsets_' | sDim, nCountSubs)) = 0, DimNm ('}Subsets_' | sDim, nCountSubs), Subst( DimNm ('}Subsets_' | sDim, nCountSubs), Scan( ':', DimNm ('}Subsets_' | sDim, nCountSubs))+1, Long(DimNm ('}Subsets_' | sDim, nCountSubs))-Scan( ':', DimNm ('}Subsets_' | sDim, nCountSubs))));
+    sCurrHier = If( Scan( ':', DimNm ('}Subsets_' | sDim, nCountSubs)) = 0, '', Subst(DimNm ('}Subsets_' | sDim, nCountSubs), 1, Scan( ':', DimNm ('}Subsets_' | sDim, nCountSubs))-1));
+
+    ExecuteProcess('}bedrock.hier.sub.clone',
+      'pLogOutput',0,
+      'pStrictErrorHandling',0,
+      'pSrcDim',sDim,
+      'pSrcHier',sCurrHier,
+      'pSrcSub',sCurrSub,
+      'pTgtDim', pTgtDim,
+      'pTgtHier', sCurrHier,
+      'pTgtSub',sCurrSub,
+      'pTemp',0,
+      'pAlias','');
+    nCountSubs = nCountSubs - 1;
+  End;
+Endif;
+          
 
 ### Return code & final error message handling
 If( nErrors > 0 );
