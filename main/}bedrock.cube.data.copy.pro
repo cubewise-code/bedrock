@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,29
+560,31
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -55,7 +55,9 @@ pSubN
 pThreadMode
 pThreadControlFile
 pMaxWaitSeconds
-561,29
+pDelim
+pQuote
+561,31
 1
 1
 2
@@ -85,7 +87,7 @@ pMaxWaitSeconds
 1
 2
 1
-590,29
+590,31
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -115,7 +117,9 @@ pSubN,0
 pThreadMode,0
 pThreadControlFile,""
 pMaxWaitSeconds,1800
-637,29
+pDelim,","
+pQuote,""""
+637,31
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
@@ -145,6 +149,8 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
 pThreadControlFile,"DO NOT USE: Internal parameter only, please don't use"
 pMaxWaitSeconds,"OPTIONAL: Used with parallel to define wait time"
+pDelim,"OPTIONAL: For pFile > 0. AsciiOutput delimiter character (Default=comma)"
+pQuote,"OPTIONAL: For pFile > 0. AsciiOutput quote character (Default=double quote)"
 577,51
 V1
 V2
@@ -566,8 +572,8 @@ cDir    = '.' | sOSDelim;
 cFileName = pCube | cTimeStamp | cRandomInt | '.csv';
 cFile   = cDir | cFileName;
 cTitleRows = 1;
-cDelimiter = ',';
-cQuote = '"';
+cDelimiter = pDelim;
+cQuote = pQuote;
 
 # nMappedDimX is a binary switch used to keep track of which dimensions have been mapped from the source to the target
 nMappedDim1 = 0;
