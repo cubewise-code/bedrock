@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.import"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"ixEHiDJ;\anLjVM?utpjMBWiQjlYZP54t2`Mt49ZPYmAi7;1UWRxDSA3nN;YN0qNhBU`ZrEDB]fCPFu03Ql?u2Q^rv;[wX;9gb5H=0f]OvVC0>O9eR<B<4qpW2;y5L4]<M]US1h`>p\<IeXZJ3nh9`8T92C9<C_@8DDKB`^zpKRW7?7oU1m6B`eIOB=s\Z1UA^:9AI@D"
+565,"cJ4a9MwgELEEG=2bhMGOb4mTv4T;9^GJtOS4r8PWi?O15gebkt>MAmdMN\gcvm?gTqI_kP;;kV]n:=c2zzq\]_A_3Wpc5tnFZpW[_D1kR3v4sOQnO<G@>rQGye>R`8gdhksjjB5SL5kHN?cPw^Qbof1lE]bHnh?S=Rnrm0rcUD?WxsJhjDliX`c0Bs>=B?JfopQ6[gd\"
 559,1
 928,0
 593,
@@ -296,7 +296,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,933
+572,950
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1133,56 +1133,73 @@ ElseIf(nTargetIndex = 11 & nNewDim11 = 0);
 ElseIf(nTargetIndex = 12);
   nMappedDim12 = 1;
   sMappedV12  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 13);
   nMappedDim13 = 1;
   sMappedV13  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 14);
   nMappedDim14 = 1;
   sMappedV14  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 15);
   nMappedDim15 = 1;
   sMappedV15  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 16);
   nMappedDim16 = 1;
   sMappedV16  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 17);
   nMappedDim17 = 1;
   sMappedV17  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 18);
   nMappedDim18 = 1;
   sMappedV18  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 19);
   nMappedDim19 = 1;
   sMappedV19  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 20);
   nMappedDim20 = 1;
   sMappedV20  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 21);
   nMappedDim21 = 1;
   sMappedV21  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 22);
   nMappedDim22 = 1;
   sMappedV22  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 23);
   nMappedDim23 = 1;
   sMappedV23  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 24);
   nMappedDim24 = 1;
   sMappedV24  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 25);
   nMappedDim25 = 1;
   sMappedV25  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 26);
   nMappedDim26 = 1;
   sMappedV26  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 ElseIf(nTargetIndex = 27);
   nMappedDim27 = 1;
   sMappedV27  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 
 # a cube with 27 dimensions uses V28 to hold the values
 ElseIf(nTargetIndex = 28);
   nMappedDim28 = 1;
   sMapped28  = 'V' | NumberToString(nSourceIndex);
+  nSourceIndex = nSourceIndex + 1;
 EndIf;
 
 
@@ -1230,13 +1247,11 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 SetInputCharacterSet (pCharacterSet);
 
 ### End Prolog ###
-573,4
-
+573,3
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,822
-
+574,821
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2058,8 +2073,7 @@ ElseIf( nDimensionCount = 27 );
 ## Increase Record count
 nRecordPostedCount = nRecordPostedCount + 1;
 ### End Data ###
-575,40
-
+575,39
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2099,7 +2113,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0
+576,_ParameterConstraints=e30=
 930,0
 638,1
 804,0
