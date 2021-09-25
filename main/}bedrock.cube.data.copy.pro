@@ -142,8 +142,8 @@ pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
-pThreadMode,"DO NOT USE: Internal parameter only, please don't use"
-pThreadControlFile,"DO NOT USE: Internal parameter only, please don't use"
+pThreadMode,"DO NOT USE: Internal parameter only, please do not use"
+pThreadControlFile,"DO NOT USE: Internal parameter only, please do not use"
 pMaxWaitSeconds,"OPTIONAL: Used with parallel to define wait time"
 577,51
 V1
