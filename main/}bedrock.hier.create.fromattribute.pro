@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.hier.create.fromattribute"
 562,"VIEW"
 586,"}ElementAttributes_}Clients"
 585,"}ElementAttributes_}Clients"
 564,
-565,"s5UFcXC8LWTfkBAvYctaVI\9PDgfbBdBL=4G;W:OJ0pZg`n2@d6vICO9`PR@G<y6lsrUJj9Obn^^F@cT1?\`1TU77IkLAdJdgfT\[sJ_pzoaDn4yHmuyuLX^UijHzY3<y^GhcJJqqxMjT[BTUEIJj3=r5g5?n>47^EguXwiXjTNampiOttcJ`s@0nYfiZml1SoOAK5Yk"
+565,"lLPTIRWmjYvga309_pfHy4]0uGLGDG4Mh`cU12ur8T[8Q]ewS;96hmsE\r3r>asfLy;IoU[;YCN0A_V6dC_`eFfPJ?R=Z1kx:v=Jb\sh]0:g0QlNftFhkHc8<cSIuL785rU8j61[Hao6t@V:1QULUzuF<_Im2D\@dLI?qd;aKdyh5C7dYzNcjC5FVI6L4zTa\87ppxXv"
 559,1
 928,0
 593,
@@ -69,14 +69,14 @@ pLogOutput,"OPTIONAL: Write parameters and action summary to server message log 
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension"
 pSrcHier,"OPTIONAL: Source Hierarchy, If not specified takes the default Hierarchy"
-pTgtHier,"OPTIONAL: Target Hierarchy, If not specified, takes the same name as attribute."
+pTgtHier,"OPTIONAL: Target Hierarchy, If not specified, takes the same name as attribute"
 pAttr,"REQUIRED: Attribute"
-pTopNode,"OPTIONAL: The name of the Target Hierarchy top element (will default to 'All ' attribute name )"
+pTopNode,"OPTIONAL: The name of the Target Hierarchy top element (will default to 'All ' attribute name)"
 pPrefix,"OPTIONAL: Prefix before the attribute value"
 pSuffix,"OPTIONAL: Suffix after the attribute value"
-pSkipBlank,"OPTIONAL: To manage empty attribute: 0= Skip,  1=Send to unallocated node (by default blank attribute values are skipped)"
+pSkipBlank,"OPTIONAL: To manage empty attribute: 0= Skip, 1=Send to unallocated node (by default blank attribute values are skipped)"
 pUnallocated,"OPTIONAL: Naming convention for rollup if attribute is empty (eg. Unallocated <pAttr>, No <pAttr>, Undefined <pAttr>)"
-pUnwind,"OPTIONAL: Unwind target hierarchy hierarchy"
+pUnwind,"OPTIONAL: Unwind target hierarchy (0 = Do not unwind, 1 = Unwind)"
 577,3
 vEle
 vAttr
@@ -102,7 +102,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,215
+572,216
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -110,7 +110,7 @@ If( 1 = 0 );
       'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pSrcHier', '', 'pTgtHier', '', 'pAttr', '',
     	'pTopNode', 'Total <pAttr>', 'pPrefix', '', 'pSuffix', '',
-    	'pSkipBlank', 0, 'pUnallocated', 'Undefined <pAttr>'
+    	'pSkipBlank', 0, 'pUnallocated', 'Undefined <pAttr>', 'pUnwind', 0
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -211,9 +211,10 @@ ElseIf( DimIx( cAttributeDim, pAttr ) = 0 );
     nErrors = 1;
     sMessage = 'Attribute: ' | pAttr | ' does not exists in dimension: ' | pDim;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( DType( cAttributeDim, pAttr ) @<> 'AS' );
+ElseIf( DType( cAttributeDim, pAttr ) @<> 'AS' & DType( cAttributeDim, pAttr ) @<> 'AN');
+    ### as alias values are all unique, not applicable for creating hierarchy
     nErrors = 1;
-    sMessage = 'Only string attributes may be used for this process.';
+    sMessage = 'Only string and numeric attributes may be used for this process.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
@@ -318,7 +319,7 @@ DatasourceNameForServer   = pDim|':'|pSrcHier;
 DatasourceNameForClient   = pDim|':'|pSrcHier;
 DataSourceType            = 'SUBSET';
 DatasourceDimensionSubset = 'ALL';
-573,51
+573,55
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -348,7 +349,11 @@ If( vEle @= sTopNode );
     ItemSkip;
 ENDIF;
 
-sAttrVal = ElementAttrS(pDim, pSrcHier, vEle, pAttr);
+If( DType( cAttributeDim, pAttr ) @= 'AS' );
+  sAttrVal = ElementAttrS(pDim, pSrcHier, vEle, pAttr);
+Else; 
+  sAttrVal = NumberToString(ElementAttrN(pDim, pSrcHier, vEle, pAttr));
+EndIf; 
 sParent = sAttrVal;
 
 # Manage not populated attribute.
