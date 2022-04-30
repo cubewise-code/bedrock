@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.copy.intercube"
 562,"VIEW"
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"pX<AdDHjxpVUM5jYaK9BeN:^74R[[h12HIR6z^]WRTpD5M@T]0jNzTMRgtxYOozfx;bSyvr<N;8uEEL;BQ5joNkSjwm2N=vgJIcw=5FSzyT<GH`bt8a7JIpISAYj@P><9;qQb7];0VamcNOluL;mUp@<yZ@[v4NmOm=lOAU\MF2yY:yXxaMP:n`u82js6YKlVoicVyDW"
+565,"zqQf=o_lA<zV?14rhRN`=jK?tiaKGRxR`PpZv=N0uCyNxwT5e8^ICvh\uuj3V>j6`ExEYx_F9:<L7plEMrqR<FNJDMX1jQY7eC5H>`09=Cmz`8XR\4D^H]_kvd>W`L@AB8StsN>2i`Q^qSe<OyT6fQ9;x\bEMhVKWO9vT<M7OK_zwvYUEjUZ9w2:=0Wc]4D8X7LFelao"
 559,1
 928,0
 593,
@@ -306,7 +306,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1390
+572,1398
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1595,7 +1595,11 @@ Else;
   If( pFile = 0 );
     ### Create View of Source ###
     IF(pSuppressConsol = 0);
-      pSubN=1;
+      If(pSuppressConsolStrings = 0);
+      	pSubN=0;
+      Else;
+      	pSubN=1;
+      EndIf;
     else;
       pSubN=0;
     Endif;  
@@ -1631,7 +1635,11 @@ Else;
   ElseIf( pFile > 0 );
     ### Export to File in case of Copy Data Via File ###
     IF(pSuppressConsol = 0);
-      pSubN=1;
+      If(pSuppressConsolStrings = 0);
+      	pSubN=0;
+      Else;
+      	pSubN=1;
+      EndIf;
     else;
       pSubN=0;
     Endif;  
@@ -1697,12 +1705,10 @@ Else;
     DatasourceASCIIQuoteCharacter   = cQuote;
   EndIf;
 EndIf;
-573,3
-
+573,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,373
-
+574,372
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2075,8 +2081,7 @@ EndIf;
 
 
 
-575,46
-
+575,45
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2122,7 +2127,7 @@ EndIf;
 
 ### End Epilog ###
 
-576,CubeAction=1511?DataAction=1503?CubeLogChanges=0?
+576,_ParameterConstraints=e30=
 930,0
 638,1
 804,0
