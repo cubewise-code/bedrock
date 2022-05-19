@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"wualONoC=68\T7SooqMx9Oaa9UbF781rNZNW2iu6aA?]8wU=zIbYeQDq<zFJfobWwP;RIWKB7fxrVT_@SsvArxsl@DkMKDOACxq[j@OB]Na>Z?SEE5:?>8l`oB`Fi<]pApB`XAen5>sf[wLf^iXelyd8@74TCyAfua6>x1xiC\;rEvxJH]asajQ7dZQCoBI<t0@Rh6Y6"
+565,"vBuG@tFn49OROjK\4<0TudavHYbB[R`TQquC=D9rd`Qrkifk>JS]?lPL6eHzP;73sMxxIt5ynvU0J\n\B[6=dmCJ7;Pw3CzbdZiErbeJo<tYmwPU=_8_F<QJM@ElWtb<_nYauVCZp_A?baZ?NIn0\HV05`gfKmPlW7jnc6J5iflU?gawhP7B:pZdKeDKfAe22BUvr4Zk"
 559,1
 928,0
 593,
@@ -99,7 +99,7 @@ sErrors             = '';
 
 # ValidateType
 sType               = Upper ( pLevel );
-If( sType @<> 'ERROR' & sType @<> 'DEBUG' & sType @<> 'INFO' );
+If( sType @<> 'ERROR' & sType @<> 'WARN' & sType @<> 'DEBUG' & sType @<> 'INFO' );
     nErrors         = nErrors + 1;
     sMessage        = 'Invalid Type: ' | pLevel | cLF;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
