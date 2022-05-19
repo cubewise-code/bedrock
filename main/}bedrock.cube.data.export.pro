@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"fq22Lramjox_rzqlg^:<LJq;5Hrz?Jk40B1@wB>2SLR1zcNpo8WjRqxzy>gCe19Sk59c`rK9j5LoTG9<F^cO7TTI1y`73L`d9mDpI?3eO@<kMJ]RE\4wglTqM_RrfhCcZ;60s<pRMqA=Z:KZ`cQA1A?d4SSq@XU?zW;w^eBSd76fgqkpXOgfKmSEMHJWMsN[;w9^Xe;i"
+565,"g>`zsvsa\i_20gL<:M6E@wRZjqb0lIfjZodcu?6H1:5hXX>Fmh`b:ZSZ6KDtsImT\jo]jy9n4ix9sneFwCIZ^suaEsM`BPwJm=m<vGtwt2XIX18HQx3PqCv[7kjd4urVFefng[VlVa\[Fo<kC^l?UPvBgkHs:Msbgr>1?L5k_OR9aRRL2eM4hj4Esdjwan2O2L=b0k>O"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,26
+560,28
 pLogoutput
 pStrictErrorHandling
 pCube
@@ -54,7 +54,7 @@ pSandbox
 pSubN
 pCharacterSet
 pCubeNameExport
-561,26
+561,28
 1
 1
 2
@@ -76,12 +76,14 @@ pCubeNameExport
 2
 2
 2
-1
+2
 2
 1
 2
 1
-590,26
+2
+1
+590,28
 pLogoutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -108,9 +110,9 @@ pQuote,""""
 pTitleRecord,1
 pSandbox,""
 pSubN,0
-pCharacterSet,"TM1CS_UTF8"
-pCubeNameExport,1
-637,26
+pCharacterSet,""
+pCubeNameExport,0
+637,28
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
@@ -130,13 +132,13 @@ pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of
 pTemp,"OPTIONAL: Retain temporary view and Subset ( 0 = retain View and Subsets 1 = use temp objects)"
 pFilePath,"OPTIONAL: Export Directory (will default to error file path)"
 pFileName,"OPTIONAL: Export Filename (If Left Blank Defaults to cube_export.csv)"
-pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
-pDecimalSeparator,"OPTIONAL: Decimal separator for conversion of number to string and string to number (default value if blank = '.')
-pThousandSeparator,"OPTIONAL: Thousand separator for conversion of number to string and string to number (default value if blank = ',')"
+pDelim,"OPTIONAL: AsciiOutput delimiter character (Default = ',' exactly 3 digits = ASCII code)"
+pDecimalSeparator,"OPTIONAL: Decimal separator for conversion of number to string and string to number (default = '.' exactly 3 digits = ASCII code)"
+pThousandSeparator,"OPTIONAL: Thousand separator for conversion of number to string and string to number (default = ',' exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
-pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
+pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter (default=0)"
 pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 pCubeNameExport,"OPTIONAL: Skip cube name from export file, including header (Skip = 0) (Default = 1)"
 577,101
@@ -547,8 +549,6 @@ Value
 0
 0
 0
-0
-0
 581,101
 0
 0
@@ -754,7 +754,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,422
+572,476
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -850,8 +850,6 @@ EndIf;
 sDelimDim = pDimDelim;
 sElementStartDelim = pEleStartDelim;
 sDelimelem = pEleDelim;
-sDecimalSeparator = pDecimalSeparator;
-sThousandSeparator = pThousandSeparator;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -953,6 +951,7 @@ Else;
           nValid = 1;
         Else;
           nValid = 0;
+          Break;
         EndIf;
         nChar = nChar + 1;
       End;
@@ -963,6 +962,7 @@ Else;
       pFieldDelim = SubSt( Trim( pFieldDelim ), 1, 1 );
     EndIf;
 EndIf;
+
 If( pQuote @= '' );
     ## Use no quote character
 Else;
@@ -975,6 +975,7 @@ Else;
           nValid = 1;
         Else;
           nValid = 0;
+          Break;
         EndIf;
         nChar = nChar + 1;
       End;
@@ -985,6 +986,46 @@ Else;
       pQuote = SubSt( Trim( pQuote ), 1, 1 );
     EndIf;
 EndIf;
+
+If ( LONG(pDecimalSeparator) = cLenASCIICode );
+  nValid = 0;
+  nChar = 1;
+  While ( nChar <= cLenASCIICode );
+    If( CODE( pDecimalSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pDecimalSeparator, nChar ) <= CODE( '9', 1 ) );
+      nValid = 1;
+    Else;
+      nValid = 0;
+      Break;
+    EndIf;
+    nChar = nChar + 1;
+  End;
+  If ( nValid<>0 );
+    pDecimalSeparator = CHAR(StringToNumber( pDecimalSeparator ));
+  Else;
+    pDecimalSeparator = SubSt( Trim( pDecimalSeparator ), 1, 1 );
+  EndIf;
+EndIf;
+sDecimalSeparator = pDecimalSeparator;
+
+If ( LONG(pThousandSeparator) = cLenASCIICode );
+  nValid = 0;
+  nChar = 1;
+  While ( nChar <= cLenASCIICode );
+    If( CODE( pThousandSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pThousandSeparator, nChar ) <= CODE( '9', 1 ) );
+      nValid = 1;
+    Else;
+      nValid = 0;
+      Break;
+    EndIf;
+    nChar = nChar + 1;
+  End;
+  If ( nValid<>0 );
+    pThousandSeparator = CHAR(StringToNumber( pThousandSeparator ));
+  Else;
+    pThousandSeparator = SubSt( Trim( pThousandSeparator ), 1, 1 );
+  EndIf;
+EndIf;
+sThousandSeparator = pThousandSeparator;
 
 # Validate Sandbox
 If( TRIM( pSandbox ) @<> '' );
