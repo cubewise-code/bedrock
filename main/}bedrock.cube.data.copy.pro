@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"fPV<G@yejygLtZvjUuTdmhKF1hTEfGT5qT[CVuXXhxrATf9]wfm8jaYo66FA:xIK;;L:quA@jxmqUxsgz?e2]AOzpa{Zc?PO2UQ=mhiyDJn^czzWX[Acpvu@XX2oJ=<\ZA{^7rJhOFh|V<=S4\15=oG7f6Bf;Q<KI<0xf7eXp;qfG:=Ew[1KBC]e`h>jVy`mRTtF:E05"
+565,"fjn^r@yuG62V_Hbvc`nygUm>aRGibb^:1Jf`\`LH<JJX1hI0tO:\3@f7t8FQ]_F;Yqz9a]6vJDdQErCrHd7GKQ_BGfujO2N0]BQ>mX]>FbrZJWpWX_0ZdE6do>v8E=>PFIkPWLUDXV`wvNWPDEa=m]E0V:9>X^]mC@>8JidXFT67HJ_XkUmHyHMH<RF>[~plrai8_Sx<"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,31
+560,33
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -59,7 +59,7 @@ pThreadControlFile
 pMaxWaitSeconds
 pDelim
 pQuote
-561,31
+561,33
 1
 1
 2
@@ -85,11 +85,15 @@ pQuote
 1
 2
 1
+2
+2
 1
 1
 2
 1
-590,31
+2
+2
+590,33
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -99,19 +103,19 @@ pFilter,""
 pFilterParallel,""
 pParallelThreads,0
 pEleMapping,""
-pMappingDelim,"->"
-pDimDelim,"&"
-pEleStartDelim,"¦"
-pEleDelim,"+"
-pFactor,1
-pSuppressConsol,1
+pMappingDelim,""
+pDimDelim,""
+pEleStartDelim,""
+pEleDelim,""
+pFactor,0
+pSuppressConsol,0
 pSuppressConsolStrings,0
-pSuppressRules,1
-pSuppressZero,1
+pSuppressRules,0
+pSuppressZero,0
 pCumulate,0
-pZeroTarget,1
+pZeroTarget,0
 pZeroSource,0
-pTemp,1
+pTemp,0
 pCubeLogging,0
 pSandbox,""
 pFile,0
@@ -119,11 +123,11 @@ pDecimalSeparator,"."
 pThousandSeparator,","
 pSubN,0
 pThreadMode,0
-pThreadControlFile,""
-pMaxWaitSeconds,1800
+pThreadControlFile,"0"
+pMaxWaitSeconds,0
 pDelim,","
 pQuote,""""
-637,31
+637,33
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
@@ -149,14 +153,14 @@ pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken, parameter does not work with Parallel thread))"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
-pDecimalSeparator,"OPTIONAL: Decimal separator for conversion of number to string and string to number if is used pFile (default value if blank = '.')"
-pThousandSeparator,"OPTIONAL: Thousand separator for conversion of number to string and string to number if is used pFile (default value if blank = ',')"
+pDecimalSeparator,"OPTIONAL: Decimal separator for conversion of number to string and string to number if is used pFile (default = '.' exactly 3 digits = ASCII code)"
+pThousandSeparator,"OPTIONAL: Thousand separator for conversion of number to string and string to number if is used pFile (default = ',' exactly 3 digits = ASCII code)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please do not use"
 pThreadControlFile,"DO NOT USE: Internal parameter only, please do not use"
 pMaxWaitSeconds,"OPTIONAL: Used with parallel to define wait time"
-pDelim,"OPTIONAL: For pFile > 0. AsciiOutput delimiter character (Default=comma)"
-pQuote,"OPTIONAL: For pFile > 0. AsciiOutput quote character (Default=double quote)"
+pDelim,"OPTIONAL: For pFile > 0. AsciiOutput delimiter character (Default = ',' exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: For pFile > 0. AsciiOutput quote character (Default = '""' exactly 3 digits = ASCII code)"
 577,51
 V1
 V2
@@ -470,7 +474,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,924
+572,1027
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -482,7 +486,7 @@ If( 1 = 0 );
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
     	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pCumulate', 0,
     	'pZeroTarget', 1, 'pZeroSource', 0,
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0, pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0, 'pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -549,7 +553,6 @@ IF (pParallelThreads > 0);
   pCubeLogging = 2;
 Endif;
 
-
 # Variables
 nDataCount      = 0;
 nExistingSourceFlag = 0;
@@ -560,6 +563,7 @@ cPrefixElementAttributes = '}ElementAttributes_';
 cDimCountMax    = 27;
 sDimCountMax    = NumberToString( cDimCountMax );
 nFactor = If( pFactor = 0, 1, pFactor );
+cLenASCIICode = 3;
 
 ## check operating system
 If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
@@ -571,6 +575,55 @@ ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
 Else;
   sOS = 'Windows';
   sOSDelim = '\';
+EndIf;
+
+# Validate file delimiter & quote character
+If( pDelim @= '' );
+    pDelim = ',';
+Else;
+    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pDelim) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pDelim, nChar ) >= CODE( '0', 1 ) & CODE( pDelim, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+          Break;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pDelim=CHAR(StringToNumber( pDelim ));
+    Else;
+      pDelim = SubSt( Trim( pDelim ), 1, 1 );
+    EndIf;
+EndIf;
+
+If( pQuote @= '' );
+    ## Use no quote character
+Else;
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+          Break;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
 EndIf;
 
 ## File location for indirect data copy
@@ -648,21 +701,64 @@ nErrors = 0;
 If( pDimDelim     @= '' );
     pDimDelim     = '&';
 EndIf;
+
 If( pEleStartDelim@= '' );
     pEleStartDelim= '¦';
 EndIf;
+
 If( pEleDelim     @= '' );
     pEleDelim     = '+';
 EndIf;
+
 If( pMappingDelim     @= '' );
     pMappingDelim     = '->';
 EndIf;
+
 If( pDecimalSeparator @= '' );
  	pDecimalSeparator = '.';
 EndIf;
+If ( LONG(pDecimalSeparator) = cLenASCIICode );
+  nValid = 0;
+  nChar = 1;
+  While ( nChar <= cLenASCIICode );
+    If( CODE( pDecimalSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pDecimalSeparator, nChar ) <= CODE( '9', 1 ) );
+      nValid = 1;
+    Else;
+      nValid = 0;
+      Break;
+    EndIf;
+    nChar = nChar + 1;
+  End;
+  If ( nValid<>0 );
+    pDecimalSeparator = CHAR(StringToNumber( pDecimalSeparator ));
+  Else;
+    pDecimalSeparator = SubSt( Trim( pDecimalSeparator ), 1, 1 );
+  EndIf;
+EndIf;
+sDecimalSeparator = pDecimalSeparator;
+
 If( pThousandSeparator @= '' );
  	pThousandSeparator = ',';
 EndIf;
+If ( LONG(pThousandSeparator) = cLenASCIICode );
+  nValid = 0;
+  nChar = 1;
+  While ( nChar <= cLenASCIICode );
+    If( CODE( pThousandSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pThousandSeparator, nChar ) <= CODE( '9', 1 ) );
+      nValid = 1;
+    Else;
+      nValid = 0;
+      Break;
+    EndIf;
+    nChar = nChar + 1;
+  End;
+  If ( nValid<>0 );
+    pThousandSeparator = CHAR(StringToNumber( pThousandSeparator ));
+  Else;
+    pThousandSeparator = SubSt( Trim( pThousandSeparator ), 1, 1 );
+  EndIf;
+EndIf;
+sThousandSeparator = pThousandSeparator;
 
 # Validate cube
 If( Trim( pCube ) @= '' );
@@ -1405,7 +1501,6 @@ Else;
 EndIf;
 
 ### End Prolog ###
-
 
 573,3
 #****Begin: Generated Statements***
