@@ -46,6 +46,8 @@ pTemp
 pFilePath
 pFileName
 pDelim
+pDecimalSeparator
+pThousandSeparator
 pQuote
 pTitleRecord
 pSandbox
@@ -100,6 +102,8 @@ pTemp,1
 pFilePath,""
 pFileName,""
 pDelim,","
+pDecimalSeparator,"."
+pThousandSeparator,","
 pQuote,""""
 pTitleRecord,1
 pSandbox,""
@@ -127,6 +131,8 @@ pTemp,"OPTIONAL: Retain temporary view and Subset ( 0 = retain View and Subsets 
 pFilePath,"OPTIONAL: Export Directory (will default to error file path)"
 pFileName,"OPTIONAL: Export Filename (If Left Blank Defaults to cube_export.csv)"
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
+pDecimalSeparator,"OPTIONAL: Decimal separator for conversion of number to string and string to number (default value if blank = '.')
+pThousandSeparator,"OPTIONAL: Thousand separator for conversion of number to string and string to number (default value if blank = ',')"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pTitleRecord,"OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
@@ -541,6 +547,8 @@ Value
 0
 0
 0
+0
+0
 581,101
 0
 0
@@ -758,7 +766,8 @@ If( 1 = 0 );
     	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
     	'pZeroSource', 0, 'pCubeLogging', 0, 'pTemp', 1,
     	'pFilePath', '', 'pFileName', '',
-    	'pDelim', ',', 'pQuote', '"', 'pTitleRecord', 1, 'pSandbox', pSandbox, 'pSubN', pSubN
+    	'pDelim', ',','pDecimalSeparator','.','pThousandSeparator',',',
+      'pQuote', '"', 'pTitleRecord', 1, 'pSandbox', pSandbox, 'pSubN', pSubN
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -766,9 +775,9 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-################################################################################################# 
+#################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-################################################################################################# 
+#################################################################################################
 
 #Region @DOC
 # Description:
@@ -791,9 +800,9 @@ EndIf;
 #   and passed to a recursive call of the process being added to pFilter. Each element name will also be appended to the filename
 #
 # Warning:
-# As the *RunProcess* function currently has no mechanism to check for the state of the called process if more processes are 
+# As the *RunProcess* function currently has no mechanism to check for the state of the called process if more processes are
 # released than available CPU cores on the server then this could lead to TM1 consuming all available server resources and a
-# associated performance issue. Be careful that the number of slicer elements listed in pFilterParallel should not exceed the 
+# associated performance issue. Be careful that the number of slicer elements listed in pFilterParallel should not exceed the
 # number of available cores.
 #EndRegion @DOC
 
@@ -809,7 +818,7 @@ cTimeStamp        = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%.'; 
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%.';
 cDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 cLenASCIICode     = 3;
 
@@ -817,6 +826,8 @@ pFieldDelim       = TRIM(pDelim);
 pDimDelim         = TRIM(pDimDelim);
 pEleStartDelim    = TRIM(pEleStartDelim);
 pEleDelim         = TRIM(pEleDelim);
+pDecimalSeparator = TRIM(pDecimalSeparator);
+pThousandSeparator= TRIM(pThousandSeparator);
 nDataCount        = 0;
 nErrors           = 0;
 
@@ -830,13 +841,21 @@ EndIf;
 If( pEleDelim     @= '' );
     pEleDelim     = '+';
 EndIf;
+If( pDecimalSeparator @= '' );
+ 	pDecimalSeparator = '.';
+EndIf;
+If( pThousandSeparator @= '' );
+ 	pThousandSeparator = ',';
+EndIf;
 sDelimDim = pDimDelim;
 sElementStartDelim = pEleStartDelim;
 sDelimelem = pEleDelim;
+sDecimalSeparator = pDecimalSeparator;
+sThousandSeparator = pThousandSeparator;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
-    LogOutput('INFO', Expand( cLogInfo ) );   
+    LogOutput('INFO', Expand( cLogInfo ) );
 ENDIF;
 
 ### Validate Parameters ###
@@ -945,7 +964,7 @@ Else;
     EndIf;
 EndIf;
 If( pQuote @= '' );
-    ## Use no quote character 
+    ## Use no quote character
 Else;
     # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
     nValid = 0;
@@ -990,8 +1009,8 @@ EndIf;
 # Jump to Epilog if any errors so far
 IF ( nErrors > 0 );
     DataSourceType = 'NULL';
-    If( pStrictErrorHandling = 1 ); 
-        ProcessQuit; 
+    If( pStrictErrorHandling = 1 );
+        ProcessQuit;
     Else;
         ProcessBreak;
     EndIf;
@@ -1034,12 +1053,13 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         sFileName = Expand('%sFileName%%sExt%');
         RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
         	'pCube', pCube, 'pView', '',
-        	'pFilter', sFilter, 'pFilterParallel', '', 
+        	'pFilter', sFilter, 'pFilterParallel', '',
         	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
         	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
         	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
         	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-        	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
+        	'pDelim', pFieldDelim, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
+          'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
         );
     	  nThreadElCounter = 0;
     	  sFilter = '';
@@ -1051,20 +1071,21 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     sFileName = Expand('%sFileName%%sExt%');
     RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
     	'pCube', pCube, 'pView', '',
-    	'pFilter', sFilter, 'pFilterParallel', '', 
+    	'pFilter', sFilter, 'pFilterParallel', '',
     	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
     	'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,
     	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
     	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
-    	'pDelim', pFieldDelim, 'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
+    	'pDelim', pFieldDelim, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
+      'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
     );
   ENDIF;
   DataSourceType = 'NULL';
   nParallelRun = 1;
 Else;
   # No parallelization is being used. Proceed as normal and do everything internally
-  
-  # Determine number of dims in source cube & create strings to expand on title and rows 
+
+  # Determine number of dims in source cube & create strings to expand on title and rows
   nCount = 1;
   nDimensionIndex = 0;
 
@@ -1085,7 +1106,7 @@ Else;
     End;
     nDimensionCount = nCount - 1;
 
-    # Finish off the strings 
+    # Finish off the strings
     sTitle = sTitle|'%pQuote%Value%pQuote%';
     sRow = sRow|'%pQuote%%sValue%%pQuote%';
 
@@ -1109,8 +1130,8 @@ Else;
     sTitle = sTitle|'%pFieldDelim%%pQuote%Value%pQuote%';
     sRow = sRow|'%pFieldDelim%%pQuote%%sValue%%pQuote%';
   ENDIF;
-  
-  # Create Processing View for source version 
+
+  # Create Processing View for source version
   nRet = ExecuteProcess('}bedrock.cube.view.create',
           'pLogOutput', pLogOutput,
           'pStrictErrorHandling', pStrictErrorHandling,
@@ -1127,7 +1148,7 @@ Else;
           'pTemp', pTemp,
           'pSubN', pSubN
           );
- 
+
     # Validate Sandbox
     If( TRIM( pSandbox ) @<> '' );
       If( ServerSandboxExists( pSandbox ) = 0 );
@@ -1142,23 +1163,23 @@ Else;
     Else;
       SetUseActiveSandboxProperty( 0 );
     EndIf;
- 
-  
+
+
   IF( nRet <> ProcessExitNormal() );
       sMessage = 'Error creating the view from the filter.';
       nErrors = nErrors + 1;
       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-      If( pStrictErrorHandling = 1 ); 
-          ProcessQuit; 
+      If( pStrictErrorHandling = 1 );
+          ProcessQuit;
       Else;
           ProcessBreak;
       EndIf;
   ENDIF;
-  
+
   sParsedFilter = sBedrockViewCreateParsedFilter;
   sFilterRow = '%pQuote%%pCube%%pQuote%%pFieldDelim%%pQuote%Filter%pQuote%%pFieldDelim%%pQuote%%sParsedFilter%%pQuote%%pFieldDelim%%pQuote%%pDimDelim%%pQuote%%pFieldDelim%%pQuote%%pEleStartDelim%%pQuote%%pFieldDelim%%pQuote%%pEleDelim%%pQuote%';
-  
-  # Assign Datasource 
+
+  # Assign Datasource
   DataSourceType          = 'VIEW';
   DatasourceNameForServer = pCube;
   DatasourceNameForClient = pCube;
@@ -1179,9 +1200,9 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-################################################################################################# 
+#################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-################################################################################################# 
+#################################################################################################
 
 # Set the output character set
 SetOutputCharacterSet( cExportFile, pCharacterSet );
@@ -1192,16 +1213,16 @@ nDataCount = nDataCount + 1;
 # Output the title string
 IF( nDataCount = 1 & pTitleRecord >= 1 );
     TextOutput( cExportFile, Expand(sTitle) );
-Endif; 
+Endif;
 
 ### Export filter into the 1st record of the file, it will be used from import process to zero out the corresponding slice, if specified
 IF( nDataCount = 1 & pTitleRecord = 2 );
     TextOutput( cExportFile, Expand(sFilterRow) );
 Endif;
-    
+
 ### Export data from source version to file ###
 If( value_is_string = 0 );
-    sValue = NumberToString( nValue );
+    sValue = NumberToStringEx( nValue, '#,0.#############', sDecimalSeparator, sThousandSeparator );
 EndIf;
 
 # Selects the correct TextOutput formula depending upon the number of dimensions in the cube
@@ -1230,9 +1251,9 @@ TextOutput( cExportFile, Expand(sRow) );
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-################################################################################################# 
+#################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-################################################################################################# 
+#################################################################################################
 
 ### Delete source data ###
 If( pZeroSource = 1 & nErrors = 0 & nParallelRun = 0 );
@@ -1242,7 +1263,7 @@ If( pZeroSource = 1 & nErrors = 0 & nParallelRun = 0 );
     EndIf;
     ViewZeroOut( pCube, cView );
     If ( pCubeLogging <= 1 );
-      CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) ); 
+      CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
     EndIf;
 EndIf;
 
@@ -1252,8 +1273,8 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
-    If( pStrictErrorHandling = 1 ); 
-        ProcessQuit; 
+    If( pStrictErrorHandling = 1 );
+        ProcessQuit;
     EndIf;
 Else;
     sDataCount = NUMBERTOSTRING (nDataCount);
@@ -1261,7 +1282,7 @@ Else;
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( sProcessAction ) );   
+        LogOutput('INFO', Expand( sProcessAction ) );
     EndIf;
 
 EndIf ;

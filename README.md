@@ -16,7 +16,7 @@ Trialled and implemented for over many years in numerous highly complex TM1 site
 
 ## Minimum TM1 / IBM Planning Analytics Version
 
-The latest release [**bedrock v4.1.1**](https://github.com/cubewise-code/bedrock/releases/tag/v4.1.1) is a complete rebuild of the bedrock library for Planning Analytics 2.x (TM1 Server 11.x). Due to incorporation of support for new Planning Analytics features (alternate hierarchies, temporary objects, processes execution on independent threads) please note that the _**minimum supported version is PA 2.0.6 (TM1 Server 11.4)**_.
+The latest release [**bedrock v4.1.2**](https://github.com/cubewise-code/bedrock/releases/tag/v4.1.2) is a complete rebuild of the bedrock library for Planning Analytics 2.x (TM1 Server 11.x). Due to incorporation of support for new Planning Analytics features (alternate hierarchies, temporary objects, processes execution on independent threads) please note that the _**minimum supported version is PA 2.0.6 (TM1 Server 11.4)**_.
 
 ### What do I need for v4?
 For bedrock v4 the TI process _source code_ has been split into 2 folders:

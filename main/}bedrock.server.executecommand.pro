@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.server.executecommand"
 562,"NULL"
 586,
 585,
 564,
-565,"vR42cY=Lg<Ho7XsFH\;QP6a>pY>LEzY`yL7zoK<eQkr<K4=]bWXn2:u59gfit^NZx94ixs4\cBic:qiuGW`Cn3V\2^?DWgUzCE<t^ktPm1gI`JV2ebSZ?3[6e@wDyMi:QpD3^IBlVYL`F:[;f6O^WZNhJansX1WuEcBGETs4m3XFceIU>:o]vYJIKFB62wUh3DZ;X`Gw"
+565,"ksc?fwBhVCJax0Z]5E7LwuY1]>M5sW\MgRPbtQEw7Jx]j7hML3NjK2GSX0FDL4\vO]XZ2h1H;GtgAvQnLQrwkDe[K62Gltj5eVmc8b;MtVH30rYl<=ibwnSlU2QzAjS1RU5X2Hdtq2tu\g@[07zLQkV5`uwf_`x=DVz_2[uug6g?]dfig;hP`26PGl<EOXFGr>7vj<A]"
 559,1
 928,0
 593,
@@ -25,34 +25,44 @@
 569,0
 592,0
 599,1000
-560,4
+560,5
 pLogOutput
 pStrictErrorHandling
 pCommand
 pWait
-561,4
+pPowerShell
+561,5
 1
 1
 2
-2
-590,4
+1
+1
+590,5
 pLogOutput,0
 pStrictErrorHandling,0
 pCommand,""
-pWait,"0"
-637,4
+pWait,0
+pPowerShell,0
+637,5
 pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCommand,"The full command line string to execute"
 pWait,"Wait for command to finish 0=false 1=true"
-577,0
-578,0
-579,0
-580,0
-581,0
-582,0
+pPowerShell,"Execute a PowerShell script 0=false 1=true"
+577,1
+vCommandOutput
+578,1
+2
+579,1
+1
+580,1
+0
+581,1
+0
+582,1
+VarType=32ColType=827
 603,0
-572,55
+572,78
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -62,11 +72,16 @@ pWait,"Wait for command to finish 0=false 1=true"
 
 #Region @DOC
 # Description:
-# This process will run the TI ExecuteCommand function.
+# This process will run the TI ExecuteCommand function and print the output to Server Logs.
 
 # Use case: Intended for production.
-# 1/ To run an executeCommand function from any part of the model, including RushTI or third party system without direct access to TI Editor.
+# 1/ To run an ExecuteCommand function from any part of the model, including RushTI or third party system without direct access to TI Editor.
 # 2/ To remove the requirement of creating a one off process to use this function
+# 3/ To compress/uncompress files
+# 4/ To copy files and folders from the TM1 server
+# 5/ To delete files and folders from the TM1 server
+# 6/ To list and kill tasks running in the TM1 server
+# 7/ To export and import registry keys such as ODBC data sources
 
 #EndRegion @DOC
 
@@ -77,13 +92,17 @@ nProcessReturnCode= 0;
 
 ### Constants ###
 cThisProcName = GetProcessName();
-cUserName = TM1User();
+cUser = TM1User();
+cUserName = CellGetS('}ElementAttributes_}Clients', cUser, '}TM1_DefaultDisplayValue');
+cUserName = IF( cUserName @<> '', cUserName, 'admin' );
 cMsgErrorLevel = 'ERROR';
 cMsgErrorContent = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
+cCmdOutputDir = GetProcessErrorFileDirectory;
+cCmdOutputFile = cCmdOutputDir | GetProcessName() | '.txt';
 
 ## LogOutput parameters
 If( pLogOutput = 1 );
-  sLogInfo = Expand('Process:%cThisProcName% run with parameters: pCommand: %pCommand%, pWait: %pWait%'); 
+  sLogInfo = Expand('Process "%cThisProcName%" run with parameters: pCommand: "%pCommand%", pWait: %pWait%, pPowerShell: %pPowerShell%'); 
   LogOutput ( 'INFO', sLogInfo );
   nStart = Now();
 EndIf;
@@ -97,24 +116,42 @@ If ( pCommand @= '' );
 EndIf;
 
 ### ExecuteCommand ###
-nWait = StringToNumber ( pWait );
 
-# Check if the pCommand parameter is enclosed in quotes and add if not
-sSubst = Subst ( pCommand, 1, 1 );
-If ( Subst ( pCommand, 1, 1 ) @<> '"' );
-  sCommand = Expand ( '"%pCommand%"' );
+# Check if the pCommand parameter is enclosed in quotes and remove it if it is
+If( Subst(pCommand, 1, 1) @= '"' );
+  sCommand = Delet(pCommand, 1, 1);
+  sCommand = Delet(sCommand, Long(sCommand), 1);
 Else;
   sCommand = pCommand;
 EndIf;
 
-ExecuteCommand ( pCommand, nWait );
+If( pPowerShell = 1 );
+  #Prepare the full command for Powershell
+  sCommand = 'POWERSHELL.EXE -Command "& {' | pCommand | '}" 1> ' | cCmdOutputFile | ' 2>&1';
+Else;
+  #Prepare the full command for Windows CMD
+  sCommand = 'CMD.EXE /C "' | sCommand | '" 1> ' | cCmdOutputFile | ' 2>&1';
+EndIf;
+
+#Execute the command in the TM1 server
+ExecuteCommand ( sCommand, pWait );
+
+#If pLogOutput is true then define the command output file as data source
+If( pLogOutput = 1 );
+  DataSourceType = 'CHARACTERDELIMITED';
+  DatasourceNameForServer = cCmdOutputFile;
+EndIf;
 573,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,2
+574,6
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-575,30
+
+# Write the command output to Server Logs
+sLogInfo = Expand('Process "%cThisProcName%": %vCommandOutput%');
+LogOutput( 'INFO', sLogInfo);
+575,34
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -122,7 +159,7 @@ ExecuteCommand ( pCommand, nWait );
 
 If( pLogOutput = 1 );
     sSec     = NumberToStringEx( 86400*(Now() - nStart),'#,##0.0', '.', ',' );
-    sLogInfo = Expand('Process:%cThisProcName% completed. Elapsed time %sSec% seconds.'); 
+    sLogInfo = Expand('Process "%cThisProcName%" completed in %sSec% seconds.'); 
     LogOutput( 'INFO', sLogInfo );
 EndIf;
 
@@ -131,18 +168,22 @@ If( nErrors > 0 );
     sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+    sProcessReturnCode = Expand( '%sProcessReturnCode% Process "%cThisProcName%" completed with errors. Check tm1server.log for details.' );
     If( pStrictErrorHandling = 1 ); 
         ProcessQuit; 
     EndIf;
 Else;
-    sProcessAction = Expand( 'Process:%cThisProcName% completed successfully.' );
+    sProcessAction = Expand( 'Process "%cThisProcName%" completed successfully.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
         LogOutput('INFO', Expand( sProcessAction ) );   
     EndIf;
 EndIf;
+
+### Optional: Clean the command output file
+#sCommand = 'CMD.EXE /C "TYPE NUL > "' | cCmdOutputFile | '" "';
+#ExecuteCommand( sCommand, 0 );
 
 ### End Epilog ###
 576,
