@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"fjn^r@yuG62V_Hbvc`nygUm>aRGibb^:1Jf`\`LH<JJX1hI0tO:\3@f7t8FQ]_F;Yqz9a]6vJDdQErCrHd7GKQ_BGfujO2N0]BQ>mX]>FbrZJWpWX_0ZdE6do>v8E=>PFIkPWLUDXV`wvNWPDEa=m]E0V:9>X^]mC@>8JidXFT67HJ_XkUmHyHMH<RF>[~plrai8_Sx<"
+565,"xNpi39Xafr[Tlj7VQF=U8XA7yL6<aej6QtJMeP\vm1t=Yc9ePJNRdD?_2?FQ>xA;PMZ;Qn\LVygaLpC3=K6STLl\@rjf0P`t^w9]=H<bHp\T8zWh63;SQqSAzdZA]Z\:@[QGLJ2FgArfT0VDT:;=zbVczRfiY6?^0>Xah`hqFd5L:LbD1qMTI=Ub=lPf`gbJeRHhhb"
 559,1
 928,0
 593,
@@ -103,19 +103,19 @@ pFilter,""
 pFilterParallel,""
 pParallelThreads,0
 pEleMapping,""
-pMappingDelim,""
-pDimDelim,""
-pEleStartDelim,""
-pEleDelim,""
-pFactor,0
-pSuppressConsol,0
+pMappingDelim,"->"
+pDimDelim,"&"
+pEleStartDelim,"¦"
+pEleDelim,"+"
+pFactor,1
+pSuppressConsol,1
 pSuppressConsolStrings,0
-pSuppressRules,0
-pSuppressZero,0
+pSuppressRules,1
+pSuppressZero,1
 pCumulate,0
-pZeroTarget,0
+pZeroTarget,1
 pZeroSource,0
-pTemp,0
+pTemp,1
 pCubeLogging,0
 pSandbox,""
 pFile,0
@@ -123,8 +123,8 @@ pDecimalSeparator,"."
 pThousandSeparator,","
 pSubN,0
 pThreadMode,0
-pThreadControlFile,"0"
-pMaxWaitSeconds,0
+pThreadControlFile,""
+pMaxWaitSeconds,1800
 pDelim,","
 pQuote,""""
 637,33
