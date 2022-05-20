@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"pX<AdDHjxpVUM5jYaK9BeN:^74R[[h12HIR6z^]WRTpD5M@T]0jNzTMRgtxYOozfx;bSyvr<N;8uEEL;BQ5joNkSjwm2N=vgJIcw=5FSzyT<GH`bt8a7JIpISAYj@P><9;qQb7];0VamcNOluL;mUp@<yZ@[v4NmOm=lOAU\MF2yY:yXxaMP:n`u82js6YKlVoicVyDW"
+565,"jmvpSLX=a@a=3wAxAt9dWkZ9kUgyu3T:1QWarLetaBElTaj1i:QlwZLaGQ_hKpa<Pm9KE@dm0LAxQ>qehnyT7nFOh0SmpZq3xF]hAp7U3Tibv2X4ipInlhOyvtl3?57RmiG:wjKodzlux_N`ZamSbDNqL:d0FaZ29IUhuU9<WxU7xMf_HQnwqD\wDW]:28>>@9u`=Gzf"
 559,1
 928,0
 593,
@@ -1675,8 +1675,6 @@ Else;
     ENDIF;
   ENDIF;
   
-  
-  ### Assign Datasource ###
   If ( pCubeLogging <= 1 );
     sCubeLogging = CellGetS('}CubeProperties', pTgtCube, 'LOGGING' );
     CubeSetLogChanges( pTgtCube, pCubeLogging);
@@ -1697,11 +1695,13 @@ Else;
     DatasourceASCIIQuoteCharacter   = cQuote;
   EndIf;
 EndIf;
+
+### End Prolog ###
 573,3
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,373
+574,371
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -2072,10 +2072,8 @@ EndIf;
   
   EndIf;
  
-
-
-
-575,46
+### End Data ###
+575,45
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -2121,7 +2119,6 @@ Else;
 EndIf;
 
 ### End Epilog ###
-
 576,CubeAction=1511?DataAction=1503?CubeLogChanges=0?
 930,0
 638,1

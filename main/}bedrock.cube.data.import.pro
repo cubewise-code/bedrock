@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.cube.data.import"
 562,"CHARACTERDELIMITED"
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"ixEHiDJ;\anLjVM?utpjMBWiQjlYZP54t2`Mt49ZPYmAi7;1UWRxDSA3nN;YN0qNhBU`ZrEDB]fCPFu03Ql?u2Q^rv;[wX;9gb5H=0f]OvVC0>O9eR<B<4qpW2;y5L4]<M]US1h`>p\<IeXZJ3nh9`8T92C9<C_@8DDKB`^zpKRW7?7oU1m6B`eIOB=s\Z1UA^:9AI@D"
+565,"g2`htV;a>1CHf5@TV7WAl:w7=RQi[VDIsjE148Ion`r216cRt>X;tKJcu2yG<AQdGiI4up?GmvPlPjbfj]CtfivZ[ASpMxY5Ai3Sq;aFG^[6Wh[gD6;x3nz@p[ZN:F:WQtIfygF^vSe`]2P7uWwXUWYq[XcVn^;U4a1CULSloE=mpKKow60z<GM=H2;mF4>eG8rV]RDT"
 559,1
 928,0
 593,
@@ -296,7 +296,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,950
+572,951
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -957,7 +957,6 @@ END;
 
 ###########################################
 #Region ### MAPPING Target DIMENSIONS #####
-###########################################
 
 ## Source index starting from 2, since first columns holds the export cube name
 nSourceIndex = 2;
@@ -1230,6 +1229,8 @@ WHILE(nIndexInTarget <= nTargetCubeDimensionCount);
        
        nIndexInTarget = nIndexInTarget + 1;
 END;
+#EndRegion ### MAPPING Target DIMENSIONS #####
+##############################################
 
 #CubeLogging
 If ( pCubeLogging <= 1 );
