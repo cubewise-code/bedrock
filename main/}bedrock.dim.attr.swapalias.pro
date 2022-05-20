@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"ws[DLzmY5zCDD\CuCQpIHWSaPWY:g?v^cpsk<C>ZkdehZPtEU<SfMydu[7g]HJQ]V8k6>fU[1tSMs7`vVa:1b5dNNR@]t76NhvP?p[RSs?;xD<v0ZYQ=ASTWF\Op:_Wa[fLbS:\eo49t:Qi>SqWA^k:p^nW^5SJG:rTVz>OrD9Rfuuru4jnu_<_CZmL<z7<S:v=kD@pv"
+565,"w5f\^g\2OzYM]kJ:\BUC78paf`rhTnH?DVmDRO6x1RGf^H^UFiT`ph8KY<YuII^zO3VoRHScK7PKZCyYv=Zr1SANjTqH<9^642NBRJX3SH]Ph^v3=>:=NP;;NJ75zdDBX?]>n\[X9phJ<z3W@81f@SYPgIRb5^]c_S05ax\thwuSJc=3o95C<O=mrCxx@jb^X:H^grGz"
 559,1
 928,0
 593,
@@ -52,7 +52,7 @@ pAlias,"REQUIRED: Alias"
 581,0
 582,0
 603,0
-572,114
+572,102
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -142,18 +142,6 @@ If( sElementType @<> 'AA' );
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-# Validate that only 1 hierarchy exists
-sMDX                    = Expand('{TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions] ) ,"%pDim%") , TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions] ) ,"%pDim%:*") }');  
-# Create temporary subset
-SubsetCreatebyMDX(cSubset, sMDX , 1 );
-nSubSize                = SubsetGetSize( cDim , cSubset);
-IF( nSubSize > 1 );
-    nErrors = 1;
-    sSubSize            = NumberToString( nSubSize );
-    sMessage = Expand('Dimension %pDim% has multiple(%sSubSize%) hierarchies and there is currently no function that will swap the alias in a dimension with multiple hierarchies.');
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
-
 ### Check for errors before continuing
 If( nErrors <> 0 );
   If( pStrictErrorHandling = 1 ); 
@@ -172,12 +160,10 @@ SwapAliasWithPrincipalName( pDim, pAlias, 0 );
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,6
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
-
 
 575,27
 
