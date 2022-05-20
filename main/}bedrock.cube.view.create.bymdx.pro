@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.MDX.Placeholder.csv"
 564,
-565,"eYcSKagXR9cw[]GW\lAg5KD^>W=[kWd5TKLSqNoc:oO:8Zhj_cl[j>h<iBPIcHeu=c=eO0lP3RASAIS50yBqUSe_yndvzWWxT]wP^_o@OV8BLNyRDg8OSZUUX9c^21lksN?_FOxsyN=_nmr=pe8vD^NILpvGHVUaiST]LmwIp;^0Mb9WJrHO>Q^wSk768HXSSV3z`r`h"
+565,"vgkOCci:1JzbM:XxqPweuuaK?7yu8WCm:q8V><GlIo`\N_0]0gKSw`A>?Ty?EzaZJOt1ply1NvzSP[JSnA5zW@RMKrFe>D8VhCHoO@o7Oa5[zD4BG]B3[4efqGWq79?[TmjLa\qPrlIf6w<AR>OB^_I`LmiA<xBGfMzf;UZf9kg4zn3MPgrsWbAnshSN1HKji9D34_Qi"
 559,1
 928,0
 593,
@@ -60,7 +60,7 @@ pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
 581,0
 582,0
 603,0
-572,119
+572,118
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -112,7 +112,6 @@ sMessage = 	'';
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pMDXExpr:%pMDXExpr%, pTemp:%pTemp%.' ;  
- 
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -180,18 +179,17 @@ EndIf;
 ViewCreatebyMDX ( pCube , pView , sMDXExpr, pTemp ) ; 
 
 ### End Prolog ###
-573,5
+573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
 
 574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,28
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -217,7 +215,6 @@ Else;
         LogOutput('INFO', Expand( sProcessAction ) );   
     EndIf;
 EndIf;
-
 
 ### End Epilog ###
 576,CubeAction=1511DataAction=1503CubeLogChanges=0
