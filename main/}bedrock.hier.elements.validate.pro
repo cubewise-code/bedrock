@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"kfPhY_H84e<aC=5xUBT;fkUBK\1CmT^=_]QrR>e3>f22T8=_AZ7MSYDCR@cs^vwD6[npUFY9pcru0glx[J8:uHync9`EXUKe8aLErhah88nT4tQlhCh9ibTQBGki9rCD=K:XBrDyFN@0[w56_;51sJKyQSUCqC2m:wl\sIN7:S=TztvVz\r271NR\1k\ae2Ar1LowyfA"
+565,"g[nj@IeaarPiT\neCu:cZ_>3p4:kFy6Ra_<TP1>GS;TMi_C6d=wAw:Wyw1^NOum:NXKgqdQo\]@bRx;20YC@^?E=ZLG^j:7[ukPw;?e9Zxs>7kZMq6PPe^nNylx7u7PkOd<o;KQ4\TPT]c5VK\PRv\i=S9Vzpqitq`GTdGHfA9[kH53sN:W3t0GohU^66]qzpWQjDmsG"
 559,1
 928,0
 593,
@@ -66,7 +66,7 @@ vDim
 582,1
 VarType=32ColType=827
 603,0
-572,268
+572,250
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -303,30 +303,12 @@ EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  If( pStrictErrorHandling = 1 ); 
-      ProcessQuit; 
-  Else;
-      ProcessBreak;
-  EndIf;
+    DatasourceType = 'NULL';
+    ProcessBreak;
 EndIf;
 
 # Create temporary subset
 SubsetCreatebyMDX(cSubset, sMDX , 1 );
-
-# Create subset using MDX
-#nRet = ExecuteProcess( '}bedrock.hier.sub.create.bymdx',
-#    'pLogOutput', pLogOutput,
-#    'pStrictErrorHandling', pStrictErrorHandling,
-#    'pDim', cDim,
-#    'pHier', '',
-#    'pSub', cSubset,
-#    'pMDXExpr', sMDX,
-#    'pConvertToStatic', 1 );
-#
-#If( nRet <> ProcessExitNormal );
-#    nErrors = 1;
-#    DatasourceType = 'NULL';
-#EndIf;
 
 ### Set data source for process ### 
 DatasourceType              = 'SUBSET';
@@ -416,7 +398,7 @@ End;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,32
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -433,11 +415,6 @@ If( nErrors <> 0 );
   If( pStrictErrorHandling = 1 ); 
       ProcessQuit; 
   EndIf;
-EndIf;
-
-### Destroy Source Subset ###
-If( SubsetExists( cDim, cSubset ) = 1 );
-    #SubsetDestroy(cDim, cSubset );
 EndIf;
 
 #Return Code
