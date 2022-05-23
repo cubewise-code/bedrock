@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"jmvpSLX=a@a=3wAxAt9dWkZ9kUgyu3T:1QWarLetaBElTaj1i:QlwZLaGQ_hKpa<Pm9KE@dm0LAxQ>qehnyT7nFOh0SmpZq3xF]hAp7U3Tibv2X4ipInlhOyvtl3?57RmiG:wjKodzlux_N`ZamSbDNqL:d0FaZ29IUhuU9<WxU7xMf_HQnwqD\wDW]:28>>@9u`=Gzf"
+565,"zP_n]X[_A`V2_]ouc5xvFscY0EaJLv?<jSr:py9X4VdKEv7km:szoM8kUgowLOEa[q@QoIWWFoguYYxIDXe0]=1vjij@C:un]uWl6=<bJV4equ0BhnN@PZQb1h@nG4cxA^ojbLV7uG>E>8vQFUNjz8YAgTEUI[jfjzDaItf]j5>?LOdu9Qd\:PJo`VL1gtgBMzP_9[w4"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,24
+560,28
 pLogOutput
 pStrictErrorHandling
 pSrcCube
@@ -48,9 +48,13 @@ pTemp
 pCubeLogging
 pSandbox
 pFile
+pDelim
+pQuote
+pDecimalSeparator
+pThousandSeparator
 pSubN
 pThreadMode
-561,24
+561,28
 1
 1
 2
@@ -73,9 +77,13 @@ pThreadMode
 1
 2
 1
+2
+2
+2
+2
 1
 1
-590,24
+590,28
 pLogOutput,0
 pStrictErrorHandling,0
 pSrcCube,""
@@ -98,9 +106,13 @@ pTemp,1
 pCubeLogging,0
 pSandbox,""
 pFile,0
+pDelim,","
+pQuote,""""
+pDecimalSeparator,"."
+pThousandSeparator,","
 pSubN,0
 pThreadMode,0
-637,24
+637,28
 pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcCube,"REQUIRED: Cube data is being copied from"
@@ -123,6 +135,10 @@ pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
+pDelim,"OPTIONAL: For pFile > 0. AsciiOutput delimiter character (Default = ',' exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: For pFile > 0. AsciiOutput quote character (Default = '""' exactly 3 digits = ASCII code)"
+pDecimalSeparator,"OPTIONAL: For pFile > 0. Decimal separator for conversion of NumberToStringEx and StringToNumberEx (default = '.' exactly 3 digits = ASCII code)"
+pThousandSeparator,"OPTIONAL: For pFile > 0. Thousand separator for conversion of NumberToStringEx and StringToNumberEx (default = ',' exactly 3 digits = ASCII code)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please do not use"
 577,29
@@ -306,7 +322,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1390
+572,1489
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -319,7 +335,8 @@ If( 1 = 0 );
     	'pZeroTarget', 1, 'pZeroSource', 0,
     	'pFactor', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', pSandbox, 'pSubN', 0
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', pSandbox, 'pSubN', 0, 
+    	'pFile', 0, 'pDelim', ',', 'pQuote', '"', 'pDecimalSeparator', '.', 'pThousandSeparator', ','
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -388,6 +405,7 @@ sDelimDim           = TRIM(pDimDelim);
 sElementStartDelim  = TRIM(pElEStartDelim);
 sDelimElem          = TRIM(pEleDelim);
 nErrors             = 0;
+cLenASCIICode       = 3;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -419,8 +437,57 @@ cDir    = '.' | sOSDelim;
 cFileName = pSrcCube | cTimeStamp | cRandomInt | '.csv';
 cFile   = cDir | cFileName;
 cTitleRows = 1;
-cDelimiter = ',';
-cQuote = '"';
+
+# Validate file delimiter & quote character
+If( pDelim @= '' );
+    pDelim = ',';
+Else;
+    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pDelim) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pDelim, nChar ) >= CODE( '0', 1 ) & CODE( pDelim, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+          Break;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pDelim=CHAR(StringToNumber( pDelim ));
+    Else;
+      pDelim = SubSt( Trim( pDelim ), 1, 1 );
+    EndIf;
+EndIf;
+cDelimiter = pDelim;
+
+If( pQuote @= '' );
+    ## Use no quote character
+Else;
+    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+    nValid = 0;
+    If ( LONG(pQuote) = cLenASCIICode );
+      nChar = 1;
+      While ( nChar <= cLenASCIICode );
+        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
+          nValid = 1;
+        Else;
+          nValid = 0;
+          Break;
+        EndIf;
+        nChar = nChar + 1;
+      End;
+    EndIf;
+    If ( nValid<>0 );
+      pQuote=CHAR(StringToNumber( pQuote ));
+    Else;
+      pQuote = SubSt( Trim( pQuote ), 1, 1 );
+    EndIf;
+EndIf;
+cQuote = pQuote;
 
 #Region ## Check Parameters ###
 
@@ -434,6 +501,52 @@ EndIf;
 If( pEleDelim     @= '' );
     pEleDelim     = '+';
 EndIf;
+
+If( pDecimalSeparator @= '' );
+ 	pDecimalSeparator = '.';
+EndIf;
+If ( LONG(pDecimalSeparator) = cLenASCIICode );
+  nValid = 0;
+  nChar = 1;
+  While ( nChar <= cLenASCIICode );
+    If( CODE( pDecimalSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pDecimalSeparator, nChar ) <= CODE( '9', 1 ) );
+      nValid = 1;
+    Else;
+      nValid = 0;
+      Break;
+    EndIf;
+    nChar = nChar + 1;
+  End;
+  If ( nValid<>0 );
+    pDecimalSeparator = CHAR(StringToNumber( pDecimalSeparator ));
+  Else;
+    pDecimalSeparator = SubSt( Trim( pDecimalSeparator ), 1, 1 );
+  EndIf;
+EndIf;
+sDecimalSeparator = pDecimalSeparator;
+
+If( pThousandSeparator @= '' );
+ 	pThousandSeparator = ',';
+EndIf;
+If ( LONG(pThousandSeparator) = cLenASCIICode );
+  nValid = 0;
+  nChar = 1;
+  While ( nChar <= cLenASCIICode );
+    If( CODE( pThousandSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pThousandSeparator, nChar ) <= CODE( '9', 1 ) );
+      nValid = 1;
+    Else;
+      nValid = 0;
+      Break;
+    EndIf;
+    nChar = nChar + 1;
+  End;
+  If ( nValid<>0 );
+    pThousandSeparator = CHAR(StringToNumber( pThousandSeparator ));
+  Else;
+    pThousandSeparator = SubSt( Trim( pThousandSeparator ), 1, 1 );
+  EndIf;
+EndIf;
+sThousandSeparator = pThousandSeparator;
 
 # If specified source cube doesn't exist then terminate process
 If( CubeExists(   pSrcCube   ) = 0 );
@@ -1657,6 +1770,8 @@ Else;
        'pFilePath', cDir,
        'pFileName', cFileName,
        'pDelim', cDelimiter,
+       'pDecimalSeparator', sDecimalSeparator,
+       'pThousandSeparator', sThousandSeparator,
        'pQuote', cQuote,
        'pTitleRecord', cTitleRows,
        'pSandbox', pSandbox,
@@ -1785,12 +1900,12 @@ EndIf;
       ELSEIF( sElType @= 'AS' );
         AttrPutS( sV3, sDim1, sV1, sV2 );
       ELSEIF( sElType @= 'AN' );
-        AttrPutN( Numbr( sV3) * nFactor, sDim1, sV1, sV2 );
+        AttrPutN( StringToNumberEx( sV3, sDecimalSeparator, sThousandSeparator ) * nFactor, sDim1, sV1, sV2 );
       ElseIf( sElType @= 'S' );
         CellPutS( sV3, pTgtCube, sV1, sV2 );
       Else;
         nObal = CellGetN( pTgtCube, sV1, sV2 );
-        nCbal = nObal + Numbr( sV3 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV3, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2 );
       EndIf;
     EndIf;
@@ -1799,7 +1914,7 @@ EndIf;
       sElType = DType( sDim3, sV3 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3 );
-        nCbal = nObal + Numbr( sV4 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV4, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3 );
       Else;
         CellPutS( sV4, pTgtCube, sV1, sV2, sV3 );
@@ -1810,7 +1925,7 @@ EndIf;
       sElType = DType( sDim4, sV4 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4);
-        nCbal = nObal + Numbr( sV5 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV5, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4);
       Else;
         CellPutS( sV5, pTgtCube, sV1, sV2, sV3, sV4);
@@ -1821,7 +1936,7 @@ EndIf;
       sElType = DType( sDim5, sV5 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5 );
-        nCbal = nObal + Numbr( sV6 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV6, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5 );
       Else;
         CellPutS( sV6, pTgtCube, sV1, sV2, sV3, sV4, sV5 );
@@ -1832,7 +1947,7 @@ EndIf;
       sElType = DType( sDim6, sV6 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
-        nCbal = nObal + Numbr( sV7 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV7, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
       Else;
         CellPutS( sV7, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
@@ -1843,7 +1958,7 @@ EndIf;
       sElType = DType( sDim7, sV7 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
-        nCbal = nObal + Numbr( sV8 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV8, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
       Else;
         CellPutS( sV8, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
@@ -1854,7 +1969,7 @@ EndIf;
       sElType = DType( sDim8, sV8 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
-        nCbal = nObal + Numbr( sV9 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV9, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
       Else;
         CellPutS( sV9, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
@@ -1865,7 +1980,7 @@ EndIf;
       sElType = DType( sDim9, sV9 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
-        nCbal = nObal + Numbr( sV10 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV10, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
       Else;
         CellPutS( sV10, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
@@ -1876,7 +1991,7 @@ EndIf;
       sElType = DType( sDim10, sV10 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
-        nCbal = nObal + Numbr( sV11 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV11, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
       Else;
         CellPutS( sV11, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
@@ -1887,7 +2002,7 @@ EndIf;
       sElType = DType( sDim11, sV11 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
-        nCbal = nObal + Numbr( sV12 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV12, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
       Else;
         CellPutS( sV12, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
@@ -1898,7 +2013,7 @@ EndIf;
       sElType = DType( sDim12, sV12 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
-        nCbal = nObal + Numbr( sV13 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV13, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
       Else;
         CellPutS( sV13, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
@@ -1909,7 +2024,7 @@ EndIf;
       sElType = DType( sDim13, sV13 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
-        nCbal = nObal + Numbr( sV14 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV14, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
       Else;
         CellPutS( sV14, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
@@ -1920,7 +2035,7 @@ EndIf;
       sElType = DType( sDim14, sV14 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
-        nCbal = nObal + Numbr( sV15 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV15, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
       Else;
         CellPutS( sV15, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
@@ -1931,7 +2046,7 @@ EndIf;
       sElType = DType( sDim15, sV15 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
-        nCbal = nObal + Numbr( sV16 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV16, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
       Else;
         CellPutS( sV16, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
@@ -1942,7 +2057,7 @@ EndIf;
       sElType = DType( sDim16, sV16 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
-        nCbal = nObal + Numbr( sV17 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV17, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
       Else;
         CellPutS( sV17, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
@@ -1953,7 +2068,7 @@ EndIf;
       sElType = DType( sDim17, sV17 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
-        nCbal = nObal + Numbr( sV18 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV18, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
       Else;
         CellPutS( sV18, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
@@ -1964,7 +2079,7 @@ EndIf;
       sElType = DType( sDim18, sV18 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
-        nCbal = nObal + Numbr( sV19 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV19, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
       Else;
         CellPutS( sV19, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
@@ -1975,7 +2090,7 @@ EndIf;
       sElType = DType( sDim19, sV19 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
-        nCbal = nObal + Numbr( sV20 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV20, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
       Else;
         CellPutS( sV20, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
@@ -1986,7 +2101,7 @@ EndIf;
       sElType = DType( sDim20, sV20 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
-        nCbal = nObal + Numbr( sV21 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV21, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
       Else;
         CellPutS( sV21, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
@@ -1997,7 +2112,7 @@ EndIf;
       sElType = DType( sDim21, sV21 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
-        nCbal = nObal + Numbr( sV22 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV22, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
       Else;
         CellPutS( sV22, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
@@ -2008,7 +2123,7 @@ EndIf;
       sElType = DType( sDim22, sV22 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
-        nCbal = nObal + Numbr( sV23 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV23, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
       Else;
         CellPutS( sV23, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
@@ -2019,7 +2134,7 @@ EndIf;
       sElType = DType( sDim23, sV23 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
-        nCbal = nObal + Numbr( sV24 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV24, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
       Else;
         CellPutS( sV24, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
@@ -2030,7 +2145,7 @@ EndIf;
       sElType = DType( sDim24, sV24 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
-        nCbal = nObal + Numbr( sV25 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV25, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
       Else;
         CellPutS( sV25, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
@@ -2041,7 +2156,7 @@ EndIf;
       sElType = DType( sDim25, sV25 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
-        nCbal = nObal + Numbr( sV26 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV26, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
       Else;
         CellPutS( sV26, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
@@ -2052,7 +2167,7 @@ EndIf;
       sElType = DType( sDim26, sV26 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
-        nCbal = nObal + Numbr( sV27 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV27, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
       Else;
         CellPutS( sV27, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
@@ -2063,7 +2178,7 @@ EndIf;
       sElType = DType( sDim27, sV27 );
       If( sElType @<> 'S' );
         nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );
-        nCbal = nObal + Numbr( sV28 ) * nFactor;
+        nCbal = nObal + StringToNumberEx( sV28, sDecimalSeparator, sThousandSeparator ) * nFactor;
         CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );
       Else;
         CellPutS( sV28, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );

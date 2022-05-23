@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"xNpi39Xafr[Tlj7VQF=U8XA7yL6<aej6QtJMeP\vm1t=Yc9ePJNRdD?_2?FQ>xA;PMZ;Qn\LVygaLpC3=K6STLl\@rjf0P`t^w9]=H<bHp\T8zWh63;SQqSAzdZA]Z\:@[QGLJ2FgArfT0VDT:;=zbVczRfiY6?^0>Xah`hqFd5L:LbD1qMTI=Ub=lPf`gbJeRHhhb"
+565,"pu@xag9_9=9J724>yptClZg=eztH;4;:aOc\j?:GSFAneaia6HZLiXxLR0F1sgA{ay@9QrnQ;Rdq`psoV0^qCej1:X}jflgj@J\<mphT1Irz<`sW8`9t@Mjfmi9fFm`]]E{[gLnW`HV{VV_Xd3q6=5>89Fz=bk\X6;0XmRmXp[dZNZzqMd<LGG}vc\jH_u0gb8Ly9X4o"
 559,1
 928,0
 593,
@@ -51,14 +51,14 @@ pTemp
 pCubeLogging
 pSandbox
 pFile
+pDelim
+pQuote
 pDecimalSeparator
 pThousandSeparator
 pSubN
 pThreadMode
 pThreadControlFile
 pMaxWaitSeconds
-pDelim
-pQuote
 561,33
 1
 1
@@ -87,12 +87,12 @@ pQuote
 1
 2
 2
+2
+2
 1
 1
 2
 1
-2
-2
 590,33
 pLogOutput,0
 pStrictErrorHandling,0
@@ -119,14 +119,14 @@ pTemp,1
 pCubeLogging,0
 pSandbox,""
 pFile,0
+pDelim,","
+pQuote,""""
 pDecimalSeparator,"."
 pThousandSeparator,","
 pSubN,0
 pThreadMode,0
 pThreadControlFile,""
 pMaxWaitSeconds,1800
-pDelim,","
-pQuote,""""
 637,33
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
@@ -153,14 +153,14 @@ pTemp,"OPTIONAL: Delete temporary view and Subset ( 0 = Retain View and Subsets 
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken, parameter does not work with Parallel thread))"
 pSandbox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pFile,"OPTIONAL: Copy via file export and import. Reduces locks (0 = no, 1= use file and delete it 2= use file and retain it)"
-pDecimalSeparator,"OPTIONAL: Decimal separator for conversion of number to string and string to number if is used pFile (default = '.' exactly 3 digits = ASCII code)"
-pThousandSeparator,"OPTIONAL: Thousand separator for conversion of number to string and string to number if is used pFile (default = ',' exactly 3 digits = ASCII code)"
+pDelim,"OPTIONAL: For pFile > 0. AsciiOutput delimiter character (Default = ',' exactly 3 digits = ASCII code)"
+pQuote,"OPTIONAL: For pFile > 0. AsciiOutput quote character (Default = '""' exactly 3 digits = ASCII code)"
+pDecimalSeparator,"OPTIONAL: For pFile > 0. Decimal separator for conversion of NumberToStringEx and StringToNumberEx (default = '.' exactly 3 digits = ASCII code)"
+pThousandSeparator,"OPTIONAL: For pFile > 0. Thousand separator for conversion of NumberToStringEx and StringToNumberEx (default = ',' exactly 3 digits = ASCII code)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 pThreadMode,"DO NOT USE: Internal parameter only, please do not use"
 pThreadControlFile,"DO NOT USE: Internal parameter only, please do not use"
 pMaxWaitSeconds,"OPTIONAL: Used with parallel to define wait time"
-pDelim,"OPTIONAL: For pFile > 0. AsciiOutput delimiter character (Default = ',' exactly 3 digits = ASCII code)"
-pQuote,"OPTIONAL: For pFile > 0. AsciiOutput quote character (Default = '""' exactly 3 digits = ASCII code)"
 577,51
 V1
 V2
@@ -474,7 +474,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1027
+572,1028
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -486,7 +486,8 @@ If( 1 = 0 );
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
     	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pCumulate', 0,
     	'pZeroTarget', 1, 'pZeroSource', 0,
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 'pFile', 0, 'pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
+    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 
+    	'pFile', 0, 'pDelim', ',', 'pQuote', '"', 'pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
