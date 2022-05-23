@@ -415,7 +415,7 @@ If(Trim( pSourceDir ) @= '' );
     pSourceDir = GetProcessErrorFileDirectory;
 EndIf;
 
-If( SubSt( pSourceDir, Long( pSourceDir ) - 1, 1 ) @= sOSDelim );
+If( SubSt( pSourceDir, Long( pSourceDir ), 1 ) @= sOSDelim );
   pSourceDir = SubSt( pSourceDir, 1, Long( pSourceDir ) - 1 );
 EndIf;
 
