@@ -4,7 +4,7 @@
 586,"}Dimensions"
 585,"}Dimensions"
 564,
-565,"uMX:b=[[Ue\`u_o[<SKf\aW6dN2T>ptwYVaD[CwLX4n:Wz3FOa7;ahtf:nLskvMkrbd]df:BsQ]Dme<F5XAyMBV3S\S5CayUq92H]@CVl995?:vDWQ@w_4hIq7MMl[<TJvjW<h8rpoI>_<EW?8XOZwdmujy:G;Qw6HX]_XpRY<5\rGmBQ\hGJeYf1RHvsgw8[?MFb7py"
+565,"n^673zs`o>qj9Na0ViQ^>QQaY57Iaf<455h4LuMRMHT5@X[Ue5dezZFf[mcy_cmHBdSqpPPh6g:[UaMMdu1SpG9DsS>SxBoEcFqr?r?a1SG<PVU2JQ_3XHRgOpGzy3DO1`SEUjn[nmi4GdOPU`v>A0BfLpQd>bRt3A`[6pn4MzJHl9E5J@3ivs;Y\IkoHeMjnhojVkU="
 559,1
 928,0
 593,
@@ -70,7 +70,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,155
+572,152
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -108,7 +108,7 @@ EndIf;
 # Weight of all added elements into target parent consolidation will be assigned accoring to
 # pWeight parameter value.
 
-# Caution: If the target pConsol exists in the hierarchy, then it will be overwritten.
+# Caution: If the target element pTgtConsol exists in the hierarchy, then it will be overwritten.
 #EndRegion @DOC
 
 ### Global Variables
@@ -124,7 +124,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pDim=%pDim%, pHier=%pHier%, pSrcConsol=%pSrcConsol%, pTgtConsol=%pTgtConsol%, pMemberConsol=%pMemberConsol%.';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pDim=%pDim%, pHier=%pHier%, pSrcConsol=%pSrcConsol%, pTgtConsol=%pTgtConsol%.';
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -218,15 +218,12 @@ Else;
     HierarchyElementInsert( pDim, pHier, '', pTgtConsol, 'C' );
 ENDIF;
 
-
 ### Assign Datasource ###
 DatasourceNameForServer = pDim|':'|pHier;
 DataSourceDimensionSubset = 'All';
 
-
 ### End Prolog ###
-
-573,36
+573,33
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -253,14 +250,11 @@ IF( pSrcConsol @<> '' );
   ENDIF;
 ENDIF;  
 
-
 ### BUILD CONSOLIDATION ###
-
 
 If( nErrors = 0 );
   HierarchyElementComponentAdd( pDim, pHier, pTgtConsol, vElement, pWeight );
 EndIf;
-
 
 ### End Metadata ###
 574,4
