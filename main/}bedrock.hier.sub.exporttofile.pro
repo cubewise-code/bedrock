@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"rNys]@VeyoqBPNH0AtaJGL1;C@spRL0=jzGHcKc5W>qlCRFR>>GfWKOzhqS9j@X8zXi@4IOQGynon;7F\hOXB=V1m[m`LX=_uSK@lA5`kaCVn4LbhAuESsJO1;4^@Vq;R_GRWy6cMi]mj3ZbwW5I8FbGzgl5\?^Y\QbUp>]ll\V6UROXI6AG0XvQnwyoP3A7p[kGfOKe"
+565,"nkvdvDiz0BujwcarJIbVtLzwLpVJEU^lT\[4WM3t<N?7=GgTd?mkQ@nhU:QYa_ANHGC]HtRMs4iS<a5tc[`u_uPe>>qJp:D7HChX2ywtLeSTXn\W]m4ReXbtjcy3O0dNk[5WVLl2>JJ3AQ^NH0V1cqN_64re<]xYGsE2Qmgm[TEHDy=N4dt=[lE?Xw0EbruDtxuCxGO5"
 559,1
 928,0
 593,
@@ -86,7 +86,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,243
+572,242
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -137,7 +137,7 @@ cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pTgtDir:%pTgtDir%, pTgtFile:%pTgtFile%, pTitleRecord:%pTitleRecord%.'; 
 cAttributeDim       = '}ElementAttributes_' | pDim;
-cLenASCIICode = 3;
+cLenASCIICode       = 3;
 
 pDelim = TRIM(pDelim);
 
@@ -328,14 +328,13 @@ DatasourceDimensionSubset = pSub;
 DatasourceAsciiDelimiter= pDelim;
 DatasourceAsciiQuoteCharacter = pQuote;
 
-
 ### End Prolog ###
 573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,108
+574,118
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -396,28 +395,32 @@ If( nRecordCount = 1 & pTitleRecord = 1 );
 
 EndIf;
 
-
 ### Write dimension info to flat file ###
-
-sElement = HierarchyElementPrincipalName( pDim, PHier, vElement );
+sElement = HierarchyElementPrincipalName( pDim, pHier, vElement );
 sSubix = NumberToString( nRecordCount );
 sIndex = NumberToString( ElementIndex( pDim, pHier, vElement ) );
 sType = ElementType( pDim, PHier, vElement );
 sLevel = NumberToString( ElementLevel( pDim, pHier, vElement ) );
 sChild = NumberToString( ElementComponentCount( pDim, pHier, vElement ) );
-sParent1 = ElementParent( pDim,pHier,vElement, 1 );
-sParent2 = ElementParent( pDim,pHier,vElement, 2 );
-sParent3 = ElementParent( pDim,pHier,vElement, 3 );
-sParent4 = ElementParent( pDim,pHier,vElement, 4 );
-sParent5 = ElementParent( pDim,pHier,vElement, 5 );
+sParent1 = ElementParent( pDim,pHier, vElement, 1 );
+sParent2 = ElementParent( pDim,pHier, vElement, 2 );
+sParent3 = ElementParent( pDim,pHier, vElement, 3 );
+sParent4 = ElementParent( pDim,pHier, vElement, 4 );
+sParent5 = ElementParent( pDim,pHier, vElement, 5 );
+sParent6 = ElementParent( pDim,pHier, vElement, 6 );
+sParent7 = ElementParent( pDim,pHier, vElement, 7 );
+sParent8 = ElementParent( pDim,pHier, vElement, 8 );
 sWeight1 = NumberToString( ElementWeight( pDim, pHier, sParent1, vElement ) );
 sWeight2 = NumberToString( ElementWeight( pDim, pHier, sParent2, vElement ) );
 sWeight3 = NumberToString( ElementWeight( pDim, pHier, sParent3, vElement ) );
 sWeight4 = NumberToString( ElementWeight( pDim, pHier, sParent4, vElement ) );
 sWeight5 = NumberToString( ElementWeight( pDim, pHier, sParent5, vElement ) );
+sWeight6 = NumberToString( ElementWeight( pDim, pHier, sParent6, vElement ) );
+sWeight7 = NumberToString( ElementWeight( pDim, pHier, sParent7, vElement ) );
+sWeight8 = NumberToString( ElementWeight( pDim, pHier, sParent8, vElement ) );
 
 If( sAlias @<> '(no alias)' );
-  sAliasValue = AttrS( pDim, vElement, sAlias );
+  sAliasValue = ElementAttrS( pDim, pHier, vElement, sAlias );
 Else;
   sAliasValue = '';
 EndIf;
@@ -440,7 +443,13 @@ EndIf;
     sParent4,
     sWeight4,
     sParent5,
-    sWeight5
+    sWeight5,
+    sParent6,
+    sWeight6,
+    sParent7,
+    sWeight7,
+    sParent8,
+    sWeight8
   );
 
 ### End Data ###
