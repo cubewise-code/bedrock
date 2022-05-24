@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"wMY\NTmNi34[q0JNJ7B6`b>awZBick>f]wC[PNJnDfUMKdKL[P?<b1;W[rNhuMAqbDdke0eIy:m`:[sCecOdE\adhwbEBCfg3?2hJ@L[OB1[vFqI^ERsHJZ88KdSs^B5<2Un7:e4@\qC^Qe^EZM:tF<h3Fm6qhKZJRGKB<w2O=kt909tczkpnh`NKSSk81^A`rV:;nOw"
+565,"wG<[0r>wEzymj`d\jFLCvFXaI;s=Yw?Hi>G;YWkw=uf=V?4DLas\hYEfjUV;F5iRP?H3Skxxwbgp5\v^p\[bxyA7BlI0P;b_PPK6;77tLopNAux3L@C:[;JMJ?H[NH>g@T?5UksHer2>sbCyF750l[B[6t>1r2BV\:]ZKtKyWugt<cCKTy_`MTLsPnP:q`heF890c:wf"
 559,1
 928,0
 593,
@@ -124,6 +124,8 @@ cUserName       = TM1User();
 cTimeStamp      = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
+cTempSubOuter   = '}OuterLoop_' | cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
+cTempSubInner   = '}InnerLoop_' | cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoContent = 'User:%cUserName% Process:%cThisProcName% Message:%sMessage%';
@@ -156,10 +158,10 @@ ElseIF( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
-# Validate hierarchy
+# Validate hierarchy (can only validate hierarchy up front if dimension is fixed and doesn't contain wildcards)
 IF( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & pHier @= '');
     pHier = pDim;
-ElseIf( Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & pHier @<> '' & HierarchyExists( pDim, pHier ) = 0 );
+ElseIf( Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & pHier @<> '' & DimensionExists( pDim ) = 1 & HierarchyExists( pDim, pHier ) = 0 );
     nErrors = 1;
     sMessage = 'Invalid dimension hierarchy: ' | pHier;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -190,7 +192,6 @@ ElseIf( Trim( pConsol ) @= '' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 Endif;
 
-
 # If blank delimiter specified then convert to default
 If( pDelim @= '' );
     pDelim = '&';
@@ -203,9 +204,10 @@ If( nErrors <> 0 );
   Else;
       ProcessBreak;
   EndIf;
+Else;
+  # If subset required will be set later
+  DataSourceType = 'NULL';
 EndIf;
-
-IF (DNLEV(pDim) > 1);
 
 ### If there is no separator and wildcard in the parameters, execute the unwind of the specific consolidated element
 If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 );
@@ -313,18 +315,18 @@ Else;
         EndIf;
     End;
   
-    If( SubsetExists( '}Dimensions' , cTempSub ) = 1 );
+    If( SubsetExists( '}Dimensions' , cTempSubOuter ) = 1 );
         # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
-        SubsetMDXSet( '}Dimensions' , cTempSub, sMDX );
+        SubsetMDXSet( '}Dimensions' , cTempSubOuter, sMDX );
     Else;
         # temp subset, therefore no need to destroy in epilog
-        SubsetCreatebyMDX( cTempSub, sMDX, '}Dimensions' , 1 );
+        SubsetCreatebyMDX( cTempSubOuter, sMDX, '}Dimensions' , 1 );
     EndIf;
   
     # Loop through dimensions in subset created based on wildcard
-    nCountDim = SubsetGetSize( '}Dimensions' , cTempSub );
+    nCountDim = SubsetGetSize( '}Dimensions' , cTempSubOuter );
     While( nCountDim >= 1 );
-        sDim = SubsetGetElementName( '}Dimensions' , cTempSub, nCountDim );
+        sDim = SubsetGetElementName( '}Dimensions' , cTempSubOuter, nCountDim );
         # Validate dimension name
         If( DimensionExists(sDim) = 0 );
             nErrors = 1;
@@ -373,18 +375,18 @@ Else;
                 sMdxHier = Expand('{[%sHierDim%].[%sHierDim%].[%sDim%]} + %sMdxHier%');
             EndIf;
   
-            If( SubsetExists( sHierDim, cTempSub ) = 1 );
-                # If a delimited list of attr names includes wildcards then we may have to re-use the subset multiple times
-                SubsetMDXSet( sHierDim, cTempSub, sMdxHier );
+            If( SubsetExists( sHierDim, cTempSubInner ) = 1 );
+                # If a delimited list of hierarchy names includes wildcards then we may have to re-use the subset multiple times
+                SubsetMDXSet( sHierDim, cTempSubInner, sMdxHier );
             Else;
                 # temp subset, therefore no need to destroy in epilog
-                SubsetCreatebyMDX( cTempSub, sMdxHier, sHierDim, 1 );
+                SubsetCreatebyMDX( cTempSubInner, sMdxHier, sHierDim, 1 );
             EndIf;
 
             # Loop through subset of hierarchies created based on wildcard
-            nCountHier = SubsetGetSize( sHierDim, cTempSub );
+            nCountHier = SubsetGetSize( sHierDim, cTempSubInner );
             While( nCountHier >= 1 );
-                sCurrHier = SubsetGetElementName( sHierDim, cTempSub, nCountHier );
+                sCurrHier = SubsetGetElementName( sHierDim, cTempSubInner, nCountHier );
                 sCurrHierName = Subst( sCurrHier, Scan(':', sCurrHier)+1, Long(sCurrHier) );
                 # Validate hierarchy name in sHierDim
                 If( Dimix( sHierDim , sCurrHier ) = 0 );
@@ -448,7 +450,7 @@ Else;
                             While( nCountElems >= 1 );
                                 sElement = HierarchySubsetGetElementName(sDim, sCurrHierName, cTempSub, nCountElems);
                                 ## Check that the element is consolidated and has children
-                                If( DType( sCurrHier, sElement )@='C' & ElementComponentCount( sDim, sCurrHierName, sElement ) > 0 );
+                                If( DType( sCurrHier, sElement ) @= 'C' & ElementComponentCount( sDim, sCurrHierName, sElement ) > 0 );
                                     If( pLogOutput = 1 );
                                         LogOutput( 'INFO', Expand( 'Process called recursively for "%sElement%" in hierarchy "%sDim%:%sCurrHierName%".' ) );
                                     EndIf;
@@ -474,8 +476,6 @@ Else;
         nCountDim = nCountDim - 1;
     End;
 EndIf;
-
-Endif;
 
 ### End Prolog ###
 573,62
