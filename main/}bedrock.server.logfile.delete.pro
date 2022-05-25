@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"dOn<aGenlMg;R<_7X\`k=@yqCMmj9VvWspV<oS^UFCZQVu^uS5cMVyIhM`6EfmPm1OR_[p2XZU6PMHqCVSeU3=>jmmQNjLTud7<LD@GP7AIzgXkvb9[_7NkgWvLgud^^J8]p8ilADgO_7^`JG[_GrHHKt_zZPLR_^ok2:Y[Qqy86]R]dYHx1ld32tj6pusTAESf5tV:b"
+565,"gl4YRcFa@BDWZlrYA:Wc0o>C>dr2Kre6myTZLbcBGY4SR_y:\\vBUKg_i8Eq]`1k31<pq6^nsMjBxFKD6\c=9qMDXnAU>ZLDidIroly^_s?zu22DluE4;x`f^`I9JqMMhk6_Pq^vUpNOTrebGydxAb3PHqWlrB4wFbsr>SS03SfkRQQ1J=IKsId[UET\CincM>HN5QLH"
 559,1
 928,0
 593,
@@ -64,7 +64,7 @@ pCSVDays,"REQUIRED: The number of days to retain CSV files"
 581,0
 582,0
 603,0
-572,121
+572,131
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -123,7 +123,6 @@ IF( pLogoutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
 
-
 ### Validate Parameters ###
 nErrors = 0;
 
@@ -160,32 +159,43 @@ sErrorDays      = NumberToString( ROUND( pErrorDays ) );
 sBedrockDays    = NumberToString( ROUND( pBedrockDays ) );
 sCSVDays        = NumberToString( ROUND( pCSVDays ) );
 
-### Save the model to disk
-ExecuteProcess( '}bedrock.server.savedataall', 'pStrictErrorHandling', pStrictErrorHandling );
-
 ### Create Execute File File ###
 DatasourceASCIIQuoteCharacter='';
 
 If( sOS @= 'Windows');
   sFileName = GetProcessName() | '.bat';
-  ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m tm1s*.log -d -' | sLogDays | ' -c "cmd /c del @path"' );
-  ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m tm1auditstore*.log -d -' | sLogDays | ' -c "cmd /c del @path"' );
-  ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m TM1ProcessError*.log -d -' | sErrorDays | ' -c "cmd /c del @path"' );
-  ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m Bedrock*.* -d -' | sBedrockDays | ' -c "cmd /c del @path"' );
-  ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.csv -d -' | sCSVDays | ' -c "cmd /c del @path"' );
-  ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.cma -d -' | sCSVDays | ' -c "cmd /c del @path"' );
-  ASCIIOUTPUT( sFileName, 'forfiles -p "'| pTgtDir |'" -s -m *.txt -d -' | sCSVDays | ' -c "cmd /c del @path"' );
+  If( SubSt(pTgtDir, 1, 2) @<> '\\' );
+    # local or mapped drive, use forfiles to delete files matching pattern and expiry days
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m tm1s*.log -d -%sLogDays% -c "cmd /c del @path"'));
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m tm1auditstore*.log -d -%sLogDays% -c "cmd /c del @path"'));
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m TM1ProcessError*.log -d -%sErrorDays% -c "cmd /c del @path"'));
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m Bedrock*.* -d -%sBedrockDays% -c "cmd /c del @path"'));
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m *.csv -d -%sCSVDays% -c "cmd /c del @path"'));
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m *.cma -d -%sCSVDays% -c "cmd /c del @path"'));
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m *.txt -d -%sCSVDays% -c "cmd /c del @path"'));
+  Else;
+    # UNC shared folder path (forfiles command doesn't work with UNC use robocopy instead, create temp dir, move files to temp dir, then delete folder and contents)
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1s*.log" /mov /purge /MINAGE:%sLogDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1auditstore*.log" /mov /purge /MINAGE:%sLogDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "Bedrock*.*" /mov /purge /MINAGE:%sErrorDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "TM1ProcessError*.log" /mov /purge /MINAGE:%sBedrockDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.csv" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.cma" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.txt" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('rmdir /s /q "%pTgtDir%\bedrocklogclear"'));
+  EndIf;
 Else;
   sFileName = GetProcessName() | '.sh';
-  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sLogDays |' -name "tm1s*.log" -exec rm {}\;');
-  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sLogDays |' -name "tm1auditstore*.log" -exec rm {}\;');
-  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sErrorDays |' -iname "TM1ProcessError*.log" -exec rm {}\;');
-  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sBedrockDays |' -iname "bedrock*.*" -exec rm {}\;');
-  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sCSVDays |' -iname "*.csv" -exec rm {}\;');
-  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sCSVDays |' -iname "*.cma" -exec rm {}\;');
-  ASCIIOUTPUT( sFileName, 'find "'| pTgtDir |'" -type f -mtime +' | sCSVDays |' -iname "*.txt" -exec rm {}\;');
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sLogDays% -name "tm1s*.log" -exec rm {}\;'));
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sLogDays% -name "tm1auditstore*.log" -exec rm {}\;'));
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sErrorDays% -name "TM1ProcessError*.log" -exec rm {}\;'));
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sBedrockDays% -name "bedrock*.*" -exec rm {}\;'));
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sCSVDays% -name "*.csv" -exec rm {}\;'));
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sCSVDays% -name "*.cma" -exec rm {}\;'));
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sCSVDays% -name "*.txt" -exec rm {}\;'));
 EndIf;
 
+### End Prolog ###
 573,4
 
 #****Begin: Generated Statements***
@@ -209,9 +219,9 @@ EndIf;
 sCommand = sFileName;
 
 If(sOS @= 'Windows');
-  ExecuteCommand ( sCommand, 1 );
+  ExecuteCommand( sCommand, 1 );
 Else;
-  ExecuteCommand ( 'sh ' | sCommand, 1 );
+  ExecuteCommand( 'sh ' | sCommand, 1 );
 EndIf;
 ASCIIDelete( sFileName);
 
