@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.server.logfile.delete"
 562,"NULL"
 586,
 585,
 564,
-565,"gl4YRcFa@BDWZlrYA:Wc0o>C>dr2Kre6myTZLbcBGY4SR_y:\\vBUKg_i8Eq]`1k31<pq6^nsMjBxFKD6\c=9qMDXnAU>ZLDidIroly^_s?zu22DluE4;x`f^`I9JqMMhk6_Pq^vUpNOTrebGydxAb3PHqWlrB4wFbsr>SS03SfkRQQ1J=IKsId[UET\CincM>HN5QLH"
+565,"kYqW]I>ffDtaT1q4NokvAcq@vYZCJ]5GCZUG86Sfi93`VYc7ov12dpes7Ysw8i?o^DEzPos7v?ykThPZ_\F;mB`Yj[gCh3YchmwSDSrMsgMt8W:q4NgWGYJl3jB[h4Y>e5_HPq^fMa`K6\t\8I\`05UOeyI4R=;sf=RJuemKO@jEBnv0^`TZNYmwMT1oH;2YnC2Lktpz"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,7
+560,8
 pLogOutput
 pStrictErrorHandling
 pTgtDir
@@ -33,7 +33,8 @@ pLogDays
 pErrorDays
 pBedrockDays
 pCSVDays
-561,7
+pFileSize
+561,8
 1
 1
 2
@@ -41,15 +42,17 @@ pCSVDays
 1
 1
 1
-590,7
+1
+590,8
 pLogOutput,0
 pStrictErrorHandling,0
 pTgtDir,""
-pLogDays,7
-pErrorDays,21
-pBedrockDays,7
-pCSVDays,7
-637,7
+pLogDays,0
+pErrorDays,0
+pBedrockDays,0
+pCSVDays,0
+pFileSize,0
+637,8
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pTgtDir,"OPTIONAL: Log file directory. (Blank = from TM1 configuration file)"
@@ -57,6 +60,7 @@ pLogDays,"REQUIRED: The number of days to retain log Files"
 pErrorDays,"REQUIRED: The number of day to retain TM1 Error Logs"
 pBedrockDays,"REQUIRED: The number of days to retain Bedrock Debug Files"
 pCSVDays,"REQUIRED: The number of days to retain CSV files"
+pFileSize,"REQUIRED: The file size of log files (in MB) to exceed before removal"
 577,0
 578,0
 579,0
@@ -64,14 +68,13 @@ pCSVDays,"REQUIRED: The number of days to retain CSV files"
 581,0
 582,0
 603,0
-572,131
+572,137
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess( '}bedrock.server.logfile.delete', 'pLogOutput', pLogOutput,
-      'pStrictErrorHandling', pStrictErrorHandling,
-	    'pTgtDir', '',
-    	'pLogDays', 7, 'pErrorDays', 21, 'pBedrockDays', 7, 'pCSVDays', 7
+    ExecuteProcess( '}bedrock.server.logfile.delete', 
+      'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling,
+      'pTgtDir', '', 'pLogDays', 7, 'pErrorDays', 21, 'pBedrockDays', 7, 'pCSVDays', 7, 'pFileSize', 2
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -104,7 +107,7 @@ cThisProcName     = GetProcessName();
 cUserName         = TM1User();
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pTgtDir:%pTgtDir%, pLogDays:%pLogDays%, pErrorDays:%pErrorDays%, pBedrockDays:%pBedrockDays%, pCSVDays:%pCSVDays%.' ;  
+cLogInfo          = 'Process:%cThisProcName% run with parameters pTgtDir:%pTgtDir%, pLogDays:%pLogDays%, pErrorDays:%pErrorDays%, pBedrockDays:%pBedrockDays%, pCSVDays:%pCSVDays%, pFileSize:%pFileSize%.' ;
 
 ## check operating system
 If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
@@ -154,19 +157,26 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
+# Positive file size
+If( pFileSize < 0 );
+  pFileSize = 0;
+EndIf;
+pFileSize = pFileSize * 1024 * 1024;
+
 sLogDays        = NumberToString( ROUND( pLogDays ) );
 sErrorDays      = NumberToString( ROUND( pErrorDays ) );
 sBedrockDays    = NumberToString( ROUND( pBedrockDays ) );
 sCSVDays        = NumberToString( ROUND( pCSVDays ) );
+sFileSize       = NumberToString( ROUND( pFileSize ) );
 
 ### Create Execute File File ###
-DatasourceASCIIQuoteCharacter='';
+DatasourceASCIIQuoteCharacter = '';
 
 If( sOS @= 'Windows');
   sFileName = GetProcessName() | '.bat';
   If( SubSt(pTgtDir, 1, 2) @<> '\\' );
     # local or mapped drive, use forfiles to delete files matching pattern and expiry days
-    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m tm1s*.log -d -%sLogDays% -c "cmd /c del @path"'));
+    ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m tm1s*.log -d -%sLogDays% -c "cmd /c if @fsize GEQ %sFileSize% del @path"'));
     ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m tm1auditstore*.log -d -%sLogDays% -c "cmd /c del @path"'));
     ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m TM1ProcessError*.log -d -%sErrorDays% -c "cmd /c del @path"'));
     ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m Bedrock*.* -d -%sBedrockDays% -c "cmd /c del @path"'));
@@ -177,8 +187,8 @@ If( sOS @= 'Windows');
     # UNC shared folder path (forfiles command doesn't work with UNC use robocopy instead, create temp dir, move files to temp dir, then delete folder and contents)
     ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1s*.log" /mov /purge /MINAGE:%sLogDays% /copyall /s'));
     ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1auditstore*.log" /mov /purge /MINAGE:%sLogDays% /copyall /s'));
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "Bedrock*.*" /mov /purge /MINAGE:%sErrorDays% /copyall /s'));
     ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "TM1ProcessError*.log" /mov /purge /MINAGE:%sBedrockDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "Bedrock*.*" /mov /purge /MINAGE:%sErrorDays% /copyall /s'));
     ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.csv" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
     ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.cma" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
     ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.txt" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
