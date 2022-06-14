@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"uO\VHhh]j1:D1SgOfcyM=aRd0^J^l[;9h8ik^u`3u3?3sDDBJ8fg\OJARvuRong2wi2Edy<Ts^TGe7q=Mq=9\oAzcr7t8a315PwxU\RsVd_RKWf\hi3I>jxBRs\spx<Osbf?2md4mN0^Bhp?v@7W;Ga0K?O4ngbM\^cr=B:ru2C[>C21nlI10CV4mFyt[lBpug@oQx7u"
+565,"vMAC9mheGxg:MCz\U7Ih]iaLSnbySfz;T1yBNJaKvtJTAT:D1c8e:6;10o94m4hcS]4vmWxBHBtih6A6XiH3TDBF\t2=FVQSyYi=p;X63uyI1j?G<PODfX?dUMb1K\S6F?5SEFWh9GS]j6Al^09DAtpjQV?_:Jir?qFy4>a>T6V7EXj16\rR<Amk>CQUM=eEZcKRy0km"
 559,1
 928,0
 593,
@@ -18,7 +18,7 @@
 566,0
 567,","
 588,"."
-589,"."
+589,","
 568,""""
 570,
 571,
@@ -102,13 +102,13 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.hier.element.move',
   'pLogOutput', pDebug,
-  'pStrictErrorHandling',1,
+  'pStrictErrorHandling', 1,
   'pDim', pDimension,
   'pHier', '',
   'pEle', pElement,
   'pTgtConsol', pTargetConsol,
   'pMode', pAction,
-  'pElWeight', pElWeight
+  'pWeight', pElWeight
   );
 
 IF(nRet <> 0);
