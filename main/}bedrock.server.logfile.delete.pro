@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.server.logfile.delete"
 562,"NULL"
 586,
 585,
 564,
-565,"gl4YRcFa@BDWZlrYA:Wc0o>C>dr2Kre6myTZLbcBGY4SR_y:\\vBUKg_i8Eq]`1k31<pq6^nsMjBxFKD6\c=9qMDXnAU>ZLDidIroly^_s?zu22DluE4;x`f^`I9JqMMhk6_Pq^vUpNOTrebGydxAb3PHqWlrB4wFbsr>SS03SfkRQQ1J=IKsId[UET\CincM>HN5QLH"
+565,"d>nuaYTJwU^Us]mQ0[E::>mgn^jLwC@HmPcWaoCin2xm\fbzgaFFL0=?motWJUs_=_\@qT9e5qN>Nne^mvbi@pIH[^NXHhOefwbf4eLL8lAx3PJZE9<6M7S]b0QIY2dmdAihutY?WVHW3Njmls[trFc@Hf1[?^`<CV[Jn>S?ip\jPHpv?vUdeaq3c]tKiR4?>tIOthKS"
 559,1
 928,0
 593,
@@ -60,7 +60,7 @@ pLogDays,"REQUIRED: The number of days to retain log Files"
 pErrorDays,"REQUIRED: The number of day to retain TM1 Error Logs"
 pBedrockDays,"REQUIRED: The number of days to retain Bedrock Debug Files"
 pCSVDays,"REQUIRED: The number of days to retain CSV files"
-pFileSize,"REQUIRED: The file size of log files (in MB) to exceed before removal"
+pFileSize,"OPTIONAL: The file size of log files (in MB) to exceed before removal (Default=0). Note: for tm1s*.log transaction logs only"
 577,0
 578,0
 579,0
@@ -158,7 +158,7 @@ If( nErrors <> 0 );
 EndIf;
 
 # Positive file size
-If( pFileSize < 0 );
+If( pFileSize <= 0 );
   pFileSize = 0;
 EndIf;
 pFileSize = pFileSize * 1024 * 1024;
@@ -185,18 +185,18 @@ If( sOS @= 'Windows');
     ASCIIOUTPUT(sFileName, Expand('forfiles -p "%pTgtDir%" -s -m *.txt -d -%sCSVDays% -c "cmd /c del @path"'));
   Else;
     # UNC shared folder path (forfiles command doesn't work with UNC use robocopy instead, create temp dir, move files to temp dir, then delete folder and contents)
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1s*.log" /mov /purge /MINAGE:%sLogDays% /copyall /s'));
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1auditstore*.log" /mov /purge /MINAGE:%sLogDays% /copyall /s'));
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "TM1ProcessError*.log" /mov /purge /MINAGE:%sBedrockDays% /copyall /s'));
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "Bedrock*.*" /mov /purge /MINAGE:%sErrorDays% /copyall /s'));
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.csv" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.cma" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
-    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.txt" /mov /purge /MINAGE:%sCSVDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1s*.log" /mov /purge /minage:%sLogDays% /min:%sFileSize% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "tm1auditstore*.log" /mov /purge /minage:%sLogDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "TM1ProcessError*.log" /mov /purge /minage:%sBedrockDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "Bedrock*.*" /mov /purge /minage:%sErrorDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.csv" /mov /purge /minage:%sCSVDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.cma" /mov /purge /minage:%sCSVDays% /copyall /s'));
+    ASCIIOUTPUT(sFileName, Expand('robocopy "%pTgtDir%" "%pTgtDir%\bedrocklogclear" "*.txt" /mov /purge /minage:%sCSVDays% /copyall /s'));
     ASCIIOUTPUT(sFileName, Expand('rmdir /s /q "%pTgtDir%\bedrocklogclear"'));
   EndIf;
 Else;
   sFileName = GetProcessName() | '.sh';
-  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sLogDays% -name "tm1s*.log" -exec rm {}\;'));
+  ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sLogDays% -name "tm1s*.log" -size +%sFileSize%c -exec rm {}\;'));
   ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sLogDays% -name "tm1auditstore*.log" -exec rm {}\;'));
   ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sErrorDays% -name "TM1ProcessError*.log" -exec rm {}\;'));
   ASCIIOUTPUT(sFileName, Expand('find "%pTgtDir%" -type f -mtime +%sBedrockDays% -name "bedrock*.*" -exec rm {}\;'));
