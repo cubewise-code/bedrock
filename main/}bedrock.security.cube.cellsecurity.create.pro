@@ -101,7 +101,7 @@ cLogInfo            = 'Process:%cThisProcName% run with parameters pCube:%pCube%
 cDelim              = ':';
 
 ## LogOutput parameters
-IF( pLogoutput = 1 );
+IF( pLogOutput = 1 );
     LogOutput('INFO', Expand( cLogInfo ) );   
 ENDIF;
 
@@ -136,13 +136,13 @@ If( nErrors <> 0 );
 EndIf;
 
 ### Count dimensions in cube ###
-nDims               = 0;
-iDim                = 1;
-While( TabDim( pCube, iDim ) @<> '' );
-   nDims            = iDim;
-   iDim             = iDim + 1;
-End;
+nDims               = CubeDimensionCountGet( pCube );
 
+### If pDim is empty, then no restrictions on dimensions ###
+pDim = Trim( pDim );
+If( pDim @= '' );
+   pDim = Fill( '1:', 2 * nDims - 1 );
+EndIf;
 ### Count dimensions mapped in pDim ###
 sDimensions         = pDim;
 nDelimiterIndex     = 1;
