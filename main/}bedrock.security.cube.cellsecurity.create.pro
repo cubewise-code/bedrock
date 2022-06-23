@@ -135,12 +135,12 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
-### Count dimensions in cube ###
+### Count dimensions in cube
 nDims               = CubeDimensionCountGet( pCube );
 
-### If pDim is empty, then no restrictions on dimensions ###
+### If pDim is wildcard, then = ALL (no restrictions on dimensions)
 pDim = Trim( pDim );
-If( pDim @= '' );
+If( pDim @= '*' );
    pDim = Fill( '1:', 2 * nDims - 1 );
 EndIf;
 ### Count dimensions mapped in pDim ###
