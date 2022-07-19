@@ -199,7 +199,6 @@ While( nDelimiterIndex <> 0 );
         nHier_Sub_Size = HierarchySubsetGetSize(cGroupDim, cGroupHier, cTempSub);
         nCount = nHier_Sub_Size;
         While (nCount >= 1);
-          nSubsetIndex = 1;
           sTemp = HierarchySubsetElementGetIndex (cGroupDim, cGroupHier, cTempSub, '', 1);
           sElement = HierarchySubsetGetElementName(cGroupDim, cGroupHier, cTempSub, nCount);
           If( Scan( Upper( sElement ) |'&', Upper( cBuiltInGroups ) ) = 0 );
