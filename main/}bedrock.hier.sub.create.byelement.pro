@@ -243,15 +243,11 @@ EndIf;
 If( HierarchySubsetExists( pDim, pHier, pSub ) = 1 );
   If( pAddtoSubset <> 1 );
     HierarchySubsetDeleteAllElements( pDim, pHier, pSub );
-    nSubsetSize = 0;
-  Else;
-    nSubsetSize = HierarchySubsetGetSize( pDim, pHier, pSub );
   EndIf;
 Else;
   If( nErrors = 0 );
     HierarchySubsetCreate( pDim, pHier, pSub, pTemp );
   EndIf;
-  nSubsetSize = 0;
 EndIf;
 
 ### Assign Alias to subset
@@ -261,11 +257,10 @@ ENDIF;
 
 ### Insert elements ###
 
-nSubsetIndex = 1;
 sElements = pEle;
 nDelimIndex = 1;
 
-# Split filter into seperate dimensions
+# Split filter into separate dimensions
 While( nDelimIndex <> 0 & Long( sElements ) > 0 );
 
   nDelimIndex = Scan( pDelim, sElements );
@@ -278,7 +273,7 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
 
   If( ElementIndex( pDim, pHier, sElement ) <> 0 );
     If( nErrors = 0 );
-      IF(ElementLevel( pDim, pHier, sElement) > 0);
+      IF( ElementLevel( pDim, pHier, sElement) > 0 );
         If( pExpandConsol = 1 );
           ExecuteProcess('}bedrock.hier.sub.create',
                          'pStrictErrorHandling', pStrictErrorHandling,
@@ -308,13 +303,12 @@ While( nDelimIndex <> 0 & Long( sElements ) > 0 );
                          'pTemp', pTemp
                         );
         Else;
-          HierarchySubsetElementInsert( pDim, pHIer, pSub, sElement, nSubsetIndex );
+          HierarchySubsetElementInsert( pDim, pHier, pSub, sElement, 0 );
         EndIf;
       ELSE;
-        HierarchySubsetElementInsert( pDim, pHIer, pSub, sElement, nSubsetIndex );
+        HierarchySubsetElementInsert( pDim, pHier, pSub, sElement, 0 );
       ENDIF;
     EndIf;
-    nSubsetIndex = nSubsetIndex + 1;
   EndIf;
 End;
 
