@@ -430,7 +430,11 @@ If( FileExists( pSourceDir ) = 0 );
 EndIf;
 
 If( pSourceFile @= '' );
-    pSourceFile = Expand('%pCube%_Export.csv');
+    If( sOS @= 'Linux' );
+      pSourceFile = Lower( Expand( '%pCube%_Export.csv' ) );
+    Else;
+      pSourceFile = Expand( '%pCube%_Export.csv' );
+    EndIf;
 EndIf;
 
 sFile = pSourceDir | sOSDelim | pSourceFile;
