@@ -629,7 +629,7 @@ EndIf;
 
 ## File location for indirect data copy
 cDir    = '.' | sOSDelim;
-cFileName = pCube | cTimeStamp | cRandomInt | '.csv';
+cFileName = LOWER(pCube) | cTimeStamp | cRandomInt | '.csv';
 cFile   = cDir | cFileName;
 cTitleRows = 1;
 cDelimiter = pDelim;
@@ -2004,7 +2004,11 @@ EndIf;
 
 ### Delete export file if used
 If( pFile = 1 );
-  TM1RunCmd = 'CMD.EXE /C "DEL "' | cFile | '" "';
+  If( sOS @= 'Linux' );
+    TM1RunCmd = 'rm "' | cFile | '"';
+  Else;
+    TM1RunCmd = 'CMD.EXE /C "DEL "' | cFile | '" "';
+  EndIf;
   EXECUTECOMMAND ( TM1RunCmd , 0 );
 EndIf;
 
