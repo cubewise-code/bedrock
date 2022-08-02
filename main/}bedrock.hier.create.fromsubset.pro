@@ -192,7 +192,6 @@ IF(HierarchySubsetExists( pSrcDim, pSrcHier, pSubset) = 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ELSE;
     cSubset = pSubset;
-    nSubsetSize = HierarchySubsetGetSize( pSrcDim, pSrcHier, pSubset );
 ENDIF;
 
 ### Check for errors before continuing
