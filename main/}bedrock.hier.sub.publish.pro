@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"oipuKFyatq@RB@Rao@`@HmL^HFHVX47H09ouG]sCt3JDN:1OvmmNv4FiO7[unFNGb?^lU6@Y1^G;X7H:G_f[gyfczKTSUhL0onK=7\:a:uQYUP3<0xHP6YlJ;saJ\tTLTdALg[1fU@1HblVF9Q6^34tf05=d1b;y`KbSlQiVw:T=np^o`A\v[3CC:w6n0fJ^UR>gx>LU"
+565,"rBX:WRm^5BE2FebAb6al=ROwqGQJmv>OgayqZ8TABPm6iBm:u@mKYXM?1OSf]meA?dQ8nHp0gVz6rbwar7ThHMz0i][iG5`IYg;<Eg]IyjrdfNQxT`3v5?nCuBUEHM;bvINzqGQRi78kGwz6I8Fucz:W5F_=jc7ef9VTPgZFGi[w`la43^4aM3aI`w=M9yg1vUdSS^xw"
 559,1
 928,0
 593,
@@ -106,7 +106,7 @@ cTempFile           = GetProcessErrorFileDirectory | cTempSubset | '.csv';
 sMessage            = 	'';
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pSubPublish:%pSubPublish%, pOverwrite:%pOverwrite%.' ;
+cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pSubPublish:%pSubPublish%, pOverwrite:%pOverwrite%.' ;
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
@@ -221,7 +221,7 @@ If( nErrors > 0 );
         ProcessQuit; 
     EndIf;
 Else;
-    sProcessAction = Expand( 'Process:%cThisProcName% successfully published view %pView% in cube %pCube% created by cient %pClient%.' );
+    sProcessAction = Expand( 'Process:%cThisProcName% successfully published subset %pSub% in hierarchy %pDim%:%pHier% created by cient %pClient%.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
