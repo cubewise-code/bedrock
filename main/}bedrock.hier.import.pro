@@ -508,7 +508,7 @@ Endif;
 IF( V1 @= 'V' );
     sAttrType = DTYPE( sAttrDimName , sVar3 );
     IF ( pDim @<> sHier );
-        IF ( CellIsUpdateable ( '}ElementAttributes_' | pDim, sVar2, sVar3 ) = 0 ) ;
+        IF ( CellIsUpdateable ( '}ElementAttributes_' | pDim, sHier:sVar2, sVar3 ) = 0 ) ;
             ItemSkip ;
         ENDIF ;
         IF( sAttrType @= 'AN' );
