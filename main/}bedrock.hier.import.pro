@@ -71,7 +71,7 @@ pSrcFile,"OPTIONAL: Source File Name (defaults to 'Dimension Hierarchy _Export.c
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
 pLegacy,"OPTIONAL: 1 = Legacy format (bedrock v3) 0 or empty = new bedrock v4 format"
-pUnwind,"OPTIONAL: 1 = unwind elements 0 = like for like copy which may result in lost elements / data"
+pUnwind,"OPTIONAL: 1 = unwind elements 0 = like for like copy which may result in lost elements / data (2= no clear or unwind, only add)"
 pConsol,"OPTIONAL: Target Consolidation, accepts wildcards ( * will unwind ALL). Note: ignored if pUnwind=0"
 577,6
 V1
@@ -273,7 +273,7 @@ If( FileExists( sFilename ) = 0 );
 EndIf;
 
 # Validate unwind
-If( pUnwind <> 0 );
+If( pUnwind <> 0 & pUnwind <> 2 );
     pUnwind = 1;
 EndIf;
 
