@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"vR2MSHkH:w[@tC9?Bl5gD3yVUH;\YG;I:SQ@E@VXmU@=LrWCJpG8WwwFD4SQFWdA9`<`w3ur^[iO:O_n4qAJu2iGI]l;Sc`SCXv>]Z;xa\HH7e}B>N=CCccDeb<nVUshtxJdTdi:GagH~PM:@1y6]_p:j`Yc\I3>U0h?\dW410LY#?OBDo6Qgi8X`q`;VO4k|PgdWJIv"
+565,"eg10wy:Qdv<2Y=:5sHzUmpaE;cj7:5`BZ0>nUnbj_vrnZWKlOC?QgH^b4S1=c`ayUgk7TwTO^j_NDo]Q=qF]Nq@=Ob;nhcOK2C9mNHogvfgGYtB~;SWC\diEuW\S5Te@pJbDbqL1@4F^4P0P\q=MMNUieDAStnDKCf?uCVTrVF`+oL:iwy@K`XI5lB[^GD`\fz:?ZSB"
 559,1
 928,0
 593,
@@ -116,7 +116,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,279
+572,280
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -216,9 +216,11 @@ sHier       = Trim( pHier );
 If( sHier @= '' );
     sHier     = pDim;
 ElseIf( sHier @= 'Leaves' );
-    nErrors   = 1;
-    sMessage  = 'Invalid  Hierarchy: ' | pDim |':'|sHier;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    If( pUnwind = 1 );
+        pUnwind = 2;
+        sMessage  = Expand('%cThisProcName%: Leaves hierarchy, unwind is redundant. Changing unwind mode for %pDim%:%pHier% to 2.');
+        LogOutput( 'INFO', sMessage );
+    EndIf;
 EndIf;
 
 ## check operating system
@@ -394,10 +396,8 @@ DatasourceNameForClient = sFilename;
 DatasourceAsciiDelimiter= pDelim;
 DatasourceAsciiQuoteCharacter = pQuote;
 
-
 ##### End Prolog #####
-573,74
-
+573,85
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -454,6 +454,13 @@ IF( V1 @= 'A' );
     ENDIF;
 ELSEIF( V1 @= 'E' );
     # insert elements
+    If( sHier @= 'Leaves' & sVar3 @<> 'N' );
+        IF( pLogOutput = 1 );
+            sMessage    = Expand('Invalid element type %sVar3% for Leaves hierachy. Skipping insertion of element %sVar2%.');
+            LogOutput( 'INFO', Expand( cMsgErrorContent ) );  
+        ENDIF;
+        ItemSkip;
+    EndIf;
     HierarchyElementInsert( pDim, sHier, '', sVar2 , sVar3 );
     IF( pLogOutput = 1 );
         sMessage    = Expand('Inserted element %sVar2% into %sDim% as type %sVar3%.');
@@ -461,6 +468,13 @@ ELSEIF( V1 @= 'E' );
     ENDIF;
 ELSEIF( V1 @= 'P' );
     # create rollups
+    If( sHier @= 'Leaves' );
+        IF( pLogOutput = 1 );
+            sMessage    = Expand('Leaves hierarchy! Skipping mapping of %sVar2% into parent %sVar3%.');
+            LogOutput( 'INFO', Expand( cMsgErrorContent ) );  
+        ENDIF;
+        ItemSkip;
+    EndIf;
     HierarchyElementInsert( pDim, sHier, '', sVar3 , sVar4 );
     HierarchyElementComponentAdd( pDim, sHier, sVar3 , sVar2 , StringToNumber( sVar5 ) );
     IF( pLogOutput = 1 );
@@ -468,11 +482,8 @@ ELSEIF( V1 @= 'P' );
         sMessage    = Expand('Added %sVar2% to %sVar3% with a weight of %sVar5%.');
         LogOutput( 'INFO', Expand( cMsgErrorContent ) );  
     ENDIF;
-
 ENDIF;
-
-574,59
-
+574,58
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -531,8 +542,7 @@ IF( V1 @= 'V' );
         ENDIF;        
     ENDIF;
 ENDIF;
-575,28
-
+575,27
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
