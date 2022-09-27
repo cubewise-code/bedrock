@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"pu@xag9_9=9J724>yptClZg=eztH;4;:aOc\j?:GSFAneaia6HZLiXxLR0F1sgA{ay@9QrnQ;Rdq`psoV0^qCej1:X}jflgj@J\<mphT1Irz<`sW8`9t@Mjfmi9fFm`]]E{[gLnW`HV{VV_Xd3q6=5>89Fz=bk\X6;0XmRmXp[dZNZzqMd<LGG}vc\jH_u0gb8Ly9X4o"
+565,"uI9ha<[8SRl2J\?V4AUL]ykdiOFpoTz8Azm3xcwkAkvn^di8kgvr47=j;6FaBHA;@qy1aVf4jZdQ^ssyBVhL=ZUOfDwZbQrQv:h7MO@sdPvblUvWh6^T^08e@LXA@]bC_IkRwbNK0_Yy66cW4mq4MjXYR_ur;gk4]d68Zb`X5@n3AJ0Rkr7t>Am7lhQt`|`aRnofDm0D"
 559,1
 928,0
 593,
@@ -1964,7 +1964,7 @@ ElseIf( nDimensionCount = 27 );
 
 
 ### End Data ###
-575,84
+575,89
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2041,17 +2041,18 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
-    If( pStrictErrorHandling = 1 );
-        ProcessQuit;
+    If( pStrictErrorHandling = 1 ); 
+        ProcessQuit; 
     EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully copied data from %pSrcView% view to the %pTgtView% view in the %pCube% cube.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( sProcessAction ) );
+        LogOutput('INFO', Expand( sProcessAction ) );   
     EndIf;
 EndIf;
+
 ### End Epilog ###
 576,_ParameterConstraints=e30=
 930,0
