@@ -1,6 +1,8 @@
 # TM1 binary files
 *.cub
 *.dim
+*.cho
+*.tab
 
 # TM1 metadata
 *.sub
@@ -11,7 +13,9 @@
 
 # working files which shouldn't be in the data directory
 *.csv
+*.cma
 *.xls
+*.xlsb
 *.xlsx
 *.xlsm
 *.pdf
