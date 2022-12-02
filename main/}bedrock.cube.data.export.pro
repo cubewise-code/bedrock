@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"g>`zsvsa\i_20gL<:M6E@wRZjqb0lIfjZodcu?6H1:5hXX>Fmh`b:ZSZ6KDtsImT\jo]jy9n4ix9sneFwCIZ^suaEsM`BPwJm=m<vGtwt2XIX18HQx3PqCv[7kjd4urVFefng[VlVa\[Fo<kC^l?UPvBgkHs:Msbgr>1?L5k_OR9aRRL2eM4hj4Esdjwan2O2L=b0k>O"
+565,"ven`coiam:;78Ai5iEVeuKaH_D[2Tie1C7OeY[S5zHqNA5N^okkSQDV3[s;rIsTHCS0us?vbcd?P?8t2b4ipH`aFH@d]UMALpWkETmEQWC1BzELdYyMFpwL:B5JSll6F7Wx@xjYCbPouFRQ4tkJBEPXVMkXPWOXwVOU;Dzb\xQUiwsV]pV\1xNehR^9ipj;\HX^4T1EX"
 559,1
 928,0
 593,
@@ -111,7 +111,7 @@ pTitleRecord,1
 pSandbox,""
 pSubN,0
 pCharacterSet,""
-pCubeNameExport,0
+pCubeNameExport,1
 637,28
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
