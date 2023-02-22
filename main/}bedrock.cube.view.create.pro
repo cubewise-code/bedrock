@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"oN8^^6ijFcf?AZhafw:13SQeJkN>e4sS1sxRFCpf[mOLD0[PW9ejB?QUxrp5fRc8`j7V2Qyy^8]aUEBgqVoi@lwByzw[I[2]CRqgnVm;0QHwBA[DIl6g[@5w<a_bTqK:5tEaNiO:cwD2lZj;DLb<GxlejlL4be^0HTqi@B5J;e6<PgapEa`;0zAzCoEkjXwPnQ<H]4Sc"
+565,"xSBu?f]L^_vc4qHDo?6qTMx[a1\frr;vw`b9O>SB?6oZx1PdglG?B8Rl^?NcNPjH]E[6a8Y6KwFtMD<[qyD\fLJpOxUsJSZ>ES=01dy;YL0YVgEKJ89RSq^;tzfpUJaAKy=w[l2u`3;<FWHq4NtRbS2yo3\P16e4b\lUtQo7lNdktUQ7Y5Kgp\mqZ2W0^35PBI@fhvMF"
 559,1
 928,0
 593,
@@ -92,7 +92,7 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,444
+572,448
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -437,8 +437,12 @@ WHILE (nChar <= nCharCount);
               n = 1;
               WHILE ( n <= nElCount );
                   sEl = DIMNM( sDimension, n );
-                  IF( DTYPE( sDimension, sEl) @<> 'C' & ELISANC( sDimension, sElement, sEl ) = 1 );
-                      SubsetElementInsert( sDimension, sSubset, sEl, 0 );
+                  If( ElIsAnc(sDimension, sElement, sEL) = 1 );
+                      If( pSuppressConsolStrings = 0 );
+                          SubsetElementInsert(sDimension, sSubset, sEl, 0);
+                      ElseIf( DType(sDimension, sEl) @<> 'C' );
+                          SubsetElementInsert(sDimension, sSubset, sEl, 0);
+                      EndIf;
                   EndIf;
                   n = n + 1;
               END;
