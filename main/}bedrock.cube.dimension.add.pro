@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"vzUjs;kLpORvBKAd0PQtHVa<qI^YIh[@o8`wzW@aWm87V\SM=@:3pnAgek6zCKKsLWX0GCSQew_RTzzXuNwtv0^`RmLxK]qwkA\K1xgXZDFKF_9>q19b;A4`\kxrK5PeI:e[<?152uNer@uN;fPNJoz;n66@0FHHqZyB@<Q>`ZkkcJLIT;]<uUucAQ=E`mA^jIEBly:;"
+565,"aaVYwvZ=oxOxo0p4Vj4WTTY0f:fQQ9nVYy_dWjaStQVYREqaCL9E]Y5YQHa\EiN\dRM9rXJw_F85lRQ1tUKil2KCa15`uKEcrO?r;>TcT;S9WlMfrTToH9oAKuIJOB6]R6i49p4UJm2^o38^yWABamcR@?NT=e7DxeFZU5s_DNJ6S9DYR:I^=Y<fs_tPh\tLZ9n^vRGM"
 559,1
 928,0
 593,
@@ -76,7 +76,7 @@ pTemp,"OPTIONAL: Delete the clone cube (1 = delete, 0 = not delete)"
 581,0
 582,0
 603,0
-572,351
+572,367
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -145,6 +145,7 @@ ENDIF;
 ### Validate Parameters ###
 nErrors = 0;
 # Validate cube
+cDimCount = 0;
 If( Trim( pCube ) @= '' );
     nErrors = nErrors + 1;
     sMessage = 'No cube specified.';
@@ -153,12 +154,25 @@ ElseIf( CubeExists( pCube ) = 0 );
     nErrors = nErrors + 1;
     sMessage = Expand( 'Invalid cube specified: %pCube%.');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+Else;
+    cDimCount = CubeDimensionCountGet(pCube);
 EndIf;
 
 # Don't allow system cubes to be modified
 If( SubSt( pCube, 1, 1 ) @= '}' & pCtrlObj <= 0 );
     nErrors = nErrors + 1;
     sMessage = Expand( 'Do not modify system cubes: %pCube%.');
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+# Validate index
+If( pDimIndex = 0 );
+    nErrors = nErrors + 1;
+    sMessage = Expand( 'Index for new dimension is a REQUIRED parameter!');
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+ElseIf( pDimIndex > cDimCount + 1 );
+    nErrors = nErrors + 1;
+    sMessage = Expand( 'Cube %pCube% has %cDimCount% dimensions. %pDimIndex% is not valid for the new dimension index!');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
@@ -187,8 +201,8 @@ If( pIncludeData = 1 & DIMIX(pDim, pEle)=0 );
 EndIf;
 
 IF(pIncludeRules = 1 % pIncludeRules = 2);
-    cCubeRuleFileName = '.' | sOSDelim | pCube | '.RUX';
-    If(FileExists(cCubeRuleFileName) = 0);
+    cCubeRuleFileName = '.' | sOSDelim | pCube | '.rux';
+    If(FileExists(Lower(cCubeRuleFileName)) = 0);
         pIncludeRules = 0;
         LogOutput( 'INFO', Expand( 'No rule found for %pCube%.' ) );
     Endif;
@@ -203,31 +217,33 @@ nNewFound = 0;
 nIncrement = 1;
 While( TabDim( pCube, nCount ) @<> '' );
   sDim = TabDim( pCube, nCount );
-  IF(nCount=pDimIndex & nNewFound = 0);
-    sNewDim=pDim;
+  IF(nCount = pDimIndex & nNewFound = 0);
+    sNewDim = pDim;
     nNewFound = 1;
     nIncrement = 0;
   else;
-    sNewDim=sDim;
+    sNewDim = sDim;
     nIncrement = 1;
   Endif;  
-  IF(nCount = 1);
-    sDimCheck = '+'|sDim|'+';
-    #sDimString = sNewDim;
-  elseif(nCount > 1);
-    sDimCheck = sDimCheck|'+'|sDim|'+';
-  Endif;
+  sDimCheck = sDimCheck|'+'|sDim|'+';
   sDimString = sDimString|'+'|sNewDim;
   nCount = nCount + nIncrement;
 End;
 nDimensionCount = nCount;
 
-#Remove any leading +
-IF( Subst( sDimString , 1 , 1 ) @= '+' );
-    sDimString      = Subst ( sDimString , 2 , 999 );
+# Cover case of new dimension in last position (pDimIndex = cDimCount+1)
+If( nDimensionCount = pDimIndex & nNewFound = 0 );
+    nNewFound = 1;
+    sNewDim=pDim;
+    sDimString = sDimString|'+'|sNewDim;
 EndIf;
 
-IF(scan('+'|pDim|'+',sDimCheck)>0);
+# Remove any leading +
+IF( Subst( sDimString , 1 , 1 ) @= '+' );
+    sDimString      = Subst ( sDimString , 2, Long(sDimString)-1 );
+EndIf;
+
+IF( Scan('+'|Lower(pDim)|'+', Lower(sDimCheck)) > 0 );
     nErrors = nErrors + 1;
     sMessage = Expand( 'The chosen new dimension %pDim% already exists in cube %pCube%.');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -406,8 +422,8 @@ IF(pIncludeRules = 2);
       # Create error rule file 
       cErrorRuleName = 'ErrorRuleFile.rux';
       
-      IF(FileExists( cErrorRuleName ) = 0 );
-        sFile = '.' | sOSDelim | cErrorRuleName;
+      IF(FileExists( Lower(cErrorRuleName) ) = 0 );
+        sFile = '.' | sOSDelim | Lower(cErrorRuleName);
         LogOutput(cMsgErrorLevel, 'Rule could not be attached due to invalid !Dimension references. Please recover from the backup and fix manually.');
       ENDIF;
       
@@ -415,7 +431,7 @@ IF(pIncludeRules = 2);
       'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
       'pCube', pCube,
-      'pFileName', cErrorRuleName,
+      'pFileName', Lower(cErrorRuleName),
       'pMode', 'LOAD'
       );
       If( pStrictErrorHandling = 1 ); 
