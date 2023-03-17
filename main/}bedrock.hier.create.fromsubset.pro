@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"zS@Y_o[jnkjW2xk_4hw`e`WV>@y1Ebs|VPlmfvnXwci[vMH0PN7OQt08DUYA@_bf_jKx5L_=s8pdLP1gr44dPmzPJKEigH3DD8e7mH]`ko>N;qD\6Q0R7=SboC:ycV@IEZsLkO9oazD&?oqU83:2mTRLajW:HLC1nP`5N3WeM:97o4W`7MDf:?R5mb7=Fe>Zg6mrnH_8"
+565,"v1Zrzz`HTksq`dExv[i\mayhYs1vWSa{F@4f;Lu]1MJm?D8jcYi=\nbJmQYA=Ho681h}U77BY;tTdYA:P9=CA0<DE9MI0413:tV5mIb]R8C[D]H\f2l^L?L`;<tFfvgL^VSNktHYk8X!SOWh5c2=1iorQ5Bd=p85tbUpwReLq3Go42uteD?G22TeH<fYdnTwmvuX9oc"
 559,1
 928,0
 593,
@@ -82,7 +82,7 @@ vElement
 582,1
 VarType=32ColType=827
 603,0
-572,203
+572,202
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -336,7 +336,7 @@ Else;
 Endif;
 
 ### End MetaData ###
-574,42
+574,50
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -351,6 +351,10 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
+If( pSrcDim @= pTgtDim & ElementType(pSrcDim, pSrcHier, vElement) @= 'N' );
+    # leaves are shared between all hierarchies, therefore source == target and no need to copy values
+    ItemSkip;
+EndIf;
 
 ### Replicate Attributes ###
 
@@ -362,21 +366,25 @@ If( pAttr = 1 );
     While( nCount <= nNumAttrs );
         sAttrName = DimNm( sAttrDim, nCount );
         sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
-        If( sAttrType @= 'S' % sAttrType @= 'A' );
-            sAttrVal = ElementAttrS(pSrcDim, pSrcHier, vElement, sAttrName);
-            If( sAttrVal @<> '' );
-                ElementAttrPutS( sAttrVal, pTgtDim,pTgtHier, vElement, sAttrName,1 );
-            EndIf;
+        If( CellIsUpdateable('}ElementAttributes_' | pTgtDim, pTgtHier:vElement, sAttrName) <> 1 );
+            # rule derived attribute, can't copy value
         Else;
-            nAttrVal = ElementAttrN(pSrcDim, pSrcHier, vElement, sAttrName);
-            If( nAttrVal <> 0 );
-                ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vElement, sAttrName );
+            If( sAttrType @= 'S' % sAttrType @= 'A' );
+                sAttrVal = ElementAttrS(pSrcDim, pSrcHier, vElement, sAttrName);
+                If( sAttrVal @<> '' );
+                    ElementAttrPutS( sAttrVal, pTgtDim,pTgtHier, vElement, sAttrName,1 );
+                EndIf;
+            Else;
+                nAttrVal = ElementAttrN(pSrcDim, pSrcHier, vElement, sAttrName);
+                If( nAttrVal <> 0 );
+                    ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vElement, sAttrName );
+                EndIf;
             EndIf;
         EndIf;
         nCount = nCount + 1;
     End;
 
-  EndIf;
+EndIf;
 
 ### End Data ###
 575,91
