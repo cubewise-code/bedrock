@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"y\XIJ]A<XVD^?aAmDDqHSXBbeakXXYCAT]^k;QDX`pbp:Ho]>:GCVOFbglUHnQW5\3ys_p2jS9A0V7S?e[:JVEcJ8wiF8tCg3kU`3h4xq:u^:6nkIMgSBzGrTF:iFbHYzZCueSVH_x;[RaZ?HSiOddd2A5ENBnXGym<Nvxn=6yZxF\^>I>]=9g5[lR5hG50wGwTeQ6sk"
+565,"d3d9a>]0rXlc8nE]]ZZtNn?\27FUmD>C]1_3jPgTSs]h?yn6It7MWwzVJWQ4aQIogLbiA7RgLtv3@>7adEgT7gkIU`YLb5N4_TBR@7A`[Io?9RBfl4;fs3eFZw1Dzi^:z0b[?t3SSDb4p2==rJfPNPs>X\UUn9Lij3F<w=pXz9T[`IAbp3vo5o;iz9EC[m?AANL]SSF_"
 559,1
 928,0
 593,
@@ -102,7 +102,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,228
+572,230
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -216,10 +216,12 @@ EndIf;
 ## Validate consolidation
 pConsol = Trim( pConsol );
 If( pConsol @<> '' & pConsol @<> '*' );
-    If( ElementIndex ( pDim, sHier, pConsol ) = 0 );
+    If( ElementIndex(pDim, sHier, pConsol) = 0 );
         nErrors = 1;
         sMessage = 'The ' | pConsol | ' consolidation does not exist in the '| pDim |' dimension:Hierarchy ' | pDim |':'| sHier;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    Else;
+        pConsol = HierarchyElementPrincipalName(pDim, sHier, pConsol);
     EndIf;
 EndIf;
 
