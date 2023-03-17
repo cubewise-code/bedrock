@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"v1Zrzz`HTksq`dExv[i\mayhYs1vWSa{F@4f;Lu]1MJm?D8jcYi=\nbJmQYA=Ho681h}U77BY;tTdYA:P9=CA0<DE9MI0413:tV5mIb]R8C[D]H\f2l^L?L`;<tFfvgL^VSNktHYk8X!SOWh5c2=1iorQ5Bd=p85tbUpwReLq3Go42uteD?G22TeH<fYdnTwmvuX9oc"
+565,"fuV<`<y?t@;:@I1`ZSm^c9lMB<BvMe]uVP^c9Haf3<HzuBHDstItg]ozyZY1ykmvJfItuW57kCzt=^aJ;\VqLLFQLrE9zPa`i1s9=3>]PlOfCyL\6@a]TFugML2nhFQK2ZSA[gbmVQm&P6R8qg8]tDdP<?yfWcAt3jeXkRee1mYcD<RNoQ7y>bDe_rzag^[w4;iLh4d"
 559,1
 928,0
 593,
@@ -351,6 +351,11 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
+If( pAttr <> 1 );
+    # no copy of attributes (could use ProcessBreak to go directly to Epilog but this would cause minor error flag which we don't want
+    ItemSkip;
+EndIf;
+
 If( pSrcDim @= pTgtDim & ElementType(pSrcDim, pSrcHier, vElement) @= 'N' );
     # leaves are shared between all hierarchies, therefore source == target and no need to copy values
     ItemSkip;
@@ -360,31 +365,27 @@ EndIf;
 
 # Note: DTYPE on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 
-If( pAttr = 1 );
-
-    nCount = 1;
-    While( nCount <= nNumAttrs );
-        sAttrName = DimNm( sAttrDim, nCount );
-        sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
-        If( CellIsUpdateable('}ElementAttributes_' | pTgtDim, pTgtHier:vElement, sAttrName) <> 1 );
-            # rule derived attribute, can't copy value
+nCount = 1;
+While( nCount <= nNumAttrs );
+    sAttrName = DimNm( sAttrDim, nCount );
+    sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
+    If( CellIsUpdateable('}ElementAttributes_' | pTgtDim, pTgtHier:vElement, sAttrName) <> 1 );
+        # rule derived attribute, can't copy value
+    Else;
+        If( sAttrType @= 'S' % sAttrType @= 'A' );
+            sAttrVal = ElementAttrS(pSrcDim, pSrcHier, vElement, sAttrName);
+            If( sAttrVal @<> '' );
+                ElementAttrPutS( sAttrVal, pTgtDim,pTgtHier, vElement, sAttrName,1 );
+            EndIf;
         Else;
-            If( sAttrType @= 'S' % sAttrType @= 'A' );
-                sAttrVal = ElementAttrS(pSrcDim, pSrcHier, vElement, sAttrName);
-                If( sAttrVal @<> '' );
-                    ElementAttrPutS( sAttrVal, pTgtDim,pTgtHier, vElement, sAttrName,1 );
-                EndIf;
-            Else;
-                nAttrVal = ElementAttrN(pSrcDim, pSrcHier, vElement, sAttrName);
-                If( nAttrVal <> 0 );
-                    ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vElement, sAttrName );
-                EndIf;
+            nAttrVal = ElementAttrN(pSrcDim, pSrcHier, vElement, sAttrName);
+            If( nAttrVal <> 0 );
+                ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vElement, sAttrName );
             EndIf;
         EndIf;
-        nCount = nCount + 1;
-    End;
-
-EndIf;
+    EndIf;
+    nCount = nCount + 1;
+End;
 
 ### End Data ###
 575,91
