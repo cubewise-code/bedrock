@@ -409,7 +409,7 @@ Endif;
 
 sCube = '}DimensionProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pStrictErrorHandling', pStrictErrorHandling,
@@ -421,7 +421,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
@@ -433,7 +433,7 @@ ENDIF;
   
 sCube = '}HierarchyProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pStrictErrorHandling', pStrictErrorHandling,
@@ -445,7 +445,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
