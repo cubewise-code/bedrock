@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"fuV<`<y?t@;:@I1`ZSm^c9lMB<BvMe]uVP^c9Haf3<HzuBHDstItg]ozyZY1ykmvJfItuW57kCzt=^aJ;\VqLLFQLrE9zPa`i1s9=3>]PlOfCyL\6@a]TFugML2nhFQK2ZSA[gbmVQm&P6R8qg8]tDdP<?yfWcAt3jeXkRee1mYcD<RNoQ7y>bDe_rzag^[w4;iLh4d"
+565,"uDHkttSA0hjB9<bohUWDVyLHpFxiEyHwVyiQ=s=[4=AZaB8^naL]d2ET_]YaFBgFULurEDZwFOv40Wq>jksEzCyS@bLYRj0XUC38MV<S5Jq0FoJ\vgT@tJLRV9Cl`v8[_YCF;d6AigR-_[f]Xmq3M?v@DuEJ2PtZkVb5o:Z5>TsLfDSVaNzx6:Blh?wa?hn]Gop_5zBB"
 559,1
 928,0
 593,
@@ -336,7 +336,7 @@ Else;
 Endif;
 
 ### End MetaData ###
-574,51
+574,52
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -351,41 +351,42 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
-If( pAttr <> 1 );
-    # no copy of attributes (could use ProcessBreak to go directly to Epilog but this would cause minor error flag which we don't want
-    ItemSkip;
-EndIf;
-
-If( pSrcDim @= pTgtDim & ElementType(pSrcDim, pSrcHier, vElement) @= 'N' );
-    # leaves are shared between all hierarchies, therefore source == target and no need to copy values
-    ItemSkip;
-EndIf;
 
 ### Replicate Attributes ###
 
 # Note: DTYPE on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 
-nCount = 1;
-While( nCount <= nNumAttrs );
-    sAttrName = DimNm( sAttrDim, nCount );
-    sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
-    If( CellIsUpdateable('}ElementAttributes_' | pTgtDim, pTgtHier:vElement, sAttrName) <> 1 );
-        # rule derived attribute, can't copy value
-    Else;
+If( pAttr = 1 );
+
+    nCount = 1;
+    While( nCount <= nNumAttrs );
+        sAttrName = DimNm( sAttrDim, nCount );
+        sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
         If( sAttrType @= 'S' % sAttrType @= 'A' );
             sAttrVal = ElementAttrS(pSrcDim, pSrcHier, vElement, sAttrName);
             If( sAttrVal @<> '' );
-                ElementAttrPutS( sAttrVal, pTgtDim,pTgtHier, vElement, sAttrName,1 );
+                If( pStrictErrorHandling = 0 & CellIsUpdateable(sAttrDim, pTgtHier:vElement, sAttrName) = 0 );
+                    #skip
+                ElseIf( sAttrType @= 'A' );
+                    ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vElement, sAttrName, 1 );
+                Else;
+                    ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vElement, sAttrName );
+                EndIf;
             EndIf;
         Else;
             nAttrVal = ElementAttrN(pSrcDim, pSrcHier, vElement, sAttrName);
             If( nAttrVal <> 0 );
-                ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vElement, sAttrName );
+                If( pStrictErrorHandling = 0 & CellIsUpdateable(sAttrDim, pTgtHier:vElement, sAttrName) = 0 );
+                    #skip
+                Else;
+                    ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vElement, sAttrName );
+                EndIf;
             EndIf;
         EndIf;
-    EndIf;
-    nCount = nCount + 1;
-End;
+        nCount = nCount + 1;
+    End;
+
+  EndIf;
 
 ### End Data ###
 575,91
@@ -408,7 +409,7 @@ Endif;
 
 sCube = '}DimensionProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pStrictErrorHandling', pStrictErrorHandling,
@@ -420,7 +421,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '¦',
+  'pEleStartDelim', '�',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
@@ -432,7 +433,7 @@ ENDIF;
   
 sCube = '}HierarchyProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pStrictErrorHandling', pStrictErrorHandling,
@@ -444,7 +445,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '¦',
+  'pEleStartDelim', '�',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
