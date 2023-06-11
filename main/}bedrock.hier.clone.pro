@@ -453,7 +453,7 @@ EndIf;
   
 ### If a new dimension has been created, call the process recursively to clone the alternate hierarchy, after the same named hierarchy has been processed
 If( nProcessSameNamedHier = 1 );
-  nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+  nRet = ExecuteProcess('}bedrock.hier.clone',
     'pLogOutput', pLogOutput,
     'pStrictErrorHandling', pStrictErrorHandling,
     'pSrcDim', pSrcDim,
