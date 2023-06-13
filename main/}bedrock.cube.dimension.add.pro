@@ -271,7 +271,7 @@ EndIf;
 IF(pIncludeRules = 1 % pIncludeRules = 2);
   
   sProc = '}bedrock.cube.rule.manage';
-  nRet = EXECUTEPROCESS( sProc,
+  nRet = ExecuteProcess( sProc,
     'pLogOutput', pLogOutput,
     'pStrictErrorHandling', pStrictErrorHandling,
     'pCube', pCube,
@@ -299,7 +299,7 @@ IF(pIncludeData = 1);
     nSuppressRules = IF(nIncludeRules = 1,  1, 0);
   
     sProc = '}bedrock.cube.clone';
-    nRet = EXECUTEPROCESS( sProc,
+    nRet = ExecuteProcess( sProc,
         'pLogOutput', pLogOutput,
         'pStrictErrorHandling', pStrictErrorHandling,
         'pSrcCube', pCube,
@@ -357,8 +357,8 @@ IF(pIncludeData = 1);
   	'pFilter','',
   	'pTgtCube',pCube,
   	'pMappingToNewDims',sMappingToNewDims,
-    'pSuppressConsol', 1,
-    'pSuppressRules', nSuppressRules,
+        'pSuppressConsol', 1,
+        'pSuppressRules', nSuppressRules,
   	'pZeroTarget',0,
   	'pZeroSource',0,
   	'pFactor',1,
@@ -382,7 +382,7 @@ IF(pIncludeData = 1);
     # destroy clone cube
     IF(pTemp=1);
         sProc = '}bedrock.cube.delete';
-        nRet = EXECUTEPROCESS( sProc,
+        nRet = ExecuteProcess( sProc,
             'pLogOutput', pLogOutput,
             'pStrictErrorHandling', pStrictErrorHandling,
             'pCube', pCloneCube,
@@ -408,7 +408,7 @@ IF(pIncludeRules = 2);
   
     sProc = '}bedrock.cube.rule.manage';
 
-    nRet = EXECUTEPROCESS( sProc,
+    nRet = ExecuteProcess( sProc,
         'pLogOutput', pLogOutput,
         'pStrictErrorHandling', pStrictErrorHandling,
         'pCube', pCube,
@@ -427,7 +427,7 @@ IF(pIncludeRules = 2);
         LogOutput(cMsgErrorLevel, 'Rule could not be attached due to invalid !Dimension references. Please recover from the backup and fix manually.');
       ENDIF;
       
-      EXECUTEPROCESS( sProc,
+      ExecuteProcess( sProc,
       'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
       'pCube', pCube,
