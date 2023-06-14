@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"fbAq<Xa:0`I;ZJ1NvElTI>1DdpG_kQmX3RLwcKf`;V2[;48aRo>YO3FaW_\YAjdAkw2e4v]pYATpe<AOmE<\dPE<2v2czzz<dQNXT7A\9A_^<\9k]F_UtIzveBN[cI\OSYOz6adsla:hRo12X_os10meTd7eErbuy=Tvl6VODb[dsiaxdzWQvR0joKuMJ1>oUj2WTS>8"
+565,"l=MOGhSJ`8PzaY=EpKi0jzgkzsUl<R2tGkdyI<A74LogFh3GP`Xgsx0\0b:22<dvQyWeA^llVRZdh2\Le?7y6AE<xvL6e=1G2]BCUTfjC22a]^t0L6QGPmTjTvg?vQb0dcJVCY>5EcubcpXQ2<`vwfJeZNlsDY\\jdXmSEWHTjLjq6ydhRsKXhEP8]_^=amvUXf2Azc3"
 559,1
 928,0
 593,
@@ -86,7 +86,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,223
+572,224
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -290,6 +290,7 @@ EndIf;
 
 # Construct full export filename including path
 sFilename       = pTgtDir | pTgtFile;
+sLocAttFile     = 'Localized_' | pTgtFile;
 sAttrDimName    = '}ElementAttributes_' | pDim ;
 
 ### Check for errors before continuing
@@ -393,9 +394,9 @@ IF( nElPar > 0 );
 ENDIF;
 
 ### Attribute Value 
-IF( DimensionExists( sAttrDimName ) = 1 );
+IF( CubeExists(sAttrDimName) = 1 & DimensionExists(sAttrDimName) = 1 );
     nIndex = 1;
-    nLimit = DIMSIZ ( sAttrDimName );
+    nLimit = DIMSIZ( sAttrDimName );
     WHILE( nIndex <= nLimit );
         sElName   = DIMNM( sAttrDimName, nIndex );
         sElType   = DTYPE( sAttrDimName, sElName);
@@ -404,15 +405,15 @@ IF( DimensionExists( sAttrDimName ) = 1 );
         ELSE;
             sAttrValue = ElementAttrS( pDim , sHier , vEle , sElName );
         ENDIF;
-        IF( sAttrValue @<>'' & sAttrValue @<>'0' );
+        IF( sAttrValue @<> '' & sAttrValue @<> '0' );
             TextOutput( sFilename, 'V', vEle, If( pLegacy = 1,'', cAttrName ) | sElName, If( pLegacy = 1,'', cAttrValue ) | sAttrValue );
         EndIf;
         nIndex = nIndex + 1;
     END;
 ENDIF;
 
-
-575,30
+### End Data ###
+575,40
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -431,6 +432,17 @@ If( nErrors > 0 );
     If( pStrictErrorHandling = 1 ); 
         ProcessQuit; 
     EndIf;
+ElseIf( CubeExists('}LocalizedElementAttributes_' | pDim) = 1 );
+    # if attributes have been localized then export the cube (NOTE: values stored against C elements of alternate hierarchies will not be included in the file)
+    ExecuteProcess('}bedrock.cube.data.export', 'pLogoutput', pLogoutput, 'pStrictErrorHandling', pStrictErrorHandling,
+        'pCube', '}LocalizedElementAttributes_' | pDim, 'pView', '', 'pFilter', '', 'pFilterParallel', '', 'pParallelThreads', 0,
+        'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+        'pSuppressZero', 1, 'pSuppressConsol', 0, 'pSuppressRules', 0, 'pSuppressConsolStrings', 0,
+        'pZeroSource', 0, 'pCubeLogging', 2, 'pTemp', 1, 
+        'pFilePath', pTgtDir, 'pFileName', sLocAttFile,
+        'pDelim', pDelim, 'pDecimalSeparator', DatasourceASCIIDecimalSeparator, 'pThousandSeparator', DatasourceASCIIThousandSeparator, 'pQuote', pQuote,
+        'pTitleRecord', 1, 'pSandbox', '', 'pSubN', 0, 'pCharacterSet', '', 'pCubeNameExport', 1
+    );
 EndIf;
 
 ### Return Code
@@ -440,7 +452,6 @@ nProcessReturnCode  = 1;
 If ( pLogoutput = 1 );
     LogOutput('INFO', Expand( sProcessAction ) );   
 EndIf;
-
 
 ### End Epilog ###
 576,
