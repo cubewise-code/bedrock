@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.server.executecommand"
 562,"NULL"
 586,
 585,
 564,
-565,"ksc?fwBhVCJax0Z]5E7LwuY1]>M5sW\MgRPbtQEw7Jx]j7hML3NjK2GSX0FDL4\vO]XZ2h1H;GtgAvQnLQrwkDe[K62Gltj5eVmc8b;MtVH30rYl<=ibwnSlU2QzAjS1RU5X2Hdtq2tu\g@[07zLQkV5`uwf_`x=DVz_2[uug6g?]dfig;hP`26PGl<EOXFGr>7vj<A]"
+565,"v]pAwxQv032bo0nv?_gAd_a9S<UClBYR3<1dvVZqe<BIHV\CTzc2bKjxhTb9=MQwFjK`:zqqC_AH>iD7y\vH;mM4`iStZX>j6VR5c2GNeTmYgJ1=WVShCe_I;0AY;yZ^<TpJXEf6_7?TzrRudiFMrf<D[Otp[:DWhGdFy2Z74rT1:q?sn9`vk2I^qt77\Wqtf6DYev>I"
 559,1
 928,0
 593,
@@ -62,7 +62,7 @@ vCommandOutput
 582,1
 VarType=32ColType=827
 603,0
-572,78
+572,81
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -93,8 +93,11 @@ nProcessReturnCode= 0;
 ### Constants ###
 cThisProcName = GetProcessName();
 cUser = TM1User();
-cUserName = CellGetS('}ElementAttributes_}Clients', cUser, '}TM1_DefaultDisplayValue');
-cUserName = IF( cUserName @<> '', cUserName, 'admin' );
+cUserName = '';
+If( DimIx('}Clients', cUser) > 0 );
+    cUserName = AttrS('}Clients', cUser, '}TM1_DefaultDisplayValue');
+EndIf;
+cUserName = IF( cUserName @<> '', cUserName, 'ADMIN' );
 cMsgErrorLevel = 'ERROR';
 cMsgErrorContent = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cCmdOutputDir = GetProcessErrorFileDirectory;
