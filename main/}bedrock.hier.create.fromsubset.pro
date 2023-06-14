@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"uDHkttSA0hjB9<bohUWDVyLHpFxiEyHwVyiQ=s=[4=AZaB8^naL]d2ET_]YaFBgFULurEDZwFOv40Wq>jksEzCyS@bLYRj0XUC38MV<S5Jq0FoJ\vgT@tJLRV9Cl`v8[_YCF;d6AigR-_[f]Xmq3M?v@DuEJ2PtZkVb5o:Z5>TsLfDSVaNzx6:Blh?wa?hn]Gop_5zBB"
+565,"i6lEGh@Z^yJmI;9poECvz1ObeN;N97Vy6>nJny[FPX3HaDX@PZ@?N9?m]ZYQ\?b6pEyxUtU0uRudKUaGX@>:eL[uRrIihqk\G^G7}zyFlgal6ZB\vrS=1U<c6\`4`f7cQZ3DKT?asYJ-_@MPhac:}xK_B:[h[=hBs:kue_]evQE\et2;R_b_V>2^8gRdIen]7ufOAmy:"
 559,1
 928,0
 593,
@@ -409,7 +409,7 @@ Endif;
 
 sCube = '}DimensionProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pStrictErrorHandling', pStrictErrorHandling,
@@ -421,7 +421,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
@@ -433,7 +433,7 @@ ENDIF;
   
 sCube = '}HierarchyProperties';
 IF(CubeExists ( sCube ) = 1 );
-  sEleMapping = '}Dimensions' |'�'|sSourceElement|'->'|sTargetElement;
+  sEleMapping = '}Dimensions' |'¦'|sSourceElement|'->'|sTargetElement;
   ExecuteProcess( '}bedrock.cube.data.copy',
   'pLogOutput', pLogOutput,
   'pStrictErrorHandling', pStrictErrorHandling,
@@ -445,7 +445,7 @@ IF(CubeExists ( sCube ) = 1 );
   'pMappingDelim','->',
   'pFactor', 1,
   'pDimDelim', '&',
-  'pEleStartDelim', '�',
+  'pEleStartDelim', '¦',
   'pEleDelim', '+',
   'pSuppressRules', 0 ,
   'pCumulate', 0 ,
