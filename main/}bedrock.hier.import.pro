@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"byyk_bB`c3_N[zVYJz^Ci;MtK:nG7evJj6bGrlLQBFyy3}WO7b@xy`W@Y?SQKcb1AB4oWXtA=_lOZH4^V9mqtM@Pza{:pvmd7x>m4fi4zk0ZyzB>_xCC]omV3QPTEde`qZo4<?4\QhO~6O8puh7=Sn0jWIYyXH6R9dc0XDGHDv%O_=d7Eb]aXU;sMpCG4blyxTNUY>"
+565,"vjMHRBcfOwU\X1eLPnf9Q4y6s_tWiBeDZ2XRDS2zts;<Fwwth7`Uz8Vfa6SaeqfQ:A5l7Hb=L?oKAo4m2X2f0JYBvm;G8wwVyD4=vxX0ne<]suB^4AFu>_hY>vZ[ef:k~jht9JQ\JPIN`@50:n0]u8>hk2MDs6N73agPRDXPdE""OCTNb]mnhHbNAjRuO4a|s@OdmbM"
 559,1
 928,0
 593,
@@ -116,7 +116,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,280
+572,281
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -158,7 +158,7 @@ EndIf;
 # Valid dimension name (pDim) is mandatory otherwise the process will abort.
 # If needed, custom delimiter might be used by specifying parameter pDelim value as either exactly one
 # character or as a 3-digit (decimal) ASCII code. For example to use TAB as a delimiter, use 009.
-# pUnwind provides the option to 1 (unwind) or 0 (delete) elements in the target dimension. Default is to unwind,
+# pUnwind provides the option to 2 (do nothing of add only), 1 (unwind) or 0 (delete) elements in the target dimension. Default is to unwind,
 # care should be taken when using option 0 otherwise data loss may occur.
 
 # Caution: Process was redesigned in Bedrock4 but is able to process dimension extracts from prior
@@ -266,6 +266,7 @@ EndIf;
 
 # Construct full export filename including path
 sFilename       = pSrcDir | pSrcFile;
+sLocAttFile     = 'Localized_' | pSrcFile;
 sAttrDimName    = '}ElementAttributes_' | pDim ;
 
 If( FileExists( sFilename ) = 0 );
@@ -542,7 +543,7 @@ IF( V1 @= 'V' );
         ENDIF;        
     ENDIF;
 ENDIF;
-575,27
+575,50
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -559,6 +560,29 @@ If( nErrors > 0 );
     If( pStrictErrorHandling = 1 ); 
         ProcessQuit; 
     EndIf;
+ElseIf( FileExists(pSrcDir | sLocAttFile) = 1 );
+    # If dimension is localized check for presence of localized attribute file and if it exists load it
+    If( CubeExists('}LocalizedElementAttributes_' | pDim) = 0 );
+        # Need to create attribute cube via AttrPut with locale code should it not exist
+        nAttr = 1; nMax = DimSiz(sAttrDimName);
+        While( nAttr <= nMax );
+            sAttr = DimNm(sAttrDimName, nAttr);
+            If( DType(sAttrDimName, sAttr) @= 'AA' % DType(sAttrDimName, sAttr) @= 'AS' );
+                AttrPutS(AttrS(pDim, DimNm(pDim, 1), sAttr), pDim, DimNm(pDim, 1), sAttr, 'en');
+                Break;
+            EndIf;
+            nAttr = nAttr + 1;
+        End;
+    EndIf;
+    # proceed with loading localized values
+    ExecuteProcess('}bedrock.cube.data.import', 'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling,
+        'pCube', '}LocalizedElementAttributes_' | pDim, 'pSrcDir', pSrcDir, 'pSrcFile', sLocAttFile,
+        'pDim', '', 'pSrcEle', '', 'pTgtEle', '', 'pTitleRows', 1,
+        'pDelim', pDelim, 'pQuote', pQuote, 'pDecimalSeparator', DatasourceASCIIDecimalSeparator, 'pThousandSeparator', DatasourceASCIIThousandSeparator, 
+        'pCumulate', 0, 'pCubeLogging', 2, 'pSandbox', '', 'pZeroFilter', 0, 'pMappingToNewDims', '',
+        'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
+        'pCharacterSet', '', 'pFileDelete', 0, 'pSkipInvalidRecords', 1
+    );
 EndIf;
 
 ### Return Code
