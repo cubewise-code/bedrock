@@ -437,7 +437,7 @@ If( pHier @= '*' );
         If(nElestart > 1);
           vSourceHierarchy = SUBST(sEle,nElestart,nElength);
          If ( vSourceHierarchy @<> 'Leaves');
-             nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+             nRet = ExecuteProcess('}bedrock.hier.clone',
                'pLogOutput', pLogOutput,
                'pStrictErrorHandling', pStrictErrorHandling,
                'pSrcDim', sDim,
@@ -470,7 +470,7 @@ ElseIf( Scan( '*', pHier )=0 &  Scan( '?', pHier )=0 & Scan( pDelim, pHier )=0 &
         sMessage = Expand( 'Hierarchy "%sCurrHierName%" in Dimension "%sDim%" being processed....' );
         LogOutput( 'INFO', Expand( cMsgInfoContent ) );
       EndIf;
-      nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+      nRet = ExecuteProcess('}bedrock.hier.clone',
        'pLogOutput', pLogOutput,
        'pStrictErrorHandling', pStrictErrorHandling,
        'pSrcDim', sDim,
@@ -513,7 +513,7 @@ ElseIf( Scan( '*', pHier )=0 &  Scan( '?', pHier )=0 & Trim( pHier ) @<> '' );
             sMessage = Expand( 'Hierarchy "%sCurrHierName%" in Dimension "%sDim%" being processed....' );
             LogOutput( 'INFO', Expand( cMsgInfoContent ) );
           EndIf;
-          nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+          nRet = ExecuteProcess('}bedrock.hier.clone',
            'pLogOutput', pLogOutput,
            'pStrictErrorHandling', pStrictErrorHandling,
            'pSrcDim', sDim,
@@ -580,7 +580,7 @@ ElseIf( Trim( pHier ) @<> '' );
             sMessage = Expand( 'Hierarchy "%sCurrHierName%" in Dimension "%sDim%" being processed....' );
             LogOutput( 'INFO', Expand( cMsgInfoContent ) );
           EndIf;
-          nRet = EXECUTEPROCESS('}bedrock.hier.clone',
+          nRet = ExecuteProcess('}bedrock.hier.clone',
            'pLogOutput', pLogOutput,
            'pStrictErrorHandling', pStrictErrorHandling,
            'pSrcDim', sDim,
