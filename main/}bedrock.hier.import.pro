@@ -4,7 +4,7 @@
 586,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 585,"D:\TM1Models\Bedrock.v4\Log\Currency Currency 2_Export.csv"
 564,
-565,"eg10wy:Qdv<2Y=:5sHzUmpaE;cj7:5`BZ0>nUnbj_vrnZWKlOC?QgH^b4S1=c`ayUgk7TwTO^j_NDo]Q=qF]Nq@=Ob;nhcOK2C9mNHogvfgGYtB~;SWC\diEuW\S5Te@pJbDbqL1@4F^4P0P\q=MMNUieDAStnDKCf?uCVTrVF`+oL:iwy@K`XI5lB[^GD`\fz:?ZSB"
+565,"byyk_bB`c3_N[zVYJz^Ci;MtK:nG7evJj6bGrlLQBFyy3}WO7b@xy`W@Y?SQKcb1AB4oWXtA=_lOZH4^V9mqtM@Pza{:pvmd7x>m4fi4zk0ZyzB>_xCC]omV3QPTEde`qZo4<?4\QhO~6O8puh7=Sn0jWIYyXH6R9dc0XDGHDv%O_=d7Eb]aXU;sMpCG4blyxTNUY>"
 559,1
 928,0
 593,
@@ -351,7 +351,7 @@ If( HierarchyExists( pDim, sHier ) = 1 );
     	'pRecursive', 1
     );
     ElseIf( pUnwind = 0 );
-        If( pDim @= pHier );
+        If( pDim @= sHier );
             DimensionDeleteAllElements( pDim );
         Else;
             HierarchyDeleteAllElements( pDim, pHier );
@@ -366,7 +366,7 @@ Else;
 EndIf;
 
 If( nErrors = 0 );
-    If( HierarchyExists( pDim, pHier ) = 1 );
+    If( HierarchyExists( pDim, sHier ) = 1 );
         IF ( pUnwind = 1 ) ;
             sMessage = 'Dimension unwound: ' | pDim|':'|sHier;
         ELSEIF ( pUnwind = 0 ) ;
