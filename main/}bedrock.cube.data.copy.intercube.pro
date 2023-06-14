@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"zP_n]X[_A`V2_]ouc5xvFscY0EaJLv?<jSr:py9X4VdKEv7km:szoM8kUgowLOEa[q@QoIWWFoguYYxIDXe0]=1vjij@C:un]uWl6=<bJV4equ0BhnN@PZQb1h@nG4cxA^ojbLV7uG>E>8vQFUNjz8YAgTEUI[jfjzDaItf]j5>?LOdu9Qd\:PJo`VL1gtgBMzP_9[w4"
+565,"b`aQN25MEHEbmukQMRkM_yz1tO:;9KYFtHmS:ISzbJmgSaQz_l2se0BENnyw?iuMmWrYo3dMr:Wk08bwF;S`]>s>QNuXHkbA<lg`WIOsUV]Z5O]Bu7fnfAHz3n2eji9C5e7MIoYhK>OyqjdZqeHYlhZDiqqS@84b<Tpv\QAM:BUT@\sDMh_0]3s<mSvN8N7Oxc\Zbn_\"
 559,1
 928,0
 593,
@@ -433,7 +433,7 @@ Else;
 EndIf;
 
 ## File location for indirect data copy
-cDir    = '.' | sOSDelim;
+cDir    = GetProcessErrorFileDirectory;
 cFileName = pSrcCube | cTimeStamp | cRandomInt | '.csv';
 cFile   = cDir | cFileName;
 cTitleRows = 1;

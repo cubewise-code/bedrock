@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"uI9ha<[8SRl2J\?V4AUL]ykdiOFpoTz8Azm3xcwkAkvn^di8kgvr47=j;6FaBHA;@qy1aVf4jZdQ^ssyBVhL=ZUOfDwZbQrQv:h7MO@sdPvblUvWh6^T^08e@LXA@]bC_IkRwbNK0_Yy66cW4mq4MjXYR_ur;gk4]d68Zb`X5@n3AJ0Rkr7t>Am7lhQt`|`aRnofDm0D"
+565,"heI0\YKRyrqYYblE1BEVClIxH`C22xB4Qulo7Ppaf7]aEfYD2Hg9sB:q23FaYECK1cM9qT\FtZbA=qSJ:7upML`OYoJSW:Aj]p6}hRSIIxBxktW8ET3[VWnf9nxH]q6pB[PWG:RVQaxfQ1PDxQ6}eSGG`2Z67uDfT5HHliHZb3kIJzRVGRN_F=ohChIKq@`r9YVYOX?"
 559,1
 928,0
 593,
@@ -474,7 +474,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1028
+572,1024
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -628,7 +628,7 @@ Else;
 EndIf;
 
 ## File location for indirect data copy
-cDir    = '.' | sOSDelim;
+cDir    = GetProcessErrorFileDirectory;
 cFileName = LOWER(pCube) | cTimeStamp | cRandomInt | '.csv';
 cFile   = cDir | cFileName;
 cTitleRows = 1;
@@ -1327,7 +1327,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       sFilter = Expand('%sFilter%%pEleDelim%%sSlicerEle%');
     ENDIF;
     IF( nThreadElCounter >= nElemsPerThread );
-            nThreadID = INT( RAND( ) * 10000 + 1) + Numbr(cTimeStamp);
+      nThreadID = INT( RAND( ) * 10000 + 1) + Numbr(cTimeStamp);
       sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID) | '_' | cTimeStamp;
       AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
       LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
@@ -1341,11 +1341,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       );
   	  nThreadElCounter = 0;
   	  sFilter = '';
-  	  nThreadID = INT( RAND( ) * 10000 ) + 1;
-        sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID);
-        AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
-        LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
-  	 ENDIF;
+  	ENDIF;
   End;
   ## Process last elements - only when filter is not empty (there are still elements)
   IF( sFilter @<> '' );
@@ -2026,7 +2022,7 @@ If( pFilterParallel @<> '' );
     While( i < pMaxWaitSeconds );
         sThreadCheck = WildcardFileSearch( cDir | sThreadFilePattern, '' );
         If( sThreadCheck @<> '' );
-            Sleep( 1 );
+            Sleep( 1000 );
         Else;
             Break;
         EndIf;
