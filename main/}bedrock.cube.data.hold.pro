@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aaf7I1NuRU1<cmF1<lO44@W43vz`\0vZ[cobcdu=3gDUHz8<bhCd7K1?3EsBQBXY?3?q5R\f>CHP0IG@tvLQBhEYeeRWMXQ;4OFQ0fSxDJD_@N<QcH_]Sk[fc15RMe^f90mk?MW08kcRGqT1dk7q1;14e1b3x<c_Xi[nj;4?eoLc[BJxmHM7i=TfQWy5C6rmZarVi3;A"
+565,"d[e<aMFCC]s\pMjIr@3==EuBeX6XH>q1;iG^3T@;Pq@7RO@08Ke9n59lvg@s75WXL_cABE<f;7K^Ghh8SYF1d8ogugN>GF0QZ4CTiR``EEIq?m]R[Sb7SzP9o?1awuiD8NM]XBPKZ=tsxIdOQK4ZCSXJyAkYy`zKLbxg?fx^B8_?>iIKZK[NMWNQHx?o:8CpbNwBJpow"
 559,1
 928,0
 593,
@@ -59,9 +59,9 @@ pSkipNonExistentHoldsCubes,0
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pMode,"REQUIRED: Use C / D / R / X / M. See inside process for information. Supported operations for holds cubes: Create, Destroy, Release, Export, Import."
-pCube,"REQUIRED: Treat which Holds cube(s) ? Supports a list and wildcards * and ? This should be the base cube name."
-pClient,"REQUIRED or used in conjunction with pGroup. Treat the Holds cube(s) of which client(s) ? Supports a list and wildcards * and ?"
-pGroup,"REQUIRED or used in conjunction with pGroup. Treat the Holds cube(s) of which client(s) in which group(s) ? Supports a list and wildcards * and ?"
+pCube,"REQUIRED: Treat which Holds cube(s) ? Provide the base cube name(s). Supports a list and wildcards * and ? and keyword MODELCUBES."
+pClient,"REQUIRED or used in conjunction with pGroup. Treat the Holds cube(s) of which client(s) ? Supports a list and wildcards * and ? and keyword MYSELF."
+pGroup,"REQUIRED or used in conjunction with pClient. Treat the Holds cube(s) of which client(s) in which group(s) ? Supports a list and wildcards * and ? and keyword MYGROUPS."
 pDelim,"OPTIONAL: delimiter character for the different lists. (default value if blank = '&')"
 pDir,"OPTIONAL: Directory (will default to error file path)"
 pSkipNonExistentHoldsCubes,"OPTIONAL: When using lists and wildcards, it can lead to non-existent holds cubes. 1=Silently ignore these. Default=0."
@@ -72,7 +72,7 @@ pSkipNonExistentHoldsCubes,"OPTIONAL: When using lists and wildcards, it can lea
 581,0
 582,0
 603,0
-572,586
+572,620
 
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -99,28 +99,38 @@ EndIf;
 # Parameters:
 # - pLogOutput (standard Bedrock parameter, Boolean True = 1)
 # - pStrictErrorHandling (standard Bedrock parameter, Boolean True = 1)
-# - pMode (several options, see below)
-# - pCube (mandatory, could be multiple cubes and supports wildcards * and ?)
-# - pClient (mandatory or use in conjunction with pGroup, could be multiple clients and supports wildcards * and ?)
-# - pGroup (mandatory or use in conjunction with pClient, could be multiple groups and supports wildcards * and ?)
+# - pMode (see below). It should be one of: C / D / R / X / M
+# - pCube (mandatory). Provide the base cuube name(s), not the Holds cube names! It could be a combination of:
+#     * multiple cubes separated with pDelim
+#     * wildcards * and ?
+#     * the keyword MODELCUBES (the cubes excluding the control cubes)
+# - pClient (mandatory or used in conjunction with pGroup). It could be a combination of:
+#     * multiple clients separated with pDelim
+#     * wildcards * and ?
+#     * the keyword MYSELF (the client running this TI process)
+# - pGroup (mandatory or used in conjunction with pClient). It could be a combination of:
+#     * multiple clients separated with pDelim
+#     * wildcards * and ?
+#     * the keyword MYGROUPS (the groups that the client running this TI process is a member of)
 # - pDelim (standard Bedrock parameter to manage above lists, default value if blank = '&')
 # - pDir (only used when exporting or importing flat files. If empty, the error file directory is used. If not existing, an error is returned.)
 # - pSkipNonExistentHoldsCubes (not used for mode C) (When using lists and wildcards, it can lead to non-existent holds cubes. Use 1 to skip silently.
 #
-# Supported functionality related to holds:
-# - pMode = C: create a holds cube
-# - pMode = D: destroy a holds cube
+# Supported functionality related to holds, given the selections made:
+# - pMode = C: creation of a holds cube
+# - pMode = D: destruction of a holds cube
 # - pMode = R: release all holds
-# - pMode = X: export applied holds to text files
-# - pMode = M: import holds from text files (either to be set, either exported earlier)
+# - pMode = X: export of holds to text files
+# - pMode = M: import of holds from text files (either new holds to be set, either holds exported earlier)
 #
 # Note:
-# - When exporting holds, the file format will respect the default values of the Bedrock process to export data. The file name is '}Hold_ClientName_}}_%CubeName%.csv so it matches the cubename.
-# - To import holds, the file format needs to respect the default values of the Bedrock process to import data. The file name is '}Hold_ClientName_}}_%CubeName%.csv so it matches the cubename.
+# - When exporting holds, the file format will respect the default values of the Bedrock process to export data. The file name is '}Hold_[ClientName]_}}_[CubeName].csv so it matches the Holds cubename.
+# - To import holds, the file format needs to respect the default values of the Bedrock process to import data. The file name is '}Hold_[ClientName]_}}_[CubeName].csv so it matches the Holds cubename.
 # - When importing holds, the cell value needs to be either H or C
 #   * A value of C is to be put in a consolidated cell of the Holds cube
 #   * A value of H is to be put in a level 0 cell of the Holds cube
 #   * Any other combination will not lead to an error but TM1 will not apply the hold as intended
+#   * String cells should not be used in data holds
 # - When importing holds, an additional zeroout should be done with a call to this process with mode 'R'
 # - The selections for pClient and pGroup will lead to a list of unique clients, to which the selected mode is applied
 #   For a group, the members in the group are retrieved, and added to the selected client(s).
@@ -170,18 +180,18 @@ EndIf;
 # If no clients and groups have been specified then terminate process
 If( Trim( pClient ) @= '' & Trim( pGroup ) @= '' );
    nErrors = 1;
-   sMessage = 'No groups specified.';
+   sMessage = 'No clients and groups specified.';
    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
 
 # The mode is a restricted list of actions
-If( pMode @<> 'X'
-  & pMode @<> 'M'
+If( pMode @<> 'C'
+  & pMode @<> 'D'
   & pMode @<> 'R'
-  & pMode @<> 'C'
-  & pMode @<> 'D' );
+  & pMode @<> 'X'
+  & pMode @<> 'M' );
     nErrors = 1;
-    sMessage = Expand( 'Incorrect value for pMode: %pMode%. Valid values are: X, M, R, C, D' );
+    sMessage = Expand( 'Incorrect value for pMode: %pMode%. Valid values are: C, D, R, X, M.' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 Else;
     pMode = Upper( Trim( pMode ));
@@ -209,6 +219,10 @@ EndIf;
 
 
 # # # # # # # # # #        SEARCH FOR CUBES BY INSPECTING CUBE PARAMETER
+# - pCube (mandatory). It could be a combination of:
+#     * multiple cubes separated with pDelim
+#     * wildcards * and ?
+#     * the keyword MODELCUBES (the cubes excluding the control cubes)
 
 ### Split parameter into individual cubes and store in a temporary subset ###
 SubsetCreate( '}Cubes', 'Cubes subset', 1 );
@@ -226,7 +240,12 @@ While( nDelimiterIndex <> 0 );
 
    If( sCube @<> '' );
       # Create subset of cubes. Wildcards could be involved.
-      sMDX = '{TM1FilterByPattern( TM1SubsetAll( [}Cubes] ), "' | sCube | '" )}';
+
+      If( sCube @= 'MODELCUBES' );
+         sMDX = '{Except( TM1SubsetAll( [}Cubes] ), TM1FilterByPattern( TM1SubsetAll( [}Cubes] ), "}*" ))}';
+      Else;
+         sMDX = '{TM1FilterByPattern( TM1SubsetAll( [}Cubes] ), "' | sCube | '" )}';
+      EndIf;
 
       If( SubsetExists( '}Cubes', cTempSub ) = 1 );
          # If a delimited list of cube names includes wildcards then we may have to re-use the subset multiple times
@@ -236,7 +255,7 @@ While( nDelimiterIndex <> 0 );
          SubsetCreatebyMDX( cTempSub, sMDX, '}Cubes', 1 );
       EndIf;
 
-      # Loop through cubes in subset created based on wildcard
+      # Loop through the returned cubes, if any
       nCountCubes = 1;
       While( nCountCubes <= SubsetGetSize( '}Cubes', cTempSub ) );
          sCurrCube = SubsetGetElementName( '}Cubes', cTempSub, nCountCubes );
@@ -266,10 +285,16 @@ Else;
 EndIf;
 
 
-
-
 # # # # # # # # # #        SEARCH FOR CLIENTS BY INSPECTING CLIENTS AND GROUPS PARAMETERS
+# - pClient (mandatory or used in conjunction with pGroup). It could be a combination of:
+#     * multiple clients separated with pDelim
+#     * wildcards * and ?
+#     * the keyword MYSELF (the client running this TI process)
 
+# - pGroup (mandatory or used in conjunction with pClient). It could be a combination of:
+#     * multiple clients separated with pDelim
+#     * wildcards * and ?
+#     * the keyword MYGROUPS (the groups that the client running this TI process is a member of)
 
 ### Split parameter into individual clients and store in a temporary subset ###
 SubsetCreate( '}Clients', 'Clients subset', 1 );
@@ -286,6 +311,11 @@ While( nDelimiterIndex <> 0 );
    EndIf;
 
    If( sClient @<> '' );
+
+      If( sClient @= 'MYSELF' );
+         sClient = cUserName;
+      EndIf;
+
       # Create subset of clients using Wildcard. Wildcards could be involved.
       sMDX = '{TM1FilterByPattern( TM1SubsetAll( [}Clients] ), "' | sClient | '" )}';
 
@@ -297,7 +327,7 @@ While( nDelimiterIndex <> 0 );
          SubsetCreatebyMDX( cTempSub, sMDX, '}Clients', 1 );
       EndIf;
 
-      # Loop through clients in subset created based on wildcard
+      # Loop through the returned clients, if any
       nCountClients = 1;
       While( nCountClients <= SubsetGetSize( '}Clients', cTempSub ) );
          sCurrClient = SubsetGetElementName( '}Clients', cTempSub, nCountClients );
@@ -330,7 +360,12 @@ While( nDelimiterIndex <> 0 );
 
    If( sGroup @<> '' );
       # Create subset of groups. Wildcards could be involved.
-      sMDX = '{TM1FilterByPattern( TM1SubsetAll( [}Groups] ), "' | sGroup | '" )}';
+
+      If( sGroup @= 'MYGROUPS' );
+         sMDX = '{Filter( TM1SubsetAll( [}Groups] ), [}ClientGroups].( [}Clients].[' | cUserName | '] ) <> "" )}';
+      Else;
+         sMDX = '{TM1FilterByPattern( TM1SubsetAll( [}Groups] ), "' | sGroup | '" )}';
+      EndIf;
 
       If( SubsetExists( '}Groups', cTempSub ) = 1 );
          # If a delimited list of group names includes wildcards then we may have to re-use the subset multiple times
@@ -340,7 +375,7 @@ While( nDelimiterIndex <> 0 );
          SubsetCreatebyMDX( cTempSub, sMDX, '}Groups', 1 );
       EndIf;
 
-      # Loop through groups in subset created based on wildcard
+      # Loop through the returned groups, if any
       nCountGroups = 1;
       While( nCountGroups <= SubsetGetSize( '}Groups', cTempSub ) );
          sCurrGroup = SubsetGetElementName( '}Groups', cTempSub, nCountGroups );
@@ -359,27 +394,26 @@ nFoundGroupsCount = SubsetGetSize( '}Groups', 'Groups subset' );
 
 
 # Now rework groups into their clients through the security memberships
-g = 1;
-While( g <= nFoundGroupsCount );
+If( nFoundGroupsCount > 0 );
 
-   sGroup = SubsetGetElementName( '}Groups', 'Groups subset', g );
+   # Create subset of clients using Wildcard. Wildcards could be involved.
+   sMDX = 'Generate( TM1SubsetToSet([}Groups], "Groups subset" ), Filter( TM1SubsetAll([}Clients]), [}ClientGroups].([}Groups].CurrentMember) <> "" ))';
+   If( SubsetExists( '}Clients', cTempSub ) = 1 );
+      SubsetMDXSet( '}Clients', cTempSub, sMDX );
+   Else;
+      SubsetCreatebyMDX( cTempSub, sMDX, '}Clients', 1 );
+   EndIf;
 
-   # Retrieve associated clients
-   c = 1;
-   While( c <= Dimsiz( '}Clients' ) );
-      sClient = Dimnm( '}Clients', c );
-
-      # Retrieve associated clients
-      If( CellGetS( '}ClientGroups', sClient, sGroup ) @= sGroup );
-         # Add client to the Client subset
-         If( SubsetElementExists( '}Clients', 'Clients subset', sClient ) = 0 );
-             SubsetElementInsert( '}Clients', 'Clients subset', sClient, 0 );
-         EndIf;
+   # Loop through the returned clients, if any
+   nCountClients = 1;
+   While( nCountClients <= SubsetGetSize( '}Clients', cTempSub ) );
+      sCurrClient = SubsetGetElementName( '}Clients', cTempSub, nCountClients );
+      If( SubsetElementExists( '}Clients', 'Clients subset', sCurrClient ) = 0 );
+         SubsetElementInsert( '}Clients', 'Clients subset', sCurrClient, 0 );
       EndIf;
-      c = c + 1;
+      nCountClients = nCountClients + 1;
    End;
-   g = g + 1;
-End;
+EndIf;
 
 
 # If no clients found
@@ -419,36 +453,7 @@ While( nCountCubes <= nFoundCubesCount );
       sHoldsCube = Expand( cHoldsCube );
 
 
-      If( pMode @= 'D' );
-
-
-         # Destroy a Holds cube
-         If( CubeExists( sHoldsCube ) = 0 );
-            If( pSkipNonExistentHoldsCubes = 0 );
-               # nErrors = 1;
-               # sMessage = Expand( 'The holds cube ''%sHoldsCube%'' does not exist so it could not be destroyed.' );
-               # LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-               # If( pStrictErrorHandling = 1 );
-               #     ProcessQuit;
-               # Else;
-               #     ProcessBreak;
-               # EndIf;
-               If( pLogOutput = 1 );
-                  sMessage = Expand( 'The holds cube ''%sHoldsCube%'' does not exist so it could not be destroyed.' );
-                  LogOutput('INFO', Expand( sMessage ) );
-               EndIf;
-            EndIf;
-         Else;
-
-            CubeDestroy( sHoldsCube );
-            If( pLogOutput = 1 );
-               sMessage = Expand( 'The holds cube ''%sHoldsCube%'' was destroyed.' );
-               LogOutput('INFO', Expand( sMessage ) );
-            EndIf;
-         EndIf;
-
-
-      ElseIf( pMode @= 'C' );
+      If( pMode @= 'C' );
 
 
          # Create a Holds cube
@@ -520,6 +525,35 @@ While( nCountCubes <= nFoundCubesCount );
          If( pLogOutput = 1 );
             sMessage = Expand( 'The holds cube ''%sHoldsCube%'' was created.' );
             LogOutput('INFO', Expand( sMessage ) );
+         EndIf;
+
+
+      ElseIf( pMode @= 'D' );
+
+
+         # Destroy a Holds cube
+         If( CubeExists( sHoldsCube ) = 0 );
+            If( pSkipNonExistentHoldsCubes = 0 );
+               # nErrors = 1;
+               # sMessage = Expand( 'The holds cube ''%sHoldsCube%'' does not exist so it could not be destroyed.' );
+               # LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+               # If( pStrictErrorHandling = 1 );
+               #     ProcessQuit;
+               # Else;
+               #     ProcessBreak;
+               # EndIf;
+               If( pLogOutput = 1 );
+                  sMessage = Expand( 'The holds cube ''%sHoldsCube%'' does not exist so it could not be destroyed.' );
+                  LogOutput('INFO', Expand( sMessage ) );
+               EndIf;
+            EndIf;
+         Else;
+
+            CubeDestroy( sHoldsCube );
+            If( pLogOutput = 1 );
+               sMessage = Expand( 'The holds cube ''%sHoldsCube%'' was destroyed.' );
+               LogOutput('INFO', Expand( sMessage ) );
+            EndIf;
          EndIf;
 
 
