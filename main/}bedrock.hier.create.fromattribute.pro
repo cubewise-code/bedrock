@@ -163,7 +163,7 @@ If( Scan( ':', pDim ) > 0 & pSrcHier @= '' );
     pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );
 EndIf;
 
-IF( Trim ( pSrcHier ) @= Trim ( pTgtHier ));
+IF( Trim ( pSrcHier ) @= Trim ( pTgtHier ) & pTgtHier @<> '' );
     nErrors = 1;
     sMessage = 'Source and target Herarchy can not be the same';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
