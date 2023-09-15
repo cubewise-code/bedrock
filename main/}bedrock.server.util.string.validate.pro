@@ -161,7 +161,7 @@ ENDIF;
 ## Validate pInputString parameter
 IF( Trim( pInputString ) @= '' );
     nErrors     =1;
-    sError      = Expand('No element name specified in pInputString.');
+    sMessage    = Expand('No element name specified in pInputString.');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ELSE;
     sElementToUpdate        = Trim( pInputString ) ;
@@ -170,26 +170,30 @@ ENDIF;
 ## Validate pMode parameter
 IF( pMode <>1 & pMode <>2 & pMode <>3 );
     nErrors     =1;
-    sError      = Expand('pMode parameter must be 1, 2 or 3 not %pMode%.');
+    sMessage    = Expand('pMode parameter must be 1, 2 or 3 not %pMode%.');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ENDIF;
 
 ## Validate pDelim parameter
+IF( Trim( pChanges ) @<> '' );
 IF( Trim( pDelim ) @= '' );
-    nErrors     =1;
-    sError      = Expand('No delimiter specified in pDelim.');
+    nErrors     = 1;
+    sMessage    = Expand('No delimiter specified in pDelim.');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ELSE;
     sDelim      = SUBST( Trim( pDelim ) , 1 , 1 );
 ENDIF;
+ENDIF;
 
 ## Validate pSeperator parameter
+IF( Trim( pChanges ) @<> '' );
 IF( Trim( pSeperator ) @= '' );
-    nErrors     =1;
-    sError      = Expand('No seperator specified in pSeperator.');
+    nErrors     = 1;
+    sMessage    = Expand('No seperator specified in pSeperator.');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ELSE;
     sSeperator      = SUBST( Trim( pSeperator ) , 1 , 1 );
+ENDIF;
 ENDIF;
 
 ## Validate pChanges parameter
