@@ -1,10 +1,10 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.copy.intercube"
 562,"VIEW"
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"b`aQN25MEHEbmukQMRkM_yz1tO:;9KYFtHmS:ISzbJmgSaQz_l2se0BENnyw?iuMmWrYo3dMr:Wk08bwF;S`]>s>QNuXHkbA<lg`WIOsUV]Z5O]Bu7fnfAHz3n2eji9C5e7MIoYhK>OyqjdZqeHYlhZDiqqS@84b<Tpv\QAM:BUT@\sDMh_0]3s<mSvN8N7Oxc\Zbn_\"
+565,"pG`ZNN<g]IoKu=fCavbjyjE:P7zu:UIA[_lTD;E3<jZcRkzD5;kAw>?yKH1mTC`Ji8r`_r5SpmA:ik]lEK3<ct4\4rPQKFLN@B1UPO^uYxPnTkm[yavQIWmIs@PvKMbA\ZAoQtcIme_F`0;`TlCq?4XO9eEN3WnIoVd:PO]AsiuZ0dYzkBp_tZTTkzwTwwyn9X<Z5U0b"
 559,1
 928,0
 593,
@@ -322,7 +322,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1489
+572,1490
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1245,13 +1245,14 @@ WHILE (nChar <= nCharCount);
         If( nCount > 0 & nChar + nCount <= nCharCount );
           # Add the extra characters
           sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
-          # Move to the end of the delimter
-          nAddExtra = nCount;
         EndIf;
 
         If( sDelim @= sDelimDim );
           nIsDelimiter = 1;
           sChar = sDelim;
+          
+          # Move to the end of the delimter
+          nAddExtra = nCount;
         EndIf;
 
         If ( nIsDelimiter = 1 );
@@ -2234,7 +2235,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,CubeAction=1511?DataAction=1503?CubeLogChanges=0?
+576,_ParameterConstraints=e30=
 930,0
 638,1
 804,0
