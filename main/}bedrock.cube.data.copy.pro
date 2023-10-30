@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"heI0\YKRyrqYYblE1BEVClIxH`C22xB4Qulo7Ppaf7]aEfYD2Hg9sB:q23FaYECK1cM9qT\FtZbA=qSJ:7upML`OYoJSW:Aj]p6}hRSIIxBxktW8ET3[VWnf9nxH]q6pB[PWG:RVQaxfQ1PDxQ6}eSGG`2Z67uDfT5HHliHZb3kIJzRVGRN_F=ohChIKq@`r9YVYOX?"
+565,"sJ;s>64<SFMmyZLVHaQy]>kfCKC`K`p;AgBHS4Z=g4AvafY1p@;5rPtHn3FqUCBKRsk?qU`AE^`1mchfReEF^MTNWuJPv089g]5}4SlqAJ9OYqWXDDVZgooX33<Bm^vIA{ZGJ>\4M1}fGhP42o3m2sG7xhEVc@>eA7h?wkHIDavOju=z<x@lB}9ImcUdy`nBm_Gg?Qm"
 559,1
 928,0
 593,
@@ -474,39 +474,57 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1024
+572,1095
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
-If( 1 = 0 );
-    ExecuteProcess( '}bedrock.cube.data.copy', 'pLogOutput', pLogOutput,
-      'pStrictErrorHandling', pStrictErrorHandling,
-    	'pCube', '', 'pSrcView', '', 'pTgtView', '', 'pFilter', '',
-    	'pFilterParallel', '', 'pParallelThreads', 0,
-    	'pEleMapping', '', 'pMappingDelim', '->',
-    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pCumulate', 0,
-    	'pZeroTarget', 1, 'pZeroSource', 0,
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 
-    	'pFile', 0, 'pDelim', ',', 'pQuote', '"', 'pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
-    );
-EndIf;
-#EndRegion CallThisProcess
 
+IF( 1 = 0 );
+	ExecuteProcess( '}bedrock.cube.data.copy', 
+		'pLogOutput', pLogOutput, 
+		'pStrictErrorHandling', pStrictErrorHandling, 
+		'pCube', '', 
+		'pSrcView', '', 
+		'pTgtView', '', 
+		'pFilter', '', 
+		'pFilterParallel', '', 
+		'pParallelThreads', 0, 
+		'pEleMapping', '', 
+		'pMappingDelim', '->', 
+		'pDimDelim', '&', 
+		'pEleStartDelim', '¦', 
+		'pEleDelim', '+', 
+		'pFactor', 1, 
+		'pSuppressConsol', 1, 
+		'pSuppressConsolStrings', 0, 
+		'pSuppressRules', 1, 
+		'pSuppressZero', 1, 
+		'pCumulate', 0, 
+		'pZeroTarget', 1, 
+		'pZeroSource', 0, 
+		'pTemp', 1, 
+		'pCubeLogging', 0, 
+		'pSandbox', '', 
+		'pFile', 0, 
+		'pDelim', ',', 
+		'pQuote', '"', 
+		'pDecimalSeparator', '.', 
+		'pThousandSeparator', ',', 
+		'pSubN', 0 );
+ENDIF;
+
+#EndRegion CallThisProcess
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
 #################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 #################################################################################################
-
 #Region @DOC
 # Description:
 # This TI is intended to copy data from one element of a dimension to another in the same cube.
-
 # Use case: Mainly used in production environments.
 # 1/ Typically, this would be used to archive a Budget or Forecast element of a version dimension.
 # 2/ Could also be used to prepopulate a version from a prior year.
-
 # Note:
 # Naturally, a valid cube name (pCube) is required. otherwise the process will abort.
 # Element mapping (pEleMapping) is also required, otherwise the process will abort.
@@ -522,120 +540,136 @@ EndIf;
 #   and passed to a recursive call of the process being added to pFilter.
 #EndRegion @DOC
 
-If( pThreadControlFile @<> '' );
-    LogOutput( 'INFO', 'Executed as subTI with Thread Control File: ' | pThreadControlFile );
-EndIf;
+IF( pThreadControlFile @<> '' );
+	LogOutput( 'INFO', 'Executed as subTI with Thread Control File: ' | pThreadControlFile );
+ENDIF;
 
 ##Global Variables
-StringGlobalVariable('sProcessReturnCode');
-NumericGlobalVariable('nProcessReturnCode');
+
+StringGlobalVariable( 'sProcessReturnCode' );
+NumericGlobalVariable( 'nProcessReturnCode' );
 nProcessReturnCode = 0;
+
 # Target Filter Variable for shell processes
-StringGlobalVariable('sTargetFilter');
+
+StringGlobalVariable( 'sTargetFilter' );
 
 ### Constants ###
-cThisProcName   = GetProcessName();
-cUserName       = TM1User();
-cTimeStamp      = TimSt( Now, '\Y\m\d\h\i\s' );
-cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
-cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
-cMsgErrorLevel  = 'ERROR';
-cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';
-cDefaultView    = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
+
+cThisProcName = GetProcessName(  );
+cUserName = Tm1User(  );
+cTimeStamp = TimSt( Now, '\Y\m\d\h\i\s' );
+cRandomInt = NumberToString( Int( Rand(  ) * 1000 ));
+cTempSub = cThisProcName | '_' | cTimeStamp | '_' | cRandomInt;
+cMsgErrorLevel = 'ERROR';
+cMsgErrorContent = 'Process:%cThisProcName% ErrorMsg:%sMessage%';
+cLogInfo = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';
+cDefaultView = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 
 ## LogOutput parameters
+
 IF( pLogoutput = 1 );
-    LogOutput('INFO', Expand( cLogInfo ) );
+	LogOutput( 'INFO', Expand( cLogInfo ));
 ENDIF;
 
 #Disable logic for pCubeLogic for prararrel thread
-IF (pParallelThreads > 0);
-  pCubeLogging = 2;
-Endif;
+
+IF( pParallelThreads > 0 );
+	pCubeLogging = 2;
+ENDIF;
 
 # Variables
-nDataCount      = 0;
+
+nDataCount = 0;
 nExistingSourceFlag = 0;
-nAttrCubeFlag   = 0;
-cSuffixSource   = 'S';
-cSuffixTarget   = 'T';
+nAttrCubeFlag = 0;
+cSuffixSource = 'S';
+cSuffixTarget = 'T';
 cPrefixElementAttributes = '}ElementAttributes_';
-cDimCountMax    = 27;
-sDimCountMax    = NumberToString( cDimCountMax );
-nFactor = If( pFactor = 0, 1, pFactor );
+cDimCountMax = 27;
+sDimCountMax = NumberToString( cDimCountMax );
+nFactor = IF( pFactor = 0, 1, pFactor );
 cLenASCIICode = 3;
 
 ## check operating system
-If( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
-  sOS = 'Windows';
-  sOSDelim = '\';
-ElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
-  sOS = 'Linux';
-  sOSDelim = '/';
-Else;
-  sOS = 'Windows';
-  sOSDelim = '\';
-EndIf;
+
+IF( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );
+	sOS = 'Windows';
+	sOSDelim = '\';
+ELSEIF( Scan( '/', GetProcessErrorFileDirectory ) > 0 );
+	sOS = 'Linux';
+	sOSDelim = '/';
+ELSE;
+	sOS = 'Windows';
+	sOSDelim = '\';
+ENDIF;
 
 # Validate file delimiter & quote character
-If( pDelim @= '' );
-    pDelim = ',';
-Else;
-    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
-    nValid = 0;
-    If ( LONG(pDelim) = cLenASCIICode );
-      nChar = 1;
-      While ( nChar <= cLenASCIICode );
-        If( CODE( pDelim, nChar ) >= CODE( '0', 1 ) & CODE( pDelim, nChar ) <= CODE( '9', 1 ) );
-          nValid = 1;
-        Else;
-          nValid = 0;
-          Break;
-        EndIf;
-        nChar = nChar + 1;
-      End;
-    EndIf;
-    If ( nValid<>0 );
-      pDelim=CHAR(StringToNumber( pDelim ));
-    Else;
-      pDelim = SubSt( Trim( pDelim ), 1, 1 );
-    EndIf;
-EndIf;
 
-If( pQuote @= '' );
-    ## Use no quote character
-Else;
-    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
-    nValid = 0;
-    If ( LONG(pQuote) = cLenASCIICode );
-      nChar = 1;
-      While ( nChar <= cLenASCIICode );
-        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );
-          nValid = 1;
-        Else;
-          nValid = 0;
-          Break;
-        EndIf;
-        nChar = nChar + 1;
-      End;
-    EndIf;
-    If ( nValid<>0 );
-      pQuote=CHAR(StringToNumber( pQuote ));
-    Else;
-      pQuote = SubSt( Trim( pQuote ), 1, 1 );
-    EndIf;
-EndIf;
+IF( pDelim @= '' );
+	pDelim = ',';
+ELSE;
+
+	# If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code
+
+	nValid = 0;
+	IF( Long( pDelim ) = cLenASCIICode );
+		nChar = 1;
+		WHILE( nChar <= cLenASCIICode );
+			IF( Code( pDelim, nChar ) >= Code( '0', 1 ) & Code( pDelim, nChar ) <= Code( '9', 1 ));
+				nValid = 1;
+			ELSE;
+				nValid = 0;
+				BREAK;
+			ENDIF;
+			nChar = nChar + 1;
+		END;
+	ENDIF;
+	IF( nValid <> 0 );
+		pDelim = Char( StringToNumber( pDelim ));
+	ELSE;
+		pDelim = SubSt( Trim( pDelim ), 1, 1 );
+	ENDIF;
+ENDIF;
+IF( pQuote @= '' );
+
+	## Use no quote character
+
+ELSE;
+
+	# If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code
+
+	nValid = 0;
+	IF( Long( pQuote ) = cLenASCIICode );
+		nChar = 1;
+		WHILE( nChar <= cLenASCIICode );
+			IF( Code( pQuote, nChar ) >= Code( '0', 1 ) & Code( pQuote, nChar ) <= Code( '9', 1 ));
+				nValid = 1;
+			ELSE;
+				nValid = 0;
+				BREAK;
+			ENDIF;
+			nChar = nChar + 1;
+		END;
+	ENDIF;
+	IF( nValid <> 0 );
+		pQuote = Char( StringToNumber( pQuote ));
+	ELSE;
+		pQuote = SubSt( Trim( pQuote ), 1, 1 );
+	ENDIF;
+ENDIF;
 
 ## File location for indirect data copy
-cDir    = GetProcessErrorFileDirectory;
-cFileName = LOWER(pCube) | cTimeStamp | cRandomInt | '.csv';
-cFile   = cDir | cFileName;
+
+cDir = GetProcessErrorFileDirectory;
+cFileName = Lower( pCube ) | cTimeStamp | cRandomInt | '.csv';
+cFile = cDir | cFileName;
 cTitleRows = 1;
 cDelimiter = pDelim;
 cQuote = pQuote;
 
 # nMappedDimX is a binary switch used to keep track of which dimensions have been mapped from the source to the target
+
 nMappedDim1 = 0;
 nMappedDim2 = 0;
 nMappedDim3 = 0;
@@ -665,6 +699,7 @@ nMappedDim26 = 0;
 nMappedDim27 = 0;
 
 ### Determine dimensions in target cube - we need to know this to test the cell type before loading ###
+
 sDim1 = TabDim( pCube, 1 );
 sDim2 = TabDim( pCube, 2 );
 sDim3 = TabDim( pCube, 3 );
@@ -696,808 +731,844 @@ sDim27 = TabDim( pCube, 27 );
 ###########################
 ### Validate Parameters ###
 ###########################
+
 nErrors = 0;
 
 ## Default filter delimiters
-If( pDimDelim     @= '' );
-    pDimDelim     = '&';
-EndIf;
 
-If( pEleStartDelim@= '' );
-    pEleStartDelim= '¦';
-EndIf;
-
-If( pEleDelim     @= '' );
-    pEleDelim     = '+';
-EndIf;
-
-If( pMappingDelim     @= '' );
-    pMappingDelim     = '->';
-EndIf;
-
-If( pDecimalSeparator @= '' );
- 	pDecimalSeparator = '.';
-EndIf;
-If ( LONG(pDecimalSeparator) = cLenASCIICode );
-  nValid = 0;
-  nChar = 1;
-  While ( nChar <= cLenASCIICode );
-    If( CODE( pDecimalSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pDecimalSeparator, nChar ) <= CODE( '9', 1 ) );
-      nValid = 1;
-    Else;
-      nValid = 0;
-      Break;
-    EndIf;
-    nChar = nChar + 1;
-  End;
-  If ( nValid<>0 );
-    pDecimalSeparator = CHAR(StringToNumber( pDecimalSeparator ));
-  Else;
-    pDecimalSeparator = SubSt( Trim( pDecimalSeparator ), 1, 1 );
-  EndIf;
-EndIf;
+IF( pDimDelim @= '' );
+	pDimDelim = '&';
+ENDIF;
+IF( pEleStartDelim @= '' );
+	pEleStartDelim = '¦';
+ENDIF;
+IF( pEleDelim @= '' );
+	pEleDelim = '+';
+ENDIF;
+IF( pMappingDelim @= '' );
+	pMappingDelim = '->';
+ENDIF;
+IF( pDecimalSeparator @= '' );
+	pDecimalSeparator = '.';
+ENDIF;
+IF( Long( pDecimalSeparator ) = cLenASCIICode );
+	nValid = 0;
+	nChar = 1;
+	WHILE( nChar <= cLenASCIICode );
+		IF( Code( pDecimalSeparator, nChar ) >= Code( '0', 1 ) & Code( pDecimalSeparator, nChar ) <= Code( '9', 1 ));
+			nValid = 1;
+		ELSE;
+			nValid = 0;
+			BREAK;
+		ENDIF;
+		nChar = nChar + 1;
+	END;
+	IF( nValid <> 0 );
+		pDecimalSeparator = Char( StringToNumber( pDecimalSeparator ));
+	ELSE;
+		pDecimalSeparator = SubSt( Trim( pDecimalSeparator ), 1, 1 );
+	ENDIF;
+ENDIF;
 sDecimalSeparator = pDecimalSeparator;
-
-If( pThousandSeparator @= '' );
- 	pThousandSeparator = ',';
-EndIf;
-If ( LONG(pThousandSeparator) = cLenASCIICode );
-  nValid = 0;
-  nChar = 1;
-  While ( nChar <= cLenASCIICode );
-    If( CODE( pThousandSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pThousandSeparator, nChar ) <= CODE( '9', 1 ) );
-      nValid = 1;
-    Else;
-      nValid = 0;
-      Break;
-    EndIf;
-    nChar = nChar + 1;
-  End;
-  If ( nValid<>0 );
-    pThousandSeparator = CHAR(StringToNumber( pThousandSeparator ));
-  Else;
-    pThousandSeparator = SubSt( Trim( pThousandSeparator ), 1, 1 );
-  EndIf;
-EndIf;
+IF( pThousandSeparator @= '' );
+	pThousandSeparator = ',';
+ENDIF;
+IF( Long( pThousandSeparator ) = cLenASCIICode );
+	nValid = 0;
+	nChar = 1;
+	WHILE( nChar <= cLenASCIICode );
+		IF( Code( pThousandSeparator, nChar ) >= Code( '0', 1 ) & Code( pThousandSeparator, nChar ) <= Code( '9', 1 ));
+			nValid = 1;
+		ELSE;
+			nValid = 0;
+			BREAK;
+		ENDIF;
+		nChar = nChar + 1;
+	END;
+	IF( nValid <> 0 );
+		pThousandSeparator = Char( StringToNumber( pThousandSeparator ));
+	ELSE;
+		pThousandSeparator = SubSt( Trim( pThousandSeparator ), 1, 1 );
+	ENDIF;
+ENDIF;
 sThousandSeparator = pThousandSeparator;
 
 # Validate cube
-If( Trim( pCube ) @= '' );
-    nErrors     = 1;
-    sMessage    = 'No cube specified.';
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-ElseIf( CubeExists( pCube ) = 0 );
-    nErrors     = nErrors + 1;
-    sMessage    = Expand( 'Invalid source cube specified: %pCube%.');
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
+
+IF( Trim( pCube ) @= '' );
+	nErrors = 1;
+	sMessage = 'No cube specified.';
+	LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+ELSEIF( CubeExists( pCube ) = 0 );
+	nErrors = nErrors + 1;
+	sMessage = Expand( 'Invalid source cube specified: %pCube%.' );
+	LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+ENDIF;
 
 ### Determine number of dims in target cube ###
-nCount          = 1;
-While( TabDim( pCube, nCount ) @<> '' );
-    sDimension  = TabDim( pCube, nCount );
-    nCount      = nCount + 1;
-End;
+
+nCount = 1;
+WHILE( TabDim( pCube, nCount ) @<> '' );
+	sDimension = TabDim( pCube, nCount );
+	nCount = nCount + 1;
+END;
 nDimensionCount = nCount - 1;
 
 ## If dimension count exceeds the current maximum then terminate process
-If( nDimensionCount > cDimCountMax );
-    nErrors     = nErrors + 1;
-    sMessage    = 'Cube has too many dimensions: %pCube%. Max %sDimCountMax% dims catered for, TI must be altered to accommodate.';
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
+
+IF( nDimensionCount > cDimCountMax );
+	nErrors = nErrors + 1;
+	sMessage = 'Cube has too many dimensions: %pCube%. Max %sDimCountMax% dims catered for, TI must be altered to accommodate.';
+	LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+ENDIF;
 
 ## Validate the View parameter
-If( TRIM(pSrcView) @<> '' & TRIM(pSrcView) @= TRIM(pTgtView) );
-    nErrors     = nErrors + 1;
-    sMessage    = Expand( 'Source and Target Views can not be the same: %pSrcView%.' ) ;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
+
+IF( Trim( pSrcView ) @<> '' & Trim( pSrcView ) @= Trim( pTgtView ));
+	nErrors = nErrors + 1;
+	sMessage = Expand( 'Source and Target Views can not be the same: %pSrcView%.' );
+	LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+ENDIF;
 
 ## Validate the View parameter
-If( TRIM( pSrcView) @= '' );
-  cViewSource   = Expand( '%cDefaultView%_%cSuffixSource%' ) ;
-Else ;
-  cViewSource   = pSrcView ;
-  nExistingSourceFlag = 1;
-EndIf;
+
+IF( Trim( pSrcView ) @= '' );
+	cViewSource = Expand( '%cDefaultView%_%cSuffixSource%' );
+ELSE;
+	cViewSource = pSrcView;
+	nExistingSourceFlag = 1;
+ENDIF;
 
 ## Validate the View parameter
-If( TRIM( pTgtView ) @= '' );
-  cViewTarget   = Expand( '%cDefaultView%_%cSuffixTarget%' ) ;
-Else ;
-  cViewTarget   = pTgtView ;
-EndIf;
+
+IF( Trim( pTgtView ) @= '' );
+	cViewTarget = Expand( '%cDefaultView%_%cSuffixTarget%' );
+ELSE;
+	cViewTarget = pTgtView;
+ENDIF;
 
 # Validate parallelization filter
-If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
-    sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
-    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 );
-        sMessage = 'Parallelization dimension %sDimParallel% cannot exist in filter.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    EndIf;
-    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pEleMapping) ) > 0 );
-        sMessage = 'Parallelization dimension %sDimParallel% cannot exist in element mapping.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    EndIf;
-EndIf;
+
+IF( Scan( pEleStartDelim, pFilterParallel ) > 0 );
+	sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
+	IF( Scan( Lower( sDimParallel ) | pEleStartDelim, Lower( pFilter )) > 0 );
+		sMessage = 'Parallelization dimension %sDimParallel% cannot exist in filter.';
+		nErrors = nErrors + 1;
+		LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+	ENDIF;
+	IF( Scan( Lower( sDimParallel ) | pEleStartDelim, Lower( pEleMapping )) > 0 );
+		sMessage = 'Parallelization dimension %sDimParallel% cannot exist in element mapping.';
+		nErrors = nErrors + 1;
+		LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+	ENDIF;
+ENDIF;
 
 # Validate Max Threads
-If( pParallelThreads > 0 );
-  nMaxThreads = pParallelThreads;
-Else;
-  nMaxThreads = 1;
-EndIf;
+
+IF( pParallelThreads > 0 );
+	nMaxThreads = pParallelThreads;
+ELSE;
+	nMaxThreads = 1;
+ENDIF;
 
 # Validate Mapping parameter
-If( pDimDelim @= pEleStartDelim % pDimDelim @= pEleDelim % pEleStartDelim @= pEleDelim );
-    sMessage = 'The delimiters cannot me the same.';
-    nErrors = nErrors + 1;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
+
+IF( pDimDelim @= pEleStartDelim % pDimDelim @= pEleDelim % pEleStartDelim @= pEleDelim );
+	sMessage = 'The delimiters cannot me the same.';
+	nErrors = nErrors + 1;
+	LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+ENDIF;
 
 # Validate Mapping parameter
-If( TRIM( pEleMapping ) @<> '' & TRIM( pMappingDelim) @= '');
-    nErrors = nErrors + 1;
-    sMessage = 'Mapping Delimiter & Element Mapping can not both be empty.';
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-Endif;
+
+IF( Trim( pEleMapping ) @<> '' & Trim( pMappingDelim ) @= '' );
+	nErrors = nErrors + 1;
+	sMessage = 'Mapping Delimiter & Element Mapping can not both be empty.';
+	LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+ENDIF;
 
 # Validate Sandbox
-If( TRIM( pSandbox ) @<> '' );
-    If( ServerSandboxExists( pSandbox ) = 0 );
-        SetUseActiveSandboxProperty( 0 );
-        nErrors = nErrors + 1;
-        sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    Else;
-        ServerActiveSandboxSet( pSandbox );
-        SetUseActiveSandboxProperty( 1 );
-    EndIf;
-Else;
-    SetUseActiveSandboxProperty( 0 );
-EndIf;
+
+IF( Trim( pSandbox ) @<> '' );
+	IF( ServerSandboxExists( pSandbox ) = 0 );
+		SetUseActiveSandboxProperty( 0 );
+		nErrors = nErrors + 1;
+		sMessage = Expand( 'Sandbox %pSandbox% is invalid for the current user.' );
+		LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+	ELSE;
+		ServerActiveSandboxSet( pSandbox );
+		SetUseActiveSandboxProperty( 1 );
+	ENDIF;
+ELSE;
+	SetUseActiveSandboxProperty( 0 );
+ENDIF;
 
 ### Check for errors before continuing
-If( nErrors <> 0 );
-  If( pStrictErrorHandling = 1 );
-      ProcessQuit;
-  Else;
-      ProcessBreak;
-  EndIf;
-EndIf;
+
+IF( nErrors <> 0 );
+	IF( pStrictErrorHandling = 1 );
+		ProcessQuit;
+	ELSE;
+		ProcessBreak;
+	ENDIF;
+ENDIF;
 
 ########## pEleMapping ######################################################
 ### Split ElementMapping parameter and create variables to be substituted ###
 ################################################################################################# #############
-sElementMapping     = TRIM( pEleMapping );
-sMappingDelimiter   = TRIM( pMappingDelim );
-sElementStartDelim  = TRIM( pEleStartDelim );
-sDelimDim           = TRIM( pDimDelim );
-sDecimalSeparator   = TRIM(pDecimalSeparator);
-sThousandSeparator  = TRIM(pThousandSeparator);
-sFilter             = TRIM( pFilter);
-sTargetFilter       = '';
-nSuppressConsol     = pSuppressConsol;
-nChar               = 1;
-nCharCount          = LONG( sElementMapping );
+
+sElementMapping = Trim( pEleMapping );
+sMappingDelimiter = Trim( pMappingDelim );
+sElementStartDelim = Trim( pEleStartDelim );
+sDelimDim = Trim( pDimDelim );
+sDecimalSeparator = Trim( pDecimalSeparator );
+sThousandSeparator = Trim( pThousandSeparator );
+sFilter = Trim( pFilter );
+sTargetFilter = '';
+nSuppressConsol = pSuppressConsol;
+nChar = 1;
+nCharCount = Long( sElementMapping );
 
 # If there's no element mapping then the process can be used to multiply existing value by a factor
-If( nCharCount > 0 );
 
-  sWord = '';
-  sLastDelim = '';
+IF( nCharCount > 0 );
+	sWord = '';
+	sLastDelim = '';
 
-  # Add a trailing element delimiter so that the last element is picked up
-  If( nCharCount > 0 );
-    sElementMapping = sElementMapping | sMappingDelimiter ;
-    nCharCount      = nCharCount + LONG(sMappingDelimiter );
-  EndIf;
+	# Add a trailing element delimiter so that the last element is picked up
 
-  WHILE (nChar <= nCharCount);
-    sChar = SUBST( sElementMapping, nChar, 1);
+	IF( nCharCount > 0 );
+		sElementMapping = sElementMapping | sMappingDelimiter;
+		nCharCount = nCharCount + Long( sMappingDelimiter );
+	ENDIF;
+	WHILE( nChar <= nCharCount );
+		sChar = SubSt( sElementMapping, nChar, 1 );
 
-    # Used for delimiters, required for multiple character delimiters
-    sDelim = '';
-    nAddExtra = 0;
+		# Used for delimiters, required for multiple character delimiters
 
-    # Ignore spaces
-    IF (TRIM(sChar) @<> '' );
+		sDelim = '';
+		nAddExtra = 0;
 
-      ### Dimension Name ###
+		# Ignore spaces
 
-      # If the delimiter is more than 1 character peek ahead the same amount
-      # Ignore the first character
-      sDelim = sChar;
-      nCount = LONG(sElementStartDelim) - 1;
-      If( nCount > 0 & nChar + nCount <= nCharCount );
-        # Add the extra characters
-        sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
-        # Move to the end of the delimter
-        nAddExtra = nCount;
-      EndIf;
+		IF( Trim( sChar ) @<> '' );
 
-      If( sDelim @= sElementStartDelim );
+			### Dimension Name ###
+			# If the delimiter is more than 1 character peek ahead the same amount
+			# Ignore the first character
 
-        sChar = sDelim;
+			sDelim = sChar;
+			nCount = Long( sElementStartDelim ) - 1;
+			IF( nCount > 0 & nChar + nCount <= nCharCount );
 
-        If( sLastDelim @<> '' & sLastDelim @<> sDelimDim );
-            sMessage = Expand ( 'The name of a dimension must follow a dimension delimiter %sDelimDim%' );
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
-        EndIf;
+				# Add the extra characters
 
-        sDimension = sWord;
+				sDelim = sDelim | SubSt( sElementMapping, nChar + 1, nCount );
 
-        If( DimensionExists( sDimension ) = 0 );
-            # The dimension does not exist in the model. Cancel process
-            sMessage = Expand( 'Dimension: %sDimension% does not exist');
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
-        EndIf;
+				# Move to the end of the delimter
 
-        # Check that the dimension is in the cube
-         i = 1;
-         iMax = 30;
-         sDimInCube = 'No';
-         While( i <= iMax );
-           sDimensionOfCube = TabDim( pCube, i );
-           If(sDimension @= sDimensionOfCube);
-             sDimInCube = 'Yes';
-             # record where the loop stops
-             nIndex = i;
-             i = 100;
-             Else;
-             i = i + 1;
-           EndIf;
-        End;
+				nAddExtra = nCount;
+			ENDIF;
+			IF( sDelim @= sElementStartDelim );
+				sChar = sDelim;
+				IF( sLastDelim @<> '' & sLastDelim @<> sDelimDim );
+					sMessage = Expand( 'The name of a dimension must follow a dimension delimiter %sDelimDim%' );
+					nErrors = nErrors + 1;
+					LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
 
-        If( sDimInCube @<> 'Yes' );
-            # The dimension does not exist in the cube. Cancel process
-            sMessage = Expand( 'Dimension %sDimension% does not exist in this cube');
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
-        EndIf;
+					#ProcessError();
 
-        ### Dimension exists so add it to the filters
-        IF(LONG(sFilter) > 0 & sLastDelim @= '');
-          sTargetFilter = sFilter | sDelimDim | sDimension | sElementStartDelim;
-          sFilter = sFilter | sDelimDim | sDimension | sElementStartDelim;
-          ElseiF(LONG(sFilter) > 0 & sLastDelim@<>'');
-          sFilter = sFilter | sDelimDim | sDimension | sElementStartDelim;
-          sTargetFilter = sTargetFilter | sDelimDim | sDimension | sElementStartDelim;
-          Else;
-          sFilter = sDimension | sElementStartDelim;
-          sTargetFilter = sDimension | sElementStartDelim;
-        EndIf;
+				ENDIF;
+				sDimension = sWord;
+				IF( DimensionExists( sDimension ) = 0 );
 
-        #Reset the source and target elements
-        sSource = '';
-        sTarget = '';
+					# The dimension does not exist in the model. Cancel process
 
-        # The variable nElementCount is used to keep track of how many elements there are per dimension
-        # the first element is the source
-        # the second element is the target
-        # There shouldn't be any more than 2 elements per dimension
+					sMessage = Expand( 'Dimension: %sDimension% does not exist' );
+					nErrors = nErrors + 1;
+					LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
 
-        # A new dimension has been found so reset the element count so
-        # the code can tell how many elements have been specified for each dimension
-        # There should just be 2
+					#ProcessError();
 
-        nElementCount = 1;
-        sLastDelim = sChar;
+				ENDIF;
 
-        # Clear the word
-        sWord = '';
+				# Check that the dimension is in the cube
 
-      Else;
+				i = 1;
+				iMax = 30;
+				sDimInCube = 'No';
+				WHILE( i <= iMax );
+					sDimensionOfCube = TabDim( pCube, i );
+					IF( sDimension @= sDimensionOfCube );
+						sDimInCube = 'Yes';
 
-        # Reset extra chars
-        nAddExtra = 0;
+						# record where the loop stops
 
-        ### Check both dim delimiter and element delimiter ###
-        nIsDelimiter = 0;
+						nIndex = i;
+						i = 100;
+					ELSE;
+						i = i + 1;
+					ENDIF;
+				END;
+				IF( sDimInCube @<> 'Yes' );
 
-        # Check dim delim
-        # If the delimiter is more than 1 character peek ahead the same amount
-        # Ignore the first character
-        sDelim = sChar;
-        nCount = LONG(sDelimDim) - 1;
-        If( nCount > 0 & nChar + nCount <= nCharCount );
-          # Add the extra characters
-          sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
-          # Move to the end of the delimter
-          nAddExtra = nCount;
-        EndIf;
+					# The dimension does not exist in the cube. Cancel process
 
-        If( sDelim @= sDelimDim );
-          nIsDelimiter = 1;
-          sChar = sDelim;
-        Else;
-          # Reset extra chars
-          nAddExtra = 0;
+					sMessage = Expand( 'Dimension %sDimension% does not exist in this cube' );
+					nErrors = nErrors + 1;
+					LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
 
-          ## Check element delimiter
+					#ProcessError();
 
-          # If the delimiter is more than 1 character peek ahead the same amount
-          # Ignore the first character
-          sDelim = sChar;
-          nCount = LONG(sMappingDelimiter) - 1;
-          If( nCount > 0 & nChar + nCount <= nCharCount );
-            # Add the extra characters
-            sDelim = sDelim | SUBST( sElementMapping, nChar + 1, nCount);
-            # Move to the end of the delimter
-            nAddExtra = nCount;
-          EndIf;
+				ENDIF;
 
-          If( sDelim @= sMappingDelimiter  );
-            nIsDelimiter = 1;
-            sChar = sDelim;
-          Else;
-            # Reset extra chars
-            nAddExtra = 0;
-          EndIf;
+				### Dimension exists so add it to the filters
 
-        EndIf;
+				IF( Long( sFilter ) > 0 & sLastDelim @= '' );
+					sTargetFilter = sFilter | sDelimDim | sDimension | sElementStartDelim;
+					sFilter = sFilter | sDelimDim | sDimension | sElementStartDelim;
+				ELSEIF( Long( sFilter ) > 0 & sLastDelim @<> '' );
+					sFilter = sFilter | sDelimDim | sDimension | sElementStartDelim;
+					sTargetFilter = sTargetFilter | sDelimDim | sDimension | sElementStartDelim;
+				ELSE;
+					sFilter = sDimension | sElementStartDelim;
+					sTargetFilter = sDimension | sElementStartDelim;
+				ENDIF;
 
-        If ( nIsDelimiter = 1 );
+				#Reset the source and target elements
 
-          If( sLastDelim @= '' % sLastDelim @= sDelimDim );
-            sMessage = 'An element start delimiter must follow a dimension name: ' |  sChar | ' (' | NumberToString(nChar) | ')';
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
-          EndIf;
+				sSource = '';
+				sTarget = '';
 
-          # an element has been found!
-          sElement = sWord;
+				# The variable nElementCount is used to keep track of how many elements there are per dimension
+				# the first element is the source
+				# the second element is the target
+				# There shouldn't be any more than 2 elements per dimension
+				# A new dimension has been found so reset the element count so
+				# the code can tell how many elements have been specified for each dimension
+				# There should just be 2
 
-          If( DIMIX( sDimension, sElement ) = 0 );
-            # The element does not exist in the dimension. Cancel process
-            sMessage = Expand( 'Element: %sElement% does not exist in dimension %sDimension%' );
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          EndIf;
+				nElementCount = 1;
+				sLastDelim = sChar;
 
-          # Allow consolidations only if pSuppressConsol is not set to 1
-          # Consolidations may be made allowable
-          # so that you can copy strings between c levels
-          # or copy from a consolidated source element to an n level target element
+				# Clear the word
 
-          ### Check for errors before continuing
-          If( nErrors <> 0 );
-              If( pStrictErrorHandling = 1 );
-                  ProcessQuit;
-              Else;
-                  ProcessBreak;
-              EndIf;
-          EndIf;
+				sWord = '';
+			ELSE;
 
-          If ( DTYPE( sDimension, sElement) @= 'C' );
-              IF( nElementCount = 1 );
-                If( pSuppressConsol <> 1 );
-                  nSuppressConsol = 0;
-                EndIf;
-                pSubN = 1;
-              Else;
-                sMessage = Expand( 'Target element: %sElement% for dimension %sDimension% is consolidated' );
-                nErrors = nErrors + 1;
-                LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-                #ProcessBreak;
-              Endif;
-          Endif;
+				# Reset extra chars
 
-          # Add the element to the source or target depending on whether it's the first or the second element
-          # Get principal name
-          # in case source element and this element are using different aliases
+				nAddExtra = 0;
 
-          sElement = DimensionElementPrincipalName(sDimension,sElement);
+				### Check both dim delimiter and element delimiter ###
 
-          # first element
-          IF(nElementCount = 1);
+				nIsDelimiter = 0;
 
-            sSource = sElement;
-            sFilter = sFilter | sElement;
+				# Check dim delim
+				# If the delimiter is more than 1 character peek ahead the same amount
+				# Ignore the first character
 
-          # second element
-          ElseIf(nElementCount = 2);
+				sDelim = sChar;
+				nCount = Long( sDelimDim ) - 1;
+				IF( nCount > 0 & nChar + nCount <= nCharCount );
 
-            sTarget = sElement;
-            sTargetFilter = sTargetFilter | sElement;
+					# Add the extra characters
 
-          Else;
+					sDelim = sDelim | SubSt( sElementMapping, nChar + 1, nCount );
 
-            sMessage = Expand( 'There should only be 2 elements per dimension: %sDimension% , a source and a target');
-            nErrors = nErrors + 1;
-            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
+					# Move to the end of the delimter
 
-          EndIf;
+					nAddExtra = nCount;
+				ENDIF;
+				IF( sDelim @= sDelimDim );
+					nIsDelimiter = 1;
+					sChar = sDelim;
+				ELSE;
 
-          If(nIndex = 1);
-            nMappedDim1 = 1;
-            sSourceDim1 = sSource;
-            sTargetDim1 = sTarget;
-          ElseIf(nIndex = 2);
-            nMappedDim2 = 1;
-            sSourceDim2 = sSource;
-            sTargetDim2 = sTarget;
-          ElseIf(nIndex = 3);
-            nMappedDim3 = 1;
-            sSourceDim3 = sSource;
-            sTargetDim3 = sTarget;
-          ElseIf(nIndex = 4);
-            nMappedDim4 = 1;
-            sSourceDim4 = sSource;
-            sTargetDim4 = sTarget;
-          ElseIf(nIndex = 5);
-            nMappedDim5 = 1;
-            sSourceDim5 = sSource;
-            sTargetDim5 = sTarget;
-          ElseIf(nIndex = 6);
-            nMappedDim6 = 1;
-            sSourceDim6 = sSource;
-            sTargetDim6 = sTarget;
-          ElseIf(nIndex = 7);
-            nMappedDim7 = 1;
-            sSourceDim7 = sSource;
-            sTargetDim7 = sTarget;
-          ElseIf(nIndex = 8);
-            nMappedDim8 = 1;
-            sSourceDim8 = sSource;
-            sTargetDim8 = sTarget;
-          ElseIf(nIndex = 9);
-            nMappedDim9 = 1;
-            sSourceDim9 = sSource;
-            sTargetDim9 = sTarget;
-          ElseIf(nIndex = 10);
-            nMappedDim10 = 1;
-            sSourceDim10 = sSource;
-            sTargetDim10 = sTarget;
-          ElseIf(nIndex = 11);
-            nMappedDim11 = 1;
-            sSourceDim11 = sSource;
-            sTargetDim11 = sTarget;
-          ElseIf(nIndex = 12);
-            nMappedDim12 = 1;
-            sSourceDim12 = sSource;
-            sTargetDim12 = sTarget;
-          ElseIf(nIndex = 13);
-            nMappedDim13 = 1;
-            sSourceDim13 = sSource;
-            sTargetDim13 = sTarget;
-          ElseIf(nIndex = 14);
-            nMappedDim14 = 1;
-            sSourceDim14 = sSource;
-            sTargetDim14 = sTarget;
-          ElseIf(nIndex = 15);
-            nMappedDim15 = 1;
-            sSourceDim15 = sSource;
-            sTargetDim15 = sTarget;
-          ElseIf(nIndex = 16);
-            nMappedDim16 = 1;
-            sSourceDim16 = sSource;
-            sTargetDim16 = sTarget;
-          ElseIf(nIndex = 17);
-            nMappedDim17 = 1;
-            sSourceDim17 = sSource;
-            sTargetDim17 = sTarget;
-          ElseIf(nIndex = 18);
-            nMappedDim18 = 1;
-            sSourceDim18 = sSource;
-            sTargetDim18 = sTarget;
-          ElseIf(nIndex = 19);
-            nMappedDim19 = 1;
-            sSourceDim19 = sSource;
-            sTargetDim19 = sTarget;
-          ElseIf(nIndex = 20);
-            nMappedDim20 = 1;
-            sSourceDim20 = sSource;
-            sTargetDim20 = sTarget;
-          ElseIf(nIndex = 21);
-            nMappedDim21 = 1;
-            sSourceDim21 = sSource;
-            sTargetDim21 = sTarget;
-          ElseIf(nIndex = 22);
-            nMappedDim22 = 1;
-            sSourceDim22 = sSource;
-            sTargetDim22 = sTarget;
-          ElseIf(nIndex = 23);
-            nMappedDim23 = 1;
-            sSourceDim23 = sSource;
-            sTargetDim23 = sTarget;
-          ElseIf(nIndex = 24);
-            nMappedDim24 = 1;
-            sSourceDim24 = sSource;
-            sTargetDim24 = sTarget;
-          ElseIf(nIndex = 25);
-            nMappedDim25 = 1;
-            sSourceDim25 = sSource;
-            sTargetDim25 = sTarget;
-          ElseIf(nIndex = 26);
-            nMappedDim26 = 1;
-            sSourceDim26 = sSource;
-            sTargetDim26 = sTarget;
-          ElseIf(nIndex = 27);
-            nMappedDim27 = 1;
-            sSourceDim27 = sSource;
-            sTargetDim27 = sTarget;
-          EndIf;
+					# Reset extra chars
 
-          sLastDelim = sChar;
+					nAddExtra = 0;
 
-          # Clear the word
-          sWord = '';
+					## Check element delimiter
+					# If the delimiter is more than 1 character peek ahead the same amount
+					# Ignore the first character
 
-          nElementCount = nElementCount + 1;
+					sDelim = sChar;
+					nCount = Long( sMappingDelimiter ) - 1;
+					IF( nCount > 0 & nChar + nCount <= nCharCount );
 
-        Else;
-          sWord = sWord | sChar;
-        EndIf;
+						# Add the extra characters
 
-      EndIf;
+						sDelim = sDelim | SubSt( sElementMapping, nChar + 1, nCount );
 
-    EndIf;
+						# Move to the end of the delimter
 
-    nChar = nChar + nAddExtra + 1;
+						nAddExtra = nCount;
+					ENDIF;
+					IF( sDelim @= sMappingDelimiter );
+						nIsDelimiter = 1;
+						sChar = sDelim;
+					ELSE;
 
-  END;
+						# Reset extra chars
+
+						nAddExtra = 0;
+					ENDIF;
+				ENDIF;
+				IF( nIsDelimiter = 1 );
+					IF( sLastDelim @= '' % sLastDelim @= sDelimDim );
+						sMessage = 'An element start delimiter must follow a dimension name: ' | sChar | ' (' | NumberToString( nChar ) | ')';
+						nErrors = nErrors + 1;
+						LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+
+						#ProcessError();
+
+					ENDIF;
+
+					# an element has been found!
+
+					sElement = sWord;
+					IF( DimIx( sDimension, sElement ) = 0 );
+
+						# The element does not exist in the dimension. Cancel process
+
+						sMessage = Expand( 'Element: %sElement% does not exist in dimension %sDimension%' );
+						nErrors = nErrors + 1;
+						LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+					ENDIF;
+
+					# Allow consolidations only if pSuppressConsol is not set to 1
+					# Consolidations may be made allowable
+					# so that you can copy strings between c levels
+					# or copy from a consolidated source element to an n level target element
+
+					### Check for errors before continuing
+
+					IF( nErrors <> 0 );
+						IF( pStrictErrorHandling = 1 );
+							ProcessQuit;
+						ELSE;
+							ProcessBreak;
+						ENDIF;
+					ENDIF;
+					IF( DType( sDimension, sElement ) @= 'C' );
+						IF( nElementCount = 1 );
+							IF( pSuppressConsol <> 1 );
+								nSuppressConsol = 0;
+							ENDIF;
+							pSubN = 1;
+						ELSE;
+							sMessage = Expand( 'Target element: %sElement% for dimension %sDimension% is consolidated' );
+							nErrors = nErrors + 1;
+							LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+
+							#ProcessBreak;
+
+						ENDIF;
+					ENDIF;
+
+					# Add the element to the source or target depending on whether it's the first or the second element
+					# Get principal name
+					# in case source element and this element are using different aliases
+
+					sElement = DimensionElementPrincipalName( sDimension, sElement );
+
+					# first element
+
+					IF( nElementCount = 1 );
+						sSource = sElement;
+						sFilter = sFilter | sElement;
+
+						# second element
+
+					ELSEIF( nElementCount = 2 );
+						sTarget = sElement;
+						sTargetFilter = sTargetFilter | sElement;
+					ELSE;
+						sMessage = Expand( 'There should only be 2 elements per dimension: %sDimension% , a source and a target' );
+						nErrors = nErrors + 1;
+						LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+
+						#ProcessError();
+
+					ENDIF;
+					IF( nIndex = 1 );
+						nMappedDim1 = 1;
+						sSourceDim1 = sSource;
+						sTargetDim1 = sTarget;
+					ELSEIF( nIndex = 2 );
+						nMappedDim2 = 1;
+						sSourceDim2 = sSource;
+						sTargetDim2 = sTarget;
+					ELSEIF( nIndex = 3 );
+						nMappedDim3 = 1;
+						sSourceDim3 = sSource;
+						sTargetDim3 = sTarget;
+					ELSEIF( nIndex = 4 );
+						nMappedDim4 = 1;
+						sSourceDim4 = sSource;
+						sTargetDim4 = sTarget;
+					ELSEIF( nIndex = 5 );
+						nMappedDim5 = 1;
+						sSourceDim5 = sSource;
+						sTargetDim5 = sTarget;
+					ELSEIF( nIndex = 6 );
+						nMappedDim6 = 1;
+						sSourceDim6 = sSource;
+						sTargetDim6 = sTarget;
+					ELSEIF( nIndex = 7 );
+						nMappedDim7 = 1;
+						sSourceDim7 = sSource;
+						sTargetDim7 = sTarget;
+					ELSEIF( nIndex = 8 );
+						nMappedDim8 = 1;
+						sSourceDim8 = sSource;
+						sTargetDim8 = sTarget;
+					ELSEIF( nIndex = 9 );
+						nMappedDim9 = 1;
+						sSourceDim9 = sSource;
+						sTargetDim9 = sTarget;
+					ELSEIF( nIndex = 10 );
+						nMappedDim10 = 1;
+						sSourceDim10 = sSource;
+						sTargetDim10 = sTarget;
+					ELSEIF( nIndex = 11 );
+						nMappedDim11 = 1;
+						sSourceDim11 = sSource;
+						sTargetDim11 = sTarget;
+					ELSEIF( nIndex = 12 );
+						nMappedDim12 = 1;
+						sSourceDim12 = sSource;
+						sTargetDim12 = sTarget;
+					ELSEIF( nIndex = 13 );
+						nMappedDim13 = 1;
+						sSourceDim13 = sSource;
+						sTargetDim13 = sTarget;
+					ELSEIF( nIndex = 14 );
+						nMappedDim14 = 1;
+						sSourceDim14 = sSource;
+						sTargetDim14 = sTarget;
+					ELSEIF( nIndex = 15 );
+						nMappedDim15 = 1;
+						sSourceDim15 = sSource;
+						sTargetDim15 = sTarget;
+					ELSEIF( nIndex = 16 );
+						nMappedDim16 = 1;
+						sSourceDim16 = sSource;
+						sTargetDim16 = sTarget;
+					ELSEIF( nIndex = 17 );
+						nMappedDim17 = 1;
+						sSourceDim17 = sSource;
+						sTargetDim17 = sTarget;
+					ELSEIF( nIndex = 18 );
+						nMappedDim18 = 1;
+						sSourceDim18 = sSource;
+						sTargetDim18 = sTarget;
+					ELSEIF( nIndex = 19 );
+						nMappedDim19 = 1;
+						sSourceDim19 = sSource;
+						sTargetDim19 = sTarget;
+					ELSEIF( nIndex = 20 );
+						nMappedDim20 = 1;
+						sSourceDim20 = sSource;
+						sTargetDim20 = sTarget;
+					ELSEIF( nIndex = 21 );
+						nMappedDim21 = 1;
+						sSourceDim21 = sSource;
+						sTargetDim21 = sTarget;
+					ELSEIF( nIndex = 22 );
+						nMappedDim22 = 1;
+						sSourceDim22 = sSource;
+						sTargetDim22 = sTarget;
+					ELSEIF( nIndex = 23 );
+						nMappedDim23 = 1;
+						sSourceDim23 = sSource;
+						sTargetDim23 = sTarget;
+					ELSEIF( nIndex = 24 );
+						nMappedDim24 = 1;
+						sSourceDim24 = sSource;
+						sTargetDim24 = sTarget;
+					ELSEIF( nIndex = 25 );
+						nMappedDim25 = 1;
+						sSourceDim25 = sSource;
+						sTargetDim25 = sTarget;
+					ELSEIF( nIndex = 26 );
+						nMappedDim26 = 1;
+						sSourceDim26 = sSource;
+						sTargetDim26 = sTarget;
+					ELSEIF( nIndex = 27 );
+						nMappedDim27 = 1;
+						sSourceDim27 = sSource;
+						sTargetDim27 = sTarget;
+					ENDIF;
+					sLastDelim = sChar;
+
+					# Clear the word
+
+					sWord = '';
+					nElementCount = nElementCount + 1;
+				ELSE;
+					sWord = sWord | sChar;
+				ENDIF;
+			ENDIF;
+		ENDIF;
+		nChar = nChar + nAddExtra + 1;
+	END;
 ENDIF;
 
-
 ### Check that there if a dimension is used, there is a source element and a target element
+
 cSourceVariableStem = 'sSourceDim';
 cTargetVariableStem = 'sTargetDim';
 cMappedDimVariableStem = 'nMappedDim';
-
 nCounter = 1;
-WHILE(nCounter <= nDimensionCount);
+WHILE( nCounter <= nDimensionCount );
+	sMappedDimVariable = 'nMappedDim ' | NumberToString( nCounter );
+	sDimensionUsedPadded = Expand( '%' | sMappedDimVariable | '%' );
+	nMappedDim = StringToNumber( Trim( sDimensionUsedPadded ));
+	IF( nMappedDim = 1 );
+		sDim = TabDim( pCube, nCounter );
+		sSourceVariable = cSourceVariableStem | NumberToString( nCounter );
+		sSourcePadded = Expand( '%' | sSourceVariable | '%' );
+		sSource = Trim( sSourcePadded );
+		sTargetVariable = cTargetVariableStem | NumberToString( nCounter );
+		sTargetPadded = Expand( '%' | sTargetVariable | '%' );
+		sTarget = Trim( sTargetPadded );
+		IF( sSource @= '' % sTarget @= '' );
+			sMessage = 'Source and/or target element is blank for dimension ' | sDim;
+			nErrors = nErrors + 1;
+			LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
 
-  sMappedDimVariable = 'nMappedDim ' | NumberToString(nCounter);
-  sDimensionUsedPadded = Expand('%' | sMappedDimVariable | '%');
+			#ProcessError();
 
-  nMappedDim = StringToNumber(Trim(sDimensionUsedPadded));
-  If(nMappedDim = 1);
-    sDim = TabDim( pCube, nCounter );
-    sSourceVariable = cSourceVariableStem | NumberToString(nCounter);
-    sSourcePadded = Expand('%' | sSourceVariable | '%');
-    sSource = Trim(sSourcePadded);
-
-    sTargetVariable = cTargetVariableStem | NumberToString(nCounter);
-    sTargetPadded = Expand('%' | sTargetVariable | '%');
-    sTarget = Trim(sTargetPadded);
-
-    If(sSource @='' % sTarget @='');
-      sMessage = 'Source and/or target element is blank for dimension ' | sDim;
-      nErrors = nErrors + 1;
-      LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-      #ProcessError();
-    EndIf;
-
-  EndIf;
-
-nCounter = nCounter + 1;
-
+		ENDIF;
+	ENDIF;
+	nCounter = nCounter + 1;
 END;
 
 ### Check for errors before continuing
-If( nErrors <> 0 );
-  DataSourceType = 'NULL';
-  If( pStrictErrorHandling = 1 );
-      ProcessQuit;
-  Else;
-      ProcessBreak;
-  EndIf;
-EndIf;
+
+IF( nErrors <> 0 );
+	DataSourceType = 'NULL';
+	IF( pStrictErrorHandling = 1 );
+		ProcessQuit;
+	ELSE;
+		ProcessBreak;
+	ENDIF;
+ENDIF;
 
 # Branch depending on whether to do recursive calls to self on independent threads or run all in this thread
-If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
-  sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
-  sElementList = SubSt( pFilterParallel, Scan( pEleStartDelim, pFilterParallel ) + Long( pEleStartDelim ), Long( pFilterParallel ) );
-  If( SubSt( sElementList, Long( sElementList ), 1 ) @<> pEleDelim );
-      sElementList = sElementList | pEleDelim;
-  EndIf;
-  ## Counting elements in element list
-  sElementListCount = sElementList;
-  nElements = 0;
-  While( Scan( pEleDelim, sElementListCount ) > 0 );
-    nElements = nElements + 1;
-    sElementListCount = SubSt( sElementListCount, Scan( pEleDelim, sElementListCount ) + Long( pEleDelim ), Long( sElementListCount ) );
-  End;
-  IF( Mod( nElements, nMaxThreads ) = 0 );
-    nElemsPerThread = INT( nElements / nMaxThreads );
-  ELSE;
-    nElemsPerThread = INT( nElements / nMaxThreads ) + 1;
-  ENDIF;
-  nThreadElCounter = 0;
-  While( Scan( pEleDelim, sElementList ) > 0 );
-    sSlicerEle = SubSt( sElementList, 1, Scan( pEleDelim, sElementList ) - 1 );
-    sElementList = SubSt( sElementList, Scan( pEleDelim, sElementList ) + Long( pEleDelim ), Long( sElementList ) );
-    # Do recursive process call with new RunProcess function
-    nThreadElCounter = nThreadElCounter + 1;
-    sDimDelim = If(pFilter @= '', '', pDimDelim );
-    IF( nThreadElCounter = 1 );
-      sFilter = Expand('%pFilter%%sDimDelim%%sDimParallel%%pEleStartDelim%%sSlicerEle%');
-    ELSE;
-      sFilter = Expand('%sFilter%%pEleDelim%%sSlicerEle%');
-    ENDIF;
-    IF( nThreadElCounter >= nElemsPerThread );
-      nThreadID = INT( RAND( ) * 10000 + 1) + Numbr(cTimeStamp);
-      sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID) | '_' | cTimeStamp;
-      AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
-      LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
-      RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
-      	'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
-      	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
-      	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-      	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
-        'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
-      );
-  	  nThreadElCounter = 0;
-  	  sFilter = '';
-  	ENDIF;
-  End;
-  ## Process last elements - only when filter is not empty (there are still elements)
-  IF( sFilter @<> '' );
-    RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
-    	'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
-    	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
-    	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-    	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
-      'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
-    );
-  ENDIF;
-  DataSourceType = 'NULL';
-Else;
-  ### Create View of target to zero out
-  ### Check that there's something in sTargetFilter so the cube doesn't accidentally get wiped out
 
-  If(pZeroTarget = 1 & LONG(sTargetFilter)> 0);
+IF( Scan( pEleStartDelim, pFilterParallel ) > 0 );
+	sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
+	sElementList = SubSt( pFilterParallel, Scan( pEleStartDelim, pFilterParallel ) + Long( pEleStartDelim ), 
+		Long( pFilterParallel ));
+	IF( SubSt( sElementList, Long( sElementList ), 1 ) @<> pEleDelim );
+		sElementList = sElementList | pEleDelim;
+	ENDIF;
 
-    sProc = '}bedrock.cube.data.clear';
-    nRet = ExecuteProcess( sProc,
-    'pLogOutput', pLogOutput,
-    'pStrictErrorHandling', pStrictErrorHandling,
-    'pCube', pCube,
-    'pView', cViewTarget,
-    'pFilter', sTargetFilter,
-    'pDimDelim', pDimDelim,
-    'pEleStartDelim', pEleStartDelim,
-    'pEleDelim', pEleDelim,
-    'pCubeLogging', pCubeLogging,
-    'pTemp', pTemp,
-    'pSandbox', pSandbox
-    );
+	## Counting elements in element list
 
-    IF(nRet <> 0);
-        sMessage = 'Error clearing the target view.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        If( pStrictErrorHandling = 1 );
-            ProcessQuit;
-        Else;
-            ProcessBreak;
-        EndIf;
-    ENDIF;
+	sElementListCount = sElementList;
+	nElements = 0;
+	WHILE( Scan( pEleDelim, sElementListCount ) > 0 );
+		nElements = nElements + 1;
+		sElementListCount = SubSt( sElementListCount, Scan( pEleDelim, sElementListCount ) + Long( pEleDelim ), Long( sElementListCount ));
+	END;
+	IF( Mod( nElements, nMaxThreads ) = 0 );
+		nElemsPerThread = Int( nElements / nMaxThreads );
+	ELSE;
+		nElemsPerThread = Int( nElements / nMaxThreads ) + 1;
+	ENDIF;
+	nThreadElCounter = 0;
+	nThreads = 0;
+	WHILE( Scan( pEleDelim, sElementList ) > 0 );
+		sSlicerEle = SubSt( sElementList, 1, Scan( pEleDelim, sElementList ) - 1 );
+		sElementList = SubSt( sElementList, Scan( pEleDelim, sElementList ) + Long( pEleDelim ), Long( sElementList ));
 
-  Endif;
+		# Do recursive process call with new RunProcess function
 
-  If ( pCubeLogging <= 1 );
-    sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
-    CubeSetLogChanges( pCube, pCubeLogging);
-  EndIf;
+		nThreadElCounter = nThreadElCounter + 1;
+		sDimDelim = IF( pFilter @= '', '', pDimDelim );
+		IF( nThreadElCounter = 1 );
+			sFilter = Expand( '%pFilter%%sDimDelim%%sDimParallel%%pEleStartDelim%%sSlicerEle%' );
+		ELSE;
+			sFilter = Expand( '%sFilter%%pEleDelim%%sSlicerEle%' );
+		ENDIF;
+		IF( nThreadElCounter >= nElemsPerThread );
+			nThreadID = Int( Rand(  ) * 10000 + 1 ) + Numbr( cTimeStamp );
+			sThreadControlFile = Lower( GetProcessName(  ) | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString( nThreadID ) | '_' | cTimeStamp );
+			LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString( nThreadID ));
+			RunProcess( cThisProcName, 'pLogoutput', pLogoutput, 'pCube', pCube, 'pSrcView', pSrcView, 
+				'pTgtView', pTgtView, 'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 
+				'pMappingDelim', pMappingDelim, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 
+				'pEleDelim', pEleDelim, 'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', 
+				pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 
+				'pCumulate', pCumulate, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', 
+				pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', 
+				pDecimalSeparator, 'pThousandSeparator', pThousandSeparator, 'pThreadMode', 1, 'pThreadControlFile', 
+				sThreadControlFile );
+			nThreadElCounter = 0;
+			sFilter = '';
+			nThreads = nThreads + 1;
+		ENDIF;
+	END;
 
-  If( pFile = 0 );
+	## Process last elements - only when filter is not empty (there are still elements)
 
-    ### Create View of Source ###
+	IF( sFilter @<> '' );
+		RunProcess( cThisProcName, 'pLogoutput', pLogoutput, 'pCube', pCube, 'pSrcView', pSrcView, 
+			'pTgtView', pTgtView, 'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 
+			'pMappingDelim', pMappingDelim, 'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 
+			'pEleDelim', pEleDelim, 'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', 
+			pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 
+			'pCumulate', pCumulate, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', 
+			pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', 
+			pDecimalSeparator, 'pThousandSeparator', pThousandSeparator, 'pThreadMode', 1, 'pThreadControlFile', 
+			sThreadControlFile );
+	ENDIF;
+	DataSourceType = 'NULL';
+	Sleep( 1000 );
+ELSE;
+	IF( pThreadControlFile @<> '' );
+		LogOutput( 'info', 'creating thread file ' | cDir | pThreadControlFile | '.txt' );
+		AsciiOutput( cDir | pThreadControlFile | '.txt', '' );
+	ENDIF;
 
-    nRet = ExecuteProcess('}bedrock.cube.view.create',
-      'pLogOutput', pLogOutput,
-      'pStrictErrorHandling', pStrictErrorHandling,
-      'pCube', pCube,
-      'pView', cViewSource,
-      'pFilter', sFilter,
-      'pSuppressZero', pSuppressZero,
-      'pSuppressConsol', nSuppressConsol,
-      'pSuppressRules', pSuppressRules,
-      'pSuppressConsolStrings', pSuppressConsolStrings,
-      'pDimDelim', pDimDelim,
-      'pEleStartDelim', pEleStartDelim,
-      'pEleDelim', pEleDelim ,
-      'pTemp', pTemp,
-      'pSubN', pSubN
-      );
+	### Create View of target to zero out
+	### Check that there's something in sTargetFilter so the cube doesn't accidentally get wiped out
 
-    IF(nRet <> 0);
-          sMessage = 'Error creating the view from the filter.';
-          nErrors = nErrors + 1;
-          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          If( pStrictErrorHandling = 1 );
-              ProcessQuit;
-          Else;
-              ProcessBreak;
-          EndIf;
-    ENDIF;
+	IF( pZeroTarget = 1 & Long( sTargetFilter ) > 0 );
+		sProc = '}bedrock.cube.data.clear';
+		nRet = ExecuteProcess( sProc, 
+			'pLogOutput', pLogOutput, 
+			'pStrictErrorHandling', pStrictErrorHandling, 
+			'pCube', pCube, 
+			'pView', cViewTarget, 
+			'pFilter', sTargetFilter, 
+			'pDimDelim', pDimDelim, 
+			'pEleStartDelim', pEleStartDelim, 
+			'pEleDelim', pEleDelim, 
+			'pCubeLogging', pCubeLogging, 
+			'pTemp', pTemp, 
+			'pSandbox', pSandbox );
+		IF( nRet <> 0 );
+			sMessage = 'Error clearing the target view.';
+			nErrors = nErrors + 1;
+			LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+			IF( pStrictErrorHandling = 1 );
+				ProcessQuit;
+			ELSE;
+				ProcessBreak;
+			ENDIF;
+		ENDIF;
+	ENDIF;
+	IF( pCubeLogging <= 1 );
+		sCubeLogging = CellGetS( '}CubeProperties', pCube, 'LOGGING' );
+		CubeSetLogChanges( pCube, pCubeLogging );
+	ENDIF;
+	IF( pFile = 0 );
 
+		### Create View of Source ###
 
-    ### Assign Datasource ###
-    DataSourceType          = 'VIEW';
-    DatasourceNameForServer = pCube;
-    DatasourceNameForClient = pCube;
-    DatasourceCubeView      = cViewSource;
-    nThreadMode = 1;
-  Else;
-    ### Export Data to file ###
+		nRet = ExecuteProcess( '}bedrock.cube.view.create', 
+			'pLogOutput', pLogOutput, 
+			'pStrictErrorHandling', pStrictErrorHandling, 
+			'pCube', pCube, 
+			'pView', cViewSource, 
+			'pFilter', sFilter, 
+			'pSuppressZero', pSuppressZero, 
+			'pSuppressConsol', nSuppressConsol, 
+			'pSuppressRules', pSuppressRules, 
+			'pSuppressConsolStrings', pSuppressConsolStrings, 
+			'pDimDelim', pDimDelim, 
+			'pEleStartDelim', pEleStartDelim, 
+			'pEleDelim', pEleDelim, 
+			'pTemp', pTemp, 
+			'pSubN', pSubN );
+		IF( nRet <> 0 );
+			sMessage = 'Error creating the view from the filter.';
+			nErrors = nErrors + 1;
+			LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+			IF( pStrictErrorHandling = 1 );
+				ProcessQuit;
+			ELSE;
+				ProcessBreak;
+			ENDIF;
+		ENDIF;
 
-    nRet = ExecuteProcess('}bedrock.cube.data.export',
-       'pLogoutput', pLogOutput,
-       'pStrictErrorHandling', pStrictErrorHandling,
-       'pCube', pCube,
-       'pView', cViewSource,
-       'pFilter', sFilter,
-       'pFilterParallel', '',
-       'pParallelThreads', 0,
-       'pDimDelim', pDimDelim,
-       'pEleStartDelim', pEleStartDelim,
-       'pEleDelim', pEleDelim,
-       'pSuppressZero', pSuppressZero,
-       'pSuppressConsol', nSuppressConsol,
-       'pSuppressRules', pSuppressRules,
-       'pSuppressConsolStrings', pSuppressConsolStrings,
-       'pZeroSource', 0,
-       'pCubeLogging', pCubeLogging,
-       'pTemp', pTemp,
-       'pFilePath', cDir,
-       'pFileName', cFileName,
-       'pDelim', cDelimiter,
-       'pDecimalSeparator', sDecimalSeparator,
-       'pThousandSeparator', sThousandSeparator,
-       'pQuote', cQuote,
-       'pTitleRecord', cTitleRows,
-       'pSandbox', pSandbox
-      );
+		### Assign Datasource ###
 
-    IF(nRet <> 0);
-          sMessage = 'Error exporting data to file.';
-          nErrors = nErrors + 1;
-          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-          If( pStrictErrorHandling = 1 );
-              ProcessQuit;
-          Else;
-              ProcessBreak;
-          EndIf;
-    ENDIF;
+		DataSourceType = 'VIEW';
+		DataSourceNameForServer = pCube;
+		DataSourceNameForClient = pCube;
+		DataSourceCubeView = cViewSource;
+		nThreadMode = 1;
+	ELSE;
 
-    If(FileExists(cFile) = 0);
-      # If the file does not exist, it means that nothing got exported, so there is nothing to import
-      If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( 'Process:%cThisProcName% is skipping import as export file %cFile% was not found.' ) );
-      EndIf;
-      DataSourceType = 'NULL';
-    Else;
-      ### Assign Datasource ###
-      DataSourceType                  = 'CHARACTERDELIMITED';
-      DatasourceNameForServer         = cFile;
-      DatasourceNameForClient         = cFile;
-      DatasourceASCIIHeaderRecords    = cTitleRows;
-      DatasourceASCIIDelimiter        = cDelimiter;
-      DatasourceASCIIQuoteCharacter   = cQuote;
-    EndIf;
+		### Export Data to file ###
 
-    nThreadMode = 1;
+		nRet = ExecuteProcess( '}bedrock.cube.data.export', 
+			'pLogoutput', pLogOutput, 
+			'pStrictErrorHandling', pStrictErrorHandling, 
+			'pCube', pCube, 
+			'pView', cViewSource, 
+			'pFilter', sFilter, 
+			'pFilterParallel', '', 
+			'pParallelThreads', 0, 
+			'pDimDelim', pDimDelim, 
+			'pEleStartDelim', pEleStartDelim, 
+			'pEleDelim', pEleDelim, 
+			'pSuppressZero', pSuppressZero, 
+			'pSuppressConsol', nSuppressConsol, 
+			'pSuppressRules', pSuppressRules, 
+			'pSuppressConsolStrings', pSuppressConsolStrings, 
+			'pZeroSource', 0, 
+			'pCubeLogging', pCubeLogging, 
+			'pTemp', pTemp, 
+			'pFilePath', cDir, 
+			'pFileName', cFileName, 
+			'pDelim', cDelimiter, 
+			'pDecimalSeparator', sDecimalSeparator, 
+			'pThousandSeparator', sThousandSeparator, 
+			'pQuote', cQuote, 
+			'pTitleRecord', cTitleRows, 
+			'pSandbox', pSandbox );
+		IF( nRet <> 0 );
+			sMessage = 'Error exporting data to file.';
+			nErrors = nErrors + 1;
+			LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+			IF( pStrictErrorHandling = 1 );
+				ProcessQuit;
+			ELSE;
+				ProcessBreak;
+			ENDIF;
+		ENDIF;
+		IF( FileExists( cFile ) = 0 );
 
-  EndIf;
+			# If the file does not exist, it means that nothing got exported, so there is nothing to import
 
-EndIf;
+			IF( pLogoutput = 1 );
+				LogOutput( 'INFO', Expand( 'Process:%cThisProcName% is skipping import as export file %cFile% was not found.' ));
+			ENDIF;
+			DataSourceType = 'NULL';
+		ELSE;
+
+			### Assign Datasource ###
+
+			DataSourceType = 'CHARACTERDELIMITED';
+			DataSourceNameForServer = cFile;
+			DataSourceNameForClient = cFile;
+			DataSourceAsciiHeaderRecords = cTitleRows;
+			DataSourceAsciiDelimiter = cDelimiter;
+			DataSourceAsciiQuoteCharacter = cQuote;
+		ENDIF;
+		nThreadMode = 1;
+	ENDIF;
+ENDIF;
 
 ### End Prolog ###
+
 
 573,3
 #****Begin: Generated Statements***
@@ -1960,96 +2031,102 @@ ElseIf( nDimensionCount = 27 );
 
 
 ### End Data ###
-575,89
+575,95
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
 
 #################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
 #################################################################################################
-
 # Zero out source cube #
+
 IF( pZeroSource = 1 & nErrors = 0 );
-    sProc = '}bedrock.cube.data.clear';
-    nRet = ExecuteProcess( sProc,
-        'pLogOutput', pLogOutput,
-        'pStrictErrorHandling', pStrictErrorHandling,
-        'pCube', pCube,
-        'pView', cViewSource,
-        'pFilter', sFilter,
-        'pDimDelim', pDimDelim,
-        'pEleStartDelim', pEleStartDelim,
-        'pEleDelim', pEleDelim,
-        'pTemp', pTemp,
-        'pCubeLogging', pCubeLogging,
-        'pSandbox', pSandbox
-    );
-    If(nRet <> 0);
-        sMessage = 'Error clearing the source view.';
-        nErrors = nErrors + 1;
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-        ProcessError();
-    EndIf;
-EndIf;
-
-
-If( pCubeLogging <= 1 );
-    CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
-EndIf;
+	sProc = '}bedrock.cube.data.clear';
+	nRet = ExecuteProcess( sProc, 
+		'pLogOutput', pLogOutput, 
+		'pStrictErrorHandling', pStrictErrorHandling, 
+		'pCube', pCube, 
+		'pView', cViewSource, 
+		'pFilter', sFilter, 
+		'pDimDelim', pDimDelim, 
+		'pEleStartDelim', pEleStartDelim, 
+		'pEleDelim', pEleDelim, 
+		'pTemp', pTemp, 
+		'pCubeLogging', pCubeLogging, 
+		'pSandbox', pSandbox );
+	IF( nRet <> 0 );
+		sMessage = 'Error clearing the source view.';
+		nErrors = nErrors + 1;
+		LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+		ProcessError(  );
+	ENDIF;
+ENDIF;
+IF( pCubeLogging <= 1 );
+	CubeSetLogChanges( pCube, IF( sCubeLogging @= 'YES', 1, 0 ));
+ENDIF;
 
 ### Delete export file if used
-If( pFile = 1 );
-  If( sOS @= 'Linux' );
-    TM1RunCmd = 'rm "' | cFile | '"';
-  Else;
-    TM1RunCmd = 'CMD.EXE /C "DEL "' | cFile | '" "';
-  EndIf;
-  EXECUTECOMMAND ( TM1RunCmd , 0 );
-EndIf;
+
+IF( pFile = 1 );
+	IF( sOS @= 'Linux' );
+		TM1RunCmd = 'rm "' | cFile | '"';
+	ELSE;
+		TM1RunCmd = 'CMD.EXE /C "DEL "' | cFile | '" "';
+	ENDIF;
+	ExecuteCommand( TM1RunCmd, 0 );
+ENDIF;
 
 ### Delete thread control file if used
-If( pThreadControlFile @<> '' );
-    LogOutput( 'INFO', 'Removing thread control file: ' | pThreadControlFile );
-    ASCIIDelete( cDir | pThreadControlFile | '.txt' );
-EndIf;
+
+IF( pThreadControlFile @<> '' );
+	LogOutput( 'INFO', 'Removing thread control file: ' | cDir | pThreadControlFile | '.txt' );
+	IF( sOS @= 'Linux' );
+		TM1RunCmd = 'rm "' | cDir | pThreadControlFile | '.txt' | '"';
+	ELSE;
+		TM1RunCmd = 'CMD.EXE /C "DEL "' | cDir | pThreadControlFile | '.txt' | '" "';
+	ENDIF;
+	ExecuteCommand( TM1RunCmd, 0 );
+ENDIF;
 
 ### Wait for all parallel threads to finish if using pFilterParallel
-If( pFilterParallel @<> '' );
-    sThreadFilePattern = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | '*.txt';
-    LogOutput( 'INFO', 'Checking for: ' | sThreadFilePattern );
-    i = 1;
-    While( i < pMaxWaitSeconds );
-        sThreadCheck = WildcardFileSearch( cDir | sThreadFilePattern, '' );
-        If( sThreadCheck @<> '' );
-            Sleep( 1000 );
-        Else;
-            Break;
-        EndIf;
 
-    i = i + 1;
-    End;
-EndIf;
+IF( pFilterParallel @<> '' );
+	sThreadFilePattern = LOWER(GetProcessName(  ) | '_ThreadControlFile_' | cRandomInt | '_' | '*.txt');
+	LogOutput( 'INFO', 'Checking for: ' | sThreadFilePattern );
+	i = 1;
+	WHILE( i < pMaxWaitSeconds );
+		sThreadCheck = WildcardFileSearch( cDir | sThreadFilePattern, '' );
+		IF( sThreadCheck @<> '' );
+			Sleep( 1000 );
+		ELSE;
+			BREAK;
+		ENDIF;
+		i = i + 1;
+	END;
+ENDIF;
 
 ### Return code & final error message handling
-If( nErrors > 0 );
-    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';
-    nProcessReturnCode = 0;
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
-    If( pStrictErrorHandling = 1 ); 
-        ProcessQuit; 
-    EndIf;
-Else;
-    sProcessAction = Expand( 'Process:%cThisProcName% successfully copied data from %pSrcView% view to the %pTgtView% view in the %pCube% cube.' );
-    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
-    nProcessReturnCode = 1;
-    If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( sProcessAction ) );   
-    EndIf;
-EndIf;
+
+IF( nErrors > 0 );
+	sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';
+	nProcessReturnCode = 0;
+	LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ));
+	sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
+	IF( pStrictErrorHandling = 1 );
+		ProcessQuit;
+	ENDIF;
+ELSE;
+	sProcessAction = Expand( 'Process:%cThisProcName% successfully copied data from %pSrcView% view to the %pTgtView% view in the %pCube% cube.' );
+	sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
+	nProcessReturnCode = 1;
+	IF( pLogoutput = 1 );
+		LogOutput( 'INFO', Expand( sProcessAction ));
+	ENDIF;
+ENDIF;
 
 ### End Epilog ###
+
+
 576,_ParameterConstraints=e30=
 930,0
 638,1
