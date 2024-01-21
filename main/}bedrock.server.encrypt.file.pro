@@ -72,7 +72,7 @@ pAction,"REQUIRED: 5 = unencrypt, 4 = encrypt"
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    ExecuteProcess('}bedrock.server.encrypt.directory', 'pLogOutput', pLogOutput,
+    ExecuteProcess('}bedrock.server.encrypt.file', 'pLogOutput', pLogOutput,
        'pStrictErrorHandling', pStrictErrorHandling,
        'pSourcePath', pSourcePath,
        'pSourceFile', pSourceFile,
