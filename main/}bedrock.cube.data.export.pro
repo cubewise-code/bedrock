@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"ven`coiam:;78Ai5iEVeuKaH_D[2Tie1C7OeY[S5zHqNA5N^okkSQDV3[s;rIsTHCS0us?vbcd?P?8t2b4ipH`aFH@d]UMALpWkETmEQWC1BzELdYyMFpwL:B5JSll6F7Wx@xjYCbPouFRQ4tkJBEPXVMkXPWOXwVOU;Dzb\xQUiwsV]pV\1xNehR^9ipj;\HX^4T1EX"
+565,"t0>iy1P8vQ6Qd88CdnHMa>N]gni0ZD=qkH0]vgtJSV`@hgzXK1Z`pwTszqXqjH6VD^cr[__rc2<OErRxC[FYFTdq\YJS[@_FtDA<`>s[<pREf>^9za_MLyiwjz?BryR=nQCtyANh1H:[LJh;jUeOXutvBg>8qDaEgkSAC;SZNxr0zPt\PJUP4@l:M:M<NRZMjwF==K4v"
 559,1
 928,0
 593,
@@ -754,7 +754,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,476
+572,487
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -830,6 +830,11 @@ pDecimalSeparator = TRIM(pDecimalSeparator);
 pThousandSeparator= TRIM(pThousandSeparator);
 nDataCount        = 0;
 nErrors           = 0;
+
+## Capture current transaction logging state
+If( CubeExists(pCube) = 1 );
+  sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
+EndIf;
 
 ## Default filter delimiters
 If( pDimDelim     @= '' );
@@ -1051,6 +1056,9 @@ EndIf;
 IF ( nErrors > 0 );
     DataSourceType = 'NULL';
     If( pStrictErrorHandling = 1 );
+        If( CubeExists(pCube) = 1 );
+          CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+        EndIf;
         ProcessQuit;
     Else;
         ProcessBreak;
@@ -1211,6 +1219,9 @@ Else;
       nErrors = nErrors + 1;
       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
       If( pStrictErrorHandling = 1 );
+          If( CubeExists(pCube) = 1 );
+            CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+          EndIf;
           ProcessQuit;
       Else;
           ProcessBreak;
@@ -1287,7 +1298,7 @@ ENDIF;
 TextOutput( cExportFile, Expand(sRow) );
 
 ### End Data ###
-575,41
+575,43
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1299,7 +1310,6 @@ TextOutput( cExportFile, Expand(sRow) );
 ### Delete source data ###
 If( pZeroSource = 1 & nErrors = 0 & nParallelRun = 0 );
     If ( pCubeLogging <= 1 );
-      sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
       CubeSetLogChanges( pCube, pCubeLogging);
     EndIf;
     ViewZeroOut( pCube, cView );
@@ -1315,6 +1325,9 @@ If( nErrors > 0 );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
     If( pStrictErrorHandling = 1 );
+        If( CubeExists(pCube) = 1 );
+          CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+        EndIf;
         ProcessQuit;
     EndIf;
 Else;
