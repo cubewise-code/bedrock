@@ -65,10 +65,10 @@ The first place for further information is the [code.cubewise.com/bedrock](https
 * [Bedrock Wiki](https://github.com/cubewise-code/bedrock/wiki). Each process has a full documentation of what it does, the intended purpose, needed parameters, and dependencies within the library.
 
 **White Papers**:
-* [Bedrock Modular Approach](https://code.cubewise.com/s/White_Paper_Modular_Approach.pdf)
-* [Best Practice Turbo Integrator](https://code.cubewise.com/s/White_Paper_Best_Practice_Turbo_Integrator.pdf)
-* [Best Practice Cube Design](https://code.cubewise.com/s/White_Paper_Best_Practice_Cube_Design.pdf)
-* [Best Practice Rules](https://code.cubewise.com/s/White_Paper_Best_Practice_Rules.pdf)
+* [Bedrock Modular Approach](https://downloads.cubewise.com/Bedrock/whitepapers/White_Paper_Modular_Approach.pdf)
+* [Best Practice Turbo Integrator](https://downloads.cubewise.com/Bedrock/whitepapers/White_Paper_Best_Practice_Turbo_Integrator.pdf)
+* [Best Practice Cube Design](https://downloads.cubewise.com/Bedrock/whitepapers/White_Paper_Best_Practice_Cube_Design.pdf)
+* [Best Practice Rules](https://downloads.cubewise.com/Bedrock/whitepapers/White_Paper_Best_Practice_Rules.pdf)
 
 ## How to License
 
