@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"gk:yGWDyD9sf61eq1`WQC@hWc[l\gitu`rkDb\lnyx5==DJqWI7hySA13aT1\]4R;OIvZ1U9OBiQCrUwiqTteoW?aoELNAn^=E1>];bM5FFqc7Osq>g8\g>v6K@ADOA^^oR:@qTG8`g~B@dg6Su4}W^lKGfR3wPYdJ`5f2>1V9h^gYFk<XuqkOkSfxT0lv6<VTUjj[y`"
+565,"spMkz5cmg?l0bi<=eeiypl@P1:@6^4lt04ACiOoxLnD>CA:arspmw4yJ^cTQdm3Bvv0v:RCO=a`aPUGhuD`Ig1oklI|zIA`6QG>MH37CCgHGuFsA9r9<TzYslNwL__Yvlr>P\0x<NNxbQVaVDx?MX>XHqZ0zrI@\LlESE5A2wR>bIrddn_DqCksN5:L4wV7F^jgoF9U"
 559,1
 928,0
 593,
@@ -56,7 +56,7 @@ pDebug,"Debug Mode"
 581,0
 582,0
 603,0
-572,75
+572,82
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -109,10 +109,17 @@ If ( pMode > 2);
   ProcessError();
 EndIf;
 
+# change in "ALL" handling. Blank = All in v3, in v4 must be explicitly passed as wildcard *
+If( pDimensions @= '' );
+  sDimensions = '*';
+Else;
+  sDimensions = pDimensions;
+EndIf;
+
 nRet = ExecuteProcess( cB4Proc,
                        'pLogOutput', 0,
                        'pStrictErrorHandling',1,
-                       'pDim', pDimensions,
+                       'pDim', sDimensions,
                        'pHier', '',
                        'pSub', pSubsets,
                        'pDelim', pDelimiter,

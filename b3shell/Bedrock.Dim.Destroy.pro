@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"oLDg7o1TIOA@:slaape39St\Gws2fKkO=E=ssY]j3u1sg1]PK2OB8n`7YBwUhRs4Y:x_CJWr=Jc>ndEtxqcu@A=IBz__oG3TfDjseaeZjDrNA3rbdqwJJLiV2NEsl@lwhR;?eOm@;n0Q7mA@Av7;pmOhCXstDCe?Lac6Q5sE\S_Hk9w]hS3NgvQ<0e8rYYiTL>ItHNxo"
+565,"wD]Ka5QRq8lntm4Ibh6Geaaa@WK`i\MQpVJv]k^bM13JspsJYsZht?1wM9Cu?osbCgY9]N2Q]AV[JrW=0UuLwfez4OWDv?Al0GlEW:ShtLG8:2w1Qt:WCh:jkND7<?SntU1C_SqvD@V^giu5@GQ9HpZH5gfIfTSp]7MFP2wtXEk?rpm]5]AW1F9D=]hI]jW`cT>7V4K5"
 559,1
 928,0
 593,
@@ -80,7 +80,7 @@ EndIf;
 
 nRet = EXECUTEPROCESS('}bedrock.dim.delete',
   'pLogOutput', pDebug,
-  'pStrictErrorHandling','1',
+  'pStrictErrorHandling', 1,
   'pDim', pDimension,
   'pDelim', '&'
   );
