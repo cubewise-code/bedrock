@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,14
+560,15
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -39,8 +39,9 @@ pDimDelim
 pEleStartDelim
 pEleDelim
 pTemp
+pSandBox
 pSubN
-561,14
+561,15
 1
 1
 2
@@ -54,8 +55,9 @@ pSubN
 2
 2
 1
+2
 1
-590,14
+590,15
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -69,8 +71,9 @@ pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
+pSandBox,""
 pSubN,0
-637,14
+637,15
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
@@ -84,6 +87,7 @@ pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
 pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
 pTemp,"OPTIONAL: Make View Temporary (1=Temporary)"
+pSandBox,"OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)"
 pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 577,0
 578,0
@@ -101,7 +105,7 @@ If( 1 = 0 );
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pTemp', 1, 'pSubN', 0
+    	'pTemp', 1,'pSandbox', pSandbox,'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -152,7 +156,7 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoLevel     =  'INFO';
 cMsgInfoContent   = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSuppressConsolStrings:%pSuppressConsolStrings%.' ;  
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%.' ;  
 
 
 sSubset           = pView;
@@ -219,6 +223,21 @@ If( nErrors <> 0 );
   Else;
       ProcessBreak;
   EndIf;
+EndIf;
+
+# Validate Sandbox
+If( TRIM( pSandbox ) @<> '' );
+    If( ServerSandboxExists( pSandbox ) = 0 );
+        SetUseActiveSandboxProperty( 0 );
+        nErrors = nErrors + 1;
+        sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    Else;
+        ServerActiveSandboxSet( pSandbox );
+        SetUseActiveSandboxProperty( 1 );
+    EndIf;
+Else;
+    SetUseActiveSandboxProperty( 0 );
 EndIf;
   
 # Reset all of the subsets that may be attached to the view in the case that dimensions not in the filter
