@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"heI0\YKRyrqYYblE1BEVClIxH`C22xB4Qulo7Ppaf7]aEfYD2Hg9sB:q23FaYECK1cM9qT\FtZbA=qSJ:7upML`OYoJSW:Aj]p6}hRSIIxBxktW8ET3[VWnf9nxH]q6pB[PWG:RVQaxfQ1PDxQ6}eSGG`2Z67uDfT5HHliHZb3kIJzRVGRN_F=ohChIKq@`r9YVYOX?"
+565,"ufv\E]Lwc4ImdBqI=a@JCyACmL;09U8=qn9p7DugHBov9fi7HUYPJn^b45Fa;MI[AaF2AGR92gjqkqC_[mZ4dtdeKr{J1V55;2H6}A=WGsRWzYwWHkV][YHE=v91D=En2L;X7A[d;4svFq=^D?n8}\2Yf4d<enAt@D4hqdhXGNR7FjM]<Vn_\G]z<hJ=hPe2KW=vMF6"
 559,1
 928,0
 593,
@@ -474,7 +474,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1024
+572,1030
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1315,6 +1315,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     nElemsPerThread = INT( nElements / nMaxThreads ) + 1;
   ENDIF;
   nThreadElCounter = 0;
+  nThreads = 0;
   While( Scan( pEleDelim, sElementList ) > 0 );
     sSlicerEle = SubSt( sElementList, 1, Scan( pEleDelim, sElementList ) - 1 );
     sElementList = SubSt( sElementList, Scan( pEleDelim, sElementList ) + Long( pEleDelim ), Long( sElementList ) );
@@ -1328,7 +1329,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     ENDIF;
     IF( nThreadElCounter >= nElemsPerThread );
       nThreadID = INT( RAND( ) * 10000 + 1) + Numbr(cTimeStamp);
-      sThreadControlFile = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID) | '_' | cTimeStamp;
+      sThreadControlFile = LOWER( GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | NumberToString(nThreadID) | '_' | cTimeStamp );
       AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
       LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
       RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
@@ -1341,6 +1342,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       );
   	  nThreadElCounter = 0;
   	  sFilter = '';
+  	  nThreads = nThreads + 1;
   	ENDIF;
   End;
   ## Process last elements - only when filter is not empty (there are still elements)
@@ -1355,10 +1357,14 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     );
   ENDIF;
   DataSourceType = 'NULL';
+  Sleep( 1000 );
 Else;
   ### Create View of target to zero out
   ### Check that there's something in sTargetFilter so the cube doesn't accidentally get wiped out
-
+  IF( pThreadControlFile @<> '' );
+      LogOutput( 'info', 'creating thread file ' | cDir | pThreadControlFile | '.txt' );
+      AsciiOutput( cDir | pThreadControlFile | '.txt', '' );
+  ENDIF;
   If(pZeroTarget = 1 & LONG(sTargetFilter)> 0);
 
     sProc = '}bedrock.cube.data.clear';
@@ -1960,7 +1966,7 @@ ElseIf( nDimensionCount = 27 );
 
 
 ### End Data ###
-575,89
+575,94
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2009,14 +2015,19 @@ If( pFile = 1 );
 EndIf;
 
 ### Delete thread control file if used
-If( pThreadControlFile @<> '' );
-    LogOutput( 'INFO', 'Removing thread control file: ' | pThreadControlFile );
-    ASCIIDelete( cDir | pThreadControlFile | '.txt' );
-EndIf;
+IF( pThreadControlFile @<> '' );
+    LogOutput( 'INFO', 'Removing thread control file: ' | cDir | pThreadControlFile | '.txt' );
+    IF( sOS @= 'Linux' );
+        TM1RunCmd = 'rm "' | cDir | pThreadControlFile | '.txt' | '"';
+    ELSE;
+        TM1RunCmd = 'CMD.EXE /C "DEL "' | cDir | pThreadControlFile | '.txt' | '" "';
+    ENDIF;
+    ExecuteCommand( TM1RunCmd, 0 );
+ENDIF;
 
 ### Wait for all parallel threads to finish if using pFilterParallel
 If( pFilterParallel @<> '' );
-    sThreadFilePattern = GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | '*.txt';
+    sThreadFilePattern = LOWER( GetProcessName() | '_ThreadControlFile_' | cRandomInt | '_' | '*.txt' );
     LogOutput( 'INFO', 'Checking for: ' | sThreadFilePattern );
     i = 1;
     While( i < pMaxWaitSeconds );
