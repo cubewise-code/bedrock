@@ -67,7 +67,7 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"REQUIRED: Subset Name"
-pConsol,"OPTIONAL: Consolidated Element  (Blank Equals All)"
+pConsol,"OPTIONAL: Consolidated Element (Blank Equals All)"
 pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
 pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
 pDelim,"OPTIONAL: Delimiter character"

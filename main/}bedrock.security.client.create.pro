@@ -50,7 +50,7 @@ pDelim,"&"
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pClient,"REQUIRED: Single user name or list of users separated by delimiter"
-pAlias,"OPTIONAL: single or delimited list of }TM1_DefaultDisplayValue alias to assign to user (if list of users then size of list of aliases must be the same!)"
+pAlias,"OPTIONAL: Single or delimited list of }TM1_DefaultDisplayValue alias to assign to user (if list of users then size of list of aliases must be the same!)"
 pPassword,"OPTIONAL: Initial Password"
 pDelim,"OPTIONAL: Delimiter (Blank = &)"
 577,0

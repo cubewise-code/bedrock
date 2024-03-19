@@ -58,7 +58,7 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"REQUIRED: Subset name"
-pConvertToStatic,"OPTIONAL: Boolean: 1 = Convert to Static Subset"
+pConvertToStatic,"OPTIONAL: Boolean: 1 = True (convert to static subset)"
 pAlias,"OPTIONAL: Set Alias for Subset"
 pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0

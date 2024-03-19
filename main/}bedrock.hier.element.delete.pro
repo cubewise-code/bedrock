@@ -50,9 +50,9 @@ pDelim,"&"
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name, accepts wildcards (if = *, then all the dimensions)"
-pHier,"OPTIONAL: hierarchy name (if blank then same named hierarchy as dimension is assumed), accepts wildcards (if = *, then all hierarchies)"
+pHier,"OPTIONAL: Hierarchy name (if blank then same named hierarchy as dimension is assumed), accepts wildcards (if = *, then all hierarchies)"
 pEle,"OPTIONAL: filter on elements (delimiter separated list of elements, accepts wildcards (if = *, then all the elements in hierarchy get deleted))"
-pDelim,"OPTIONAL: delimiter character for element list (default value if blank = '&')"
+pDelim,"OPTIONAL: Delimiter character for element list (default value if blank = '&')"
 577,0
 578,0
 579,0

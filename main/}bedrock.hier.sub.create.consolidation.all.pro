@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"o3pnif2r53XydwyafNrBd@epq_6Dky]Dn3MbzbkB1E2ZZz5eJxbtyIP[m3A^SB4nqaEod0JMwFJww;zRjC>OyX:DBCW4]0JM??;0Kbp637Y_At6]MT1\iIU^;CBW3Qab@r>PS:jsFc375n@j;[6y6V[<tAR:Q<6zhKC0Lt?K<B<q6y1ZIPG]MT2S9by2;2R\VgS@IXRA"
+565,"j_89>xhhF`aC>5kMBfjfXSpwezb?rTeBRI@M9K0uCi<c;a1h@5`Ku?mP64:<19vggjl[xkn\M_GdTg:1TUd\RQNcB1a<?FLFa>[S;4dB_u0]39k]?d9UQ=YbGx?HQRZD^S?NPmcoINCSeqlzXHBjigbc\cZxpsHcYZ`]r`S9AFmTb?fA[Fm_JfPZaHC6KZTDQKjX92Bu"
 559,1
 928,0
 593,
@@ -67,7 +67,7 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pSub,"REQUIRED: Subset name"
-pConsol,"OPTIONAL: Consolidated Element  (Blank Equals All)"
+pConsol,"OPTIONAL: Consolidated Element (Blank Equals All)"
 pAddToSubset,"OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)"
 pExclusions,"OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)"
 pDelim,"OPTIONAL: Delimiter character"

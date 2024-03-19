@@ -49,9 +49,9 @@ pCtrlObj,0
 637,6
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
-pDim,"REQUIRED: dimension name, parameter accepts delimited list and wildcards(*)."
+pDim,"REQUIRED: dimension name, parameter accepts delimited list and wildcards(*)"
 pAttr,"REQUIRED: attribute name, parameter accepts delimited list and wildcards (* = ALL)."
-pDelim,"OPTIONAL: delimiter character for attribute list. (Defaults to & if blank)"
+pDelim,"OPTIONAL: Delimiter character for attribute list. (Defaults to & if blank)"
 pCtrlObj,"REQUIRED: Include control dimensions (1 = include, 0 = not include)"
 577,0
 578,0

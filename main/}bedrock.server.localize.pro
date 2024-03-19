@@ -51,7 +51,7 @@ pLogOutput,"OPTIONAL: Write parameters and action summary to server message log 
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"OPTIONAL: Dimension (Delimited list & wildcards (*) acceptable)"
 pCube,"OPTIONAL: Cube( Delimited list & wildcards (*) acceptable)"
-pDelim,"OPTIONAL: delimiter character for dimension list. (Defaults to & if blank)"
+pDelim,"OPTIONAL: Delimiter character for dimension list. (Defaults to & if blank)"
 pSub,"OPTIONAL: If localizing attributes for a dimension also localize subset names?"
 577,0
 578,0

@@ -47,7 +47,7 @@ pDelim,"&"
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pGroup,"REQUIRED: Groups separated by delimiter"
-pAlias,"OPTIONAL: single or delimited list of }TM1_DefaultDisplayValue alias to assign to group (if list of groups then size of list of aliases must be the same!)"
+pAlias,"OPTIONAL: Single or delimited list of }TM1_DefaultDisplayValue alias to assign to group (if list of groups then size of list of aliases must be the same!)"
 pDelim,"OPTIONAL: Delimiter character (Defaults to & if left blank)"
 577,0
 578,0

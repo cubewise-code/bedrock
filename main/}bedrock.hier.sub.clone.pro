@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"jLwo5u@][xazPFZ>Jn61@>Q?O2f`NrRq;iM8c3HhGOkz9MWxQXCydHDYMrdn=f@o2km?<FYohr^I[[W`_prevhE=U@ag6BXz:6dDH[P\JqJxRl8tJR5a[5wQ>kUMZ?6hcQ34LV3spmk62M_\rxqOBsH^oHNLyc\RzlH`JTVy5Dx22@2dxGvw1ma?GaH^ugsxBaA`8A<`"
+565,"j_89>xhhF`aC>5kMBfjfXSpwezb?rTeBRI@M9K0uCi<c;a1h@5`Ku?mP64:<19vggjl[xkn\M_GdTg:1TUd\RQNcB1a<?FLFa>[S;4dB_u0]39k]?d9UQ=YbGx?HQRZD^S?NPmcoINCSeqlzXHBjigbc\cZxpsHcYZ`]r`S9AFmTb?fA[Fm_JfPZaHC6KZTDQKjX92Bu"
 559,1
 928,0
 593,
@@ -64,11 +64,11 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 pSrcDim,"REQUIRED: Dimension where the subset exists"
 pSrcHier,"OPTIONAL: Source Hierarchy (blank = same as source)"
 pSrcSub,"REQUIRED: Source Subset"
-pTgtDim,"OPTIONAL: Target dimension (blank = same as source)"
-pTgtHier,"OPTIONAL: Target Hierarchy (blank = same as Target Dimension)"
+pTgtDim,"OPTIONAL: Target Dimension (blank = same name as source dimension)"
+pTgtHier,"OPTIONAL: Target Hierarchy (blank = same name as target dimension)"
 pTgtSub,"REQUIRED: Target Subset"
 pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
-pAlias,"Optional: Set Alias for Subset"
+pAlias,"OPTIONAL: Set Alias for Subset"
 577,1
 vEle
 578,1

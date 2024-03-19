@@ -56,11 +56,11 @@ pDelim,"&"
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name, accepts wildcards (if = *, then all the dimensions)"
-pHier,"OPTIONAL: hierarchy (default value same named hierarchy as dimension), accepts wildcards (if = *, then all hierarchies)"
+pHier,"OPTIONAL: Hierarchy (default value same named hierarchy as dimension), accepts wildcards (if = *, then all hierarchies)"
 pEle,"REQUIRED: element name, accepts delimited list"
 pEleType,"OPTIONAL: element type N S C (default value N)"
-pInsertionPoint,"OPTIONAL: insertion point (default value blank)"
-pDelim,"OPTIONAL: delimiter character for element list. (default value if blank = '&')"
+pInsertionPoint,"OPTIONAL: Insertion point (default value blank)"
+pDelim,"OPTIONAL: Delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0

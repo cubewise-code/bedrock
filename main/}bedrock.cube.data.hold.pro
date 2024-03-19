@@ -62,7 +62,7 @@ pMode,"REQUIRED: Use C / D / R / X / M. See inside process for information. Supp
 pCube,"REQUIRED: Treat which Holds cube(s) ? Provide the base cube name(s). Supports a list and wildcards * and ? and keyword MODELCUBES."
 pClient,"REQUIRED or used in conjunction with pGroup. Treat the Holds cube(s) of which client(s) ? Supports a list and wildcards * and ? and keyword MYSELF."
 pGroup,"REQUIRED or used in conjunction with pClient. Treat the Holds cube(s) of which client(s) in which group(s) ? Supports a list and wildcards * and ? and keyword MYGROUPS."
-pDelim,"OPTIONAL: delimiter character for the different lists. (default value if blank = '&')"
+pDelim,"OPTIONAL: Delimiter character for the different lists. (default value if blank = '&')"
 pDir,"OPTIONAL: Directory (will default to error file path)"
 pSkipNonExistentHoldsCubes,"OPTIONAL: When using lists and wildcards, it can lead to non-existent holds cubes. 1=Silently ignore these. Default=0."
 577,0

@@ -63,7 +63,7 @@ pTgtDim,"OPTIONAL: Target Dimension (will default to pSrcDim_clone If blank (or)
 pHier,"REQUIRED: Hierarchies to be included (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
 pAttr,"REQUIRED: Include Attributes? (Boolean 1=True)"
 pUnwind,"REQUIRED: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements"
-pDelim,"OPTIONAL: delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
+pDelim,"OPTIONAL: Delimiter character for element list (required if pEle parameter is used) (default value if blank = '&')"
 pSub,"OPTIONAL: if 1 = Clone subsets"
 577,1
 vEle

@@ -55,7 +55,7 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 pCube,"REQUIRED: Cube Name to Load/Unload rule (Separated by Delimiter, Accepts Wild card)"
 pMode,"REQUIRED: Load/Unload the cube rule (=Load, the file name should be available in the data directory with the required file name Suffix)"
 pFileName,"OPTIONAL: Full file name for storing the rule (if empty = cube name.txt)"
-pDelim,"OPTIONAL: Delimiter  (default value if blank = '&')"
+pDelim,"OPTIONAL: Delimiter (default value if blank = '&')"
 pPath,"OPTIONAL: Saves the file and the backup of the existing rule in this location. If Null, backup will be saved in Data Directory. Default value Null"
 577,0
 578,0

@@ -34,7 +34,7 @@ pUndesirable1st
 pChanges
 pReplaceIfNotFound
 pDelim
-pSeperator
+pSeparator
 pMode
 561,10
 1
@@ -56,7 +56,7 @@ pUndesirable1st,"'+-[]@!{}%"
 pChanges,"\,B Slash&/,F Slash&|, &-,Minus&+,Plus&>,greater than&<,less than"
 pReplaceIfNotFound,"_"
 pDelim,"&"
-pSeperator,","
+pSeparator,","
 pMode,3
 637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
@@ -67,7 +67,7 @@ pUndesirable1st,"OPTIONAL: Undesirable 1st characters (e.g. '+-[]@!{}% )"
 pChanges,"OPTIONAL: String showing what to change. Replaces with pReplaceIfNotFound if blank."
 pReplaceIfNotFound,"OPTIONAL: Replace ndesirable character with this if not specified in pChanges above (blank will delete)"
 pDelim,"REQUIRED: Delimiter between definitions"
-pSeperator,"REQUIRED: Seperator between current & desired"
+pSeparator,"REQUIRED: Seperator between current & desired"
 pMode,"REQUIRED: 1=Validate for File System only, 2=Validate for 1st only, 3=Validate Fully"
 577,0
 578,0
@@ -85,7 +85,7 @@ If( 1 = 0 );
 	    'pInputString', '', 'pUndesirableFileSystem', '/|\>"<:?*', 'pUndesirable1st', Char(39) | '+-[]@!{}%',
 	    'pChanges', '\,B Slash&/,F Slash&|, &-,Minus&+,Plus&>,greater than&<,less than',
 	    'pReplaceIfNotFound', '_',
-	    'pDelim', '&', 'pSeperator', ',', 'pMode', 3 
+	    'pDelim', '&', 'pSeparator', ',', 'pMode', 3 
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -115,15 +115,15 @@ EndIf;
 # - pChanges: This string defines the rule of how to change undesirable characters. It can be made up
 #   of many definitions delimited by pDelim (e.g. `&` which is not considered undesirable
 #   anywhere). Each definition would contain a character considered undesirable and the desired 
-#   character separatedby pSeperator (e.g. to change a `%` to Percentage and `"` to inches, it would
-#   be `%,Percentage&",inches` if pDelim = `&` and pSeperator = `,`).
+#   character separatedby pSeparator (e.g. to change a `%` to Percentage and `"` to inches, it would
+#   be `%,Percentage&",inches` if pDelim = `&` and pSeparator = `,`).
 
 # - pReplaceIfNotFound: This is a catch all for characters listed in pUndesirableFileSystem or 
 #   pUndesirable1st that don't have a rule in pChanges.
 
 # - pDelim: This is a character that is used to seperate definitions in pChanges.
 
-# - pSeperator: This is a character used to seperate the current and desired character within each
+# - pSeparator: This is a character used to seperate the current and desired character within each
 #   definition in pChanges.
 
 # - pMode: This can be used to limit whether the TI looks at pUndesirableFileSystem or pUndesirable1st 
@@ -145,7 +145,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cSubset         = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pLogOutput=%pLogOutput%, pInputString=%pInputString%, pUndesirableFileSystem=%pUndesirableFileSystem%, pUndesirable1st=%pUndesirable1st%, pChanges=%pChanges%, pReplaceIfNotFound=%pReplaceIfNotFound%, pDelim=%pDelim%, pSeperator=%pSeperator%, pMode=%pMode%';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pLogOutput=%pLogOutput%, pInputString=%pInputString%, pUndesirableFileSystem=%pUndesirableFileSystem%, pUndesirable1st=%pUndesirable1st%, pChanges=%pChanges%, pReplaceIfNotFound=%pReplaceIfNotFound%, pDelim=%pDelim%, pSeparator=%pSeparator%, pMode=%pMode%';
 
 # Variables
 nErrors         = 0;
@@ -185,14 +185,14 @@ ELSE;
 ENDIF;
 ENDIF;
 
-## Validate pSeperator parameter
+## Validate pSeparator parameter
 IF( Trim( pChanges ) @<> '' );
-IF( Trim( pSeperator ) @= '' );
+IF( Trim( pSeparator ) @= '' );
     nErrors     = 1;
-    sMessage    = Expand('No seperator specified in pSeperator.');
+    sMessage    = Expand('No seperator specified in pSeparator.');
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ELSE;
-    sSeperator      = SUBST( Trim( pSeperator ) , 1 , 1 );
+    sSeperator      = SUBST( Trim( pSeparator ) , 1 , 1 );
 ENDIF;
 ENDIF;
 

@@ -31,7 +31,7 @@ pStrictErrorHandling
 pDim
 pHier
 pSort
-pConvertStatic
+pConvertToStatic
 pAlias
 pTemp
 561,8
@@ -49,7 +49,7 @@ pStrictErrorHandling,0
 pDim,""
 pHier,""
 pSort,0
-pConvertStatic,1
+pConvertToStatic,1
 pAlias,""
 pTemp,1
 637,8
@@ -58,7 +58,7 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 pDim,"REQUIRED: Dimension name"
 pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
 pSort,"OPTIONAL: Sort the Subset"
-pConvertStatic,"OPTIONAL: Convert the Subset to Static"
+pConvertToStatic,"OPTIONAL: Convert the Subset to Static"
 pAlias,"OPTIONAL: Set Alias for Subset"
 pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
 577,0
@@ -75,7 +75,7 @@ If( 1 = 0 );
     ExecuteProcess( '}bedrock.hier.sub.create.bylevel', 'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
     	'pDim', '', 'pHier', '',
-    	'pSort', 0, 'pConvertStatic', 1,
+    	'pSort', 0, 'pConvertToStatic', 1,
     	'pAlias', '', 'pTemp', 1
 	);
 EndIf;
@@ -112,7 +112,7 @@ cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSort:%pSort%, pConvertStatic:%pConvertStatic%, pAlias:%pAlias%, pTemp:%pTemp%.'; 
+cLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSort:%pSort%, pConvertToStatic:%pConvertToStatic%, pAlias:%pAlias%, pTemp:%pTemp%.'; 
 cAttributeDim       = '}ElementAttributes_' | pDim;
 cSubs               = '' ;
 
@@ -213,7 +213,7 @@ If( nErrors = 0 );
     EndIf;
 
     ## Build Subset for the level.
-    If( pConvertStatic = 1 );
+    If( pConvertToStatic = 1 );
       # Convert the subset to a static subset
       sSubsetMDX = '}' | cThisProcName | '.' | NumberToString( Int( Rand() * 100000 ) );
       If( HierarchySubsetExists( pDim, pHier, sSubsetMDX ) = 1 );

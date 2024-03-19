@@ -29,7 +29,7 @@
 pLogOutput
 pStrictErrorHandling
 pUser
-pDimension
+pDim
 pSubset
 pSubsetFile
 pFilePath
@@ -53,7 +53,7 @@ pWriteOutput
 pLogOutput,0
 pStrictErrorHandling,0
 pUser,""
-pDimension,""
+pDim,""
 pSubset,""
 pSubsetFile,""
 pFilePath,""
@@ -65,14 +65,14 @@ pWriteOutput,1
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pUser,"REQUIRED: User name"
-pDimension,"REQUIRED: Dimension name"
+pDim,"REQUIRED: Dimension name"
 pSubset,"REQUIRED: Subset name"
 pSubsetFile,"REQUIRED: Path to subset file"
 pFilePath,"OPTIONAL: Export Directory (will default to error file path)"
 pFileName,"OPTIONAL: Export Filename (If Left Blank Defaults to processname_user_dimension_subset_export.csv)"
 pDelim,"OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)"
 pQuote,"OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)"
-pWriteOutput,"DO NOT USE: for internal use only"
+pWriteOutput,"DO NOT USE: Internal parameter only, please do not use"
 577,1
 vLine
 578,1
@@ -94,7 +94,7 @@ If( 1 = 0 );
        'pLogOutput', pLogOutput,
        'pStrictErrorHandling', pStrictErrorHandling,
        'pUser', pUser,
-       'pDimension', pDimension,
+       'pDim', pDim,
        'pSubset', pSubset,
        'pSubsetFile', pSubsetFile,
        'pFilePath', pFilePath,
@@ -135,8 +135,8 @@ cRandomInt          = NumberToString( INT( RAND( ) * 1000 ));
 cUserName           = TM1User();
 cMsgErrorLevel      = 'ERROR';
 cMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo            = 'Process:%cThisProcName% run with parameters pUser:%pUser%, pDimension:%pDimension%, pSubset:%pSubset%, pSubsetFile:%pSubsetFile%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%.' ;  
-cMsgInfoContent    = 'User:%cUserName% Process:%cThisProcName% InfoMsg:%sMessage%';
+cLogInfo            = 'Process:%cThisProcName% run with parameters pUser:%pUser%, pDim:%pDim%, pSubset:%pSubset%, pSubsetFile:%pSubsetFile%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%.' ;  
+cMsgInfoContent     = 'User:%cUserName% Process:%cThisProcName% InfoMsg:%sMessage%';
 cSecurityPrefix = '}ElementSecurity_';
 cDimDim = '}Dimensions';
 cUserDim = '}Clients';
@@ -147,7 +147,7 @@ cGroupDim = '}Groups';
 cSecCube = '}ClientGroups';
 nGroupMax = DimSiz ( cGroupDim );
 nUserMax = DimSiz ( cUserDim );
-cEleSecCube = cSecurityPrefix | pDimension;
+cEleSecCube = cSecurityPrefix | pDim;
 
 pFieldDelim       = TRIM(pDelim);
 sCRLF             = Char( 13 ) | Char( 10 );
@@ -180,8 +180,8 @@ IF( DimIx( cUserDim,  pUser) = 0 );
 ENDIF;
 
 # Validate dimension
-IF( DimIx( cDimDim,  pDimension) = 0 );
-    sMessage = Expand('Invalid dimension: %pDimension%');
+IF( DimIx( cDimDim,  pDim) = 0 );
+    sMessage = Expand('Invalid dimension: %pDim%');
     nErrors = nErrors + 1;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 ENDIF;
@@ -221,7 +221,7 @@ pFilePath = pFilePath | sOSDelim;
 
 # Validate file name
 If( pFileName @= '' );
-    sBaseFileName = Expand('%cThisProcName%_%pUser%_%pDimension%_%pSubset%_Export');
+    sBaseFileName = Expand('%cThisProcName%_%pUser%_%pDim%_%pSubset%_Export');
     sExt = '.csv';
     pFileName = sBaseFileName | '.csv';
 Else;
@@ -359,7 +359,7 @@ If ( Subst ( vLine, 1, 3 ) @= '278' );
         nKeywordLength = Long ( sKeywordList );
     End;
     IF( sKeyWordString @<> '' );
-        sRow = '%pQuote%%pDimension%%pQuote%%pFieldDelim%%pQuote%Y%pQuote%%pFieldDelim%%pQuote%%pSubset%%pQuote%%pFieldDelim%%pQuote%%pUser%%pQuote%';
+        sRow = '%pQuote%%pDim%%pQuote%%pFieldDelim%%pQuote%Y%pQuote%%pFieldDelim%%pQuote%%pSubset%%pQuote%%pFieldDelim%%pQuote%%pUser%%pQuote%';
         sRow = sRow|'%pFieldDelim%%pQuote%%sMDX%%pQuote%';
         sRow = sRow|'%pFieldDelim%%pQuote%%sKeyWordString%%pQuote%';
     ENDIF;
@@ -381,7 +381,7 @@ If ( Subst ( vLine, 1, 3 ) @= '278' );
                 nToGo = nMDXLength - nEnder + 1;
                 sMDXTemp = Subst ( sMDXTemp, nEnder + 1, nToGo );
                 # check if that is actually an element
-                If ( DimIx ( pDimension, sElement ) > 0 );
+                If ( DimIx ( pDim, sElement ) > 0 );
                     IF( Scan( sElement, sElementString ) = 0 );
                         IF( sElementString @= '' );
                             sElementString = sElementString | sElement;

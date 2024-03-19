@@ -56,7 +56,7 @@ pDim,"REQUIRED: Target Dimension, accepts wildcards (if = *, then all the dimens
 pHier,"OPTIONAL: Target Hierarchy (will use default is left blank), accepts wildcards (if = *, then all hierarchies)"
 pConsol,"OPTIONAL: Target Consolidation, accepts wildcards ( * will unwind ALL)"
 pRecursive,"REQUIRED: Boolean: 1 = True (break from node down not just direct children)"
-pDelim,"OPTIONAL: delimiter character for element list (default value if blank = '&')"
+pDelim,"OPTIONAL: Delimiter character for element list (default value if blank = '&')"
 577,1
 vElement
 578,1
@@ -85,19 +85,19 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-################################################################################################# 
+#################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4~~##
-################################################################################################# 
+#################################################################################################
 
 #Region @DOC
 # Description:
 # This process will remove all children from a specific target consolidation (pConsol) in a Hierarchy
-# in target Dimension. If recursive (pRecursive=1), it will also unwind all consolidations that are 
+# in target Dimension. If recursive (pRecursive=1), it will also unwind all consolidations that are
 # descendants of the target regardless of depth. If not recursive (pRecursive=0) then only immediate children
 # of the target consolidation will be removed.
 #
 # Use case: Intended for both production and development/prototyping scenarios.
-# 1. **Production** call prior to main dimension build process in case mapping relationships have changed to ensure no double-counting steming from leaf elements 
+# 1. **Production** call prior to main dimension build process in case mapping relationships have changed to ensure no double-counting steming from leaf elements
 #    rolling into multiple parents within the same rollup or hierarhcy
 # 2. **Production** combine with }bedrock.hier.emptyconsols.delete to remove orphaned rollups
 # 3. **Development** manual cleanup of dimensions during prototyping or prior to going to production
@@ -108,7 +108,7 @@ EndIf;
 # * A \* pConsol parameter will process ALL C level items in the given hierarchy (pHier).
 # * A delimited list or wildcard for pDim or pHier or a delimited list of consolidations for pConsol will result in recursive calls of the process.
 #
-# Caution: 
+# Caution:
 # If consolidations are also used in unrelated consolidations and recursive is selected this
 # will result in orphan consolidations in the other rollups.
 #EndRegion @DOC
@@ -135,7 +135,7 @@ cAttrVal        = 'Descendant';
 
 ## LogOutput parameters
 IF( pLogoutput = 1 );
-    LogOutput('INFO', Expand( cLogInfo ) );   
+    LogOutput('INFO', Expand( cLogInfo ) );
 ENDIF;
 
 ### Validate Parameters ###
@@ -167,40 +167,10 @@ ElseIf( Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) 
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 Endif;
 
-If( Trim( pHier ) @= '' );
-    ## use same name as Dimension. Since wildcards are allowed, this is managed inside the code below
-EndIf;
-
-# Validate consol
-If( pConsol @<> '');
-    If( Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 & ElementIndex( pDim, pHier, pConsol ) = 0 );
-        nErrors = 1;
-        sMessage = 'Item ' | pConsol | ' does NOT exist. Please enter a valid consolidation element in the ' |pDim| ':' |pHier| ' dimension:hierarchy.';  
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ElseIf( Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 & ElementType( pDim, pHier, pConsol ) @<> 'C' );
-        nErrors = 1;
-        sMessage = 'Item ' | pConsol | ' is NOT a consolidated item. Please enter a valid consolidation element in the ' |pDim| ':' |pHier| ' dimension:hierarchy.';  
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    ElseIf( Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 & ElementComponentCount( pDim, pHier, pConsol ) = 0 );
-        nErrors = 1;
-        sMessage = 'Invalid consolidation: ' | pConsol | ' has no children.';
-        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-    Endif;
-ElseIf( Trim( pConsol ) @= '' );
-    nErrors = 1;
-    sMessage = 'No consolidated element specified.';
-    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-Endif;
-
-# If blank delimiter specified then convert to default
-If( pDelim @= '' );
-    pDelim = '&';
-EndIf;
-
 ### Check for errors before continuing
 If( nErrors <> 0 );
-  If( pStrictErrorHandling = 1 ); 
-      ProcessQuit; 
+  If( pStrictErrorHandling = 1 );
+      ProcessQuit;
   Else;
       ProcessBreak;
   EndIf;
@@ -210,57 +180,11 @@ Else;
 EndIf;
 
 ### If there is no separator and wildcard in the parameters, execute the unwind of the specific consolidated element
-If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 );
+If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0
+  & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0
+  & Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 );
 
-    ### In case alias used for pConsol convert to principal name 
-    If( ElementIndex( pDim, pHier, pConsol ) > 0 );
-        pConsol = HierarchyElementPrincipalName( pDim, pHier, pConsol );
-    EndIf;
 
-    ### Turn-off Logging in the Attribute cube
-    sAttrCube = '}ElementAttributes_' | pDim;
-    If( CubeExists( sAttrCube ) = 1 );
-        nLogging = CubeGetLogChanges( sAttrCube );
-        CubeSetLogChanges( sAttrCube, 0 );
-    EndIf;
-    
-    ### Create Temp Descendent Attribute
-    AttrDelete( pDim, cHierAttr );
-    AttrInsert( pDim, '', cHierAttr, 'S' );
-    
-    ### Assign data source ###
-    If( pRecursive      = 1);
-        # Set Descendent attribute value
-        nElementIndex   = 1;
-        nElementCount   = ElementCount( pDim , pHier );
-        While( nElementIndex <= nElementCount );
-            sElement = ElementName( pDim, pHier, nElementIndex );
-            If( ElementIsAncestor( pDim, pHier, pConsol, sElement ) = 1 % pConsol @= sElement );
-                ElementAttrPutS( cAttrVal, pDim, pHier, sElement, cHierAttr );
-            EndIf;
-            nElementIndex = nElementIndex + 1;
-        End;
-        # Assign Data Source
-        DataSourceType            = 'SUBSET';
-        DatasourceNameForServer   = pDim|':'|pHier;
-        DatasourceNameForClient   = pDim|':'|pHier;
-        DatasourceDimensionSubset = 'ALL';
-    Else;
-        ### Remove direct children from the target consol ###
-        If( ElementComponentCount( pDim, pHier, pConsol ) > 0 );
-            If( pLogOutput = 1 );
-                LogOutput( 'INFO', Expand( 'Deleting all components from consolidation %pConsol% in hierarchy "%pHier%" of "%pDim%" dimension.' ) );
-            EndIf;
-            nComp = ElementComponentCount( pDim, pHier, pConsol );
-            While( nComp > 0 );
-                sComp = ElementComponent( pDim, pHier, pConsol, nComp );
-                HierarchyElementComponentDelete( pDim, pHier, pConsol, sComp );
-                nComp = nComp - 1;
-            End;
-        EndIf;
-        # No data source, straight to Epilog
-        DataSourceType = 'NULL';
-    EndIf;
 
 ### If pConsol is "*" and there is no separator and wildcard in the pDim & pHier parameters then unwind the whole hierarchy
 ElseIf( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Trim( pConsol ) @= '*' );
@@ -289,7 +213,7 @@ ElseIf( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0
 Else;
     # No data source, straight to Epilog
     DataSourceType = 'NULL';
-    
+
     # Loop through dimensions in pDim
     sDims = pDim;
     nDimDelimiterIndex = 1;
@@ -304,17 +228,17 @@ Else;
             sDim = Trim( SubSt( sDims, 1, nDimDelimiterIndex - 1 ) );
             sDims = Trim( Subst( sDims, nDimDelimiterIndex + Long(pDelim), Long( sDims ) ) );
         EndIf;
-        
+
         # Create subset of dimensions using Wildcard to loop through dimensions in pDim with wildcard
         sDimExp = '"'|sDim|'"';
         sMdxPart = Expand('{TM1FILTERBYPATTERN( EXCEPT( TM1SUBSETALL( [}Dimensions].[}Dimensions] ), TM1FILTERBYPATTERN( TM1SUBSETALL( [}Dimensions].[}Dimensions] ) , "*:*") ) , %sDimExp% )}');
-        If( sMdx @= ''); 
-            sMdx = sMdxPart; 
+        If( sMdx @= '');
+            sMdx = sMdxPart;
         Else;
             sMdx = sMdx | ' + ' | sMdxPart;
         EndIf;
     End;
-  
+
     If( SubsetExists( '}Dimensions' , cTempSubOuter ) = 1 );
         # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
         SubsetMDXSet( '}Dimensions' , cTempSubOuter, sMDX );
@@ -322,7 +246,7 @@ Else;
         # temp subset, therefore no need to destroy in epilog
         SubsetCreatebyMDX( cTempSubOuter, sMDX, '}Dimensions' , 1 );
     EndIf;
-  
+
     # Loop through dimensions in subset created based on wildcard
     nCountDim = SubsetGetSize( '}Dimensions' , cTempSubOuter );
     While( nCountDim >= 1 );
@@ -355,7 +279,7 @@ Else;
                     sHierarchy   = Trim( SubSt( sHierarchies, 1, nDelimiterIndexA - 1 ) );
                     sHierarchies  = Trim( Subst( sHierarchies, nDelimiterIndexA + Long(pDelim), Long( sHierarchies ) ) );
                 EndIf;
-      
+
                 # Create subset of Hierarchies using Wildcard
                 If( sDim @= sHierarchy );
                     sHierExp = '"'| sDim |'"';
@@ -363,18 +287,18 @@ Else;
                     sHierExp = '"'| sDim | ':' | sHierarchy|'"';
                 EndIf;
                     sMdxHierPart = Expand('{TM1FILTERBYPATTERN( {TM1SUBSETALL([%sHierDim%].[%sHierDim%])}, %sHierExp% )}');
-                If( sMdxHier @= ''); 
-                    sMdxHier = sMdxHierPart; 
+                If( sMdxHier @= '');
+                    sMdxHier = sMdxHierPart;
                 Else;
                     sMdxHier = sMdxHier | ' + ' | sMdxHierPart;
                 EndIf;
             End;
-          
+
             # include the named hierarchy in case ALL hierachies
             If( Trim(pHier) @= '*' );
                 sMdxHier = Expand('{[%sHierDim%].[%sHierDim%].[%sDim%]} + %sMdxHier%');
             EndIf;
-  
+
             If( SubsetExists( sHierDim, cTempSubInner ) = 1 );
                 # If a delimited list of hierarchy names includes wildcards then we may have to re-use the subset multiple times
                 SubsetMDXSet( sHierDim, cTempSubInner, sMdxHier );
@@ -432,11 +356,11 @@ Else;
                                 sEle = Trim( SubSt( sEles, 1, nDelimiterIndexB - 1 ) );
                                 sEles = Trim( Subst( sEles, nDelimiterIndexB + Long(pDelim), Long( sEles ) ) );
                             EndIf;
-                        
+
                             # Wildcard search string
                             sEle = '"'|sEle|'"';
                             sMdxEle = Expand('{TM1FILTERBYPATTERN( {TM1SUBSETALL([%sCurrHier%])}, %sEle% )}');
-      
+
                             If( HierarchySubsetExists( sDim, sCurrHierName, cTempSub ) = 1 );
                                 # If a delimited list of dim names includes wildcards then we may have to re-use the subset multiple times
                                 HierarchySubsetMDXSet( sDim, sCurrHierName, cTempSub, sMDXEle );
@@ -444,7 +368,7 @@ Else;
                                 # temp subset, therefore no need to destroy in epilog
                                 SubsetCreatebyMDX( cTempSub, sMDXEle, sCurrHier, 1 );
                             EndIf;
-      
+
                             # Loop through subset of Consolidated elements created based on wildcard
                             nCountElems = HierarchySubsetGetSize(sDim, sCurrHierName, cTempSub);
                             While( nCountElems >= 1 );
@@ -461,18 +385,18 @@ Else;
                                         'pDelim', pDelim
                                     );
                                 EndIf;
-                                
+
                                 nCountElems = nCountElems - 1;
                             End;
                         End;
                     EndIf;
                 Endif;
-            
+
                 nCountHier = nCountHier - 1;
             End;
-              
+
         EndIf;
-      
+
         nCountDim = nCountDim - 1;
     End;
 EndIf;
@@ -483,14 +407,14 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-################################################################################################# 
+#################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-################################################################################################# 
+#################################################################################################
 
 ### Check for errors in prolog ###
 If( nErrors <> 0 );
-  If( pStrictErrorHandling = 1 ); 
-      ProcessQuit; 
+  If( pStrictErrorHandling = 1 );
+      ProcessQuit;
   Else;
       ProcessBreak;
   EndIf;
@@ -500,7 +424,7 @@ EndIf;
 If( ElementComponentCount( pDim, pHier, vElement ) = 0 );
     ItemSkip;
 EndIf;
-    
+
 ### Break all parent/child links below target consol ###
 If( pConsol @= '*' );
     sAttrVal = cAttrVal;
@@ -522,7 +446,7 @@ If( sAttrVal @= cAttrVal );
         EndIf;
         nPar = nPar + 1;
     End;
-        
+
     If( bFastUnwind = 1 );
         # delete and recreate C element (Fast)
         sEleNext = ElementName( pDim, pHier, ElementIndex( pDim, pHier, vElement ) + 1 );
@@ -537,7 +461,7 @@ If( sAttrVal @= cAttrVal );
             nComp = nComp - 1;
         End;
     EndIf;
-    
+
 EndIf;
 
 ### End Metadata ###
@@ -551,9 +475,9 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-################################################################################################# 
+#################################################################################################
 ##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##
-################################################################################################# 
+#################################################################################################
 
 ### Return code & final error message handling
 If( nErrors > 0 );
@@ -572,9 +496,6 @@ EndIf;
 ### Reset Logging in the Attribute cube
 IF( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( '*', pHier ) = 0 & Scan( '?', pHier ) = 0 & Scan( pDelim, pHier ) = 0 & Scan( '*', pConsol ) = 0 & Scan( '?', pConsol ) = 0 & Scan( pDelim, pConsol ) = 0 );
     If( CubeExists( sAttrCube ) = 1 );
-        If( nLogging = 1 );
-            CubeSetLogChanges( sAttrCube, 1 );
-        EndIf;
     EndIf;
 EndIf;
 
@@ -584,15 +505,15 @@ If( nErrors > 0 );
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
-    If( pStrictErrorHandling = 1 ); 
-        ProcessQuit; 
+    If( pStrictErrorHandling = 1 );
+        ProcessQuit;
     EndIf;
 Else;
     sProcessAction = Expand( 'Process:%cThisProcName% successfully unwound the appropriate consolidated items the %pDim%:%pHier% dimension:hierarchy.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( sProcessAction ) );   
+        LogOutput('INFO', Expand( sProcessAction ) );
     EndIf;
 EndIf;
 

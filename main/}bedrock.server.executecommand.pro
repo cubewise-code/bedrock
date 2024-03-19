@@ -44,7 +44,7 @@ pCommand,""
 pWait,0
 pPowerShell,0
 637,5
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCommand,"The full command line string to execute"
 pWait,"Wait for command to finish 0=false 1=true"

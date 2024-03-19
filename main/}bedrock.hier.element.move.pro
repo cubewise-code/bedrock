@@ -58,7 +58,7 @@ pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error
 pDim,"REQUIRED: Dimension Name"
 pHier,"OPTIONAL: Hierarchy Name"
 pEle,"REQUIRED: Element Name"
-pTgtConsol,"REQUIRED: Target Consolidation"
+pTgtConsol,"REQUIRED: Target consolidated element name"
 pMode,"REQUIRED: Add or Remove Element from Hierarchy"
 pWeight,"OPTIONAL: Element Weight (for Add only)"
 577,0

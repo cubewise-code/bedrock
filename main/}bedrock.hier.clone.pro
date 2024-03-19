@@ -60,7 +60,7 @@ pSrcHier,"REQUIRED: Source Hierarchy"
 pTgtDim,"REQUIRED: Target Dimension (can be the same as source)"
 pTgtHier,"OPTIONAL: Target Hierarchy (will default to SrcHier_Clone if the dimensions are the same)"
 pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True)"
-pUnwind,"REQUIRED:  Unwind? (0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements (Only relevant if target hierarchy exists) )"
+pUnwind,"REQUIRED: Unwind? (0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements (Only relevant if target hierarchy exists) )"
 577,1
 vEle
 578,1

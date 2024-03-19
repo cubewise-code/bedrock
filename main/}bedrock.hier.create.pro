@@ -48,7 +48,7 @@ pLogOutput,"OPTIONAL: Write parameters and action summary to server message log 
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: Dimension, accepts wildcards (if = *, then all the dimensions)"
 pHier,"OPTIONAL: Hierarchy, accepts delimited list"
-pDelim,"OPTIONAL: delimiter character for element list. (default value if blank = '&')"
+pDelim,"OPTIONAL: Delimiter character for element list. (default value if blank = '&')"
 577,0
 578,0
 579,0

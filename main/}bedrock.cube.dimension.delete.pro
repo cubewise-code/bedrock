@@ -53,7 +53,7 @@ pIncludeRules,2
 pCtrlObj,0
 pTemp,1
 637,8
-pLogOutput,"REQUIRED: Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
 pDim,"REQUIRED: Dimension to be deleted"

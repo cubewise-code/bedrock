@@ -48,7 +48,7 @@ pLogOutput,"OPTIONAL: Write parameters and action summary to server message log 
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: List of Cubes Separated by Delimiter (For all cubes just the wildcard character alone i.e. *)"
 pView,"REQUIRED: List of Views Separated by Delimiter. Wildcards Permitted on View Names."
-pDelim,"OPTIONAL: Delimiter Character  (default value if blank = '&')"
+pDelim,"OPTIONAL: Delimiter character (default value if blank = '&')"
 577,0
 578,0
 579,0

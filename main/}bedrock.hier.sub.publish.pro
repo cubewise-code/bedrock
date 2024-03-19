@@ -50,8 +50,8 @@ pOverwrite,0
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pDim,"REQUIRED: dimension name (if a dim:hier tuple is supplied then the hierarchy parameter will be ignored)"
-pHier,"OPTIONAL: hierarchy name (if blank assume same named hierarchy. delimited dim:hier can also be passed in the dimension parameter)"
-pSub,"REQUIRED: private subset name"
+pHier,"OPTIONAL: Hierarchy name (if blank assume same named hierarchy. delimited dim:hier can also be passed in the dimension parameter)"
+pSub,"REQUIRED: Private subset name"
 pOverwrite,"OPTIONAL: Overwrite Existing public subset with same name? (Boolean 1=Yes)"
 577,0
 578,0

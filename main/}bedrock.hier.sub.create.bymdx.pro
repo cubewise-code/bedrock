@@ -56,15 +56,15 @@ pConvertToStatic,1
 pTemp,1
 pAlias,""
 637,9
-pLogOutput,"Optional: write parameters and action summary to server message log (Boolean True = 1)"
+pLogOutput,"OPTIONAL: write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
-pDim,"Required: Dimension name"
-pHier,"Optional: Hierarchy name (default if blank = same named hierarchy)"
-pSub,"Required: Subset name"
-pMDXExpr,"Required: Valid MDX Expression for Specified Dimension"
-pConvertToStatic,"Optional: Bolean: 1 = True (convert to static subset)"
-pTemp,"Optional: Use temporary objects? (Boolean 1=True)"
-pAlias,"Optional: Set Alias for Subset"
+pDim,"REQUIRED: Dimension name"
+pHier,"OPTIONAL: Hierarchy name (default if blank = same named hierarchy)"
+pSub,"REQUIRED: Subset name"
+pMDXExpr,"REQUIRED: Valid MDX Expression for Specified Dimension"
+pConvertToStatic,"OPTIONAL: Boolean: 1 = True (convert to static subset)"
+pTemp,"OPTIONAL: Use temporary objects? (Boolean 1=True)"
+pAlias,"OPTIONAL: Set Alias for Subset"
 577,0
 578,0
 579,0

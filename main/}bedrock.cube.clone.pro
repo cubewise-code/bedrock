@@ -75,12 +75,12 @@ pTgtCube,"OPTIONAL: Target Cube to create/re-create (Source cube_clone if left b
 pIncludeRules,"REQUIRED: Include cube rules? (Boolean Yes = 1)"
 pIncludeData,"REQUIRED: Include cube data? (Boolean Yes = 1)"
 pFilter,"OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube"
-pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')"
-pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
+pDimDelim,"OPTIONAL: Delimiter for start of dimensions (default value if blank = '&')"
+pEleStartDelim,"OPTIONAL: Delimiter for start of element list (default value if blank = '¦')"
 pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
 pSuppressRules,"REQUIRED: Skip rule values? (1=skip)"
 pTemp,"REQUIRED: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )"
-pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
+pCubeLogging,"REQUIRED: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 577,28
 v1
 v2
