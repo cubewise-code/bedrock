@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"t0>iy1P8vQ6Qd88CdnHMa>N]gni0ZD=qkH0]vgtJSV`@hgzXK1Z`pwTszqXqjH6VD^cr[__rc2<OErRxC[FYFTdq\YJS[@_FtDA<`>s[<pREf>^9za_MLyiwjz?BryR=nQCtyANh1H:[LJh;jUeOXutvBg>8qDaEgkSAC;SZNxr0zPt\PJUP4@l:M:M<NRZMjwF==K4v"
+565,"dR9EasiRdMAe1MsPckbqP]CP9sSA_sm1QdBvDlwbfM5f@d2\XeGaf2Nd=C>eL?^5<hkwzGFQVS8A4gVM>]<Ov3nAjZc0]y0iB@IiFb5X@`k;y9wOc]\U3C0cnQ>LdNbAWFuGqLB4^lk6T_Y@hhqseCe^CeOyk67J:rH6EH>w5o^GJ_FrGwkTdKX44H?4QGgngo_1qhnD"
 559,1
 928,0
 593,
@@ -767,7 +767,7 @@ If( 1 = 0 );
     	'pZeroSource', 0, 'pCubeLogging', 0, 'pTemp', 1,
     	'pFilePath', '', 'pFileName', '',
     	'pDelim', ',','pDecimalSeparator','.','pThousandSeparator',',',
-      'pQuote', '"', 'pTitleRecord', 1, 'pSandbox', pSandbox, 'pSubN', pSubN
+      'pQuote', '"', 'pTitleRecord', 1, 'pSandbox', pSandbox, 'pSubN', pSubN, 'pCubeNameExport', pCubeNameExport
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -1108,7 +1108,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
         	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
         	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
         	'pDelim', pFieldDelim, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
-          'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
+          'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pCubeNameExport', pCubeNameExport
         );
     	  nThreadElCounter = 0;
     	  sFilter = '';
@@ -1126,7 +1126,7 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     	'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,
     	'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,
     	'pDelim', pFieldDelim, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
-      'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings
+      'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pCubeNameExport', pCubeNameExport
     );
   ENDIF;
   DataSourceType = 'NULL';
@@ -1242,13 +1242,10 @@ Else;
 EndIf;
 
 ### End Prolog ###
-573,4
-
+573,2
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
-574,50
-
+574,49
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -1298,8 +1295,7 @@ ENDIF;
 TextOutput( cExportFile, Expand(sRow) );
 
 ### End Data ###
-575,43
-
+575,42
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -1374,7 +1370,7 @@ EndIf ;
 917,0
 918,1
 919,0
-920,50000
+920,0
 921,""
 922,""
 923,0
