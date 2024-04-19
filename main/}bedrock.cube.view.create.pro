@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"sboQr?V0M]Y7G;3H6mRaNI0LXAnSGJXIsHXxUJ]055OaeCMIxUbD7EZbZn:?s;Qk9;`@eHAq\xnUOibWWOyL][8cffmf_bQoMuIBsCd=52Bzyo2?syoytjViHC=L`\2en\L05lPb1@7@>5<]zLN;upadni>:Ifg<iPxo?V?o>nUVRt7lSaAQ8qzBePFzNNeOyFXJKbJ:"
+565,"jwKE7Ws86Ia\@zwiIdTCpAXNUBcijIBr1`r>CyLX6uRI;8gq@o3A]T1DjaICzuOuBqycUglRnWhF]XiUZR;FT:a\M5dGVd09Ppm_v;upr;[b7aRLWNpU5^Xpl_?=i<^paZDbpdz;gCf1bT2KWur<3Dy;EcVH2HD25L9QaR\1KSE;`PO3hr\na:oEe=:X5[SvKJYe=pA0"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,15
+560,16
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -35,13 +35,14 @@ pSuppressZero
 pSuppressConsol
 pSuppressRules
 pSuppressConsolStrings
+pIncludeDescendants
 pDimDelim
 pEleStartDelim
 pEleDelim
 pTemp
 pSandBox
 pSubN
-561,15
+561,16
 1
 1
 2
@@ -51,13 +52,14 @@ pSubN
 1
 1
 1
+1
 2
 2
 2
 1
 2
 1
-590,15
+590,16
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -67,13 +69,14 @@ pSuppressZero,1
 pSuppressConsol,1
 pSuppressRules,1
 pSuppressConsolStrings,-1
+pIncludeDescendants,0
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 pTemp,1
 pSandBox,""
 pSubN,0
-637,15
+637,16
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube Name"
@@ -83,6 +86,7 @@ pSuppressZero,"REQUIRED: Suppress Zero Data (Skip = 1)"
 pSuppressConsol,"REQUIRED: Suppress Consolidations (Skip = 1)"
 pSuppressRules,"REQUIRED: Suppress Rules (Skip = 1)"
 pSuppressConsolStrings,"REQUIRED: Suppress Strings on Consolidations (Skip = 1, Include = 0) (Default [Skip] = -1 for backward compatibility)"
+pIncludeDescendants,"OPTIONAL: Include all descendants when copying consolidated values"
 pDimDelim,"REQUIRED: Delimiter for start of Dimension/Element set"
 pEleStartDelim,"REQUIRED: Delimiter for start of element list"
 pEleDelim,"REQUIRED: Delimiter between elements"
@@ -103,7 +107,7 @@ If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.view.create', 'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
     	'pCube', '', 'pView', '', 'pFilter', '',
-    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1, 'pIncludeDescendants',0,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
     	'pTemp', 1,'pSandbox', pSandbox,'pSubN', 0
     );
@@ -156,7 +160,7 @@ cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
 cMsgInfoLevel     =  'INFO';
 cMsgInfoContent   = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%.' ;  
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pTemp:%pTemp%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%  pIncludeDescendants %pIncludeDescendants%.' ;  
 
 
 sSubset           = pView;
@@ -445,7 +449,7 @@ WHILE (nChar <= nCharCount);
           
           sElement = DimensionElementPrincipalName(sDimension,sElement);
 
-          If ( pSuppressConsol = 1 & DTYPE( sDimension, sElement) @= 'C'  );
+          If ( (pSuppressConsol = 1 % pIncludeDescendants=1) & DTYPE( sDimension, sElement) @= 'C'  );
               # Add all N level elements to the subset
               # Loop through all elements and check if it is an ancestor
               sMessage = 'Element ' | sElement | ' is consolidated' ;
@@ -603,7 +607,7 @@ Else;
 EndIf;
   
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0
+576,CubeAction=1511DataAction=1503CubeLogChanges=0_ParameterConstraints=e30=
 930,0
 638,1
 804,0
