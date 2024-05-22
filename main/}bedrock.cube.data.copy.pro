@@ -4,7 +4,7 @@
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"ufv\E]Lwc4ImdBqI=a@JCyACmL;09U8=qn9p7DugHBov9fi7HUYPJn^b45Fa;MI[AaF2AGR92gjqkqC_[mZ4dtdeKr{J1V55;2H6}A=WGsRWzYwWHkV][YHE=v91D=En2L;X7A[d;4svFq=^D?n8}\2Yf4d<enAt@D4hqdhXGNR7FjM]<Vn_\G]z<hJ=hPe2KW=vMF6"
+565,"ss[X>tC6YR?4vgEg9HKyuDGD?d`LE:`4QBHm=7zhXDdori9C[BwS=>1f7=FQ?qEK4ia<azGHmtiqipcz<;d4Y0\FdNqj_LizPyp>]IKMD:?7A]}WxsWS90<fj=]CK}<gwNk_gvsE@fJpF4k\tvK8Mm7^>W2Qf01sdp>XrHgx\0?3EZ3Q9LImI@=P0s=jKz0dRfIUe[VK"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,33
+560,34
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -44,6 +44,7 @@ pSuppressConsol
 pSuppressConsolStrings
 pSuppressRules
 pSuppressZero
+pIncludeDescendants
 pCumulate
 pZeroTarget
 pZeroSource
@@ -59,7 +60,7 @@ pSubN
 pThreadMode
 pThreadControlFile
 pMaxWaitSeconds
-561,33
+561,34
 1
 1
 2
@@ -83,17 +84,18 @@ pMaxWaitSeconds
 1
 1
 1
-2
-1
-2
-2
-2
-2
-1
 1
 2
 1
-590,33
+2
+2
+2
+2
+1
+1
+2
+1
+590,34
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -112,6 +114,7 @@ pSuppressConsol,1
 pSuppressConsolStrings,0
 pSuppressRules,1
 pSuppressZero,1
+pIncludeDescendants,0
 pCumulate,0
 pZeroTarget,1
 pZeroSource,0
@@ -127,7 +130,7 @@ pSubN,0
 pThreadMode,0
 pThreadControlFile,""
 pMaxWaitSeconds,1800
-637,33
+637,34
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
@@ -146,6 +149,7 @@ pSuppressConsol,"OPTIONAL: Suppress Consolidated Cells (Skip = 1)"
 pSuppressConsolStrings,"OPTIONAL: Suppress Consolidated String Cells (Skip = 1)"
 pSuppressRules,"OPTIONAL: Suppress Rules (Skip = 1)"
 pSuppressZero,"OPTIONAL: Suppress Null Cells (Skip = 1)"
+pIncludeDescendants,"OPTIONAL: Include all descendants when copying consolidated values"
 pCumulate,"OPTIONAL: 1 = Add source to existing value in target (if zero out target = 0 False). 0 = Replace target with source."
 pZeroTarget,"OPTIONAL: Zero out Target Element PRIOR to Copy? (Boolean 1=True)"
 pZeroSource,"OPTIONAL: Zero out Source Element AFTER Copy? (Boolean 1=True)"
@@ -474,7 +478,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1030
+572,1032
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -484,7 +488,7 @@ If( 1 = 0 );
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pEleMapping', '', 'pMappingDelim', '->',
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pCumulate', 0,
+    	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pIncludeDescendants',0, 'pCumulate', 0,
     	'pZeroTarget', 1, 'pZeroSource', 0,
     	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 
     	'pFile', 0, 'pDelim', ',', 'pQuote', '"', 'pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
@@ -541,7 +545,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero% pIncludeDescendants %pIncludeDescendants% pCumulate:%pCumulate%  pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';
 cDefaultView    = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 
 ## LogOutput parameters
@@ -1414,6 +1418,7 @@ Else;
       'pSuppressConsol', nSuppressConsol,
       'pSuppressRules', pSuppressRules,
       'pSuppressConsolStrings', pSuppressConsolStrings,
+      'pIncludeDescendants',pIncludeDescendants,
       'pDimDelim', pDimDelim,
       'pEleStartDelim', pEleStartDelim,
       'pEleDelim', pEleDelim ,
@@ -1457,6 +1462,7 @@ Else;
        'pSuppressConsol', nSuppressConsol,
        'pSuppressRules', pSuppressRules,
        'pSuppressConsolStrings', pSuppressConsolStrings,
+       'pIncludeDescendants',pIncludeDescendants,
        'pZeroSource', 0,
        'pCubeLogging', pCubeLogging,
        'pTemp', pTemp,

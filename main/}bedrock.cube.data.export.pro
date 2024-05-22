@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"dR9EasiRdMAe1MsPckbqP]CP9sSA_sm1QdBvDlwbfM5f@d2\XeGaf2Nd=C>eL?^5<hkwzGFQVS8A4gVM>]<Ov3nAjZc0]y0iB@IiFb5X@`k;y9wOc]\U3C0cnQ>LdNbAWFuGqLB4^lk6T_Y@hhqseCe^CeOyk67J:rH6EH>w5o^GJ_FrGwkTdKX44H?4QGgngo_1qhnD"
+565,"k6LX;[ANEe8aDicM8WIF0F@ZtUyRN48\uJO7X@zymRj3eF`F@LmRQ6RFQUYnXs5M=N5?7EaRm:F]aBzcapy]Vef7g@K9yqW8[Gn3ycAKjzXRr:6yeudy]FrR?11?xC7uBh9O_gLz@xz1:t<eBbFhKu>=Hs_AO=krHKq6@O]j_0Sc9<RT\O6uJQcy[K:SFNBt4aY?[3Iv"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,28
+560,29
 pLogoutput
 pStrictErrorHandling
 pCube
@@ -40,6 +40,7 @@ pSuppressZero
 pSuppressConsol
 pSuppressRules
 pSuppressConsolStrings
+pIncludeDescendants
 pZeroSource
 pCubeLogging
 pTemp
@@ -54,7 +55,7 @@ pSandbox
 pSubN
 pCharacterSet
 pCubeNameExport
-561,28
+561,29
 1
 1
 2
@@ -72,6 +73,7 @@ pCubeNameExport
 1
 1
 1
+1
 2
 2
 2
@@ -83,7 +85,7 @@ pCubeNameExport
 1
 2
 1
-590,28
+590,29
 pLogoutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -98,6 +100,7 @@ pSuppressZero,1
 pSuppressConsol,1
 pSuppressRules,1
 pSuppressConsolStrings,0
+pIncludeDescendants,0
 pZeroSource,0
 pCubeLogging,0
 pTemp,1
@@ -112,7 +115,7 @@ pSandbox,""
 pSubN,0
 pCharacterSet,""
 pCubeNameExport,1
-637,28
+637,29
 pLogoutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube name"
@@ -127,6 +130,7 @@ pSuppressZero,"OPTIONAL: Suppress Zero Values (1=Suppress)"
 pSuppressConsol,"OPTIONAL: Suppress Consolidated Values? (1=Suppress)"
 pSuppressRules,"OPTIONAL: Suppress Rule Values? (1=Suppress)"
 pSuppressConsolStrings,"OPTIONAL: Suppress Strings on Consolidations (Skip = 1) (Default = 0)"
+pIncludeDescendants,""
 pZeroSource,"OPTIONAL: Zero Out view AFTER Copy? (Boolean 1=True)"
 pCubeLogging,"Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)"
 pTemp,"OPTIONAL: Retain temporary view and Subset ( 0 = retain View and Subsets 1 = use temp objects)"
@@ -754,7 +758,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,487
+572,488
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -763,7 +767,7 @@ If( 1 = 0 );
     	'pCube', '', 'pView', '', 'pFilter', '',
     	'pFilterParallel', '', 'pParallelThreads', 0,
     	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1,
+    	'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1, 'pIncludeDescendants',0,
     	'pZeroSource', 0, 'pCubeLogging', 0, 'pTemp', 1,
     	'pFilePath', '', 'pFileName', '',
     	'pDelim', ',','pDecimalSeparator','.','pThousandSeparator',',',
@@ -818,7 +822,7 @@ cTimeStamp        = TimSt( Now, '\Y\m\d\h\i\s' );
 cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%.';
+cLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%  pIncludeDescendants %pIncludeDescendants%.';
 cDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 cLenASCIICode     = 3;
 
@@ -1191,6 +1195,7 @@ Else;
           'pSuppressConsol', pSuppressConsol,
           'pSuppressRules', pSuppressRules,
           'pSuppressConsolStrings', pSuppressConsolStrings,
+          'pIncludeDescendants',pIncludeDescendants,
           'pDimDelim', pDimDelim,
           'pEleStartDelim', pEleStartDelim,
           'pEleDelim', pEleDelim,
@@ -1338,7 +1343,7 @@ Else;
 EndIf ;
 
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0
+576,CubeAction=1511DataAction=1503CubeLogChanges=0_ParameterConstraints=e30=
 930,0
 638,1
 804,0
