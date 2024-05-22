@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"aaHPtYhlk9Sd5wlRBCVDXwrK9]Veezm^H5ZNn^]wfvA@g3W0j`0FL_KNx?GRfeXK^>N?4ZaTzCKH>uoHpFSSVvN\0d=xAkR0T@C3kcw3adtCcSPMn:[Nh1Ln5Ccf2^qT?xawvaRp:^o\hi==Bo:WOvXDJmuxY5OlOSD_Y6z]=1=Joltrmv8:;:@rDD0qF@y33e;PjYfl"
+565,"rM?J<PxL=@M@\AyzAGa3PuAdle81ocF`sIla@mK@`b2yYqngcViwb`vOWmY^p[AN04XHqSmUl4[:IB3h>;fM[;3d`o8VarSJ0aYVur7aaDjD8eIObjO2_PL<9uxd[[DZM??xv::<oZM3\arm5a]t@cqOon8>pVWg=qv:f2XV<dEUKJQ5NtpXU73EQPp4KnRt5Y_@qhUw"
 559,1
 928,0
 593,
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,7
+560,9
 pLogOutput
 pStrictErrorHandling
 pMonthDays
@@ -33,7 +33,9 @@ pWeekDays
 pDelim
 pStartTime
 pEndTime
-561,7
+pScheduleTimezone
+pServerTimezone
+561,9
 1
 1
 2
@@ -41,7 +43,9 @@ pEndTime
 2
 1
 1
-590,7
+2
+2
+590,9
 pLogOutput,0
 pStrictErrorHandling,0
 pMonthDays,""
@@ -49,7 +53,9 @@ pWeekDays,""
 pDelim,"&"
 pStartTime,0
 pEndTime,24
-637,7
+pScheduleTimezone,""
+pServerTimezone,""
+637,9
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pMonthDays,"OPTIONAL: Delimited string of days in month as dd e.g. 01 & 02 & 30 & 31 (Blank=All)"
@@ -57,6 +63,8 @@ pWeekDays,"OPTIONAL: Delimited string of days in week as ddd e.g. MON & WED (Bla
 pDelim,"OPTIONAL: String array delimiter. Only 1 character allowed (Blank=&)"
 pStartTime,"OPTIONAL: Time to start running chore from in 24 hr time (at start of hour) (Blank=0)"
 pEndTime,"OPTIONAL: Time to finish chore being able to start in 24 hr time (Blank=24)"
+pScheduleTimezone,"OPTIONAL: Timezone to check the days / hours in if it is different from server timezone"
+pServerTimezone,"OPTIONAL: Timezone for server if ScheduleTimezone is different"
 577,0
 578,0
 579,0
@@ -64,7 +72,7 @@ pEndTime,"OPTIONAL: Time to finish chore being able to start in 24 hr time (Blan
 581,0
 582,0
 603,0
-572,197
+572,229
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -73,7 +81,9 @@ If( 1 = 0 );
         'pMonthDays', '', 
         'pWeekDays', '',
         'pDelim', '&',
-        'pStartTime', 0, 'pEndTime', 24
+        'pStartTime', 0, 'pEndTime', 24,
+        'pScheduleTimezone','en-AU',
+        'pServerTimezone','etc/UTC'
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -93,6 +103,10 @@ EndIf;
 
 # Alternative setup: instead of adding this TI as the 1st TI in the chore, you could also use ExecuteProcess to call it, 
 # from the top of the Prolog of your first TI process. This is definitely easier than hardcoding process call parameters in the chore dialog.
+
+# Timezones:
+# pScheduleTimezone parameter allow specifying the timezone to perform checks in if server timezone is different to schedule one. E.g. PA server is running in UTC and time or days of week are to be checked in AEST. Full list of timezones https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+# pServerTimezone allows to cater for situations when PA server is running in local time in yet another timezone, e.g. you want to check chore schedule in timezone Europe/Munich for server running in Asia/Singapore
 
 # Use case: For productive systems.
 # 1. A chore should run every 30 minutes between 8am & 8pm on weekdays. Schedule chore for every 30 minutes and include this process 1st in chore with parameters pWeekDays=MON&TUE&WED&THU&FRI pStartTime=8 pEndTime=20.
@@ -123,7 +137,7 @@ cStartTime      = NumberToString( pStartTime );
 cEndTime        = NumberToString( pEndTime );
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% Message: %sMsg%';
-cLogInfo        = 'User:%cUserName% Process:%cThisProcName% run to check if chore should run with parameters pMonthDays:%pMonthDays%, pWeekDays:%pWeekDays%, pDelim:%pDelim%, pStartTime:%cStartTime%, pEndTime:%cEndTime%.' ; 
+cLogInfo        = 'User:%cUserName% Process:%cThisProcName% run to check if chore should run with parameters pMonthDays:%pMonthDays%, pWeekDays:%pWeekDays%, pDelim:%pDelim%, pStartTime:%cStartTime%, pEndTime:%cEndTime%, pScheduleTimezone: %pScheduleTimezone% pServerTimezone: %pServerTimezone%.' ; 
 nErrors         = 0;
 sMsg            = '';
 
@@ -186,10 +200,24 @@ If( DIMIX( '}Clients', cUserName ) > 0 );
         LogOutput( 'INFO', Expand( cMsgErrorContent ) );
     EndIf;
 Else;
-    
+    if (pScheduleTimezone@<>'');
+        #initate the date format for conversion
+        pServerTimezone = if (pServerTimezone@='','etc/UTC',pServerTimezone);
+        # need to convert to UTC first and then restate in required timezones
+        nUTCDateFormatter = NewDateFormatter('', 'etc/UTC', 'serial', 'full', 'datetime');
+        nScheduleDateFormatter = NewDateFormatter('', pScheduleTimezone, 'serial', 'full', 'datetime');
+        nServerDateFormatter = NewDateFormatter('', pServerTimezone, 'serial', 'full', 'datetime');
+        sDateFormat = 'yyyy-MM-dd HH:mm:ss';
+        sUTCTimeStamp = FormatDate(Now, sDateFormat, nUTCDateFormatter);
+        nServerParsedDate = ParseDate( sUTCTimeStamp, sDateFormat, nServerDateFormatter );
+    endif;
     ### Check the day of the month
     If( pMonthDays @<> '' );
-        sDayInMonth = TimSt(Now, '\d');
+        if (pScheduleTimezone @= '');
+            sDayInMonth = TimSt(Now, '\d');
+        else;
+            sDayInMonth = FormatDate(nServerParsedDate, 'd', nScheduleDateFormatter);
+        endif;
         If( Scan( sDayInMonth | pDelim, pMonthDays ) = 0 & Scan( sDayInMonth |' '| pDelim, pMonthDays ) = 0 );
             # could not find the day in the list of acceptable days
             bQuit = 1;
@@ -203,24 +231,28 @@ Else;
 
     ### Check the day of the week
     If( pWeekDays @<> '' );
-        # support for UseExcelSerialDate=T in TM1s.cfg
-        nDayIndex = Mod( DayNo( Today ) + Dayno( '1960-01-01' ) / 21916 - 2, 7 );
-        sWeekday = '';
-        If( nDayIndex = 0 );
-            sWeekday = 'SUN';
-        ElseIf( nDayIndex = 1 );
-            sWeekday = 'MON';
-        ElseIf( nDayIndex = 2 );
-            sWeekday = 'TUE';
-        ElseIf( nDayIndex = 3 );
-            sWeekday = 'WED';
-        ElseIf( nDayIndex = 4 );
-            sWeekday = 'THU';
-        ElseIf( nDayIndex = 5 );
-            sWeekday = 'FRI';
-        ElseIf( nDayIndex = 6 );
-            sWeekday = 'SAT';
-        EndIf;
+        if (pScheduleTimezone @= '');
+            # support for UseExcelSerialDate=T in TM1s.cfg
+            nDayIndex = Mod( DayNo( Today ) + Dayno( '1960-01-01' ) / 21916 - 2, 7 );
+            sWeekday = '';
+            If( nDayIndex = 0 );
+                sWeekday = 'SUN';
+            ElseIf( nDayIndex = 1 );
+                sWeekday = 'MON';
+            ElseIf( nDayIndex = 2 );
+                sWeekday = 'TUE';
+            ElseIf( nDayIndex = 3 );
+                sWeekday = 'WED';
+            ElseIf( nDayIndex = 4 );
+                sWeekday = 'THU';
+            ElseIf( nDayIndex = 5 );
+                sWeekday = 'FRI';
+            ElseIf( nDayIndex = 6 );
+                sWeekday = 'SAT';
+            EndIf;
+        else;
+            sWeekday =  Upper (FormatDate(nServerParsedDate,  'eee', nScheduleDateFormatter));
+        endif;
         If( Scan( sWeekday | pDelim, pWeekDays ) = 0 & Scan( sWeekday |' '| pDelim, pWeekDays ) = 0 );
             # could not find the day in the list of acceptable days
             bQuit = 1;
@@ -235,7 +267,11 @@ Else;
     EndIf;
     
     ### Check the time of day
-    sMinute = TimSt(Now, '\h:\i');
+    if (pScheduleTimezone @= '');
+        sMinute = TimSt(Now, '\h:\i');       
+    else;
+        sMinute = FormatDate(nServerParsedDate,  'HH:mm', nScheduleDateFormatter);
+    endif;
     vTimeNow = StringToNumber(SubSt(sMinute, 1, 2));
     If( pStartTime = 0 & pEndTime = 24 );
         # no time exclusion parameters are set
@@ -266,8 +302,6 @@ Else;
     nProcessReturnCode  = 1;
     If( pLogOutput = 1 ); LogOutput('INFO', Expand( sProcessAction ) );  EndIf;
 EndIf;
-
-
 573,3
 
 #****Begin: Generated Statements***
@@ -300,7 +334,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0
+576,CubeAction=1511DataAction=1503CubeLogChanges=0_ParameterConstraints=e30=
 930,0
 638,1
 804,0
