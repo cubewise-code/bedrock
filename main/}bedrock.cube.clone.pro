@@ -4,7 +4,7 @@
 586,"Bedrock Test"
 585,"Bedrock Test"
 564,
-565,"x^Xbkd]qSGLA4Mh>uTu07_x?y4LNEzj7FhbZ33<POICe<bI>jBFIMc>J9\ugpUvVhnM~z1o]X`Hzj^iy<NqM_;6sc:B2l7]=G283MKL`e<yYUyelXGa6nX8fCB<[UrhbWweL2tAr??q]pu4oGfE<m;[260_58=UlXXc]DhqZuyiY`Dm>2vNN1H26OX97WGvTpIMc<tIP"
+565,"gItNDbny3GevgI1[@7TfSbYL5?DqyIZ>faK<S6ybGlzGjoY4[q6jLDmy0ZugHGwF;AozJSD0`TJzj\YVz4c<SBXgJmNRJfTMkWk?mcn;43l[;A`lH5fCJfQ4]R[o\Rie5eBb6SL8=6V0Iecw0@1}n3@^kM8y?`qOwk=MixZk8zdctKoIPjQwHB8SNdrmC6Z@xZrBDfN"
 559,1
 928,0
 593,
@@ -256,7 +256,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,183
+572,181
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -404,7 +404,6 @@ IF(nRet <> 0);
   EndIf;
 ENDIF;
 
-
 ### copy data ####
 If( pIncludeData = 1 );
 nRet = ExecuteProcess('}bedrock.cube.data.copy.intercube',
@@ -438,20 +437,16 @@ nRet = ExecuteProcess('}bedrock.cube.data.copy.intercube',
 
 EndIf;
 
-
 ### End Prolog ###
 573,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,7
+574,4
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-
-
-
 
 575,37
 
