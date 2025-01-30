@@ -758,7 +758,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,488
+572,489
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -814,6 +814,7 @@ EndIf;
 StringGlobalVariable('sProcessReturnCode');
 NumericGlobalVariable('nProcessReturnCode');
 StringGlobalVariable('sBedrockViewCreateParsedFilter');
+NumericGlobalVariable('nDataCount');
 
 ### Constants ###
 cThisProcName     = GetProcessName();
