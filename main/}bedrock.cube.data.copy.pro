@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.copy"
 562,"VIEW"
 586,"zzSYS 50 Dim Cube"
@@ -25,7 +25,7 @@
 569,0
 592,0
 599,1000
-560,34
+560,36
 pLogOutput
 pStrictErrorHandling
 pCube
@@ -40,6 +40,8 @@ pDimDelim
 pEleStartDelim
 pEleDelim
 pFactor
+pStringPrefix
+pStringSuffix
 pSuppressConsol
 pSuppressConsolStrings
 pSuppressRules
@@ -60,7 +62,7 @@ pSubN
 pThreadMode
 pThreadControlFile
 pMaxWaitSeconds
-561,34
+561,36
 1
 1
 2
@@ -75,6 +77,8 @@ pMaxWaitSeconds
 2
 2
 1
+2
+2
 1
 1
 1
@@ -95,7 +99,7 @@ pMaxWaitSeconds
 1
 2
 1
-590,34
+590,36
 pLogOutput,0
 pStrictErrorHandling,0
 pCube,""
@@ -110,6 +114,8 @@ pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 pFactor,1
+pStringPrefix,""
+pStringSuffix,""
 pSuppressConsol,1
 pSuppressConsolStrings,0
 pSuppressRules,1
@@ -130,7 +136,7 @@ pSubN,0
 pThreadMode,0
 pThreadControlFile,""
 pMaxWaitSeconds,1800
-637,34
+637,36
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pCube,"REQUIRED: Cube"
@@ -145,6 +151,8 @@ pDimDelim,"OPTIONAL: Delimiter for start of Dimension/Element set  (default valu
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
 pEleDelim,"OPTIONAL: Delimiter between elements (default value if blank = '+')"
 pFactor,"OPTIONAL: Multiply source value by factor (1 keeps the value as is). To modify existing values make the target element the same as the source with pZeroTarget = 0"
+pStringPrefix,"OPTIONAL: Literal text to write in front."
+pStringSuffix,"OPTIONAL: Literal text to append at the end."
 pSuppressConsol,"OPTIONAL: Suppress Consolidated Cells (Skip = 1)"
 pSuppressConsolStrings,"OPTIONAL: Suppress Consolidated String Cells (Skip = 1)"
 pSuppressRules,"OPTIONAL: Suppress Rules (Skip = 1)"
@@ -478,20 +486,20 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1032
+572,1037
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
     ExecuteProcess( '}bedrock.cube.data.copy', 'pLogOutput', pLogOutput,
       'pStrictErrorHandling', pStrictErrorHandling,
-    	'pCube', '', 'pSrcView', '', 'pTgtView', '', 'pFilter', '',
-    	'pFilterParallel', '', 'pParallelThreads', 0,
-    	'pEleMapping', '', 'pMappingDelim', '->',
-    	'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',
-    	'pFactor', 1, 'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pIncludeDescendants',0, 'pCumulate', 0,
-    	'pZeroTarget', 1, 'pZeroSource', 0,
-    	'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 
-    	'pFile', 0, 'pDelim', ',', 'pQuote', '"', 'pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
+      'pCube', '', 'pSrcView', '', 'pTgtView', '', 'pFilter', '',
+      'pFilterParallel', '', 'pParallelThreads', 0,
+      'pEleMapping', '', 'pMappingDelim', '->',
+      'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+', 'pFactor', 1, 'pStringPrefix', '', 'pStringSuffix', '',
+      'pSuppressConsol', 1, 'pSuppressConsolStrings', 0, 'pSuppressRules', 1, 'pSuppressZero', 1, 'pIncludeDescendants', 0, 
+      'pCumulate', 0, 'pZeroTarget', 1, 'pZeroSource', 0,
+      'pTemp', 1, 'pCubeLogging', 0, 'pSandbox', '', 
+      'pFile', 0, 'pDelim', ',', 'pQuote', '"', 'pDecimalSeparator', '.', 'pThousandSeparator', ',', 'pSubN', 0
     );
 EndIf;
 #EndRegion CallThisProcess
@@ -512,10 +520,11 @@ EndIf;
 # 2/ Could also be used to prepopulate a version from a prior year.
 
 # Note:
-# Naturally, a valid cube name (pCube) is required. otherwise the process will abort.
+# Naturally, a valid cube name (pCube) is required, otherwise the process will abort.
 # Element mapping (pEleMapping) is also required, otherwise the process will abort.
 # A filter parameter (pFilter) can also be used to filter dimensions that have not been mapped.
 # Source (pSrcView) & target (pTgtView) views will be assigned temporary names if left blank.
+# pCumulate supports numbers and texts.
 # All other parameters may be left as is but be sure to use them appropriately when specifying pEleMapping & pFilter parameters.
 # - Since this TI has a view as a data source, it requires the implicit variables NValue, SValue and Value_is_String.
 # - To edit this TI in Architect a tmp cube with minimum 24 dims is needed as the preview data source or set the data
@@ -545,7 +554,7 @@ cRandomInt      = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel  = 'ERROR';
 cMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';
-cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero% pIncludeDescendants %pIncludeDescendants% pCumulate:%pCumulate%  pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';
+cLogInfo        = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pSrcView:%pSrcView%, pTgtView:%pTgtView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pEleMapping:%pEleMapping%, pMappingDelim:%pMappingDelim%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pFactor:%pFactor%, pStringPrefix:%pStringPrefix%, pStringSuffix:%pStringSuffix%, pSuppressConsol:%pSuppressConsol%, pSuppressConsolStrings:%pSuppressConsolStrings%, pSuppressRules:%pSuppressRules%, pSuppressZero:%pSuppressZero% pIncludeDescendants:%pIncludeDescendants%, pCumulate:%pCumulate%, pZeroTarget:%pZeroTarget%, pZeroSource:%pZeroSource%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%, pSandbox:%pSandbox%, pFile:%pFile%.';
 cDefaultView    = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );
 
 ## LogOutput parameters
@@ -601,7 +610,7 @@ Else;
       End;
     EndIf;
     If ( nValid<>0 );
-      pDelim=CHAR(StringToNumber( pDelim ));
+      pDelim = CHAR(StringToNumber( pDelim ));
     Else;
       pDelim = SubSt( Trim( pDelim ), 1, 1 );
     EndIf;
@@ -625,7 +634,7 @@ Else;
       End;
     EndIf;
     If ( nValid<>0 );
-      pQuote=CHAR(StringToNumber( pQuote ));
+      pQuote = CHAR(StringToNumber( pQuote ));
     Else;
       pQuote = SubSt( Trim( pQuote ), 1, 1 );
     EndIf;
@@ -734,7 +743,7 @@ If ( LONG(pDecimalSeparator) = cLenASCIICode );
     EndIf;
     nChar = nChar + 1;
   End;
-  If ( nValid<>0 );
+  If ( nValid <> 0 );
     pDecimalSeparator = CHAR(StringToNumber( pDecimalSeparator ));
   Else;
     pDecimalSeparator = SubSt( Trim( pDecimalSeparator ), 1, 1 );
@@ -757,7 +766,7 @@ If ( LONG(pThousandSeparator) = cLenASCIICode );
     EndIf;
     nChar = nChar + 1;
   End;
-  If ( nValid<>0 );
+  If ( nValid <> 0 );
     pThousandSeparator = CHAR(StringToNumber( pThousandSeparator ));
   Else;
     pThousandSeparator = SubSt( Trim( pThousandSeparator ), 1, 1 );
@@ -880,9 +889,9 @@ sElementMapping     = TRIM( pEleMapping );
 sMappingDelimiter   = TRIM( pMappingDelim );
 sElementStartDelim  = TRIM( pEleStartDelim );
 sDelimDim           = TRIM( pDimDelim );
-sDecimalSeparator   = TRIM(pDecimalSeparator);
-sThousandSeparator  = TRIM(pThousandSeparator);
-sFilter             = TRIM( pFilter);
+sDecimalSeparator   = TRIM( pDecimalSeparator );
+sThousandSeparator  = TRIM( pThousandSeparator );
+sFilter             = TRIM( pFilter );
 sTargetFilter       = '';
 nSuppressConsol     = pSuppressConsol;
 nChar               = 1;
@@ -945,10 +954,10 @@ If( nCharCount > 0 );
         EndIf;
 
         # Check that the dimension is in the cube
-         i = 1;
-         iMax = 30;
-         sDimInCube = 'No';
-         While( i <= iMax );
+        i = 1;
+        iMax = 30;
+        sDimInCube = 'No';
+        While( i <= iMax );
            sDimensionOfCube = TabDim( pCube, i );
            If(sDimension @= sDimensionOfCube);
              sDimInCube = 'Yes';
@@ -1337,27 +1346,31 @@ If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
       AsciiOutput( cDir | sThreadControlFile | '.txt', '' );
       LogOutput( 'INFO', 'Executing subTI with Thread ID: ' | NumberToString(nThreadID) );
       RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
-      	'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
-      	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
-      	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-      	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-      	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
+        'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
+        'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
+        'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim, 
+        'pFactor', pFactor, 'pStringPrefix', pStringPrefix, 'pStringSuffix', pStringSuffix, 
+        'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 
+        'pCumulate', pCumulate, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 
+        'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
         'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
       );
-  	  nThreadElCounter = 0;
-  	  sFilter = '';
-  	  nThreads = nThreads + 1;
-  	ENDIF;
+      nThreadElCounter = 0;
+      sFilter = '';
+      nThreads = nThreads + 1;
+    ENDIF;
   End;
   ## Process last elements - only when filter is not empty (there are still elements)
   IF( sFilter @<> '' );
     RunProcess( cThisProcName, 'pLogoutput', pLogoutput,
-    	'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
-    	'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
-    	'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-    	'pFactor', pFactor, 'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 'pCumulate', pCumulate,
-    	'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
-      'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
+        'pCube', pCube, 'pSrcView', pSrcView, 'pTgtView', pTgtView,
+        'pFilter', sFilter, 'pFilterParallel', '', 'pEleMapping', pEleMapping, 'pMappingDelim', pMappingDelim,
+        'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim, 
+        'pFactor', pFactor, 'pStringPrefix', pStringPrefix, 'pStringSuffix', pStringSuffix, 
+        'pSuppressConsol', pSuppressConsol, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pSuppressRules', pSuppressRules, 'pSuppressZero', pSuppressZero, 
+        'pCumulate', pCumulate, 'pZeroTarget', pZeroTarget, 'pZeroSource', pZeroSource, 
+        'pTemp', pTemp, 'pCubeLogging', pCubeLogging, 'pSandbox', pSandbox, 'pFile', pFile, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,
+        'pThreadMode', 1, 'pThreadControlFile', sThreadControlFile
     );
   ENDIF;
   DataSourceType = 'NULL';
@@ -1515,7 +1528,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,456
+574,568
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -1525,8 +1538,8 @@ EndIf;
 #################################################################################################
 
 If( pFile > 0 );
-  v0 = v1; v1 = v2; v2 = v3;  v3 = v4; v4 = v5; v5 = v6; v6 = v7; v7 = v8; v8 = v9; v9 = v10; v10 = v11; v11 = v12; v12 = v13; v13 = v14; v14 = v15;
-  v15 = v16; v16 = v17; v17 = v18; v18 = v19; v19 = v20; v20 = v21; v21 = v22; v22 = v23; v23 = v24; v24 = v25; v25 = v26; v26 = v27; v27 = v28;  v28 = v29;
+  v0 = v1; v1 = v2; v2 = v3; v3 = v4; v4 = v5; v5 = v6; v6 = v7; v7 = v8; v8 = v9; v9 = v10; v10 = v11; v11 = v12; v12 = v13; v13 = v14; v14 = v15;
+  v15 = v16; v16 = v17; v17 = v18; v18 = v19; v19 = v20; v20 = v21; v21 = v22; v22 = v23; v23 = v24; v24 = v25; v25 = v26; v26 = v27; v27 = v28; v28 = v29;
 EndIf;
 
 v1 = IF(nMappedDim1 = 1, IF(v1 @= sSourceDim1 % elisanc(sDim1,sSourceDim1,v1)=1, sTargetDim1, v1), v1);
@@ -1573,13 +1586,25 @@ If( nDimensionCount = 2 );
             v3 = IF( v3 @= '', 'NONE', v3 );
             ElementSecurityPut( v3, sDim1, v1, v2 );
         ELSEIF( sElType @= 'AA' );
-            AttrPutS( v3, sDim1, v1, v2, 1 );
+            vString = pStringPrefix | v3 | pStringSuffix;
+            If( pCumulate = 1);
+               vString = CellGetS( pCube, v1, v2 ) | ' ' | vString;
+            EndIf;
+            AttrPutS( vString, sDim1, v1, v2, 1 );
         ELSEIF( sElType @= 'AS' );
-            AttrPutS( v3, sDim1, v1, v2 );
+            vString = pStringPrefix | v3 | pStringSuffix;
+            If( pCumulate = 1);
+               vString = CellGetS( pCube, v1, v2 ) | ' ' | vString;
+            EndIf;
+            AttrPutS( vString, sDim1, v1, v2 );
         ELSEIF( sElType @= 'AN' );
             AttrPutN( StringToNumberEx( v3, sDecimalSeparator, sThousandSeparator ) * nFactor, sDim1, v1, v2 );
         ElseIf( sElType @= 'S' );
-            CellPutS( v3, pCube, v1, v2 );
+            vString = pStringPrefix | v3 | pStringSuffix;
+            If( pCumulate = 1);
+               vString = CellGetS( pCube, v1, v2 ) | ' ' | vString;
+            EndIf;
+            CellPutS( vString, pCube, v1, v2 );
         Else;
             IF( pCumulate = 1);
                 nObal = CellGetN( pCube, v1, v2 );
@@ -1602,7 +1627,11 @@ ElseIf( nDimensionCount = 3 );
             Endif;
             CellPutN( nCbal, pCube, v1, v2, v3 );
         Else;
-            CellPutS( v4, pCube, v1, v2, v3 );
+            vString = pStringPrefix | v4 | pStringSuffix;
+            If( pCumulate = 1);
+               vString = CellGetS( pCube, v1, v2, v3 ) | ' ' | vString;
+            EndIf;
+            CellPutS( vString, pCube, v1, v2, v3 );
         EndIf;
     EndIf;
 ElseIf( nDimensionCount = 4 );
@@ -1617,7 +1646,11 @@ ElseIf( nDimensionCount = 4 );
             Endif;
             CellPutN( nCbal, pCube, v1, v2, v3, v4);
         Else;
-            CellPutS( v5, pCube, v1, v2, v3, v4);
+            vString = pStringPrefix | v5 | pStringSuffix;
+            If( pCumulate = 1);
+               vString = CellGetS( pCube, v1, v2, v3, v4 ) | ' ' | vString;
+            EndIf;
+            CellPutS( vString, pCube, v1, v2, v3, v4 );
         EndIf;
     EndIf;
 ElseIf( nDimensionCount = 5 );
@@ -1632,7 +1665,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5 );
       Else;
-        CellPutS( v6, pCube, v1, v2, v3, v4, v5 );
+        vString = pStringPrefix | v6 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 6 );
@@ -1647,7 +1684,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6 );
       Else;
-        CellPutS( v7, pCube, v1, v2, v3, v4, v5, v6 );
+        vString = pStringPrefix | v7 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 7 );
@@ -1662,7 +1703,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7 );
       Else;
-        CellPutS( v8, pCube, v1, v2, v3, v4, v5, v6, v7 );
+        vString = pStringPrefix | v8 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 8 );
@@ -1677,7 +1722,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
       Else;
-        CellPutS( v9, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
+        vString = pStringPrefix | v9 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 9 );
@@ -1692,7 +1741,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
       Else;
-        CellPutS( v10, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
+        vString = pStringPrefix | v10 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 10 );
@@ -1707,7 +1760,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
       Else;
-        CellPutS( v11, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
+        vString = pStringPrefix | v11 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 11 );
@@ -1722,7 +1779,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
       Else;
-        CellPutS( v12, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
+        vString = pStringPrefix | v12 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 12 );
@@ -1737,7 +1798,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
       Else;
-        CellPutS( v13, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
+        vString = pStringPrefix | v13 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 13 );
@@ -1752,7 +1817,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
       Else;
-        CellPutS( v14, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
+        vString = pStringPrefix | v14 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 14 );
@@ -1767,7 +1836,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
       Else;
-        CellPutS( v15, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
+        vString = pStringPrefix | v15 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 15 );
@@ -1782,7 +1855,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
       Else;
-        CellPutS( v16, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
+        vString = pStringPrefix | v16 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 16 );
@@ -1797,7 +1874,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
       Else;
-        CellPutS( v17, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
+        vString = pStringPrefix | v17 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 17 );
@@ -1812,7 +1893,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
       Else;
-        CellPutS( v18, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
+        vString = pStringPrefix | v18 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 18 );
@@ -1827,7 +1912,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
       Else;
-        CellPutS( v19, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
+        vString = pStringPrefix | v19 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 19 );
@@ -1842,7 +1931,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
       Else;
-        CellPutS( v20, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
+        vString = pStringPrefix | v20 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 20 );
@@ -1857,7 +1950,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
       Else;
-        CellPutS( v21, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
+        vString = pStringPrefix | v21 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 21 );
@@ -1872,7 +1969,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
       Else;
-        CellPutS( v22, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
+        vString = pStringPrefix | v22 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 22 );
@@ -1887,7 +1988,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
       Else;
-        CellPutS( v23, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
+        vString = pStringPrefix | v23 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 23 );
@@ -1903,7 +2008,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
       Else;
-        CellPutS( v24, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
+        vString = pStringPrefix | v24 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 24 );
@@ -1918,7 +2027,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
       Else;
-        CellPutS( v25, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
+        vString = pStringPrefix | v25 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 25 );
@@ -1933,7 +2046,11 @@ ElseIf( nDimensionCount = 5 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
       Else;
-        CellPutS( v26, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
+        vString = pStringPrefix | v26 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
       EndIf;
     EndIf;
 ElseIf( nDimensionCount = 26 );
@@ -1949,7 +2066,11 @@ ElseIf( nDimensionCount = 26 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
       Else;
-        CellPutS( v27, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
+        vString = pStringPrefix | v27 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
       EndIf;
     EndIf;
 ElseIf( nDimensionCount = 27 );
@@ -1964,7 +2085,11 @@ ElseIf( nDimensionCount = 27 );
         Endif;
         CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
       Else;
-        CellPutS( v28, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
+        vString = pStringPrefix | v28 | pStringSuffix;
+        If( pCumulate = 1);
+           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
       EndIf;
     EndIf;
 
@@ -2107,3 +2232,4 @@ EndIf;
 925,""
 926,""
 927,""
+
