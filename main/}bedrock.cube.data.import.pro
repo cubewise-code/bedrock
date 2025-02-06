@@ -4,7 +4,7 @@
 586,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 585,"C:\TM1\Bedrock\Data\Bedrock.Z.Cube.Placeholder.csv"
 564,
-565,"e^1a7ajj]3`9fsVlFlT?MYt;eyG[o7fY2o?3:?8BsQ`qtv>AfTwZswuG[9MEMm`6z]\f=wlR2XAps6a<XDA;9H3d5xd?k0ey\9HHqXxC<nHklcTi1kT3Tsc1?3J]NWKfZt8?50X0`xWiiz@Z63Cdd0Dz00vMeBc6aB[DuDvvl=Xt?^\3ZmyIzdwAk=F4:=o;F9jnAI_W"
+565,"rqVU@bRC9kS_Byx?9WaWx0Xop135oAg;CikKlT:fp]9:jm1NPdpOkuYFQc4851oxusPw`1gq0>:G\iu3O5Mxt8sziX>YrE5j=HSD@[[5AU]7fJ[NuiZo?m>[Cr`pYOrismO2?LxExtv_Z9xxfhyvL4wI[J54giI>y=t=8jHOt0vos8v99s`Fs=MYAT9g_dvQmQ\__nQI"
 559,1
 928,0
 593,
@@ -125,7 +125,7 @@ pEleDelim,"OPTIONAL: Delimiter between elements"
 pCharacterSet,"OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)"
 pFileDelete,"OPTIONAL: Delete the source file on conclusion of import (Boolean 1/0, default = 0)"
 pSkipInvalidRecords,"OPTIONAL: Skip records with invalid elements rather than creating error log"
-577,30
+577,33
 v1
 v2
 v3
@@ -156,7 +156,10 @@ v27
 v28
 v29
 v30
-578,30
+NVALUE
+SVALUE
+VALUE_IS_STRING
+578,33
 2
 2
 2
@@ -187,7 +190,10 @@ v30
 2
 2
 2
-579,30
+1
+2
+1
+579,33
 1
 2
 3
@@ -218,7 +224,10 @@ v30
 28
 29
 30
-580,30
+0
+0
+0
+580,33
 0
 0
 0
@@ -249,7 +258,13 @@ v30
 0
 0
 0
-581,30
+0
+0
+0
+581,33
+0
+0
+0
 0
 0
 0
@@ -312,7 +327,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,1004
+572,1005
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -686,33 +701,34 @@ If( nErrors <> 0 );
 EndIf;
 
 ### Determine dimensions in target cube, we need to know this to test cell type before loading ###
-sDim1  = TabDim( pCube, 1 );
-sDim2  = TabDim( pCube, 2 );
-sDim3  = TabDim( pCube, 3 );
-sDim4  = TabDim( pCube, 4 );
-sDim5  = TabDim( pCube, 5 );
-sDim6  = TabDim( pCube, 6 );
-sDim7  = TabDim( pCube, 7 );
-sDim8  = TabDim( pCube, 8 );
-sDim9  = TabDim( pCube, 9 );
-sDim10 = TabDim( pCube, 10 );
-sDim11 = TabDim( pCube, 11 );
-sDim12 = TabDim( pCube, 12 );
-sDim13 = TabDim( pCube, 13 );
-sDim14 = TabDim( pCube, 14 );
-sDim15 = TabDim( pCube, 15 );
-sDim16 = TabDim( pCube, 16 );
-sDim17 = TabDim( pCube, 17 );
-sDim18 = TabDim( pCube, 18 );
-sDim19 = TabDim( pCube, 19 );
-sDim20 = TabDim( pCube, 20 );
-sDim21 = TabDim( pCube, 21 );
-sDim22 = TabDim( pCube, 22 );
-sDim23 = TabDim( pCube, 23 );
-sDim24 = TabDim( pCube, 24 );
-sDim25 = TabDim( pCube, 25 );
-sDim26 = TabDim( pCube, 26 );
-sDim27 = TabDim( pCube, 27 );
+# For mulit-hierarchy dimensions the Leaves hierarchy is used to preform the tests
+sDim1  = TabDim( pCube, 1 ); If( HierarchyExists(sDim1, 'Leaves') = 1); sDim1 = Expand('%sDim1%:Leaves'); EndIf;
+sDim2  = TabDim( pCube, 2 ); If( HierarchyExists(sDim2, 'Leaves') = 1); sDim2 = Expand('%sDim2%:Leaves'); EndIf;
+sDim3  = TabDim( pCube, 3 ); If( HierarchyExists(sDim3, 'Leaves') = 1); sDim3 = Expand('%sDim3%:Leaves'); EndIf;
+sDim4  = TabDim( pCube, 4 ); If( HierarchyExists(sDim4, 'Leaves') = 1); sDim4 = Expand('%sDim4%:Leaves'); EndIf;
+sDim5  = TabDim( pCube, 5 ); If( HierarchyExists(sDim5, 'Leaves') = 1); sDim5 = Expand('%sDim5%:Leaves'); EndIf;
+sDim6  = TabDim( pCube, 6 ); If( HierarchyExists(sDim6, 'Leaves') = 1); sDim6 = Expand('%sDim6%:Leaves'); EndIf;
+sDim7  = TabDim( pCube, 7 ); If( HierarchyExists(sDim7, 'Leaves') = 1); sDim7 = Expand('%sDim7%:Leaves'); EndIf;
+sDim8  = TabDim( pCube, 8 ); If( HierarchyExists(sDim8, 'Leaves') = 1); sDim8 = Expand('%sDim8%:Leaves'); EndIf;
+sDim9  = TabDim( pCube, 9 ); If( HierarchyExists(sDim9, 'Leaves') = 1); sDim9 = Expand('%sDim9%:Leaves'); EndIf;
+sDim10 = TabDim( pCube, 10 ); If( HierarchyExists(sDim10, 'Leaves') = 1); sDim10 = Expand('%sDim10%:Leaves'); EndIf;
+sDim11 = TabDim( pCube, 11 ); If( HierarchyExists(sDim11, 'Leaves') = 1); sDim11 = Expand('%sDim11%:Leaves'); EndIf;
+sDim12 = TabDim( pCube, 12 ); If( HierarchyExists(sDim12, 'Leaves') = 1); sDim12 = Expand('%sDim12%:Leaves'); EndIf;
+sDim13 = TabDim( pCube, 13 ); If( HierarchyExists(sDim13, 'Leaves') = 1); sDim13 = Expand('%sDim13%:Leaves'); EndIf;
+sDim14 = TabDim( pCube, 14 ); If( HierarchyExists(sDim14, 'Leaves') = 1); sDim14 = Expand('%sDim14%:Leaves'); EndIf;
+sDim15 = TabDim( pCube, 15 ); If( HierarchyExists(sDim15, 'Leaves') = 1); sDim15 = Expand('%sDim15%:Leaves'); EndIf;
+sDim16 = TabDim( pCube, 16 ); If( HierarchyExists(sDim16, 'Leaves') = 1); sDim16 = Expand('%sDim16%:Leaves'); EndIf;
+sDim17 = TabDim( pCube, 17 ); If( HierarchyExists(sDim17, 'Leaves') = 1); sDim17 = Expand('%sDim17%:Leaves'); EndIf;
+sDim18 = TabDim( pCube, 18 ); If( HierarchyExists(sDim18, 'Leaves') = 1); sDim18 = Expand('%sDim18%:Leaves'); EndIf;
+sDim19 = TabDim( pCube, 19 ); If( HierarchyExists(sDim19, 'Leaves') = 1); sDim19 = Expand('%sDim19%:Leaves'); EndIf;
+sDim20 = TabDim( pCube, 20 ); If( HierarchyExists(sDim20, 'Leaves') = 1); sDim20 = Expand('%sDim20%:Leaves'); EndIf;
+sDim21 = TabDim( pCube, 21 ); If( HierarchyExists(sDim21, 'Leaves') = 1); sDim21 = Expand('%sDim21%:Leaves'); EndIf;
+sDim22 = TabDim( pCube, 22 ); If( HierarchyExists(sDim22, 'Leaves') = 1); sDim22 = Expand('%sDim22%:Leaves'); EndIf;
+sDim23 = TabDim( pCube, 23 ); If( HierarchyExists(sDim23, 'Leaves') = 1); sDim23 = Expand('%sDim23%:Leaves'); EndIf;
+sDim24 = TabDim( pCube, 24 ); If( HierarchyExists(sDim24, 'Leaves') = 1); sDim24 = Expand('%sDim24%:Leaves'); EndIf;
+sDim25 = TabDim( pCube, 25 ); If( HierarchyExists(sDim25, 'Leaves') = 1); sDim25 = Expand('%sDim25%:Leaves'); EndIf;
+sDim26 = TabDim( pCube, 26 ); If( HierarchyExists(sDim26, 'Leaves') = 1); sDim26 = Expand('%sDim26%:Leaves'); EndIf;
+sDim27 = TabDim( pCube, 27 ); If( HierarchyExists(sDim27, 'Leaves') = 1); sDim27 = Expand('%sDim27%:Leaves'); EndIf;
 
 ### Placeholders for mappped dimensions and for new dimensions
 
@@ -1303,7 +1319,7 @@ END;
 
 #CubeLogging
 If ( pCubeLogging <= 1 );
-  sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );
+  nCubeLogging = CubeGetLogChanges( pCube );
   CubeSetLogChanges( pCube, pCubeLogging);
 EndIf;
 
@@ -1317,11 +1333,13 @@ DatasourceASCIIQuoteCharacter   = pQuote;
 SetInputCharacterSet (pCharacterSet);
 
 ### End Prolog ###
-573,3
+573,4
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,1104
+574,1105
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2426,7 +2444,8 @@ ElseIf( nDimensionCount = 27 );
 ## Increase Record count
 nRecordPostedCount = nRecordPostedCount + 1;
 ### End Data ###
-575,44
+575,45
+
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -2436,7 +2455,7 @@ nRecordPostedCount = nRecordPostedCount + 1;
 
 #Cube Logging
 If ( pCubeLogging <= 1 );
-  CubeSetLogChanges( pCube, If(sCubeLogging@='YES',1,0) );
+  CubeSetLogChanges( pCube, nCubeLogging );
 EndIf;
     
 ### Delete source file (only if no errors) ###
@@ -2471,7 +2490,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,_ParameterConstraints=e30=
+576,CubeAction=1511DataAction=1503CubeLogChanges=0_ParameterConstraints=e30
 930,0
 638,1
 804,0
