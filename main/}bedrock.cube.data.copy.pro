@@ -486,7 +486,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1037
+572,1044
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -844,12 +844,12 @@ Else;
   nMaxThreads = 1;
 EndIf;
 
-# Validate Mapping parameter
-If( pDimDelim @= pEleStartDelim % pDimDelim @= pEleDelim % pEleStartDelim @= pEleDelim );
-    sMessage = 'The delimiters cannot me the same.';
+# Validate Element Mapping parameter
+If( TRIM( pEleMapping ) @= '' );
     nErrors = nErrors + 1;
+    sMessage = 'No Element Mapping specified.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-EndIf;
+Endif;
 
 # Validate Mapping parameter
 If( TRIM( pEleMapping ) @<> '' & TRIM( pMappingDelim) @= '');
@@ -1290,6 +1290,13 @@ WHILE(nCounter <= nDimensionCount);
       nErrors = nErrors + 1;
       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
       #ProcessError();
+    EndIf;
+
+    If(sSource @= sTarget & pZeroTarget = 1 );
+       sMessage = 'Source and target element cannot coincide for dimension ' | sDim | ' when a zero out on the target is done. Chosen element is ' | sSource;
+       nErrors = nErrors + 1;
+       LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+       #ProcessError();
     EndIf;
 
   EndIf;
