@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"}bedrock.cube.data.export"
 562,"VIEW"
 586,"}APQ Staging TempSource"
@@ -758,7 +758,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=32ColType=827
 603,0
-572,489
+572,475
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1186,7 +1186,8 @@ Else;
   ENDIF;
 
   # Create Processing View for source version
-  nRet = ExecuteProcess('}bedrock.cube.view.create',
+  If( ViewExists( pCube, cView ) = 0 );
+     nRet = ExecuteProcess('}bedrock.cube.view.create',
           'pLogOutput', pLogOutput,
           'pStrictErrorHandling', pStrictErrorHandling,
           'pCube', pCube,
@@ -1204,34 +1205,19 @@ Else;
           'pSubN', pSubN
           );
 
-    # Validate Sandbox
-    If( TRIM( pSandbox ) @<> '' );
-      If( ServerSandboxExists( pSandbox ) = 0 );
-          SetUseActiveSandboxProperty( 0 );
-          nErrors = nErrors + 1;
-          sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');
-          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-      Else;
-          ServerActiveSandboxSet( pSandbox );
-          SetUseActiveSandboxProperty( 1 );
-      EndIf;
-    Else;
-      SetUseActiveSandboxProperty( 0 );
-    EndIf;
-
-
-  IF( nRet <> ProcessExitNormal() );
-      sMessage = 'Error creating the view from the filter.';
-      nErrors = nErrors + 1;
-      LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-      If( pStrictErrorHandling = 1 );
-          If( CubeExists(pCube) = 1 );
-            CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
-          EndIf;
-          ProcessQuit;
-      Else;
-          ProcessBreak;
-      EndIf;
+     IF( nRet <> ProcessExitNormal() );
+         sMessage = 'Error creating the view from the filter.';
+         nErrors = nErrors + 1;
+         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+         If( pStrictErrorHandling = 1 );
+             If( CubeExists(pCube) = 1 );
+               CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );
+             EndIf;
+             ProcessQuit;
+         Else;
+             ProcessBreak;
+         EndIf;
+     ENDIF;
   ENDIF;
 
   sParsedFilter = sBedrockViewCreateParsedFilter;
