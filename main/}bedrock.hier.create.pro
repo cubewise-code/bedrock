@@ -56,7 +56,7 @@ pDelim,"OPTIONAL: delimiter character for element list. (default value if blank 
 581,0
 582,0
 603,0
-572,172
+572,176
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -212,7 +212,11 @@ While( nCountDim >= 1 );
             ###Creating Hierarchy
             If( HierarchyExists( sDim, sHierarchy ) = 1 & sDim @<> sHierarchy );
                 nErrors = 1;
-                sMessage = 'The Hierachy ' | pHier | ' already exists.';
+                sMessage = 'The Hierachy ' | sHierarchy | ' already exists.';
+                LogOutput( cMsgErrorLevel, sMessage );
+            ElseIf( sHierarchy @= 'Leaves' );
+                nErrors = 1;
+                sMessage = 'The Hierachy ' | sHierarchy | ' cannot be created.';
                 LogOutput( cMsgErrorLevel, sMessage );
             ElseIf( sDim @<> sHierarchy );
                 HierarchyCreate( sDim , sHierarchy );
