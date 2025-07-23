@@ -486,7 +486,7 @@ VarType=32ColType=827
 VarType=32ColType=827
 VarType=33ColType=827
 603,0
-572,1044
+572,1045
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1441,8 +1441,9 @@ Else;
       'pIncludeDescendants',pIncludeDescendants,
       'pDimDelim', pDimDelim,
       'pEleStartDelim', pEleStartDelim,
-      'pEleDelim', pEleDelim ,
+      'pEleDelim', pEleDelim,
       'pTemp', pTemp,
+      'pSandbox', pSandbox,
       'pSubN', pSubN
       );
 

@@ -379,7 +379,7 @@ While( nCubeDelimiterIndex <> 0 );
                     'pCube', sCube, 'pView', cView, 'pFilter', pFilter,
                     'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', pSuppressConsolStrings,
                     'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-                    'pTemp', pTemp, 'pSubN', pSubN
+                    'pTemp', pTemp, 'pSandbox', pSandbox, 'pSubN', pSubN
                    );
 
               # Validate Sandbox
@@ -548,7 +548,7 @@ While( nCubeDelimiterIndex <> 0 );
                   'pCube', sCube, 'pView', cView, 'pFilter', pFilter,
                   'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', pSuppressConsolStrings,
                   'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,
-                  'pTemp', pTemp, 'pSubN', pSubN
+                  'pTemp', pTemp, 'pSandbox', pSandbox, 'pSubN', pSubN
                   );
                   
               # Validate Sandbox
