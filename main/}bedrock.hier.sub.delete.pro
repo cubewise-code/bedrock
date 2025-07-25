@@ -239,7 +239,7 @@ If ( SCAN( cCharAny, pDim ) = 0 & SCAN( cStringAny, pDim ) = 0 & SCAN( pDelim, p
         ProcessBreak;
     EndIf;
   EndIf;
-  If ( HierarchySubsetExists( pDim, pHier, pSub ) = 0 );
+  If (  pHier @<> '' & HierarchySubsetExists( pDim, pHier, pSub ) = 0 );
     nErrors = 1;
     sMessage = Expand( 'Subset %pSub% doesn''t exist in hierarchy %pHier% of dimension %pDim%.' );
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
