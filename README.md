@@ -1,4 +1,5 @@
-<img src="https://s3-ap-southeast-2.amazonaws.com/downloads.cubewise.com/web_assets/CubewiseLogos/Bedrock+FOUR+logo+2019_Orange.png" style="width: 70%; height: 70%;text-align: center"/>
+
+<img width="9149" height="2224" alt="bedrock4_logogray" src="https://github.com/user-attachments/assets/f5c9591a-f4fd-4103-91dc-991ce287c1b7" />
 
 ## What is Bedrock?
 
