@@ -1,4 +1,4 @@
-﻿601,100
+601,100
 602,"}bedrock.dim.filter.fromsubset"
 562,"NULL"
 586,
@@ -52,23 +52,23 @@ pEleDelim
 590,11
 pLogOutput,0
 pStrictErrorHandling,0
-pSelection_1,"Account&level 0"
-pSelection_2,""
-pSelection_3,""
+pSelection_1,"Account \ subset:assets accounts"
+pSelection_2,"Company \ mdx:Filter( TM1FilterByLevel( TM1SubsetAll( [Company] ), 0 ), [Company].CurrentMember.Properties(""Region"") = ""' | pRegion | '"" )"
+pSelection_3,"Account\mdx: Head ( [Account].[Total Revenue].Children, 3 )"
 pSelection_4,""
 pSelection_5,""
-pSelectionDelim,"&"
+pSelectionDelim,"\"
 pDimDelim,"&"
 pEleStartDelim,"¦"
 pEleDelim,"+"
 637,11
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
-pSelection_1,"OPTIONAL: a delimited string containing dimension name pDelim subset name"
-pSelection_2,"OPTIONAL: a delimited string containing dimension name pDelim subset name"
-pSelection_3,"OPTIONAL: a delimited string containing dimension name pDelim subset name"
-pSelection_4,"OPTIONAL: a delimited string containing dimension name pDelim subset name"
-pSelection_5,"OPTIONAL: a delimited string containing dimension name pDelim subset name"
+pSelection_1,"OPTIONAL: a delimited string containing dimension name and subset name or MDX"
+pSelection_2,"OPTIONAL: a delimited string containing dimension name and subset name or MDX"
+pSelection_3,"OPTIONAL: a delimited string containing dimension name and subset name or MDX"
+pSelection_4,"OPTIONAL: a delimited string containing dimension name and subset name or MDX"
+pSelection_5,"OPTIONAL: a delimited string containing dimension name and subset name or MDX"
 pSelectionDelim,"OPTIONAL: delimiter character for element list. (default value if blank = '&')"
 pDimDelim,"OPTIONAL: Delimiter between dimensions  (default value if blank = '&')"
 pEleStartDelim,"OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')"
@@ -80,7 +80,7 @@ pEleDelim,"OPTIONAL: Delimiter between elements  (default value if blank = '+')"
 581,0
 582,0
 603,0
-572,192
+572,218
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -91,8 +91,8 @@ If( 1 = 0 );
     # or even without a vFilter and just with sFilter_String
     ExecuteProcess( '}bedrock.dim.filter.fromsubset', 
                    'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling,
-                   'pSelectionDelim', '&', 'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+', 
-                   'pSelection_1', 'Year & My years subset', 'pSelection_2', 'Company & Level 0 company', 'pSelection_3', '', 'pSelection_4', '', 'pSelection_5', ''
+                   'pSelectionDelim', '\', 'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+', 
+                   'pSelection_1', 'Year \ subset: My years subset', 'pSelection_2', 'Company \ subset: Level 0 company', 'pSelection_3', '', 'pSelection_4', '', 'pSelection_5', ''
 	);
     vFilter = vFilter | sFilter_String;
 EndIf;
@@ -107,14 +107,13 @@ EndIf;
 
 #Region @DOC
 # Description:
-# This process will create a filter string for Bedrock processes.
-# The elements in the public subset will be concatenated and form a correct filter string for a dimension.
-# PA alternate hierarchies are not allowed. Only the main hierarchy in a dimension or the leaves hierarchy.
-# Make sure that string count limits are not exceeded.
-# The subset should be a public subset. It can be static or dynamic. It can be permanent or temporary.
-
+# This process will create a filter string for Bedrock processes. The elements are either contained in a public subset, or can be retrieved from an MDX.
+# The elements that are found will be concatenated and form a correct filter string for a dimension.
+# If the source is a subset then it should be a public subset. It can be static or dynamic. It can be permanent or temporary.
+# PA alternate hierarchies are not allowed. Make sure that string count limits are not exceeded.
 # The global string variable 'sFilter_String' is populated. The process can also append to it.
 # Up to 5 filters can be created with 1 call of this process.
+# Do not forget the keywords 'subset' and 'mdx' in the parameter values.
 
 # Use case: Intended for Development but could be used in production too.
 # To circumvent the limitation with Bedrock filter strings that they can only contain hardcoded lists of elements.
@@ -150,7 +149,7 @@ nErrors = 0;
 
 ## Default delimiters
 If( pSelectionDelim @= '' );
-    pSelectionDelim = '&';
+    pSelectionDelim = '\';
 EndIf;
 If( pDimDelim     @= '' );
     pDimDelim     = '&';
@@ -170,76 +169,102 @@ sTreated_Dimensions = '#';
 # Loop through the selections
 nSelectionIndex = 1;
 While( nSelectionIndex <= 5 );
-    sDimension = ''; sSubset = '';
-    sSelection = Expand( '%pSelection_' | NumberToString( nSelectionIndex ) | '%' );
-    nDimDelimiterIndex = 1;
+    sParameter_Name = 'pSelection_' | NumberToString( nSelectionIndex );
+    sSelection = Expand( '%' | sParameter_Name | '%' );
     If( sSelection @<> '' );
 
-        # Get the parts in the string
+        sDimension = '';
+        sSubset = '';
+        sMDX = '';
+        nNrOfDelimiters = 0;
+
+        # Get the different parts in the string
+        nDimDelimiterIndex = 1;
         While( nDimDelimiterIndex <> 0 );
-            
+
             nDimDelimiterIndex = Scan( pSelectionDelim, sSelection );
-            If( nDimDelimiterIndex = 1 );
-                nErrors = 1;
-                sPart = sSelection;
-                If( pLogOutput = 1 );
-                    sMessage = Expand( 'Empty dimension name or subset name extracted from a selection parameter: %sSelection% (iteration ' | NumberToString( nSelectionIndex ) | ')' );
-                    LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
-                EndIf;
-            ElseIf( nDimDelimiterIndex = 0 );
+            If( nDimDelimiterIndex = 0 );
                 sPart = sSelection;
             Else;
                 sPart = Trim( Subst( sSelection, 1, nDimDelimiterIndex - 1 ));
                 sSelection = Trim( Delet( sSelection, 1, nDimDelimiterIndex ));
             EndIf;
 
-            # No wildcards allowed, no colons either
-            If( Scan( '*', sPart ) > 0 % Scan( '?', sPart ) > 0 & Scan( ':', sPart ) > 0 );
-                nErrors = 1;
-                If( pLogOutput = 1 );
-                    sMessage = Expand( 'Invalid characters observed in a selection parameter: %sPart% (iteration ' | NumberToString( nSelectionIndex ) | ')' );
-                    LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
-                EndIf;
-            EndIf;
-
-            ### Check for errors before continuing
-            If( nErrors <> 0 );
-                If( pStrictErrorHandling = 1 ); 
-                    ProcessQuit; 
-                Else;
-                    ProcessBreak;
-                EndIf;
-            EndIf;
-
-            # No errors observed
-            If( sDimension @= '' );
+            nNrOfDelimiters = nNrOfDelimiters + 1;
+            If( nNrOfDelimiters = 1 );
                 sDimension = sPart;
-            Else;
-                sSubset = sPart;
-                nDimDelimiterIndex = 0;
+            ElseIf( nNrOfDelimiters = 2 );
+                If( Scan( 'subset:', Lower( sPart )) = 1 );
+                    sSubset = Trim( Delet( sPart, 1, 7 ));
+                ElseIf( Scan( 'mdx:', Lower( sPart )) = 1 );
+                    sMDX = Trim( Delet( sPart, 1, 4 ));
+                EndIf;
             EndIf;
 
         End;
 
-        If( DimensionExists( sDimension ) = 0 );
+        # Validation checks
+        If( sDimension @= '' );
             nErrors = 1;
             If( pLogOutput = 1 );
-                sMessage = Expand( 'Invalid dimension name: %sDimension% (iteration ' | NumberToString( nSelectionIndex ) | ')' );
+                sMessage = Expand( 'Empty dimension name: %sDimension% [%sParameter_Name%]' );
                 LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
             EndIf;
         EndIf;
-        If( SubsetExists( sDimension, sSubset ) = 0 );
+
+        If( Scan( ':', sDimension ) > 0 );
             nErrors = 1;
             If( pLogOutput = 1 );
-                sMessage = Expand( 'Invalid subset name: %sSubset% in dimension %sDimension% (iteration ' | NumberToString( nSelectionIndex ) | ')' );
+                sMessage = Expand( 'Hierarchies are not accepted: %sDimension% [%sParameter_Name%]' );
                 LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+            EndIf;
+        EndIf;
+
+        If( DimensionExists( sDimension ) = 0 );
+            nErrors = 1;
+            If( pLogOutput = 1 );
+                sMessage = Expand( 'Invalid dimension name: %sDimension% [%sParameter_Name%]' );
+                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+            EndIf;
+        EndIf;
+
+        If( sSubset @= '' & sMDX @= '' );
+            nErrors = 1;
+            If( pLogOutput = 1 );
+                sMessage = Expand( 'Empty subset name and empty MDX specification, or missing keywords ''subset:'' and ''mdx:'': %sDimension% [%sParameter_Name%]' );
+                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+            EndIf;
+        EndIf;
+
+        If( sSubset @<> '' );
+            If( SubsetExists( sDimension, sSubset ) = 0 );
+                nErrors = 1;
+                If( pLogOutput = 1 );
+                    sMessage = Expand( 'Invalid subset name: %sSubset% in dimension %sDimension% [%sParameter_Name%]' );
+                    LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+                EndIf;
             EndIf;
         EndIf;
 
         If( Scan( '#' | NumberToString( Dimix( '}Dimensions', sDimension )) | '#', sTreated_Dimensions ) > 0 );
             nErrors = 1;
             If( pLogOutput = 1 );
-                sMessage = Expand( 'Dimension used twice: %sDimension% (iteration ' | NumberToString( nSelectionIndex ) | ')' );
+                sMessage = Expand( 'Dimension used twice: %sDimension% [%sParameter_Name%]' );
+                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+            EndIf;
+        EndIf;
+
+        # All good for now, let's continue with the heart of the process
+        # We create a temporary subset and loop over its contents
+        If( sSubset @<> '' );
+            sMDX = 'Distinct( TM1SubsetToSet( [' | sDimension | '], "' | sSubset | '", "public" ))';
+        EndIf;
+        SubsetCreateByMDX( cTempSub, sMDX, sDimension, 1 );
+        n = SubsetGetSize( sDimension, cTempSub );
+        If( n = 0 );
+            nErrors = 1;
+            If( pLogOutput = 1 );
+                sMessage = Expand( 'The ' | If( sSubset @<> '', 'subset', 'MDX' ) | ' selection leads to 0 elements or an invalid MDX was passed: %sDimension% in %sDimension% [%sParameter_Name%]' );
                 LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
             EndIf;
         EndIf;
@@ -253,11 +278,12 @@ While( nSelectionIndex <= 5 );
             EndIf;
         EndIf;
 
-        # All good now, let's continue with the heart of the process
+
+        # Finally there, let's loop and concatenate element names
         sFilter = sFilter | If( sFilter @= '', '', ' ' | pDimDelim | ' ' ) | sDimension | pEleStartDelim;
         m = 1;
-        While( m <= SubsetGetSize(  sDimension, sSubset ));
-            vElement = SubsetGetElementName(  sDimension, sSubset, m );
+        While( m <= n );
+            vElement = SubsetGetElementName( sDimension, cTempSub, m );
             sFilter = sFilter | If( m = 1, '', ' ' | pEleDelim | ' ' ) | vElement;
             m = m + 1;
         End;
