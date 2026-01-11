@@ -80,21 +80,27 @@ pEleDelim,"OPTIONAL: Delimiter between elements  (default value if blank = '+')"
 581,0
 582,0
 603,0
-572,218
+572,255
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
-    StringGlobalVariable('sFilter_String');
-    vFilter = 'Year¦2025 + 2026 & ';
+    StringGlobalVariable('vElementFilter');
+    NumericGlobalVariable('nProcessReturnCode');
+    vElementFilter = 'Year¦2025 + 2026 & ';
     # or:
-    vFilter = '';
-    # or even without a vFilter and just with sFilter_String
+    vElementFilter = '';
+    # or even without a Filter
     ExecuteProcess( '}bedrock.dim.filter.fromsubset', 
                    'pLogOutput', pLogOutput, 'pStrictErrorHandling', pStrictErrorHandling,
                    'pSelectionDelim', '\', 'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+', 
                    'pSelection_1', 'Year \ subset: My years subset', 'pSelection_2', 'Company \ subset: Level 0 company', 'pSelection_3', '', 'pSelection_4', '', 'pSelection_5', ''
 	);
-    vFilter = vFilter | sFilter_String;
+    If( nProcessReturnCode = 0 );
+        LogOutput('ERROR', 'The process to create a Bedrock filter string did not give the desired result. Please investigate.' );
+        ProcessQuit;
+    EndIf;
+
+    LogOutput('INFO', vElementFilter );
 EndIf;
 #EndRegion CallThisProcess
 
@@ -111,9 +117,9 @@ EndIf;
 # The elements that are found will be concatenated and form a correct filter string for a dimension.
 # If the source is a subset then it should be a public subset. It can be static or dynamic. It can be permanent or temporary.
 # PA alternate hierarchies are not allowed. Make sure that string count limits are not exceeded.
-# The global string variable 'sFilter_String' is populated. The process can also append to it.
+# The global string variable 'vElementFilter' is populated. The process can also append to it.
 # Up to 5 filters can be created with 1 call of this process.
-# Do not forget the keywords 'subset' and 'mdx' in the parameter values.
+# Do not forget the keyword 'subset' or 'mdx' for the selection filter parameter values.
 
 # Use case: Intended for Development but could be used in production too.
 # To circumvent the limitation with Bedrock filter strings that they can only contain hardcoded lists of elements.
@@ -165,6 +171,8 @@ EndIf;
 # Initialization
 sFilter = '';
 sTreated_Dimensions = '#';
+nApplied_Filters = 0;
+sApplied_Filters = '';
 
 # Loop through the selections
 nSelectionIndex = 1;
@@ -208,71 +216,87 @@ While( nSelectionIndex <= 5 );
             nErrors = 1;
             If( pLogOutput = 1 );
                 sMessage = Expand( 'Empty dimension name: %sDimension% [%sParameter_Name%]' );
-                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+                LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
             EndIf;
-        EndIf;
 
-        If( Scan( ':', sDimension ) > 0 );
+        ElseIf( Scan( ':', sDimension ) > 0 );
             nErrors = 1;
             If( pLogOutput = 1 );
                 sMessage = Expand( 'Hierarchies are not accepted: %sDimension% [%sParameter_Name%]' );
-                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+                LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
             EndIf;
-        EndIf;
 
-        If( DimensionExists( sDimension ) = 0 );
+        ElseIf( DimensionExists( sDimension ) = 0 );
             nErrors = 1;
             If( pLogOutput = 1 );
                 sMessage = Expand( 'Invalid dimension name: %sDimension% [%sParameter_Name%]' );
-                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+                LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
             EndIf;
-        EndIf;
 
-        If( sSubset @= '' & sMDX @= '' );
+        ElseIf( Scan( '#' | NumberToString( Dimix( '}Dimensions', sDimension )) | '#', sTreated_Dimensions ) > 0 );
+            nErrors = 1;
+            If( pLogOutput = 1 );
+                sMessage = Expand( 'Dimension used twice: %sDimension% [%sParameter_Name%]' );
+                LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
+            EndIf;
+
+        ElseIf( sSubset @= '' & sMDX @= '' );
             nErrors = 1;
             If( pLogOutput = 1 );
                 sMessage = Expand( 'Empty subset name and empty MDX specification, or missing keywords ''subset:'' and ''mdx:'': %sDimension% [%sParameter_Name%]' );
-                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+                LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
             EndIf;
-        EndIf;
 
-        If( sSubset @<> '' );
+        ElseIf( sSubset @<> '' );
             If( SubsetExists( sDimension, sSubset ) = 0 );
                 nErrors = 1;
                 If( pLogOutput = 1 );
                     sMessage = Expand( 'Invalid subset name: %sSubset% in dimension %sDimension% [%sParameter_Name%]' );
-                    LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+                    LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
                 EndIf;
-            EndIf;
-        EndIf;
-
-        If( Scan( '#' | NumberToString( Dimix( '}Dimensions', sDimension )) | '#', sTreated_Dimensions ) > 0 );
-            nErrors = 1;
-            If( pLogOutput = 1 );
-                sMessage = Expand( 'Dimension used twice: %sDimension% [%sParameter_Name%]' );
-                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
-            EndIf;
-        EndIf;
-
-        # All good for now, let's continue with the heart of the process
-        # We create a temporary subset and loop over its contents
-        If( sSubset @<> '' );
-            sMDX = 'Distinct( TM1SubsetToSet( [' | sDimension | '], "' | sSubset | '", "public" ))';
-        EndIf;
-        SubsetCreateByMDX( cTempSub, sMDX, sDimension, 1 );
-        n = SubsetGetSize( sDimension, cTempSub );
-        If( n = 0 );
-            nErrors = 1;
-            If( pLogOutput = 1 );
-                sMessage = Expand( 'The ' | If( sSubset @<> '', 'subset', 'MDX' ) | ' selection leads to 0 elements or an invalid MDX was passed: %sDimension% in %sDimension% [%sParameter_Name%]' );
-                LogOutput( 'ERROR', Expand( cMsgInfoContent ) );
+            ElseIf( SubsetGetSize( sDimension, sSubset ) = 0 );
+                nErrors = 1;
+                If( pLogOutput = 1 );
+                    sMessage = Expand( 'Empty subset: %sSubset% in dimension %sDimension% [%sParameter_Name%]' );
+                    LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
+                EndIf;
             EndIf;
         EndIf;
 
         ### Check for errors before continuing
         If( nErrors <> 0 );
-            If( pStrictErrorHandling = 1 ); 
-                ProcessQuit; 
+            If( pStrictErrorHandling = 1 );
+                ProcessQuit;
+            Else;
+                ProcessBreak;
+            EndIf;
+        EndIf;
+
+        # When we use an MDX statement, we create a temporary subset first
+        If( sSubset @<> '' );
+            vSubset_For_Loop = sSubset;
+        Else;
+            SubsetCreateByMDX( cTempSub, sMDX, sDimension, 1 );
+            vSubset_For_Loop = cTempSub;
+        EndIf;
+
+        n = SubsetGetSize( sDimension, vSubset_For_Loop );
+        If( n = 0 );
+            nErrors = 1;
+            If( pLogOutput = 1 );
+                If( sSubset @<> '' );
+                    sMessage = Expand( 'The subset selection leads to 0 elements: %sDimension% in %sDimension% [%sParameter_Name%]' );
+                Else;
+                    sMessage = Expand( 'The MDX selection leads to 0 elements or an invalid MDX was passed: %sDimension% in %sDimension% [%sParameter_Name%]' );
+                EndIf;
+                LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
+            EndIf;
+        EndIf;
+
+        ### Check for errors before continuing
+        If( nErrors <> 0 );
+            If( pStrictErrorHandling = 1 );
+                ProcessQuit;
             Else;
                 ProcessBreak;
             EndIf;
@@ -283,20 +307,33 @@ While( nSelectionIndex <= 5 );
         sFilter = sFilter | If( sFilter @= '', '', ' ' | pDimDelim | ' ' ) | sDimension | pEleStartDelim;
         m = 1;
         While( m <= n );
-            vElement = SubsetGetElementName( sDimension, cTempSub, m );
+            vElement = SubsetGetElementName( sDimension, vSubset_For_Loop, m );
             sFilter = sFilter | If( m = 1, '', ' ' | pEleDelim | ' ' ) | vElement;
             m = m + 1;
         End;
 
         # Note that this dimension is done and should not be used more than once
+        # Work towards an overall summary of the activity in the filtering
         sTreated_Dimensions = sTreated_Dimensions | NumberToString( Dimix( '}Dimensions', sDimension )) | '#';
+        nApplied_Filters = nApplied_Filters + 1;
+        sApplied_Filters = sApplied_Filters | If( nApplied_Filters = 1, '', ' ' | pDimDelim | ' ' ) | 'dimension ''' | sDimension | ''' ==> ' | NumberToString(n) | ' element' | If( n = 1, '', 's');
 
     EndIf;
     nSelectionIndex = nSelectionIndex + 1;
 End;
 
-
-sFilter_String = sFilter_String | If( sFilter_String @= '', '', ' ' | pDimDelim | ' ' ) | sFilter;
+### Do we have 1 or more filters that were applied?
+If( nApplied_Filters > 0 );
+    If( pLogOutput = 1 );
+        sMessage = Expand( 'The selections lead to a filter string based on: ' | Trim( sApplied_Filters ));
+        LogOutput( 'INFO', Expand( cMsgInfoContent ) );
+    EndIf;
+    vElementFilter = vElementFilter | If( Subst( Trim(vElementFilter), Long( Trim(vElementFilter) ) + 1 - Long(pDimDelim), Long(pDimDelim)) @= pDimDelim, '', ' ' | pDimDelim | ' ' ) | ' ' | sFilter;
+Else;
+    nErrors = 1;
+    sMessage = Expand( 'All selections are empty.' );
+    LogOutput( cMsgErrorLevel, Expand( cMsgInfoContent ) );
+EndIf;
 
 ### End Prolog ###
 573,4
@@ -309,7 +346,7 @@ sFilter_String = sFilter_String | If( sFilter_String @= '', '', ' ' | pDimDelim 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-575,29
+575,27
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -320,23 +357,21 @@ sFilter_String = sFilter_String | If( sFilter_String @= '', '', ' ' | pDimDelim 
 
 ### Return code & final error message handling
 If( nErrors > 0 );
-    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';
+    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details. Be careful not to clear/copy/export/... too much data in the calling process!';
     nProcessReturnCode = 0;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
     sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );
-    If( pStrictErrorHandling = 1 ); 
-        ProcessQuit; 
+    If( pStrictErrorHandling = 1 );
+        ProcessQuit;
     EndIf;
 Else;
     sProcessAction     = Expand( 'Process:%cThisProcName% successfully returned/updated the filter string.' );
     sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );
     nProcessReturnCode = 1;
     If( pLogoutput = 1 );
-        LogOutput('INFO', Expand( sProcessAction ) );   
+        LogOutput('INFO', Expand( sProcessAction ) );
     EndIf;
 EndIf;
-
-
 
 ### End Epilog ###
 576,
