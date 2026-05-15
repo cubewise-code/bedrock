@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.cube.data.copy"
 562,"VIEW"
 586,"zzSYS 50 Dim Cube"
 585,"zzSYS 50 Dim Cube"
 564,
-565,"ss[X>tC6YR?4vgEg9HKyuDGD?d`LE:`4QBHm=7zhXDdori9C[BwS=>1f7=FQ?qEK4ia<azGHmtiqipcz<;d4Y0\FdNqj_LizPyp>]IKMD:?7A]}WxsWS90<fj=]CK}<gwNk_gvsE@fJpF4k\tvK8Mm7^>W2Qf01sdp>XrHgx\0?3EZ3Q9LImI@=P0s=jKz0dRfIUe[VK"
+565,"jP\svfYMYGayUM>xj=<DE:^=<f1jKyCrNu92P9_51Q]3doFo]OjNA3g@rSAdo[=GWoZVOFP9o6@sLk=hTx_SDyl2VJiFqq[B76UB`y7g3kbxzAqA3QVZA0CX1fQE0ghc]y;[;kYdY0OwagvIHhqHl][Q_2Bx^BgzA>6u@Yfqm1]g5W8u3Q9ScPC?4:hpkmY^wxTf?u2z"
 559,1
 928,0
 593,
@@ -17,8 +17,8 @@
 801,
 566,0
 567,","
-588,"."
-589,","
+588,","
+589,"."
 568,""""
 570,Temp
 571,
@@ -433,60 +433,9 @@ Value
 0
 0
 0
-582,51
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=33ColType=827
+582,0
 603,0
-572,1044
+572,1042
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -786,12 +735,10 @@ ElseIf( CubeExists( pCube ) = 0 );
 EndIf;
 
 ### Determine number of dims in target cube ###
-nCount          = 1;
-While( TabDim( pCube, nCount ) @<> '' );
-    sDimension  = TabDim( pCube, nCount );
-    nCount      = nCount + 1;
-End;
-nDimensionCount = nCount - 1;
+nDimensionCount = CubeDimensionCountGet( pCube );
+sDimCount   = NumberToString( nDimensionCount );
+sDimCountP1 = NumberToString( nDimensionCount + 1 );
+sLastDimName = TabDim( pCube, nDimensionCount );
 
 ## If dimension count exceeds the current maximum then terminate process
 If( nDimensionCount > cDimCountMax );
@@ -825,7 +772,7 @@ EndIf;
 # Validate parallelization filter
 If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
-    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 );
+    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 % Scan( Lower(sDimParallel) | ':', Lower(pFilter) ) > 0 );
         sMessage = 'Parallelization dimension %sDimParallel% cannot exist in filter.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -1535,7 +1482,7 @@ EndIf;
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
-574,568
+574,461
 #****Begin: Generated Statements***
 #****End: Generated Statements****
 
@@ -1577,6 +1524,30 @@ v25 = IF(nMappedDim25 = 1, IF(v25 @= sSourceDim25 % elisanc(sDim25,sSourceDim25,
 v26 = IF(nMappedDim26 = 1, IF(v26 @= sSourceDim26 % elisanc(sDim26,sSourceDim26,v26)=1, sTargetDim26, v26), v26);
 v27 = IF(nMappedDim27 = 1, IF(v27 @= sSourceDim27 % elisanc(sDim27,sSourceDim27,v27)=1, sTargetDim27, v27), v27);
 
+### Single-pass type and value preparation per data row ###
+
+# sLastDimName was computed in the Prolog (constant across all rows)
+# sLastEle: last dimension element - changes per row, read via Expand
+sLastEle = Expand( '%v' | sDimCount | '%' );
+
+# Cell type lookup - works for both pFile=0 (VIEW) and pFile>0 (CSV)
+sElType = DType( sLastDimName, sLastEle );
+
+# Value preparation
+If( sElType @= 'S' % sElType @= 'AA' % sElType @= 'AS' );
+  If( pFile = 0 );
+    vString = pStringPrefix | SValue | pStringSuffix;
+  Else;
+    vString = pStringPrefix | Expand( '%v' | sDimCountP1 | '%' ) | pStringSuffix;
+  EndIf;
+Else;
+  If( pFile = 0 );
+    nCbal = NValue * nFactor;
+  Else;
+    nCbal = StringToNumberEx( Expand( '%v' | sDimCountP1 | '%' ), sDecimalSeparator, sThousandSeparator ) * nFactor;
+  EndIf;
+EndIf;
+
 
 ### Write data from source version to target version ###
 
@@ -1607,500 +1578,369 @@ If( nDimensionCount = 2 );
         ELSEIF( sElType @= 'AN' );
             AttrPutN( StringToNumberEx( v3, sDecimalSeparator, sThousandSeparator ) * nFactor, sDim1, v1, v2 );
         ElseIf( sElType @= 'S' );
-            vString = pStringPrefix | v3 | pStringSuffix;
-            If( pCumulate = 1);
-               vString = CellGetS( pCube, v1, v2 ) | ' ' | vString;
+            If( pCumulate = 1 );
+              vString = CellGetS( pCube, v1, v2 ) | ' ' | vString;
             EndIf;
             CellPutS( vString, pCube, v1, v2 );
         Else;
-            IF( pCumulate = 1);
-                nObal = CellGetN( pCube, v1, v2 );
-                nCbal = nObal + StringToNumberEx( v3, sDecimalSeparator, sThousandSeparator ) * nFactor;
-            ELSE;
-                nCbal = StringToNumberEx( v3, sDecimalSeparator, sThousandSeparator ) * nFactor;
-            Endif;
-            CellPutN( nCbal, pCube, v1, v2 );
+            If( pCumulate = 1 );
+              CellIncrementN( nCbal, pCube, v1, v2 );
+            Else;
+              CellPutN( nCbal, pCube, v1, v2 );
+            EndIf;
         EndIf;
     EndIf;
 ElseIf( nDimensionCount = 3 );
     If( CellIsUpdateable( pCube, v1, v2, v3 ) = 1 );
-        sElType = DType( sDim3, v3 );
-        If( sElType @<> 'S' );
-            IF( pCumulate = 1);
-                nObal = CellGetN( pCube, v1, v2, v3 );
-                nCbal = nObal + StringToNumberEx( v4, sDecimalSeparator, sThousandSeparator ) * nFactor;
-            ELSE;
-                nCbal = StringToNumberEx( v4, sDecimalSeparator, sThousandSeparator ) * nFactor;
-            Endif;
-            CellPutN( nCbal, pCube, v1, v2, v3 );
-        Else;
-            vString = pStringPrefix | v4 | pStringSuffix;
-            If( pCumulate = 1);
-               vString = CellGetS( pCube, v1, v2, v3 ) | ' ' | vString;
-            EndIf;
-            CellPutS( vString, pCube, v1, v2, v3 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3 ) | ' ' | vString;
         EndIf;
-    EndIf;
-ElseIf( nDimensionCount = 4 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4 ) = 1 );
-        sElType = DType( sDim4, v4 );
-        If( sElType @<> 'S' );
-            IF( pCumulate = 1);
-                nObal = CellGetN( pCube, v1, v2, v3, v4);
-                nCbal = nObal + StringToNumberEx( v5, sDecimalSeparator, sThousandSeparator ) * nFactor;
-            ELSE;
-                nCbal = StringToNumberEx( v5, sDecimalSeparator, sThousandSeparator ) * nFactor;
-            Endif;
-            CellPutN( nCbal, pCube, v1, v2, v3, v4);
-        Else;
-            vString = pStringPrefix | v5 | pStringSuffix;
-            If( pCumulate = 1);
-               vString = CellGetS( pCube, v1, v2, v3, v4 ) | ' ' | vString;
-            EndIf;
-            CellPutS( vString, pCube, v1, v2, v3, v4 );
-        EndIf;
-    EndIf;
-ElseIf( nDimensionCount = 5 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5 ) = 1 );
-      sElType = DType( sDim5, v5 );
-      If( sElType @<> 'S' );
-        IF(pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5 );
-          nCbal = nObal + StringToNumberEx( v6, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v6, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5 );
+        CellPutS( vString, pCube, v1, v2, v3 );
       Else;
-        vString = pStringPrefix | v6 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 4 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4 ) | ' ' | vString;
+        EndIf;
+        CellPutS( vString, pCube, v1, v2, v3, v4 );
+      Else;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 5 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 6 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6 ) = 1 );
-      sElType = DType( sDim6, v6 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6 );
-          nCbal = nObal + StringToNumberEx( v7, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v7, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6 );
       Else;
-        vString = pStringPrefix | v7 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 6 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 7 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7 ) = 1 );
-      sElType = DType( sDim7, v7 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7 );
-          nCbal = nObal + StringToNumberEx( v8, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v8, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7 );
       Else;
-        vString = pStringPrefix | v8 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 7 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 8 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8 ) = 1 );
-      sElType = DType( sDim8, v8 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
-          nCbal = nObal + StringToNumberEx( v9, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v9, sDecimalSeparator, sThousandSeparator )* nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
       Else;
-        vString = pStringPrefix | v9 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 8 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 9 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 ) = 1 );
-      sElType = DType( sDim9, v9 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
-          nCbal = nObal + StringToNumberEx( v10, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v10, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
       Else;
-        vString = pStringPrefix | v10 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 9 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 10 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 ) = 1 );
-      sElType = DType( sDim10, v10 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
-          nCbal = nObal + StringToNumberEx( v11, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v11, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
       Else;
-        vString = pStringPrefix | v11 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 10 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 11 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 ) = 1 );
-      sElType = DType( sDim11, v11 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
-          nCbal = nObal + StringToNumberEx( v12, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v12, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
       Else;
-        vString = pStringPrefix | v12 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 11 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 12 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 ) = 1 );
-      sElType = DType( sDim12, v12 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
-          nCbal = nObal + StringToNumberEx( v13, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v13, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
       Else;
-        vString = pStringPrefix | v13 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 12 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 13 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 ) = 1 );
-      sElType = DType( sDim13, v13 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
-          nCbal = nObal + StringToNumberEx( v14, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v14, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
       Else;
-        vString = pStringPrefix | v14 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 13 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 14 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 ) = 1 );
-      sElType = DType( sDim14, v14 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
-          nCbal = nObal + StringToNumberEx( v15, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v15, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
       Else;
-        vString = pStringPrefix | v15 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 14 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 15 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 ) = 1 );
-      sElType = DType( sDim15, v15 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
-          nCbal = nObal + StringToNumberEx( v16, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v16, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
       Else;
-        vString = pStringPrefix | v16 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 15 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 16 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 ) = 1 );
-      sElType = DType( sDim16, v16 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
-          nCbal = nObal + StringToNumberEx( v17, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v17, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
       Else;
-        vString = pStringPrefix | v17 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 16 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 17 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 ) = 1 );
-      sElType = DType( sDim17, v17 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
-          nCbal = nObal + StringToNumberEx( v18, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v18, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
       Else;
-        vString = pStringPrefix | v18 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 17 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 18 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 ) = 1 );
-      sElType = DType( sDim18, v18 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
-          nCbal = nObal + StringToNumberEx( v19, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v19, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
       Else;
-        vString = pStringPrefix | v19 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 18 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 19 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 ) = 1 );
-      sElType = DType( sDim19, v19 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
-          nCbal = nObal + StringToNumberEx( v20, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v20, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
       Else;
-        vString = pStringPrefix | v20 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 19 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 20 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 ) = 1 );
-      sElType = DType( sDim20, v20 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
-          nCbal = nObal + StringToNumberEx( v21, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v21, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
       Else;
-        vString = pStringPrefix | v21 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 20 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 21 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 ) = 1 );
-      sElType = DType( sDim21, v21 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
-          nCbal = nObal + StringToNumberEx( v22, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v22, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
       Else;
-        vString = pStringPrefix | v22 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 21 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 22 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 ) = 1 );
-      sElType = DType( sDim22, v22 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
-          nCbal = nObal + StringToNumberEx( v23, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v23, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
       Else;
-        vString = pStringPrefix | v23 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 22 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 23 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21,
-    v22, v23 ) = 1 );
-      sElType = DType( sDim23, v23 );
-      If( sElType @<> 'S' );
-        IF( pCumulate >= 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
-          nCbal = nObal + StringToNumberEx( v24, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v24, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
       Else;
-        vString = pStringPrefix | v24 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 23 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 24 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 ) = 1 );
-      sElType = DType( sDim24, v24 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
-          nCbal = nObal + StringToNumberEx( v25, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v25, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
       Else;
-        vString = pStringPrefix | v25 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 24 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
-      EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 25 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 ) = 1 );
-      sElType = DType( sDim25, v25 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
-          nCbal = nObal + StringToNumberEx( v26, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v26, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
       Else;
-        vString = pStringPrefix | v26 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 25 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
-      EndIf;
-    EndIf;
-ElseIf( nDimensionCount = 26 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21,
-    v22, v23, v24, v25, v26 ) = 1 );
-      sElType = DType( sDim26, v26 );
-      If( sElType @<> 'S' );
-        IF( pCumulate = 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
-          nCbal = nObal + StringToNumberEx( v27, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v27, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
       Else;
-        vString = pStringPrefix | v27 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 26 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
-      EndIf;
-    EndIf;
-ElseIf( nDimensionCount = 27 );
-    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 ) = 1 );
-      sElType = DType( sDim27, v27 );
-      If( sElType @<> 'S' );
-        IF( pCumulate >= 1);
-          nObal = CellGetN( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
-          nCbal = nObal + StringToNumberEx( v28, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        ELSE;
-          nCbal = StringToNumberEx( v28, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        Endif;
-        CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
       Else;
-        vString = pStringPrefix | v28 | pStringSuffix;
-        If( pCumulate = 1);
-           vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 ) | ' ' | vString;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26 );
+        EndIf;
+      EndIf;
+    EndIf;ElseIf( nDimensionCount = 27 );
+    If( CellIsUpdateable( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 ) = 1 );
+      If( sElType @= 'S' );
+        If( pCumulate = 1 );
+          vString = CellGetS( pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 ) | ' ' | vString;
         EndIf;
         CellPutS( vString, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
+      Else;
+        If( pCumulate = 1 );
+          CellIncrementN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
+        Else;
+          CellPutN( nCbal, pCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27 );
+        EndIf;
       EndIf;
     EndIf;
-
-  EndIf;
 
 
 ### End Data ###
@@ -2199,7 +2039,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,_ParameterConstraints=e30=
+576,
 930,0
 638,1
 804,0
@@ -2239,4 +2079,3 @@ EndIf;
 925,""
 926,""
 927,""
-

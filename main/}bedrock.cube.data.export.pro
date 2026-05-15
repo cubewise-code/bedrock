@@ -4,7 +4,7 @@
 586,"}APQ Staging TempSource"
 585,"}APQ Staging TempSource"
 564,
-565,"k6LX;[ANEe8aDicM8WIF0F@ZtUyRN48\uJO7X@zymRj3eF`F@LmRQ6RFQUYnXs5M=N5?7EaRm:F]aBzcapy]Vef7g@K9yqW8[Gn3ycAKjzXRr:6yeudy]FrR?11?xC7uBh9O_gLz@xz1:t<eBbFhKu>=Hs_AO=krHKq6@O]j_0Sc9<RT\O6uJQcy[K:SFNBt4aY?[3Iv"
+565,"r3mMT:g:WR9ge`PTluaJ^QXZTc65MGc[_gYfaGG2PWjZrzerlgF1Lrb@Gl>dPhi@9sOt_N3y`1rh@[088^h]\m`S6qksHwR;ErN0iZGGcfsy\A^f\HQJ<s[IP1nAHPVbyFJK9MnamFg:C9kv1kuVsXvLQOo]8NGX6UVNs9iAr40ToOM5y=Jk1_3_mCSluwiwbWrj4IsR"
 559,1
 928,0
 593,
@@ -17,8 +17,8 @@
 801,
 566,0
 567,","
-588,"."
-589,","
+588,","
+589,"."
 568,""""
 570,}TI_Dummy_View
 571,
@@ -655,108 +655,7 @@ Value
 0
 0
 0
-582,101
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
+582,0
 603,0
 572,489
 #Region CallThisProcess
@@ -934,7 +833,7 @@ cExportFile = pFilePath | pFileName;
 # Validate parallelization filter
 If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
-    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 );
+    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 % Scan( Lower(sDimParallel) | ':', Lower(pFilter) ) > 0 );
         sMessage = 'Parallelization dimension %sDimParallel% cannot exist in filter.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -1344,7 +1243,7 @@ Else;
 EndIf ;
 
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0_ParameterConstraints=e30=
+576,
 930,0
 638,1
 804,0
@@ -1376,7 +1275,7 @@ EndIf ;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0

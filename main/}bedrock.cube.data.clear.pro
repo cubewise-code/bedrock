@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"y\nX5XC\qXLTgmk[ETS\IFh7Xa7C;Xl0oXdVx^85XD4rK26durcbkvmMm2orZvq385HEYS6Tl3<2eA4Y@62CIbR\O;lfd7R5m4eabu9U7:w@SKPOM0^PaS5xYZOpxuZT\zv7Ib[jG6z382KBcb33ethR9gogkWOnC7wMb]z62:c\;0udpNjOt0Fz^02XH3yhTvnk1bct"
+565,"yOXfx2He4^17C]dIOEQwQ>jcQa7CbqK[Q<jk<E?Qn`HVoeYN<S[cuAaBmXgI>A5zNX?:[BuY:o^CGgskiNZeE`X7hLbQNje\8O56b_2k>>u7bZKF@^>S5:9EH0\?hBYIEYVIIC:m;ijCiDO2uA;d<yJGTw_qo]GCHqnjVX6E1Qhnp^EW?0KwP[4_;DCdKrZ:V3<tugOq"
 559,1
 928,0
 593,
@@ -17,8 +17,8 @@
 801,
 566,0
 567,","
-588,"."
-589,","
+588,","
+589,"."
 568,""""
 570,
 571,
@@ -212,7 +212,7 @@ EndIf;
 # Validate parallelization filter
 If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
   sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
-  If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 );
+  If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 % Scan( Lower(sDimParallel) | ':', Lower(pFilter) ) > 0 );
     sMessage = 'Parallelization dimension %sDimParallel% cannot exist in filter.';
     nErrors = nErrors + 1;
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -648,7 +648,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0
+576,
 930,0
 638,1
 804,0
@@ -680,7 +680,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0

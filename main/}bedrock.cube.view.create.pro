@@ -4,7 +4,7 @@
 586,
 585,
 564,
-565,"jwKE7Ws86Ia\@zwiIdTCpAXNUBcijIBr1`r>CyLX6uRI;8gq@o3A]T1DjaICzuOuBqycUglRnWhF]XiUZR;FT:a\M5dGVd09Ppm_v;upr;[b7aRLWNpU5^Xpl_?=i<^paZDbpdz;gCf1bT2KWur<3Dy;EcVH2HD25L9QaR\1KSE;`PO3hr\na:oEe=:X5[SvKJYe=pA0"
+565,"fJ]ZLja<XbXFxsS<3Du`PxoRq^^WtCijTFw_tq1G:ZqobFii0W8c`z\U<y^]Q3i@Hh864nNx10OrcG_hk]K_xWAL[i4=u<Auh:u=sxsxIZtWCyC2AI6QQgb=@<kNb:l_Yo[7oJ^C1^Sbr6MYl0pmETISKX?E[Ei8CO1ByCHwISA[q]ZMTD]`0O_w?qVFKawYiRYGt?\r"
 559,1
 928,0
 593,
@@ -17,8 +17,8 @@
 801,
 566,0
 567,","
-588,"."
-589,","
+588,","
+589,"."
 568,""""
 570,
 571,
@@ -100,7 +100,7 @@ pSubN,"OPTIONAL: Create N level subset for all dims not mentioned in pFilter"
 581,0
 582,0
 603,0
-572,464
+572,562
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -167,6 +167,11 @@ sSubset           = pView;
 sDelimDim         = TRIM(pDimDelim);
 sElementStartDelim= TRIM(pEleStartDelim);
 sDelimElem        = TRIM(pEleDelim);
+sHierarchy        = '';
+sMDXForDim        = '';
+nDimUsesMDX       = 0;
+nInMDXBlock       = 0;
+nBraceDepth       = 0;
 
 ## LogOutput parameters
 IF ( pLogoutput = 1 );
@@ -209,6 +214,12 @@ EndIf;
 # Check the delimiters
 If( sDelimDim @= sElementStartDelim % sDelimDim @= sDelimElem % sElementStartDelim @= sDelimElem );
   sMessage = 'The delimiters cannot be the same';
+  nErrors = nErrors + 1;
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
+If( sDelimDim @= ':' % sElementStartDelim @= ':' % sDelimElem @= ':' );
+  sMessage = 'The colon (:) is reserved as hierarchy separator and cannot be used as a delimiter';
   nErrors = nErrors + 1;
   LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 EndIf;
@@ -303,8 +314,22 @@ WHILE (nChar <= nCharCount);
     sDelim = '';
     nAddExtra = 0;
 
-    # Ignore spaces
-    IF (TRIM(sChar) @<> '' );
+    # Ignore spaces except in MDX block
+    IF (TRIM(sChar) @<> '' % nInMDXBlock = 1 );
+
+      # inside MDX braces: keep literal characters and do not parse delimiters
+      If( nInMDXBlock = 1 & nBraceDepth > 0 );
+          sWord = sWord | sChar;
+          If( sChar @= '{' );
+              nBraceDepth = nBraceDepth + 1;
+          ElseIf( sChar @= '}' );
+              nBraceDepth = nBraceDepth - 1;
+              If( nBraceDepth <= 0 );
+                  nBraceDepth = 0;
+                  nInMDXBlock = 0;
+              EndIf;
+          EndIf;
+      Else;
 
       ### Dimension Name ###
 
@@ -329,12 +354,26 @@ WHILE (nChar <= nCharCount);
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
         EndIf;
 
-        sDimension = sWord;
+        If( Scan( ':', sWord ) > 0 );
+            sDimension = SubSt( sWord, 1, Scan( ':', sWord ) - 1 );
+            sHierarchy = SubSt( sWord, Scan( ':', sWord ) + 1, Long( sWord ) );
+        Else;
+            sDimension = sWord;
+            sHierarchy = sWord;
+        EndIf;
         nOneDimEleAdded = 0;
-        
+        nDimUsesMDX = 0;
+        nInMDXBlock = 0;
+        nBraceDepth = 0;
+        sMDXForDim = '';
+
         If( DimensionExists( sDimension ) = 0 );
             # The dimension does not exist in the model. Cancel process
             sMessage = 'Dimension: ' | sDimension | ' does not exist';
+            nErrors = nErrors + 1;
+            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+        ElseIf( HierarchyExists( sDimension, sHierarchy ) = 0 );
+            sMessage = 'Hierarchy: ' | sHierarchy | ' does not exist in dimension ' | sDimension;
             nErrors = nErrors + 1;
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
         EndIf;
@@ -358,21 +397,30 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         # Create the subset
-        If( SubsetExists( sDimension, sSubset ) = 1 );
-            SubsetDeleteAllElements( sDimension, sSubset );
+        If( HierarchySubsetExists( sDimension, sHierarchy, sSubset ) = 1 );
+            HierarchySubsetDeleteAllElements( sDimension, sHierarchy, sSubset );
         Else;
-            SubsetCreate( sDimension, sSubset, pTemp );            
+            HierarchySubsetCreate( sDimension, sHierarchy, sSubset, pTemp );
         EndIf;
 
         # Attach to the view
-        ViewSubsetAssign( pCube, pView, sDimension, sSubset );
-        
-        #Add to the Parsed filter
-        IF(sParsedFilter@='');
-          sParsedFilter=sDimension;          
+        If( sHierarchy @= sDimension );
+            ViewSubsetAssign( pCube, pView, sDimension, sSubset );
         Else;
-          sParsedFilter=sParsedFilter|sDelimDim|sDimension;
-        Endif;  
+            ViewSubsetAssign( pCube, pView, sDimension | ':' | sHierarchy, sSubset );
+        EndIf;
+
+        #Add to the Parsed filter
+        If( sHierarchy @= sDimension );
+          sParsedDim = sDimension;
+        Else;
+          sParsedDim = sDimension | ':' | sHierarchy;
+        EndIf;
+        IF(sParsedFilter@='');
+          sParsedFilter=sParsedDim;
+        Else;
+          sParsedFilter=sParsedFilter|sDelimDim|sParsedDim;
+        Endif;
 
         nIndex = 1;
         sLastDelim = sChar;
@@ -434,58 +482,93 @@ WHILE (nChar <= nCharCount);
             sMessage = 'An element delimiter must follow a dimension name: ' |  sChar | ' (' | NumberToString(nChar) | ')';
             nErrors = nErrors + 1;
             LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-            #ProcessError();
           EndIf;
 
           sElement = sWord;
 
-          If( DIMIX( sDimension, sElement ) = 0 );
-              # The element does not exist in the dimension. Cancel process
-              sMessage = 'Element: ' | sElement | ' in dimension ' | sDimension | ' does not exist';
-              nErrors = nErrors + 1;
-              LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
-              #ProcessError();
-          EndIf;
-          
-          sElement = DimensionElementPrincipalName(sDimension,sElement);
+          If( sLastDelim @= sElementStartDelim & SUBST( UPPER( TRIM( sElement ) ), 1, 4 ) @= 'MDX:' );
+              nDimUsesMDX = 1;
+              sMDXForDim = TRIM( SubSt( TRIM(sElement), 5, Long( TRIM(sElement) ) ) );
 
-          If ( (pSuppressConsol = 1 % pIncludeDescendants=1) & DTYPE( sDimension, sElement) @= 'C'  );
-              # Add all N level elements to the subset
-              # Loop through all elements and check if it is an ancestor
-              sMessage = 'Element ' | sElement | ' is consolidated' ;
-              IF ( pLogoutput = 1 );
-                LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
-              EndIf;
-              nElCount = DIMSIZ ( sDimension );
-              n = 1;
-              WHILE ( n <= nElCount );
-                  sEl = DIMNM( sDimension, n );
-                  If( ElIsAnc(sDimension, sElement, sEL) = 1 );
-                      If( pSuppressConsolStrings = 0 );
-                          SubsetElementInsert(sDimension, sSubset, sEl, 0);
-                      ElseIf( DType(sDimension, sEl) @<> 'C' );
-                          SubsetElementInsert(sDimension, sSubset, sEl, 0);
-                      EndIf;
+              nRet = ExecuteProcess( '}bedrock.hier.sub.create.bymdx',
+                  'pLogOutput', pLogOutput,
+                  'pStrictErrorHandling', pStrictErrorHandling,
+                  'pDim', sDimension,
+                  'pHier', sHierarchy,
+                  'pSub', sSubset,
+                  'pMDXExpr', sMDXForDim,
+                  'pConvertToStatic', 0,
+                  'pTemp', pTemp,
+                  'pAlias', ''
+              );
+
+              IF(nRet <> 0);
+                  sMessage = 'Error creating MDX subset for dimension ' | sDimension;
+                  nErrors = nErrors + 1;
+                  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+                  If( pStrictErrorHandling = 1 );
+                      ProcessQuit;
+                  Else;
+                      ProcessBreak;
                   EndIf;
-                  n = n + 1;
-              END;
-              
-              # Add the consolidated element to the subset as well to export strings, if necessary
-              If ( pSuppressConsolStrings = 0 );
-                SubsetElementInsert( sDimension, sSubset, sElement, 0 );
+              ENDIF;
+
+              If( sHierarchy @= sDimension );
+                  ViewSubsetAssign( pCube, pView, sDimension, sSubset );
+              Else;
+                  ViewSubsetAssign( pCube, pView, sDimension | ':' | sHierarchy, sSubset );
               EndIf;
 
           Else;
-              # Add the element to the subset
-              SubsetElementInsert( sDimension, sSubset, sElement, 0 );
-          EndIf;
-          
-          #Add to the Parsed filter
-          If( nOneDimEleAdded = 0 );
-            sParsedFilter=sParsedFilter|pEleStartDelim|sElement;
-            nOneDimEleAdded = nOneDimEleAdded + 1;
-          Else;
-            sParsedFilter=sParsedFilter|sDelimElem|sElement;
+
+              If( ElementIndex( sDimension, sHierarchy, sElement ) = 0 );
+                  # The element does not exist in the dimension. Cancel process
+                  sMessage = 'Element: ' | sElement | ' in dimension ' | sDimension | ':' | sHierarchy | ' does not exist';
+                  nErrors = nErrors + 1;
+                  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+              EndIf;
+
+              sElement = HierarchyElementPrincipalName(sDimension,sHierarchy,sElement);
+
+              If ( (pSuppressConsol = 1 % pIncludeDescendants=1) & ElementType( sDimension, sHierarchy, sElement) @= 'C'  );
+                  # Add all N level elements to the subset
+                  # Loop through all elements and check if it is an ancestor
+                  sMessage = 'Element ' | sElement | ' is consolidated' ;
+                  IF ( pLogoutput = 1 );
+                    LogOutput( cMsgInfoLevel, Expand( cMsgInfoContent ) );
+                  EndIf;
+                  nElCount = ElementCount( sDimension, sHierarchy );
+                  n = 1;
+                  WHILE ( n <= nElCount );
+                      sEl = ElementName( sDimension, sHierarchy, n );
+                      If( ElIsAnc(sDimension, sElement, sEL) = 1 );
+                          If( pSuppressConsolStrings = 0 );
+                              HierarchySubsetElementInsert(sDimension, sHierarchy, sSubset, sEl, 0);
+                          ElseIf( ElementType(sDimension, sHierarchy, sEl) @<> 'C' );
+                              HierarchySubsetElementInsert(sDimension, sHierarchy, sSubset, sEl, 0);
+                          EndIf;
+                      EndIf;
+                      n = n + 1;
+                  END;
+
+                  # Add the consolidated element to the subset as well to export strings, if necessary
+                  If ( pSuppressConsolStrings = 0 );
+                    HierarchySubsetElementInsert( sDimension, sHierarchy, sSubset, sElement, 0 );
+                  EndIf;
+
+              Else;
+                  # Add the element to the subset
+                  HierarchySubsetElementInsert( sDimension, sHierarchy, sSubset, sElement, 0 );
+              EndIf;
+
+              #Add to the Parsed filter
+              If( nOneDimEleAdded = 0 );
+                sParsedFilter=sParsedFilter|pEleStartDelim|sElement;
+                nOneDimEleAdded = nOneDimEleAdded + 1;
+              Else;
+                sParsedFilter=sParsedFilter|sDelimElem|sElement;
+              EndIf;
+
           EndIf;
 
           nIndex = nIndex + 1;
@@ -495,15 +578,30 @@ WHILE (nChar <= nCharCount);
           sWord = '';
         Else;
           sWord = sWord | sChar;
+
+          If( sLastDelim @= sElementStartDelim & nInMDXBlock = 0 & SUBST( UPPER( TRIM( sWord ) ), 1, 5 ) @= 'MDX:{' );
+              nInMDXBlock = 1;
+              nBraceDepth = 1;
+          EndIf;
+
         EndIf;
 
       EndIf;
 
     EndIf;
 
+    EndIf;
+
     nChar = nChar + nAddExtra + 1;
 
 END;
+
+If( nBraceDepth <> 0 );
+    sMessage = 'Unbalanced braces { } in pFilter. Check MDX expression.';
+    nErrors = nErrors + 1;
+    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
+
 sBedrockViewCreateParsedFilter = sParsedFilter;
 
 # creating N level subset for all dim not included in pFilter 
@@ -525,7 +623,7 @@ If(pSubN = 1);
         End;
         
         # to make sure that the name of the dim is not part of the name of another dim
-        If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1);
+        If(Scan(pDimDelim|sDimString|pEleStartDelim, sTFilter)=0 & Scan(sDimString|pEleStartDelim, sTFilter)<>1 & Scan(pDimDelim|sDimString|':', sTFilter)=0 & Scan(sDimString|':', sTFilter)<>1);
             sProc   = '}bedrock.hier.sub.create';
             nRet    = ExecuteProcess( sProc,
                 'pLogOutput', pLogOutput,
@@ -607,7 +705,7 @@ Else;
 EndIf;
   
 ### End Epilog ###
-576,CubeAction=1511DataAction=1503CubeLogChanges=0_ParameterConstraints=e30=
+576,
 930,0
 638,1
 804,0

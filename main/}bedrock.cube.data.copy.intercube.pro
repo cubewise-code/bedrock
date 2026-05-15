@@ -1,10 +1,10 @@
-601,100
+﻿601,100
 602,"}bedrock.cube.data.copy.intercube"
 562,"VIEW"
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"pG`ZNN<g]IoKu=fCavbjyjE:P7zu:UIA[_lTD;E3<jZcRkzD5;kAw>?yKH1mTC`Ji8r`_r5SpmA:ik]lEK3<ct4\4rPQKFLN@B1UPO^uYxPnTkm[yavQIWmIs@PvKMbA\ZAoQtcIme_F`0;`TlCq?4XO9eEN3WnIoVd:PO]AsiuZ0dYzkBp_tZTTkzwTwwyn9X<Z5U0b"
+565,"wUKf343=atv;H24yUQI4WHMa[NolYPMP`dQx5abtKX>>d_saxz>@jgsuF?7XBSOT[_ZYg<Fc9FcSu_4m4f0\Ql?jXGC?O5C]0L=MMAmifahCO:5NMAHfG24IeO=?Z^_PLas;vY1c6Wy8p0bUHDp0>lNaFaC94vq=]oAnVR3^4AOFa\3blUi8t\Kq\XiL@9W0KSw>HvfT"
 559,1
 928,0
 593,
@@ -17,8 +17,8 @@
 801,
 566,0
 567,","
-588,"."
-589,","
+588,","
+589,"."
 568,""""
 570,Default
 571,
@@ -291,38 +291,9 @@ V29
 0
 0
 0
-582,29
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
-VarType=32ColType=827
+582,0
 603,0
-572,1490
+572,1542
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -565,7 +536,7 @@ EndIf;
 # Validate parallelization filter
 If( Scan( pEleStartDelim, pFilterParallel ) > 0 );
     sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );
-    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 );
+    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 % Scan( Lower(sDimParallel) | ':', Lower(pFilter) ) > 0 );
         sMessage = 'Parallelization dimension %sDimParallel% cannot exist in filter.';
         nErrors = nErrors + 1;
         LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
@@ -1143,6 +1114,9 @@ nSourceDimensionCount       = nSourceIndex - 1;
 nTargetCubeDimensionCount   = nTargetIndex - 1;
 # default dimension count is for target
 nDimensionCount = nTargetIndex - 1;
+sDimCount   = NumberToString( nDimensionCount );
+sDimCountP1 = NumberToString( nDimensionCount + 1 );
+sLastDimName = TabDim( pTgtCube, nDimensionCount );
 
 sElementMapping = TRIM( pMappingToNewDims );
 nChar = 1;
@@ -1436,6 +1410,11 @@ nChar = 1;
 nCharCount = LONG( sFilter );
 sWord = '';
 sLastDelim = '';
+sHierarchy = '';
+nInMDXBlock = 0;
+nBraceDepth = 0;
+sMDXBuffer = '';
+nDimInTgt = 0;
 
 # Add a trailing element delimiter so that the last Dimension:Element/s clause is picked up
 If( nCharCount > 0 );
@@ -1451,8 +1430,32 @@ WHILE (nChar <= nCharCount);
     sDelim = '';
     nAddExtra = 0;
 
+    If( nInMDXBlock = 1 );
+      If( sChar @= '{' );
+        nBraceDepth = nBraceDepth + 1;
+        sMDXBuffer = sMDXBuffer | sChar;
+      ElseIf( sChar @= '}' );
+        nBraceDepth = nBraceDepth - 1;
+        sMDXBuffer = sMDXBuffer | sChar;
+        If( nBraceDepth = 0 );
+          If( nDimInTgt = 1 );
+            If( nElementCount = 1 );
+              sTargetFilter = sTargetFilter | sElementStartDelim | sMDXBuffer;
+            Else;
+              sTargetFilter = sTargetFilter | sDelimElem | sMDXBuffer;
+            EndIf;
+          EndIf;
+          nElementCount = nElementCount + 1;
+          nInMDXBlock = 0;
+          sMDXBuffer = '';
+          sWord = '';
+        EndIf;
+      Else;
+        sMDXBuffer = sMDXBuffer | sChar;
+      EndIf;
+
     # Ignore spaces
-    IF (TRIM(sChar) @<> '' );
+    ElseIf (TRIM(sChar) @<> '' );
 
       ### Dimension Name ###
 
@@ -1479,22 +1482,30 @@ WHILE (nChar <= nCharCount);
         EndIf;
 
         # Found a dimension!
-        sDimension = UPPER( sWord );
-        nDimInTgt=0;
+        If( Scan(':', sWord) > 0 );
+          sDimension = UPPER( SubSt( sWord, 1, Scan(':', sWord) - 1 ) );
+          sHierarchy = SubSt( sWord, Scan(':', sWord) + 1, Long(sWord) );
+        Else;
+          sDimension = UPPER( sWord );
+          sHierarchy = sDimension;
+        EndIf;
+
+        nDimInTgt = 0;
+        sDimTokenForFilter = If( sHierarchy @= sDimension, sDimension, sDimension | ':' | sHierarchy );
         # See if the dimension is in the target cube
         IF(scan('^^'|sDimension|'^^', sTgtDimString)>0);
           If(sTargetFilter@='');
-            sTargetFilter = sDimension;
-          Else;  
-            sTargetFilter = sTargetFilter | sDelimDim | sDimension;
+            sTargetFilter = sDimTokenForFilter;
+          Else;
+            sTargetFilter = sTargetFilter | sDelimDim | sDimTokenForFilter;
           endif;
-          nDimInTgt=1;
-        Endif;  
+          nDimInTgt = 1;
+        Endif;
 
         sLastDelim = sChar;
         # Clear the word
         sWord = '';
-        #reset element count
+        # reset element count
         nElementCount = 1;
 
       Else;
@@ -1559,7 +1570,7 @@ WHILE (nChar <= nCharCount);
           # Found an element
           sElement = sWord;
 
-          IF(DIMIX(sDimension, sElement) > 0 & nDimInTgt=1);
+          IF(ElementIndex(sDimension, sHierarchy, sElement) > 0 & nDimInTgt=1);
               # first element
               IF(nElementCount = 1);
                 sTargetFilter = sTargetFilter | sElementStartDelim | sElement;
@@ -1576,6 +1587,12 @@ WHILE (nChar <= nCharCount);
           sWord = '';
         Else;
           sWord = sWord | sChar;
+          If( sLastDelim @= sElementStartDelim & nInMDXBlock = 0 & SUBST( UPPER(TRIM(sWord)), 1, 5 ) @= 'MDX:{' );
+            nInMDXBlock = 1;
+            nBraceDepth = 1;
+            sMDXBuffer = 'MDX:{';
+            sWord = '';
+          EndIf;
         EndIf;
 
       EndIf;
@@ -1585,6 +1602,12 @@ WHILE (nChar <= nCharCount);
     nChar = nChar + nAddExtra + 1;
 
 END;
+
+If( nBraceDepth <> 0 );
+  sMessage = 'pFilter contains an unmatched MDX brace { }. Check MDX:{...} syntax.';
+  nErrors = nErrors + 1;
+  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
@@ -1817,7 +1840,7 @@ EndIf;
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
-574,371
+574,296
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -1890,299 +1913,224 @@ EndIf;
 ##########################################################################################################
 ### Write data from source file to target cube ###########################################################
 
+### Single-pass type and value preparation per data row ###
+
+# sLastDimName was computed in the Prolog (constant across all rows)
+# sLastEle: last mapped target element - changes per row, read via Expand
+sLastEle = Expand( '%sV' | sDimCount | '%' );
+
+# Cell type lookup - works for both pFile=0 (VIEW) and pFile>0 (CSV)
+sElType = DType( sLastDimName, sLastEle );
+
+# Value preparation
+If( pFile = 0 );
+  If( sElType @= 'S' );
+    sVString = SValue;
+  Else;
+    nCbal = NValue * nFactor;
+  EndIf;
+Else;
+  # Value is in sV(nDimensionCount+1) - resolved via Expand
+  sRawValue = Expand( '%sV' | sDimCountP1 | '%' );
+  If( sElType @= 'S' );
+    sVString = sRawValue;
+  Else;
+    nCbal = StringToNumberEx( sRawValue, sDecimalSeparator, sThousandSeparator ) * nFactor;
+  EndIf;
+EndIf;
+
   If( nDimensionCount = 2 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2 ) = 1 );
-      sElType = DType( sDim2, sV2 );
+      # sElType already computed at DataProcedure start
       IF( SubSt( pTgtCube, 1, 17 ) @= '}ElementSecurity_');
         sV3 = IF( sV3 @= '', 'NONE', sV3 );
         ElementSecurityPut( sV3, sDim1, sV1, sV2 );
       ELSEIF( sElType @= 'AA' );
-        AttrPutS( sV3, sDim1, sV1, sV2, 1 );
+        AttrPutS( sVString, sDim1, sV1, sV2, 1 );
       ELSEIF( sElType @= 'AS' );
-        AttrPutS( sV3, sDim1, sV1, sV2 );
+        AttrPutS( sVString, sDim1, sV1, sV2 );
       ELSEIF( sElType @= 'AN' );
-        AttrPutN( StringToNumberEx( sV3, sDecimalSeparator, sThousandSeparator ) * nFactor, sDim1, sV1, sV2 );
+        AttrPutN( nCbal, sDim1, sV1, sV2 );
       ElseIf( sElType @= 'S' );
-        CellPutS( sV3, pTgtCube, sV1, sV2 );
+        CellPutS( sVString, pTgtCube, sV1, sV2 );
       Else;
-        nObal = CellGetN( pTgtCube, sV1, sV2 );
-        nCbal = nObal + StringToNumberEx( sV3, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2 );
       EndIf;
     EndIf;
   ElseIf( nDimensionCount = 3 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3 ) = 1 );
-      sElType = DType( sDim3, sV3 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3 );
-        nCbal = nObal + StringToNumberEx( sV4, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3 );
       Else;
-        CellPutS( sV4, pTgtCube, sV1, sV2, sV3 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 4 );
+    EndIf;  ElseIf( nDimensionCount = 4 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4 ) = 1 );
-      sElType = DType( sDim4, sV4 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4);
-        nCbal = nObal + StringToNumberEx( sV5, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4);
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4 );
       Else;
-        CellPutS( sV5, pTgtCube, sV1, sV2, sV3, sV4);
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 5 );
+    EndIf;  ElseIf( nDimensionCount = 5 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5 ) = 1 );
-      sElType = DType( sDim5, sV5 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5 );
-        nCbal = nObal + StringToNumberEx( sV6, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5 );
       Else;
-        CellPutS( sV6, pTgtCube, sV1, sV2, sV3, sV4, sV5 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 6 );
+    EndIf;  ElseIf( nDimensionCount = 6 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 ) = 1 );
-      sElType = DType( sDim6, sV6 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
-        nCbal = nObal + StringToNumberEx( sV7, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
       Else;
-        CellPutS( sV7, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 7 );
+    EndIf;  ElseIf( nDimensionCount = 7 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 ) = 1 );
-      sElType = DType( sDim7, sV7 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
-        nCbal = nObal + StringToNumberEx( sV8, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
       Else;
-        CellPutS( sV8, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 8 );
+    EndIf;  ElseIf( nDimensionCount = 8 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 ) = 1 );
-      sElType = DType( sDim8, sV8 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
-        nCbal = nObal + StringToNumberEx( sV9, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
       Else;
-        CellPutS( sV9, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 9 );
+    EndIf;  ElseIf( nDimensionCount = 9 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 ) = 1 );
-      sElType = DType( sDim9, sV9 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
-        nCbal = nObal + StringToNumberEx( sV10, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
       Else;
-        CellPutS( sV10, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 10 );
+    EndIf;  ElseIf( nDimensionCount = 10 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 ) = 1 );
-      sElType = DType( sDim10, sV10 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
-        nCbal = nObal + StringToNumberEx( sV11, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
       Else;
-        CellPutS( sV11, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 11 );
+    EndIf;  ElseIf( nDimensionCount = 11 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 ) = 1 );
-      sElType = DType( sDim11, sV11 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
-        nCbal = nObal + StringToNumberEx( sV12, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
       Else;
-        CellPutS( sV12, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 12 );
+    EndIf;  ElseIf( nDimensionCount = 12 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 ) = 1 );
-      sElType = DType( sDim12, sV12 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
-        nCbal = nObal + StringToNumberEx( sV13, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
       Else;
-        CellPutS( sV13, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 13 );
+    EndIf;  ElseIf( nDimensionCount = 13 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 ) = 1 );
-      sElType = DType( sDim13, sV13 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
-        nCbal = nObal + StringToNumberEx( sV14, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
       Else;
-        CellPutS( sV14, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 14 );
+    EndIf;  ElseIf( nDimensionCount = 14 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 ) = 1 );
-      sElType = DType( sDim14, sV14 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
-        nCbal = nObal + StringToNumberEx( sV15, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
       Else;
-        CellPutS( sV15, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 15 );
+    EndIf;  ElseIf( nDimensionCount = 15 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 ) = 1 );
-      sElType = DType( sDim15, sV15 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
-        nCbal = nObal + StringToNumberEx( sV16, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
       Else;
-        CellPutS( sV16, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 16 );
+    EndIf;  ElseIf( nDimensionCount = 16 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 ) = 1 );
-      sElType = DType( sDim16, sV16 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
-        nCbal = nObal + StringToNumberEx( sV17, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
       Else;
-        CellPutS( sV17, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 17 );
+    EndIf;  ElseIf( nDimensionCount = 17 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 ) = 1 );
-      sElType = DType( sDim17, sV17 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
-        nCbal = nObal + StringToNumberEx( sV18, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
       Else;
-        CellPutS( sV18, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 18 );
+    EndIf;  ElseIf( nDimensionCount = 18 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 ) = 1 );
-      sElType = DType( sDim18, sV18 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
-        nCbal = nObal + StringToNumberEx( sV19, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
       Else;
-        CellPutS( sV19, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 19 );
+    EndIf;  ElseIf( nDimensionCount = 19 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 ) = 1 );
-      sElType = DType( sDim19, sV19 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
-        nCbal = nObal + StringToNumberEx( sV20, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
       Else;
-        CellPutS( sV20, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 20 );
+    EndIf;  ElseIf( nDimensionCount = 20 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 ) = 1 );
-      sElType = DType( sDim20, sV20 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
-        nCbal = nObal + StringToNumberEx( sV21, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
       Else;
-        CellPutS( sV21, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20 );
       EndIf;
-    EndIf;  
-  ElseIf( nDimensionCount = 21 );
+    EndIf;  ElseIf( nDimensionCount = 21 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 ) = 1 );
-      sElType = DType( sDim21, sV21 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
-        nCbal = nObal + StringToNumberEx( sV22, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
       Else;
-        CellPutS( sV22, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21 );
       EndIf;
-    EndIf;  
-  ElseIf( nDimensionCount = 22 );
+    EndIf;  ElseIf( nDimensionCount = 22 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 ) = 1 );
-      sElType = DType( sDim22, sV22 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
-        nCbal = nObal + StringToNumberEx( sV23, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
       Else;
-        CellPutS( sV23, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22 );
       EndIf;
-    EndIf;
-  ElseIf( nDimensionCount = 23 );
+    EndIf;  ElseIf( nDimensionCount = 23 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 ) = 1 );
-      sElType = DType( sDim23, sV23 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
-        nCbal = nObal + StringToNumberEx( sV24, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
       Else;
-        CellPutS( sV24, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23 );
       EndIf;
-    EndIf; 
-  ElseIf( nDimensionCount = 24 );
+    EndIf;  ElseIf( nDimensionCount = 24 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 ) = 1 );
-      sElType = DType( sDim24, sV24 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
-        nCbal = nObal + StringToNumberEx( sV25, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
       Else;
-        CellPutS( sV25, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24 );
       EndIf;
-    EndIf;     
-  ElseIf( nDimensionCount = 25 );
+    EndIf;  ElseIf( nDimensionCount = 25 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 ) = 1 );
-      sElType = DType( sDim25, sV25 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
-        nCbal = nObal + StringToNumberEx( sV26, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
       Else;
-        CellPutS( sV26, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25 );
       EndIf;
-    EndIf;  
-  ElseIf( nDimensionCount = 26 );
+    EndIf;  ElseIf( nDimensionCount = 26 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 ) = 1 );
-      sElType = DType( sDim26, sV26 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
-        nCbal = nObal + StringToNumberEx( sV27, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
       Else;
-        CellPutS( sV27, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26 );
       EndIf;
-    EndIf;   
-  ElseIf( nDimensionCount = 27 );
+    EndIf;  ElseIf( nDimensionCount = 27 );
     If( CellIsUpdateable( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 ) = 1 );
-      sElType = DType( sDim27, sV27 );
-      If( sElType @<> 'S' );
-        nObal = CellGetN( pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );
-        nCbal = nObal + StringToNumberEx( sV28, sDecimalSeparator, sThousandSeparator ) * nFactor;
-        CellPutN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );
+      If( sElType @= 'S' );
+        CellPutS( sVString, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );
       Else;
-        CellPutS( sV28, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );
+        CellIncrementN( nCbal, pTgtCube, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9, sV10, sV11, sV12, sV13, sV14, sV15, sV16, sV17, sV18, sV19, sV20, sV21, sV22, sV23, sV24, sV25, sV26, sV27 );
       EndIf;
     EndIf;     
   
@@ -2235,7 +2183,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,_ParameterConstraints=e30=
+576,
 930,0
 638,1
 804,0
@@ -2267,7 +2215,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0
