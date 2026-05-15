@@ -1,0 +1,69 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"0965e0cdac70e6735accdaae15e351bc87df7514\"",
+  "Name": "}bedrock.hier.consol.flat.create",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.consol.flat.create', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '',\r\n    \t'pSrcConsol', '', 'pTgtConsol', '', 'pWeight', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n### Start Prolog ###\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will add consolidated element pTgtConsol in the dimension hierarchy. \r\n\r\n# Use case: Intended for Development but could be used in production too.\r\n# 1/ Create a new hierarchy for testing.\r\n# 2/ Create a new hierarchy to reflect new business needs.\r\n\r\n# Note:\r\n# If source parent element (pSrcConsol) is defined then all its leaf elements will be copied to target\r\n# parent element consolidation. Otherwise all leaf elements in the dimension hierarchy will be \r\n# added into target parent element consolidation.\r\n# Valid source dimension name (pDim), hierarchy (pHier) and taget parent element (pTgtConsol)\r\n# are mandatory otherwise the process will abort.\r\n# Weight of all added elements into target parent consolidation will be assigned accoring to\r\n# pWeight parameter value.\r\n\r\n# Caution: If the target element pTgtConsol exists in the hierarchy, then it will be overwritten.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName   = GetProcessName();\r\ncUserName       = TM1User();\r\ncTimeStamp      = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt      = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel  = 'ERROR';\r\ncMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo        = 'Process:%cThisProcName% run with parameters pDim=%pDim%, pHier=%pHier%, pSrcConsol=%pSrcConsol%, pTgtConsol=%pTgtConsol%.';\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\nIF( Trim( pDim ) @= '' );\r\n    ## No dimension nominated.\r\n    nErrors = 1;\r\n    sMessage = 'No dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\nIf( DimensionExists( pDim) = 0 );\r\n    ## Dimension does not exist in the model.\r\n    nErrors = 1;\r\n    sMessage = 'The dimension does not exist in the model: ' | pDim;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\nIF( SUBST( pDim, 1, 1 ) @= '}' );\r\n    ## Nominated dimension is a system dimension.\r\n    nErrors = 1;\r\n    sMessage = 'Can not modify a system dimension with this Bedrock.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate hierarchy\r\nIF( Trim( pHier  ) @= '' );\r\n    pHier = pDim;\r\nEndIf;\r\n\r\nIF( HierarchyExists(pDim, pHier ) = 0 % pHier @= 'Leaves');\r\n    nErrors = 1;\r\n    sMessage = 'Invalid dimension Hierarchy: ' | pDim |':'|pHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate consolidation Parameter\r\npTgtConsol = Trim( pTgtConsol );\r\nIf( pTgtConsol @= '');\r\n    nErrors = 1;\r\n    sMessage = 'No target parent element supplied.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( pTgtConsol @= pSrcConsol );\r\n    nErrors = 1;\r\n    sMessage = 'Target and source consolidations can''t be the same elements: ' | pTgtConsol |':'| pSrcConsol;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;\r\n\r\n## Validate Member Consolidation\r\npSrcConsol = Trim( pSrcConsol );\r\nIF( pSrcConsol @<> '' );\r\n    ## A source consolidation has been nominated.\r\n    IF(  ElementIndex( pDim, pHier, pSrcConsol ) = 0 );\r\n    ## The Member Consolidation does not exist in the dimension.\r\n        nErrors = 1;\r\n        sMessage = Expand('Source consolidation %pSrcConsol% does not exist in the dimension:hierarchy: %pDim%:%pHier%.');\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    ENDIF;\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### UNWIND CONSOLIDATION ###\r\nIF( ElementIndex( pDim, pHier, pTgtConsol ) > 0 );\r\n  ExecuteProcess('}bedrock.hier.unwind'\r\n    ,'pStrictErrorHandling', pStrictErrorHandling\r\n    ,'pDim', pDim\r\n    ,'pHier',pHier\r\n    ,'pConsol', pTgtConsol\r\n    ,'pRecursive', 0\r\n  );\r\nElse;\r\n    HierarchyElementInsert( pDim, pHier, '', pTgtConsol, 'C' );\r\nENDIF;\r\n\r\n### Assign Datasource ###\r\nDatasourceNameForServer = pDim|':'|pHier;\r\nDataSourceDimensionSubset = 'All';\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0.0~~##\r\n################################################################################################# \r\n\r\n### Start Metadata ###\r\n\r\n### VALIDATE RECORD ###\r\n\r\nsElType = ElementType( pDim, pHier, vElement );\r\nIF( sElType @<> 'N' );\r\n  ## The element is not a 'N' element.\r\n  ITEMSKIP;\r\nENDIF;\r\n\r\nIF( pSrcConsol @<> '' );\r\n  ## A member consolidation is been used.\r\n  IF( ElementIsAncestor( pDim, pHier, pSrcConsol, vElement ) = 0 );\r\n  ## The element is not a member of the nominated consolidation.\r\n    ITEMSKIP;\r\n  ENDIF;\r\nENDIF;  \r\n\r\n### BUILD CONSOLIDATION ###\r\n\r\nIf( nErrors = 0 );\r\n  HierarchyElementComponentAdd( pDim, pHier, pTgtConsol, vElement, pWeight );\r\nEndIf;\r\n\r\n### End Metadata ###",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully created a consolidation %pTgtConsol% in the hierarchy %pDim%:%pHier%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;",
+  "DataSource": {
+    "Type": "TM1DimensionSubset",
+    "dataSourceNameForClient": "}Dimensions",
+    "dataSourceNameForServer": "}Dimensions",
+    "subset": "All"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy (will default to dimension name if blank)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSrcConsol",
+      "Prompt": "OPTIONAL: Source consolidated element name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtConsol",
+      "Prompt": "REQUIRED: Target consolidated element name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pWeight",
+      "Prompt": "OPTIONAL: Component Weight",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vElement",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"6e4c8d71407e4acfeb5aacbee6d5f3fbbc77e67b\"",
+  "Name": "}bedrock.hier.sub.create.orphans",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.sub.create.orphans', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n\t    'pDim', '', 'pHier', '', 'pTemp', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will create a static subset in a Hierarchy of target Dimension that consists of\r\n# all orphan elements.\r\n\r\n# Note:\r\n# Orphan element is defined as:\r\n# - Consolidated element without children.\r\n# - Leaf element without parent.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName       = GetProcessName();\r\ncUserName           = TM1User();\r\ncTimeStamp          = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt          = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel      = 'ERROR';\r\ncMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pTemp:%pTemp%.'; \r\ncAttributeDim       = '}ElementAttributes_' | pDim;\r\ncSubsetOrphanC = 'Orphan C Elements (no children)';\r\ncSubsetOrphanN = 'Orphan N Elements (no parents)';\r\n\r\n## LogOutput parameters\r\nIF ( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate dimension\r\nIf( Trim( pDim ) @= '' );\r\n  nErrors = 1;\r\n  sMessage = 'No dimension specified';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\nIf( DimensionExists( pDim ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid dimension: ' | pDim;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate Hierarchy\r\nIF(pHier @= 'Leaves' );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid  Hierarchy: ' | pDim |':'|pHier;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\nIf( Trim( pHier ) @= '' );\r\n  sHier = pDim;\r\nElse;\r\n  sHier = pHier;\r\nEndIf;\r\n\r\nIF(HierarchyExists(pDim, sHier ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid dimension Hierarchy: ' | pDim |':'|sHier;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate pTemp\r\nIF( pTemp <> 0 & pTemp <> 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Wrong parameter pTemp value (only 0 or 1 accepted).';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Create Subsets ###\r\nIf( nErrors = 0 );\r\n  If( HierarchySubsetExists( pDim, sHier, cSubsetOrphanC ) = 1 );\r\n    HierarchySubsetDeleteAllElements( pDim, sHier, cSubsetOrphanC );\r\n  Else;\r\n    HierarchySubsetCreate( pDim, sHier, cSubsetOrphanC, pTemp );\r\n  EndIf;\r\n  If( HierarchySubsetExists( pDim, sHier, cSubsetOrphanN ) = 1 );\r\n    HierarchySubsetDeleteAllElements( pDim, sHier, cSubsetOrphanN );\r\n  Else;\r\n    HierarchySubsetCreate( pDim, sHier, cSubsetOrphanN, pTemp );\r\n  EndIf;\r\nEndIf;\r\n\r\n\r\n### Populate subsets ###\r\nnElementCount = DimSiz( pDim|':'|sHier);\r\nnElementIndex = 1;\r\nnLeafCount = 0;\r\nnConsolCount = 0;\r\nWhile( nElementIndex <= nElementCount );\r\n  sElement = ElementName( pDim, sHier, nElementIndex );\r\n  If( ElementType( pDim, sHier, sElement ) @= 'N' & ElementParent( pDim, sHier, sElement, 1 ) @= '' );\r\n    # N element with no parents\r\n    nLeafCount = nLeafCount + 1;\r\n    HierarchySubsetElementInsert( pDim, sHier, cSubsetOrphanN, sElement, nLeafCount );\r\n  EndIf;\r\n  If(ElementType(pDim,sHier, sElement) @= 'C' & ElementComponentCount(pDim, sHier, sElement) = 0);\r\n    # C element with no children\r\n    nConsolCount = nConsolCount + 1;\r\n    HierarchySubsetElementInsert( pDim, sHier, cSubsetOrphanC, sElement, nConsolCount );\r\n  EndIf;\r\n  nElementIndex = nElementIndex + 1;\r\nEnd;\r\n\r\n\r\n### Tidy up ###\r\n\r\n# If no orphans then destroy empty subsets\r\nIf( nErrors = 0 );\r\n  If( HierarchySubsetGetSize( pDim, sHier, cSubsetOrphanN ) = 0 );\r\n    HierarchySubsetDestroy( pDim, sHier, cSubsetOrphanN );\r\n  EndIf;\r\n  If( HierarchySubsetGetSize( pDim, sHier, cSubsetOrphanC ) = 0 );\r\n    HierarchySubsetDestroy( pDim, sHier, cSubsetOrphanC );\r\n  EndIf;\r\nEndIf;\r\n\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    If( nLeafCount > 0 );\r\n       sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %cSubsetOrphanN% from dimension %pDim%:%pHier%.' );\r\n       sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n       nProcessReturnCode = 1;\r\n       If( pLogoutput = 1 );\r\n           LogOutput('INFO', Expand( sProcessAction ) );\r\n           nProcessReturnCode = 0; \r\n       EndIf;\r\n    EndIf ;\r\n    \r\n    If( nConsolCount > 0 );\r\n       sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %cSubsetOrphanC% from dimension %pDim%:%pHier%.' );\r\n \r\n       sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n       nProcessReturnCode = 1;\r\n\r\n      If( pLogoutput = 1 );\r\n          LogOutput('INFO', Expand( sProcessAction ) );   \r\n      EndIf;\r\n    Endif ;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy name (default if blank = same named hierarchy)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "OPTIONAL: Use temporary objects? (Boolean 1=True)",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": []
+}

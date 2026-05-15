@@ -1,0 +1,291 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"d53903fc6ea2c5f97bb78e5935cd15e1bfa252e1\"",
+  "Name": "}bedrock.cube.clone",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.cube.clone', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pSrcCube' ,'', 'pTgtCube', '',\r\n    \t'pIncludeRules', 1, 'pIncludeData', 0,\r\n    \t'pFilter', '',\r\n    \t'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',\r\n    \t'pSuppressRules', 1, 'pTemp', 1, 'pCubeLogging', 0\r\n    );\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process replicates an existing cube. It can include data & rules too.\r\n\r\n# Use case: Intended for development/prototyping.\r\n# 1. Take a snapshot of cube data copying all rules to values.\r\n# 2. Take an exact copy of a cube in a \"one click action\" as a starting point for prototyping rule changes or developing new features.\r\n\r\n# Note:\r\n# * There are parameter options to include data (pIncludeData) and rules (pIncludeRules) with the creation of the cube.\r\n# * If the source cube (pSrcCube) is left blank or doesn't exist in the model, process will terminate withoud doing anything.\r\n# * If the target cube (pTgtCube) already exists in the model, process will terminate withoud doing anything.\r\n# * If the target cube is left blank or is the same as the source cube the cloned cube will inherit the source cube name with \"_Clone\" appended.\r\n# * If the source cube data only needs to be partially copied, then the pFilter parameter should be entered otherwise all other parameters can be left as is.\r\n# * In productive systems this process may be called internally by other processes (}bedrock.cube.data.copy, }bedrock.cube.data.copy.intercube) if copying data via intermediate cloned cube.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName   = GetProcessName();\r\ncUserName       = TM1User();\r\ncTimeStamp      = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt      = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel  = 'ERROR';\r\ncMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo        = 'Process:%cThisProcName% run with parameters pSrcCube:%pSrcCube%, pTgtCube:%pTgtCube%, pIncludeRules:%pIncludeRules%, pIncludeData:%pIncludeData%, pFilter:%pFilter%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressRules:%pSuppressRules%, pTemp:%pTemp%, pCubeLogging:%pCubeLogging%.' ;   \r\ncDimCountMax    = 30 ;\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Initialise ###\r\nnErrors         = 0;\r\nnDataCheck      = 0;\r\nsDimCountMax    = NumberToString( cDimCountMax );\r\nsDimsString     = '';\r\nsDelim          = '+';\r\n\r\n### Validate Parameters ###\r\n\r\n## Default filter delimiters\r\nIf( pDimDelim     @= '' );\r\n    pDimDelim     = '&';\r\nEndIf;\r\nIf( pEleStartDelim@= '' );\r\n    pEleStartDelim= '¦';\r\nEndIf;\r\nIf( pEleDelim     @= '' );\r\n    pEleDelim     = '+';\r\nEndIf;\r\n\r\n# Validate source cube\r\nIf( Trim( pSrcCube ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No cube specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( CubeExists( pSrcCube ) = 0 );    \r\n    sMessage = Expand( 'Invalid source cube specified: %pSrcCube%.' );\r\n    nErrors = 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate target cube\r\nIf( pTgtCube @= '' % pTgtCube @= pSrcCube );\r\n    pTgtCube = pSrcCube | '_Clone';\r\nEndIf;\r\nIf( CubeExists( pTgtCube ) = 1 );    \r\n    sMessage = Expand( 'Invalid target cube : %pTgtCube%.' );\r\n    nErrors = 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Create the clone cube ###\r\nnDimCount = 1;\r\nWhile( TabDim( pSrcCube, nDimCount ) @<> '' );\r\n  sDimName = TabDim (pSrcCube, nDimCount);\r\n  sDimsString = sDimsString | sDimName | sDelim;\r\n  nDimCount = nDimCount + 1;\r\nEnd;\r\nnDimCount = nDimCount - 1;\r\nsDimsString = Subst(sDimsString,1,long(sDimsString)-long(sDelim));\r\n\r\nIf( nDimCount > cDimCountMax );\r\n  nErrors = 1;\r\n  sMessage = Expand( 'Cube has too many dimensions: %pSrcCube% max %sDimCountMax% dims catered for, TI must be altered to accomodate.' );\r\n  DataSourceType = 'NULL';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\nsProc = '}bedrock.cube.create';\r\nnRet = ExecuteProcess( sProc,\r\n  'pLogOutput', pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n  'pCube', pTgtCube,\r\n  'pDims', sDimsString,\r\n  'pRecreate', 1,\r\n  'pDelim', sDelim\r\n  );\r\n\r\nIF(nRet <> 0);\r\n  sMessage = 'Error creating the target cube.';\r\n  nErrors = 1;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nENDIF;\r\n\r\n### copy data ####\r\nIf( pIncludeData = 1 );\r\nnRet = ExecuteProcess('}bedrock.cube.data.copy.intercube',\r\n    'pLogOutput', pLogOutput,\r\n    'pStrictErrorHandling', pStrictErrorHandling,\r\n  \t'pSrcCube',pSrcCube,\r\n  \t'pFilter',pFilter,\r\n  \t'pTgtCube',pTgtCube,\r\n  \t'pMappingToNewDims','',\r\n  \t'pSuppressConsol',1,\r\n  \t'pSuppressRules',pSuppressRules,\r\n  \t'pZeroTarget',0,\r\n  \t'pZeroSource',0,\r\n  \t'pFactor',1,\r\n    'pDimDelim', pDimDelim,\r\n    'pEleStartDelim', pEleStartDelim,\r\n    'pEleDelim', pEleDelim,\r\n    'pTemp', pTemp,\r\n    'pCubeLogging', pCubeLogging);\r\n\r\n  IF(nRet <> 0);\r\n    sMessage = 'Error copying data.';\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    Else;\r\n        ProcessBreak;\r\n    EndIf;\r\n  ENDIF;\r\n\r\nEndIf;\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Attach rules to cloned cube ###\r\nIf( nErrors = 0 & pIncludeRules = 1 );\r\n  sRuleFile = pSrcCube | '.rux';\r\n  If( FileExists( sRuleFile ) = 1 );\r\n    If( nErrors = 0 );\r\n      RuleLoadFromFile( pTgtCube, sRuleFile );\r\n    EndIf;\r\n  EndIf;\r\nEndIf;\r\n    \r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned the %pSrcCube% cube to %pTgtCube%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSrcCube",
+      "Prompt": "REQUIRED: Source Cube",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtCube",
+      "Prompt": "OPTIONAL: Target Cube to create/re-create (Source cube_clone if left blank)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pIncludeRules",
+      "Prompt": "REQUIRED: Include cube rules? (Boolean Yes = 1)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pIncludeData",
+      "Prompt": "REQUIRED: Include cube data? (Boolean Yes = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pFilter",
+      "Prompt": "OPTIONAL: Filter on source cube in format Year¦ 2006 + 2007 & Scenario¦ Actual + Budget. Blank for whole cube",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDimDelim",
+      "Prompt": "OPTIONAL: Delimiter for start of Dimension/Element set  (default value if blank = '&')",
+      "Value": "&",
+      "Type": "String"
+    },
+    {
+      "Name": "pEleStartDelim",
+      "Prompt": "OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')",
+      "Value": "¦",
+      "Type": "String"
+    },
+    {
+      "Name": "pEleDelim",
+      "Prompt": "OPTIONAL: Delimiter between elements (default value if blank = '+')",
+      "Value": "+",
+      "Type": "String"
+    },
+    {
+      "Name": "pSuppressRules",
+      "Prompt": "REQUIRED: Skip rule values? (1=skip)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "REQUIRED: Delete temporary view and Subset ( 0 = Retain View and Subsets 1 = Delete View and Subsets 2 = Delete View only )",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCubeLogging",
+      "Prompt": "Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)",
+      "Value": 0,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "v1",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v2",
+      "Type": "String",
+      "Position": 2,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v3",
+      "Type": "String",
+      "Position": 3,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v4",
+      "Type": "String",
+      "Position": 4,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v5",
+      "Type": "String",
+      "Position": 5,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v6",
+      "Type": "String",
+      "Position": 6,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v7",
+      "Type": "String",
+      "Position": 7,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v8",
+      "Type": "String",
+      "Position": 8,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v9",
+      "Type": "String",
+      "Position": 9,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v10",
+      "Type": "String",
+      "Position": 10,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v11",
+      "Type": "String",
+      "Position": 11,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v12",
+      "Type": "String",
+      "Position": 12,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v13",
+      "Type": "String",
+      "Position": 13,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v14",
+      "Type": "String",
+      "Position": 14,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v15",
+      "Type": "String",
+      "Position": 15,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v16",
+      "Type": "String",
+      "Position": 16,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v17",
+      "Type": "String",
+      "Position": 17,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v18",
+      "Type": "String",
+      "Position": 18,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v19",
+      "Type": "String",
+      "Position": 19,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v20",
+      "Type": "String",
+      "Position": 20,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v21",
+      "Type": "String",
+      "Position": 21,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v22",
+      "Type": "String",
+      "Position": 22,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v23",
+      "Type": "String",
+      "Position": 23,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v24",
+      "Type": "String",
+      "Position": 24,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "v25",
+      "Type": "String",
+      "Position": 25,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V26",
+      "Type": "String",
+      "Position": 26,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V27",
+      "Type": "String",
+      "Position": 27,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V28",
+      "Type": "String",
+      "Position": 28,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

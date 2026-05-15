@@ -1,0 +1,82 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"5a1f99823913220882bb02233361fdaa4480d6c6\"",
+  "Name": "}bedrock.hier.create.fromrollup.aliasswap",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.create.fromrollup.aliasswap', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pSrcDim', '', 'pSrcHier', '', 'pConsol', '',\r\n    \t'pTgtDim', '', 'pTgtHier', '',\r\n    \t'pAttr', 1, 'pUnwind', 2, 'pRemove', 0,\r\n    \t'pAliasSwap', ''\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will make an aternative hierarchy from a consolidated element and its children in default hierarchy.\r\n\r\n# Use case: Intended for Development but could be used in production too.\r\n# 1/ Create a new hierarchy for testing.\r\n# 2/ Create a new hierarchy to reflect new business needs.\r\n\r\n# Note:\r\n# Valid source dimension name (pSrcDim) and source subset (pSubset) are mandatory, otherwise the process will abort.\r\n# If a source hierarchy name (pSrcHier) is specified, it needs to be valid, otherwise the process will abort.\r\n\r\n# Caution:\r\n# - Target hierarchy cannot be `Leaves`.\r\n# - If the target Hierarchy already exists, then it will be overwritten.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable ('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode = 0;\r\n\r\n### Constants ###\r\ncThisProcName     = GetProcessName();\r\ncUserName         = TM1User();\r\ncTimeStamp        = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt        = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel    = 'ERROR';\r\ncMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pConsol:%pConsol%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pAttr:%pAttr%, pUnwind:%pUnwind%, pRemove:%pRemove%, pAliasSwap:%pAliasSwap%.';\r\ncHierAttr         = 'Bedrock.Descendant';\r\ncAttrVal          = 'Descendant';\r\n\r\n## LogOutput parameters\r\nIF ( pLogoutput = 1 );\r\n  LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\nIf( Scan( ':', pSrcDim ) > 0 & pSrcHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pSrcHier       = SubSt( pSrcDim, Scan( ':', pSrcDim ) + 1, Long( pSrcDim ) );\r\n    pSrcDim        = SubSt( pSrcDim, 1, Scan( ':', pSrcDim ) - 1 );\r\nEndIf;\r\n\r\nIf( Scan( ':', pTgtDim ) > 0 & pTgtHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pTgtHier       = SubSt( pTgtDim, Scan( ':', pTgtDim ) + 1, Long( pTgtDim ) );\r\n    pTgtDim        = SubSt( pTgtDim, 1, Scan( ':', pTgtDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate source dimension\r\nIF( Trim( pSrcDim ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No source dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\nIF( DimensionExists( pSrcDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid source dimension: ' | pSrcDim;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n# Validate source Hierarchy\r\nIF(pSrcHier @= '');\r\n    pSrcHier = pSrcDim;\r\nElseIf(HierarchyExists(pSrcDim, pSrcHier) = 0);\r\n    nErrors = 1;\r\n    sMessage = 'Invalid source hierarchy: ' | pSrcHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;\r\n\r\n\r\n## Validate consolidation\r\npConsol = Trim( pConsol );\r\nIf( pConsol @<> '' );\r\n    If( ElementIndex ( pSrcDim, pSrcHier, pConsol ) = 0 );\r\n        nErrors = 1;\r\n        sMessage = 'The ' | pConsol | ' consolidation does not exist in the '| pSrcDim |' dimension:Hierarchy ' | pSrcDim |':'| pSrcHier;\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    EndIf;\r\nEndIf;\r\n\r\n## Validate Attribute\r\nIf( pAliasSwap @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'The name of the attribute to swap not specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;  \r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n## Validate target Dimension\r\nIf(pTgtDim @= '');\r\n    pTgtDim = pSrcDim;\r\nEndif;\r\n\r\nIF( DimensionExists( pTgtDim ) = 0 );\r\n   DimensionCreate(pTgtDim);\r\nEndIf;\r\n\r\n### Create target dimension Hierarchy ###\r\nIF(pTgtHier @= '');\r\n    pTgtHier = pTgtDim;\r\nEndIf;\r\n\r\n##########################################\r\n# Bedrock subprocesses\r\n\r\n\r\n#create subset\r\nExecuteProcess('}bedrock.hier.sub.create',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n\t'pDim',pSrcDim,\r\n\t'pHier', pSrcHier,\r\n\t'pSub', cTempSub,\r\n\t'pConsol', pConsol,\r\n\t'pTemp', 1\r\n);\r\n\r\ncTempDim = pSrcDim|'_'| cTimeStamp |'_'| cRandomInt;\r\n\r\nExecuteProcess('}bedrock.hier.create.fromsubset',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n  'pSrcDim',pSrcDim,\r\n  'pSrcHier', pSrcHier,\r\n  'pSubset', cTempSub,\r\n  'pTgtDim', cTempDim,\r\n  'pTgtHier', cTempDim,\r\n  'pAttr', 1,\r\n  'pUnwind', 0\r\n);\r\n\r\nExecuteProcess('}bedrock.dim.attr.create',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n  'pDim',cTempDim,\r\n  'pAttr', cTempDim,\r\n  'pAttrType','A'\r\n);\r\n\r\nExecuteProcess('}bedrock.cube.data.copy',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n  'pCube', '}ElementAttributes_'|cTempDim,\r\n  'pEleMapping','}ElementAttributes_'|cTempDim|':'|pAliasSwap|'->'|cTempDim\r\n);\r\n\r\nExecuteProcess('}bedrock.dim.attr.swapalias',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n  'pDim',cTempDim,\r\n  'pAlias', cTempDim\r\n);\r\n\r\nExecuteProcess('}bedrock.hier.sub.create',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n\t'pDim', cTempDim,\r\n\t'pHier', cTempDim,\r\n\t'pSub', cTempSub,\r\n\t'pConsol', pConsol,\r\n\t'pTemp', 0\r\n);\r\n\r\n\r\nExecuteProcess('}bedrock.hier.create.fromsubset',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n  'pSrcDim', cTempDim,\r\n  'pSrcHier', cTempDim,\r\n  'pSubset', cTempSub,\r\n  'pTgtDim', pTgtDim,\r\n  'pTgtHier', pTgtHier,\r\n  'pAttr', pAttr,\r\n  'pUnwind', pUnwind\r\n);\r\n\r\n\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\nExecuteProcess('}bedrock.dim.attr.delete',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n  'pDim', pTgtDim,\r\n  'pAttr', cTempDim\r\n);\r\n\r\nExecuteProcess('}bedrock.dim.delete',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n\t'pDim', cTempDim\r\n);\r\n\r\n\r\nIF(pRemove = 1);\r\n  ExecuteProcess('}bedrock.hier.unwind',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n\t'pDim',pSrcDim,\r\n\t'pHier', pSrcHier,\r\n\t'pConsol', pConsol,\r\n\t'pRecursive', 1\r\n);\r\n\r\n  ExecuteProcess('}bedrock.hier.emptyconsols.delete',\r\n  'pLogOutput',pLogOutput,\r\n  'pStrictErrorHandling', pStrictErrorHandling,\r\n\t'pDim',pSrcDim,\r\n\t'pHier', pSrcHier\r\n);\r\n\r\nEndif;\r\n\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned dimension:hierarchy %pSrcDim%:%pSrcHier% to %pTgtDim%:%pTgtHier% based on the %pConsol% consolidated element.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSrcDim",
+      "Prompt": "REQUIRED: Source Dimension",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSrcHier",
+      "Prompt": "OPTIONAL: Source Hierarchy (blank = same name as source dimension)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pConsol",
+      "Prompt": "REQUIRED: Cons element in source dim to create root element in target",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtDim",
+      "Prompt": "OPTIONAL: Target Dimension (blank = same name as source dimension)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtHier",
+      "Prompt": "OPTIONAL: Target Hierarchy (blank = same name as target dimension)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAttr",
+      "Prompt": "OPTIONAL: Include Attributes? (Boolean 1=True)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pUnwind",
+      "Prompt": "OPTIONAL: 0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements",
+      "Value": 2,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pRemove",
+      "Prompt": "OPTIONAL: Remove cons elements from source? (1 = Yes, 0 = No)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pAliasSwap",
+      "Prompt": "REQUIRED: Name of the attribute with names to be swapped",
+      "Value": "",
+      "Type": "String"
+    }
+  ],
+  "Variables": []
+}

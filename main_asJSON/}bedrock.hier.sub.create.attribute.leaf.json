@@ -1,0 +1,88 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"e78c41c8479be270d34b3e5ce2918fd770812421\"",
+  "Name": "}bedrock.hier.sub.create.attribute.leaf",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.sub.create.attribute.leaf', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '', 'pSub', '',\r\n    \t'pAttr', '', 'pAttrValue', '',\r\n    \t'pAddToSubset', 0, 'pExclusions', '',\r\n    \t'pDelim', '&', 'pAlias', '', 'pTemp', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will create a static subset in Hierarchy of a Dimension that consists of all\r\n# leaf elements with pAttr attribute value equivalent to pAttrValue.\r\n\r\n# Note:\r\n# This process uses a modification parameters to determine what to include in the subset:\r\n# - pAttr: If specified, only elements that have a value equivalent to pAttrValue will be included\r\n#          in the subset. If blank, this filter will be ignored.\r\n# - pExclusions: If pExclusions is specified then the elements (separated by a delimiter) will be\r\n#                excluded from the subset. Wildcards characters `*` and `?` are accepted.\r\n# - pAddToSubset: If the specified subset already exists then this parameter will control whether elements will\r\n#                 be added to the existing subset (value 1) or a new subset will be created (value 0).\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\nnErrors = 0;\r\n\r\n### Constants ###\r\ncThisProcName       = GetProcessName();\r\ncUserName           = TM1User();\r\ncTimeStamp          = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt          = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel      = 'ERROR';\r\ncMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pAttr:%pAttr%, pAttrValue:%pAttrValue%, pExclusions:%pExclusions%, pDelim:%pDelim%, pAddToSubset:%pAddToSubset%, pAlias:%pAlias%, pTemp:%pTemp%.'; \r\ncAttributeDim       = '}ElementAttributes_' | pDim;\r\n\r\n## LogOutput parameters\r\nIF ( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\nnRet = ExecuteProcess('}bedrock.hier.sub.create',\r\n                              'pStrictErrorHandling', pStrictErrorHandling,\r\n                              'pDim', pDim,\r\n                              'pHier', pHier,\r\n                              'pSub', pSub,\r\n                              'pAttr', pAttr,\r\n                              'pAttrValue', pAttrValue,\r\n                              'pLevelFrom', 0,\r\n                              'pLevelTo', 0,\r\n                              'pExclusions', pExclusions,\r\n                              'pDelim', pDelim,\r\n                              'pAddToSubset', pAddToSubset,\r\n                              'pAlias', pAlias,\r\n                              'pTemp', pTemp\r\n                            );\r\n\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %pSub% from dimension %pDim%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###\r\n",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy name (default if blank = same named hierarchy)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSub",
+      "Prompt": "REQUIRED: Subset name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAttr",
+      "Prompt": "OPTIONAL: Attribute (Blank Equals All)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAttrValue",
+      "Prompt": "OPTIONAL: Attribute Value",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAddToSubset",
+      "Prompt": "OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pExclusions",
+      "Prompt": "OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: Delimiter character",
+      "Value": "&",
+      "Type": "String"
+    },
+    {
+      "Name": "pAlias",
+      "Prompt": "OPTIONAL: Set Alias for Subset",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "OPTIONAL: Use temporary objects? (Boolean 1=True)",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": []
+}

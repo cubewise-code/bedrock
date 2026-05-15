@@ -1,0 +1,52 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"3f2e60163748921c63c3c9d2e60a656bec0c0935\"",
+  "Name": "}bedrock.hier.consol.delete",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.consol.delete', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '', 'pEle', '',\r\n    \t'pDelim', '&'\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will delete a specified C-Level item **or** ALL consolidations in the dimension hierarchy. \r\n\r\n# Use case: Could be used during development or in production.\r\n# 1/ Delete a specific or all C-Level items in a hierarchy.\r\n\r\n# Note:\r\n# Valid dimension name (pDim) is mandatory otherwise the process will abort. Control dimensions are excluded.\r\n# The hierarchy (pHier) will default to pDim if not specified, otherwise it must be valid else the process will abort.\r\n# **ALL** consoldidated items in hierarchy will be deleted if consolidated item (pEle) is specified as \\*, otherwise it needs to contain valid c-level item(s). \r\n# Caution: Target hierarchy (pHier) cannot be `Leaves`.\r\n#EndRegion @DOC\r\n\r\n##Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName     = GetProcessName();\r\ncTimeStamp        = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt        = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncUserName         = TM1User();\r\ncMsgErrorLevel    = 'ERROR';\r\ncMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo          = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pEle:%pEle%, pDelim:%pDelim%.';\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n## Validate Dimension\r\nIf( Trim( pDim ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DimensionExists( pDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Dimension: ' | pDim | ' does not exist on server.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate Hierarchy\r\nIF(pHier @= 'Leaves' );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid  Hierarchy: ' | pDim |':'|pHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate Elements\r\nIF(pEle @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'Element cannot be empty. Use * for all elements';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n\r\nIf( Trim( pHier ) @= '' );\r\n    sHier = pDim;\r\nElse;\r\n    sHier = pHier;\r\nEndIf;\r\n\r\nIf( HierarchyExists( pDim, sHier ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'The Hierarchy ' | sHier | ' does not exist.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# If blank delimiter specified then convert to default\r\nIf( pDelim @= '' );\r\n    pDelim = '&';\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors > 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\nsEles = pEle;\r\nnDelimiterIndex = 1;\r\nWhile( nDelimiterIndex <> 0 );\r\n    \r\n    nDelimiterIndex = Scan( pDelim, sEles );\r\n    If( nDelimiterIndex = 0 );\r\n        sEle = sEles;\r\n    Else;\r\n        sEle = Trim( SubSt( sEles, 1, nDelimiterIndex - 1 ) );\r\n        sEles = Trim( Subst( sEles, nDelimiterIndex + Long(pDelim), Long( sEles ) ) );\r\n    EndIf;\r\n  \r\n    # Check if a wildcard has been used to specify the Element name.\r\n    # If it hasn't then just delete the Element if it exists\r\n    If( sEle @= '*' );\r\n        nElementIndex = Dimsiz(pDim|':'|sHier);\r\n        While( nElementIndex >= 1 );\r\n            sEle = ElementName( pDim, sHier, nElementIndex );\r\n            sElType = ElementType( pDim, sHier, sEle );\r\n            If( sElType @= 'C' );\r\n                HierarchyElementDelete( pDim, sHier,sEle );\r\n            EndIf;\r\n            nElementIndex = nElementIndex - 1;\r\n        End;\r\n    ElseIf( Scan( '*', sEle ) = 0);\r\n        If( HierarchyElementExists( pDim,sHier, sEle ) = 1 );\r\n            sElType = ElementType( pDim, sHier, sEle ); \r\n            If( sElType @='C' );\r\n                HierarchyElementDelete( pDim, sHier,sEle );\r\n            EndIf;\r\n        Else;\r\n            nErrors = 1;\r\n            sMessage = 'The Hierarchy ' | sHier | ' does not have element ' | sEle;\r\n            LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n        EndIf;\r\n    Else;\r\n        # Wildcard search string\r\n        sEle    = '\"'|sEle|'\"';\r\n        sProc   = '}bedrock.hier.sub.create.bymdx';\r\n        sMdx    = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |pDim|':'|sHier |' ])},'| sEle| ')}';\r\n        ExecuteProcess('}bedrock.hier.sub.create.bymdx',\r\n          'pLogOutput', pLogOutput,\r\n          'pStrictErrorHandling', pStrictErrorHandling,\r\n        \t'pDim', pDim,\r\n        \t'pHier', sHier,\r\n        \t'pSub', cTempSub,\r\n        \t'pMDXExpr', sMdx,\r\n        \t'pConvertToStatic', 1,\r\n        \t'pTemp', 1\r\n        );\r\n        nCount = HierarchySubsetGetSize(pDim, sHier, cTempSub);\r\n        While( nCount >= 1 );\r\n            sElement = HierarchySubsetGetElementName(pDim, sHier, cTempSub, nCount);\r\n            sElType = ElementType( pDim, sHier, sElement );\r\n            If( sElType @= 'C' );\r\n                HierarchyElementDelete( pDim, sHier,sElement );\r\n            EndIf;  \r\n            nCount = nCount - 1;\r\n        End;\r\n    EndIf;\r\n\r\nEnd;\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully deleted the appropriate consolidated elements in hierarchy %pDim%:%pHier%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy name (if blank then same named hierarchy as dimension is assumed)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pEle",
+      "Prompt": "OPTIONAL: Filter on elements (element list separated by delimiter, accepts wildcards (if * then all the consolidation elements get deleted))",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: Delimiter character for element list (default to '&' if blank)",
+      "Value": "&",
+      "Type": "String"
+    }
+  ],
+  "Variables": []
+}

@@ -1,0 +1,46 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"0bccccf24c51feaeb2bd7b8181de2222ffb23f52\"",
+  "Name": "}bedrock.security.group.create",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.security.group.create', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n\t    'pGroup', '', 'pAlias', '', 'pDelim', '&'\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will create client groups.\r\n\r\n# Use case: Intended for development or production.\r\n# 1/ Create initial security groups.\r\n# 2/ Add security groups as business needs change.\r\n\r\n# Note:\r\n# Naturally, a group (pGroup) is mandatory otherwise the process will abort.\r\n# - Multiple groups can be specified separated by a delimiter.\r\n# - If group already exists then the process will skip that group.\r\n#EndRegion @DOC\r\n\r\n##Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName       = GetProcessName();\r\ncTimeStamp          = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt          = NumberToString( INT( RAND( ) * 1000 ));\r\ncUserName           = TM1User();\r\ncMsgErrorLevel      = 'ERROR';\r\ncMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo            = 'Process:%cThisProcName% run with parameters pGroup:%pGroup%, pDelim:%pDelim%.' ;  \r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors             = 0;\r\n# If blank delimiter specified then convert to default\r\nIf( pDelim @= '' );\r\n    pDelim          = '&';\r\nEndIf;\r\n\r\n# If no groups have been specified then terminate process\r\nIf( Trim( pGroup ) @= '' );\r\n    nErrors         = 1;\r\n    sMessage        = 'No groups specified';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n# Alias\r\nIf( pAlias @<> '' );\r\n    If( DimensionExists( '}ElementAttributes_}Groups' ) = 0 );\r\n        AttrInsert( '}Groups', '', '}TM1_DefaultDisplayValue', 'A' );\r\n    ElseIf( DimIx( '}ElementAttributes_}Groups', '}TM1_DefaultDisplayValue' ) = 0 );\r\n        AttrInsert( '}Groups', '', '}TM1_DefaultDisplayValue', 'A' );\r\n    EndIf;\r\nEndIf;\r\n\r\n### Split pGroups into individual groups and add ###\r\nsGroups = pGroup;\r\nnDelimiterIndex = 1;\r\nWhile( nDelimiterIndex <> 0 );\r\n    nDelimiterIndex = Scan( pDelim, sGroups );\r\n    If( nDelimiterIndex = 0 );\r\n        sGroup = sGroups;\r\n    Else;\r\n        sGroup = Trim( SubSt( sGroups, 1, nDelimiterIndex - 1 ) );\r\n        sGroups = Trim( Subst( sGroups, nDelimiterIndex + Long(pDelim), Long( sGroups ) ) );\r\n    EndIf;\r\n    # Don't attempt to add a blank group\r\n    If( sGroup @<> '' );\r\n        If( DimIx( '}Groups', sGroup ) = 0 );\r\n            AddGroup( sGroup );\r\n        Else;\r\n            #Skip group\r\n        EndIf;\r\n    EndIf;\r\nEnd;\r\n\r\nIf( nErrors = 0 );\r\n  DimensionSortOrder( '}Groups', 'ByName', 'Ascending', 'ByName' , 'Ascending' );\r\nEndIf;\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Update Alias\r\n\r\nIf( nErrors = 0 );\r\n\r\n  sAliases  = pAlias;\r\n  sGroups   = pGroup;\r\n  nDelimiterIndex = 1;\r\n\r\n  While( nDelimiterIndex > 0 );\r\n    nDelimiterIndex = Scan( pDelim, sAliases );\r\n    If( nDelimiterIndex = 0 );\r\n      sAlias    = sAliases;\r\n    Else;\r\n      sAlias    = Trim( SubSt( sAliases, 1, nDelimiterIndex - 1 ) );\r\n      sAliases  = Trim( Subst( sAliases, nDelimiterIndex + Long(pDelim), Long( sAliases ) ) );\r\n    EndIf;\r\n    nDelimiterIndex = Scan( pDelim, sGroups );\r\n    If( nDelimiterIndex = 0 );\r\n      sGroup   = sGroups;\r\n    Else;\r\n      sGroup   = Trim( SubSt( sGroups, 1, nDelimiterIndex - 1 ) );\r\n      sGroups  = Trim( Subst( sGroups, nDelimiterIndex + Long(pDelim), Long( sGroups ) ) );\r\n    EndIf;\r\n    \r\n    If( DimIx( '}Groups', sGroup ) > 0 );\r\n      If( sAlias @<> '' );\r\n        AttrPutS( sAlias, '}Groups', sGroup, '}TM1_DefaultDisplayValue', 1 );\r\n      EndIf;\r\n    EndIf;\r\n  End;\r\n\r\nEndIf;\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully created Group %pGroup% .' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pGroup",
+      "Prompt": "REQUIRED: Groups separated by delimiter",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAlias",
+      "Prompt": "OPTIONAL: single or delimited list of }TM1_DefaultDisplayValue alias to assign to group (if list of groups then size of list of aliases must be the same!)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: Delimiter character (Defaults to & if left blank)",
+      "Value": "&",
+      "Type": "String"
+    }
+  ],
+  "Variables": []
+}

@@ -1,0 +1,93 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"8544637bc205e442f466fa50d902e7009fe09dac\"",
+  "Name": "}bedrock.hier.sub.exporttofile",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.sub.exporttofile', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '', 'pSub', '',\r\n    \t'pTgtDir', '', 'pTgtFile', '',\r\n    \t'pTitleRecord', 1, 'pDelim', ',', 'pQuote', '\"'\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will Export a subset in a Hierarchy of a Dimension to a file. Custom record delimiter\r\n# (specified by a character or its ASCII code) can be used.\r\n# __Format of the file:__  \r\n# - 1st line: File metadata contains summary information about the dimension, hierarchy, subset\r\n#   name, number of elements and date/time when file was generated.\r\n# - 2nd line and forth: Elements export data.\r\n\r\n# Note:\r\n# Valid dimension name (pDim), subset name (pSub), inclusion of header (pTitleRecord)\r\n# are mandatory otherwise the process will abort. Target folder (pTgtDir) must exist.\r\n# If needed, custom delimiter might be used by specifying parameter pDelim value as either exactly one\r\n# character or as a 3-digit (decimal) ASCII code. For example to use TAB as a delimiter, use 009.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName       = GetProcessName();\r\ncUserName           = TM1User();\r\ncTimeStamp          = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt          = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel      = 'ERROR';\r\ncMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pTgtDir:%pTgtDir%, pTgtFile:%pTgtFile%, pTitleRecord:%pTitleRecord%.'; \r\ncAttributeDim       = '}ElementAttributes_' | pDim;\r\ncLenASCIICode       = 3;\r\n\r\npDelim = TRIM(pDelim);\r\n\r\n## LogOutput parameters\r\nIF ( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n\r\n### Validate Parameters ###\r\n\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate dimension\r\nIf( Trim( pDim ) @= '' );\r\n  nErrors = 1;\r\n  sMessage = 'No dimension specified';\r\n  DataSourceType = 'NULL';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\nIf( DimensionExists( pDim ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid dimension: ' | pDim;\r\n  DataSourceType = 'NULL';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate hierarchy\r\nIF( Trim(pHier) @= '' );\r\n  pHier = pDim;\r\nEndIf;\r\n\r\nIF(\r\nHierarchyExists(pDim, pHier ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid Source Hierarchy: ' | pDim |':'|pHier;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate subset\r\nIf( Trim( pSub ) @= '' );\r\n  nErrors = 1;\r\n  sMessage = 'No subset specified';\r\n    DataSourceType = 'NULL';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\nIf( HierarchySubsetExists( pDim, pHier, pSub ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid subset: ' | pSub | ' in dimension:Hierarchy ' | pDim |':' | pHier;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## check operating system\r\nIf( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );\r\n  sOS = 'Linux';\r\n  sOSDelim = '/';\r\nElse;\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nEndIf;\r\n\r\n# Validate file path\r\n# Strip off trailing backslash (if present)\r\nIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= sOSDelim );\r\n  pTgtDir = SubSt( pTgtDir, 1, Long( pTgtDir ) - 1 );\r\nEndIf;\r\nIf( FileExists( pTgtDir ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid export path specified. Folder does not exist.';\r\n  DataSourceType = 'NULL';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\npTgtDir = pTgtDir | sOSDelim;\r\n\r\n# Validate file delimiter & quote character\r\nIf( pDelim @= '' );\r\n    pDelim = ',';\r\nElse;\r\n    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pDelim) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pDelim, nChar )>=CODE( '0', 1 ) & CODE( pDelim, nChar )<=CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pDelim=CHAR(StringToNumber( pDelim ));\r\n    Else;\r\n      pDelim = SubSt( Trim( pDelim ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\nIf( pQuote @= '' );\r\n    ## Use no quote character \r\nElse;\r\n    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pQuote) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pQuote=CHAR(StringToNumber( pQuote ));\r\n    Else;\r\n      pQuote = SubSt( Trim( pQuote ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\n\r\n# Validate filename\r\n# If no file name then default to Dimension.Subset.Export.csv (or Dimension.Hierarchy.Subset.Export.csv in case of alternate hierarchy usage)\r\nIf( pTgtFile @= '' );\r\n  If( pHier @= pHier );\r\n    pTgtFile = pDim |'.'| pSub |'.Export.csv';\r\n  Else;\r\n    pTgtFile = pDim |'.'| pHier |'.'| pSub |'.Export.csv';\r\n  EndIf;\r\nElse;\r\n  If( Scan( '.', pTgtFile ) = 0 );\r\n    # No file extension specified\r\n    pTgtFile = pTgtFile | '.csv';\r\n  EndIf;\r\nEndIf;\r\nsFile = pTgtDir | pTgtFile;\r\n\r\n# Validate Character Set\r\nIf(Trim( pCharacterSet ) @= '' );\r\n  pCharacterSet = 'TM1CS_UTF8';\r\nEndIf;\r\n\r\n### Initialise & declare variables ###\r\n\r\nnRecordCount = 0;\r\n\r\n### Determine if alias exists ###\r\n\r\nsAttributeDim = '}ElementAttributes_' | pDim;\r\nsAlias = '(no alias)';\r\nIf( DimensionExists( sAttributeDim ) = 1 );\r\n  nElementIndex = 1;\r\n  nElementCount = DimSiz( sAttributeDim );\r\n  While( nElementIndex <= nElementCount );\r\n    sAttribute = DimNm( sAttributeDim, nElementIndex );\r\n    If( SubSt( DType( sAttributeDim, sAttribute ), 2, 1 ) @= 'A' );\r\n      sAlias = sAttribute;\r\n      nElementIndex = nElementCount;\r\n    EndIf;\r\n    nElementIndex = nElementIndex + 1;\r\n  End;\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### Assign Data Source ###\r\n\r\nDatasourceNameForServer = pDim|':'|pHier;\r\nDatasourceNameForClient = pDim|':'|pHier;\r\nDataSourceType = 'SUBSET';\r\nDatasourceDimensionSubset = pSub;\r\nDatasourceAsciiDelimiter= pDelim;\r\nDatasourceAsciiQuoteCharacter = pQuote;\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n# Set the output character set\r\nSetOutputCharacterSet( sFile, pCharacterSet );\r\n\r\n### Check for error in prolog ###\r\n\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### Check whether to write title records ###\r\n\r\nnRecordCount = nRecordCount + 1;\r\n\r\nIf( nRecordCount = 1 & pTitleRecord = 1 );\r\n\r\n  nSubsetSize = HierarchySubSetGetSize( pDim, pHier, pSub );\r\n\r\n  # Write params\r\n  TextOutput(\r\n    sFile,\r\n    'Export from dimension: ' | pDim | ',Hierarchy:'|pHier|',Subset:'|pSub|\r\n    ', Total elements: ' | NumberToString( nSubsetSize ) |\r\n    '. On ' | Date( Now, 1 ) | ' at ' | Time\r\n   );\r\n  # Write header records\r\n  TextOutput(\r\n    sFile,\r\n    'Subix',\r\n    'Element',\r\n    'Alias: ' | sAlias,\r\n    'Dimix',\r\n    'El Type',\r\n    'Level',\r\n    'Num Children',\r\n    'Parent 1',\r\n    'Weight 1',\r\n    'Parent 2',\r\n    'Weight 2',\r\n    'Parent 3',\r\n    'Weight 3',\r\n    'Parent 4',\r\n    'Weight 4',\r\n    'Parent 5',\r\n    'Weight 5'\r\n  );\r\n\r\nEndIf;\r\n\r\n### Write dimension info to flat file ###\r\nsElement = HierarchyElementPrincipalName( pDim, pHier, vElement );\r\nsSubix = NumberToString( nRecordCount );\r\nsIndex = NumberToString( ElementIndex( pDim, pHier, vElement ) );\r\nsType = ElementType( pDim, PHier, vElement );\r\nsLevel = NumberToString( ElementLevel( pDim, pHier, vElement ) );\r\nsChild = NumberToString( ElementComponentCount( pDim, pHier, vElement ) );\r\nsParent1 = ElementParent( pDim,pHier, vElement, 1 );\r\nsParent2 = ElementParent( pDim,pHier, vElement, 2 );\r\nsParent3 = ElementParent( pDim,pHier, vElement, 3 );\r\nsParent4 = ElementParent( pDim,pHier, vElement, 4 );\r\nsParent5 = ElementParent( pDim,pHier, vElement, 5 );\r\nsParent6 = ElementParent( pDim,pHier, vElement, 6 );\r\nsParent7 = ElementParent( pDim,pHier, vElement, 7 );\r\nsParent8 = ElementParent( pDim,pHier, vElement, 8 );\r\nsWeight1 = NumberToString( ElementWeight( pDim, pHier, sParent1, vElement ) );\r\nsWeight2 = NumberToString( ElementWeight( pDim, pHier, sParent2, vElement ) );\r\nsWeight3 = NumberToString( ElementWeight( pDim, pHier, sParent3, vElement ) );\r\nsWeight4 = NumberToString( ElementWeight( pDim, pHier, sParent4, vElement ) );\r\nsWeight5 = NumberToString( ElementWeight( pDim, pHier, sParent5, vElement ) );\r\nsWeight6 = NumberToString( ElementWeight( pDim, pHier, sParent6, vElement ) );\r\nsWeight7 = NumberToString( ElementWeight( pDim, pHier, sParent7, vElement ) );\r\nsWeight8 = NumberToString( ElementWeight( pDim, pHier, sParent8, vElement ) );\r\n\r\nIf( sAlias @<> '(no alias)' );\r\n  sAliasValue = ElementAttrS( pDim, pHier, vElement, sAlias );\r\nElse;\r\n  sAliasValue = '';\r\nEndIf;\r\n\r\n  TextOutput(\r\n    sFile,\r\n    sSubix,\r\n    sElement,\r\n    sAliasValue,\r\n    sIndex,\r\n    sType,\r\n    sLevel,\r\n    sChild,\r\n    sParent1,\r\n    sWeight1,\r\n    sParent2,\r\n    sWeight2,\r\n    sParent3,\r\n    sWeight3,\r\n    sParent4,\r\n    sWeight4,\r\n    sParent5,\r\n    sWeight5,\r\n    sParent6,\r\n    sWeight6,\r\n    sParent7,\r\n    sWeight7,\r\n    sParent8,\r\n    sWeight8\r\n  );\r\n\r\n### End Data ###",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully exported subset %pSub% from dimension %pDim%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "TM1DimensionSubset",
+    "dataSourceNameForClient": "}Cubes",
+    "dataSourceNameForServer": "}Cubes",
+    "subset": "All"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy name (default if blank = same named hierarchy)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSub",
+      "Prompt": "REQUIRED: Subset name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtDir",
+      "Prompt": "REQUIRED: Target Directory Path",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtFile",
+      "Prompt": "OPTIONAL: Target File Name (Default Extension .csv)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTitleRecord",
+      "Prompt": "OPTIONAL: Boolean: 1 = Yes include header row",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)",
+      "Value": ",",
+      "Type": "String"
+    },
+    {
+      "Name": "pQuote",
+      "Prompt": "OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)",
+      "Value": "\"",
+      "Type": "String"
+    },
+    {
+      "Name": "pCharacterSet",
+      "Prompt": "OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)",
+      "Value": "",
+      "Type": "String"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vElement",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

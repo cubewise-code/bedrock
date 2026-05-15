@@ -1,0 +1,64 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"69f8bbba30c82e9386d31d61edbc731653c24a01\"",
+  "Name": "}bedrock.server.encrypt.file",
+  "HasSecurityAccess": false,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess('}bedrock.server.encrypt.file', 'pLogOutput', pLogOutput,\r\n       'pStrictErrorHandling', pStrictErrorHandling,\r\n       'pSourcePath', pSourcePath,\r\n       'pSourceFile', pSourceFile,\r\n       'pDestPath', pDestPath,\r\n       'pConfigLocation', pConfigLocation,\r\n       'pTM1CryptLocation', pTM1CryptLocation,\r\n       'pAction', pAction\r\n    );\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process this process encrypts / unencrypts a file using the tm1crypt utility\r\n\r\n# Use case: To encrypts / unencrypts a single file\r\n\r\n\r\n# Note: Generated commands will only work when the TM1 isntance is entrypted\r\n# \r\n#EndRegion @DOC\r\n\r\n##Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName       = GetProcessName();\r\ncTimeStamp          = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt          = NumberToString( INT( RAND( ) * 1000 ));\r\ncUserName           = TM1User();\r\ncMsgErrorLevel      = 'ERROR';\r\ncMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo            = 'Process:%cThisProcName% run with parameters pSourcePath:%pSourcePath%, pSourceFile:%pSourceFile%, pDestPath:%pDestPath%, pConfigLocation:%pConfigLocation%, pTM1CryptLocation:%pTM1CryptLocation%, pAction:%pAction%.' ;  \r\ncMsgInfoContent    = 'User:%cUserName% Process:%cThisProcName% InfoMsg:%sMessage%';\r\nnDataCount        = 0;\r\nnErrors           = 0;\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\n\r\n## check operating system\r\nIf( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );\r\n  sOS = 'Linux';\r\n  sOSDelim = '/';\r\nElse;\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nEndIf;\r\n\r\n## Validate the action\r\nsAction = '';\r\nIf ( pAction @= '4' % pAction @= '5');\r\n    sAction = pAction;\r\nELSE;\r\n    nErrors         = 1;\r\n    sMessage        = 'Specified Action is not valid';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate config and exe\r\nIf ( FileExists( pConfigLocation ) = 0 );\r\n    nErrors         = 1;\r\n    sMessage        = 'Specified config file not found';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;  \r\n\r\nIf ( FileExists( pTM1CryptLocation ) = 0 );\r\n    nErrors         = 1;\r\n    sMessage        = 'Specified tm1crypt file not found';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;  \r\n\r\n## Validate the source file/path and dest file/path\r\nIf ( pSourcePath @= '' );\r\n    nErrors         = 1;\r\n    sMessage        = 'pSourcePath is Blank';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;\r\nsSourcePath = pSourcePath;\r\nIf ( SubSt ( pSourcePath, Long ( pSourcePath ), 1 ) @<> sOSDelim );\r\n  sSourcePath = sSourcePath | sOSDelim;\r\nEndIf;\r\n\r\nsDestPath = pDestPath;\r\nIf ( pDestPath @= '' );\r\n    sMessage        = 'pDestPath is Blank, using logging dir';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sDestPath = GetProcessErrorFileDirectory;\r\nEndIf;\r\nIf ( SubSt ( sDestPath, Long ( sDestPath ), 1 ) @<> sOSDelim );\r\n  sDestPath = sDestPath | sOSDelim;\r\nEndIf;\r\n\r\nIf ( pSourceFile @= '' );\r\n    nErrors         = 1;\r\n    sMessage        = 'pSourceFile is Blank';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;\r\nsFileSrc = sSourcePath | pSourceFile;\r\n\r\nIf ( FileExists( sFileSrc ) = 0 );\r\n    nErrors         = 1;\r\n    sMessage        = '%sFileSrc% not found';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;  \r\n\r\nsFileDest = sDestPath;\r\nIf ( SubSt ( sFileDest, Long ( sFileDest ), 1 ) @= sOSDelim );\r\n  sFileDest = SubSt ( sFileDest, 1, Long ( sFileDest ) - 1 );\r\nEndIf;\r\n\r\nIf ( sFileDest @= sSourcePath );\r\n    nErrors         = 1;\r\n    sMessage        = 'Destination is the same as source';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndif;  \r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n## Create contents of the bat file\r\n\r\nDatasourceASCIIQuoteCharacter= '';\r\n\r\nsBat = '\"' | pTM1CryptLocation | '\" -i \"' | pConfigLocation | '\" -action ' | sAction | ' -filesrc \"' | sFileSrc | '\" -filedest \"' | sFileDest |'\"';\r\nIf( sOS @= 'Windows' );\r\n    sBatFile = sDestPath | pSourceFile | '.bat';\r\nElse;\r\n    sBatFile = sDestPath | pSourceFile | '.sh';\r\nEndIf;\r\nASCIIOutput( sBatFile, sBat);\r\n",
+  "MetadataProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****",
+  "DataProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****",
+  "EpilogProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n### Run that bat file\r\n\r\nIf( nErrors = 0 );\r\n  If(sOS @= 'Windows');\r\n    ExecuteCommand( sBatfile, 1 );\r\n  Else;\r\n    ExecuteCommand ( 'sh ' | sBatfile, 1 );\r\n  EndIf;\r\n  ASCIIDelete( sBatFile );\r\nEndIf;\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully processed file %pSourceFile%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSourcePath",
+      "Prompt": "REQUIRED: Source directory of file to be processed",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSourceFile",
+      "Prompt": "REQUIRED: Source file to be processed",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDestPath",
+      "Prompt": "REQUIRED: Directory where to store encrypted files, blank = logging directory",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pConfigLocation",
+      "Prompt": "REQUIRED: Path to tm1crypt.config file",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTM1CryptLocation",
+      "Prompt": "REQUIRED: Path to tm1crypt.exe",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAction",
+      "Prompt": "REQUIRED: 5 = unencrypt, 4 = encrypt",
+      "Value": "5",
+      "Type": "String"
+    }
+  ],
+  "Variables": []
+}

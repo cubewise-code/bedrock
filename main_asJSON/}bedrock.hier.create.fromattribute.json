@@ -1,0 +1,113 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"d6270954c0eee77aba0f1300d1dcfde391508a0f\"",
+  "Name": "}bedrock.hier.create.fromattribute",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.create.fromattribute', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pSrcHier', '', 'pTgtHier', '', 'pAttr', '',\r\n    \t'pTopNode', 'Total <pAttr>', 'pPrefix', '', 'pSuffix', '',\r\n    \t'pSkipBlank', 0, 'pUnallocated', 'Undefined <pAttr>', 'pUnwind', 0\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will create a new dimension hierarchy from attribute values.\r\n\r\n# Note:\r\n# Valid dimension name (pDim) and attribute name (pAttr) are mandatory, otherwise the\r\n# process will abort.\r\n\r\n# Caution: It is assumed each element exists __only once__ within the hierarchy. This should hold true except in exceptional circumstances.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName     = GetProcessName();\r\ncUserName         = TM1User();\r\ncTimeStamp        = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt        = NumberToString( INT( RAND( ) * 1000 ));\r\ncSubset           = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel    = 'ERROR';\r\ncMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo          = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pSrcHier:%pSrcHier%, pTgtHier:%pTgtHier%, pAttr:%pAttr%, pTopNode:%pTopNode%, pPrefix:%pPrefix%, pSuffix:%pSuffix%, pSkipBlank:%pSkipBlank%, pUnallocated:%pUnallocated%.';\r\ncAttributeDim     = '}ElementAttributes_' | pDim;\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pSrcHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pSrcHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\nIF( Trim ( pSrcHier ) @= Trim ( pTgtHier ) & pTgtHier @<> '' );\r\n    nErrors = 1;\r\n    sMessage = 'Source and target Herarchy can not be the same';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;    \r\n    \r\n## Validate dimension\r\nIf( Trim( pDim ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DimensionExists( pDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Dimension: ' | pDim | ' does not exist.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n## Validate Hierarchy\r\nIF( Trim( pSrcHier  ) @= '' );\r\n    pSrcHier = Trim( pDim );\r\nEndIf;\r\n\r\nIF( HierarchyExists( pDim, pSrcHier ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid dimension Hierarchy: ' | pDim |':'|pSrcHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\npnew =DType( cAttributeDim, pAttr );\r\n## Validate attribute\r\nIf( Trim( pAttr ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No attribute specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DimIx( cAttributeDim, pAttr ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Attribute: ' | pAttr | ' does not exists in dimension: ' | pDim;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DType( cAttributeDim, pAttr ) @<> 'AS' & DType( cAttributeDim, pAttr ) @<> 'AN');\r\n    ### as alias values are all unique, not applicable for creating hierarchy\r\n    nErrors = 1;\r\n    sMessage = 'Only string and numeric attributes may be used for this process.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n##  Validate Top node name\r\nIF( Trim( pTopNode  ) @= '' );\r\n    sTopNode = 'All ' | pAttr;\r\nElseIF( Subst(Trim( pTopNode ),1,7 ) @= '<pAttr>'  );\r\n    sTopNode = pAttr | ' ' | Subst( pTopNode, 8, Long( pTopNode ) );\r\nElseIF( Subst( pTopNode, Long( pTopNode )-7, 8 ) @= '<pAttr>'  );\r\n    sTopNode = Subst( pTopNode, 1, Long( pTopNode )-8 )  | ' ' | pAttr;\r\nElseIF( Scan( '<pAttr>', pTopNode ) >0 );\r\n    sTopNode = Subst( pTopNode, 1, Scan( '<pAttr>', pTopNode )-1 ) | pAttr | Subst( pTopNode, Scan( '<pAttr>', pTopNode )+7,Long(pTopNode) );\r\nElse;\t\r\n    sTopNode = pTopNode;\r\nEndIf;\r\n\r\n##  Validate Unallocated node name\r\nIF( Trim( pUnallocated  ) @= '' );\r\n    pUnallocated = 'Unallocated';\r\nElseIF( Subst(Trim( pUnallocated ),1,7 ) @= '<pAttr>'  );\r\n    pUnallocated = pAttr | ' ' | Subst( pUnallocated, 8, Long( pUnallocated ) );\r\nElseIF( Subst( pUnallocated, Long( pUnallocated )-7, 8 ) @= '<pAttr>'  );\r\n    pUnallocated = Subst( pUnallocated, 1, Long( pUnallocated )-8 )  | ' ' | pAttr;\r\nElseIF( Scan( '<pAttr>', pUnallocated ) >0 );\r\n    pUnallocated = Subst( pUnallocated, 1, Scan( '<pAttr>', pUnallocated )-1 ) | pAttr | Subst( pUnallocated, Scan( '<pAttr>', pUnallocated )+7,Long(pUnallocated) );\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n## Modify attribute for hierarchy name\r\nsAttribute = Trim(pAttr);\r\n#If Attribute name has \":\" then delete as Hierachy names are not allowed with \":\" \r\nIf(Scan(':', sAttribute) > 0);\r\n        nStart = 0;\r\n        WHILE ( nStart <> 1 );\r\n            nSpecialChar = SCAN ( ':', sAttribute );\r\n        \tIF ( nSpecialChar <> 0 );\r\n        \t\tsAttribute  = DELET (sAttribute , nSpecialChar, 1 );\r\n        \tELSE;\r\n        \t\tnStart = 1;\r\n        \tENDIF;\r\n        END;\r\nEndIf;\r\n\r\n### Create target dimension Hierarchy ###\r\nIf(pTgtHier @= '');\r\n  sTargetHierarchy = sAttribute;\r\nElse;\r\n  sTargetHierarchy = pTgtHier;\r\nEndIf;\r\n\r\nIf( HierarchyExists( pDim, sTargetHierarchy ) = 0 );\r\n    HierarchyCreate( pDim, sTargetHierarchy );\r\nElse;\r\n  IF ( pUnwind = 1 );\r\n    ExecuteProcess('}bedrock.hier.unwind',\r\n       'pLogOutput', pLogOutput,\r\n       'pStrictErrorHandling', pStrictErrorHandling,\r\n       'pDim', pDim,\r\n       'pHier', sTargetHierarchy,\r\n       'pConsol', '*',\r\n       'pRecursive', 0,\r\n       'pDelim', '&'\r\n      );\r\n  Else;   \r\n    HierarchyDeleteAllElements( pDim, sTargetHierarchy );\r\n  Endif;  \r\nEndIf;\r\n\r\n#Target consol does not exist then add element to dimension.\r\nIf( ElementIndex(pDim, sTargetHierarchy, sTopNode) = 0);\r\n    HierarchyElementinsert(pDim, sTargetHierarchy, '',sTopNode, 'C');\r\nEndif;\r\n\r\n### Format Prefix and Suffix with trailing or leading ' ' ###\r\nIF( pPrefix @<> '' );\r\n    IF( SUBST( pPrefix, Long( pPrefix), 1) @<> ' ' );\r\n        sPrefix = pPrefix | ' ';\r\n    ELSE;\r\n        sPrefix = pPrefix;\r\n    ENDIF;\r\nENDIF;\r\n\r\nIF( pSuffix @<> '' );\r\n    IF( SUBST( pSuffix, 1, 1) @<> ' ' );\r\n        sSuffix = ' ' | pSuffix;\r\n    ELSE;\r\n        sSuffix = pSuffix;\r\n    ENDIF;\r\nENDIF;\r\n\r\n\r\n### Assign Data Source ###\r\nDatasourceNameForServer   = pDim|':'|pSrcHier;\r\nDatasourceNameForClient   = pDim|':'|pSrcHier;\r\nDataSourceType            = 'SUBSET';\r\nDatasourceDimensionSubset = 'ALL';",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0.0~~##\r\n################################################################################################# \r\n\r\n\r\n### Check for errors in prolog ###\r\n\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n# Skip if the Element is not leaf element\r\nIf( ElementType(pDim, pSrcHier, vEle) @<> 'N' );\r\n    ItemSkip;\r\nEndif;\r\n\r\n# Skip if top node\r\nIf( vEle @= sTopNode );\r\n    ItemSkip;\r\nENDIF;\r\n\r\nIf( DType( cAttributeDim, pAttr ) @= 'AS' );\r\n  sAttrVal = ElementAttrS(pDim, pSrcHier, vEle, pAttr);\r\nElse; \r\n  sAttrVal = NumberToString(ElementAttrN(pDim, pSrcHier, vEle, pAttr));\r\nEndIf; \r\nsParent = sAttrVal;\r\n\r\n# Manage not populated attribute.\r\nIf( sParent @= '' & pSkipBlank = 0 );\r\n    ItemSkip;\r\nElseIf( sParent @= '' & pSkipBlank <> 0 );  \r\n    sParent = pUnallocated;\r\nEndIf;\r\n\r\n#If parent does not exist AND allow insertion of new parents is TRUE then insert new consol\r\n## Add the attribute value to the top node.\r\n  \r\n  sElPar = sPrefix | sParent | sSuffix;\r\n\r\n  HierarchyElementinsert(pDim, sTargetHierarchy, '',sElPar, 'C');\r\n  HierarchyElementComponentAdd(pDim, sTargetHierarchy, sTopNode, sElPar, 1);\r\n  \r\n  HierarchyElementinsert(pDim, sTargetHierarchy, '',vEle, 'N' );\r\n  HierarchyElementComponentAdd(pDim, sTargetHierarchy, sElPar, vEle, 1);\r\n\r\n### End Metadata ###",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0.0~~##\r\n################################################################################################# \r\n\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully created the %sTargetHierarchy% hierarchy in the %pDim% dimension.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "TM1CubeView",
+    "dataSourceNameForClient": "}ElementAttributes_}Clients",
+    "dataSourceNameForServer": "}ElementAttributes_}Clients",
+    "view": "Temp"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSrcHier",
+      "Prompt": "OPTIONAL: Source Hierarchy, If not specified takes the default Hierarchy",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtHier",
+      "Prompt": "OPTIONAL: Target Hierarchy, If not specified, takes the same name as attribute",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAttr",
+      "Prompt": "REQUIRED: Attribute",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTopNode",
+      "Prompt": "OPTIONAL: The name of the Target Hierarchy top element (will default to 'All ' attribute name)",
+      "Value": "Total <pAttr>",
+      "Type": "String"
+    },
+    {
+      "Name": "pPrefix",
+      "Prompt": "OPTIONAL: Prefix before the attribute value",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSuffix",
+      "Prompt": "OPTIONAL: Suffix after the attribute value",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSkipBlank",
+      "Prompt": "OPTIONAL: To manage empty attribute: 0 = Skip, 1 = Send to unallocated node (by default blank attribute values are skipped)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pUnallocated",
+      "Prompt": "OPTIONAL: Naming convention for rollup if attribute is empty (eg. Unallocated <pAttr>, No <pAttr>, Undefined <pAttr>)",
+      "Value": "Undefined <pAttr>",
+      "Type": "String"
+    },
+    {
+      "Name": "pUnwind",
+      "Prompt": "OPTIONAL: Unwind target hierarchy (0 = Delete all elements, 1 = Unwind hierarchy and keep elements)",
+      "Value": 0,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vEle",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "vAttr",
+      "Type": "String",
+      "Position": 2,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "Value",
+      "Type": "String",
+      "Position": 3,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

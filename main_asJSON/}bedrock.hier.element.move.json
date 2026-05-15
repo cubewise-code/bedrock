@@ -1,0 +1,64 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"98a26b8f8a0404ac522f326c616577fe7a00b399\"",
+  "Name": "}bedrock.hier.element.move",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.element.move', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '', 'pEle', '',\r\n    \t'pTgtConsol', '', 'pMode', 'Add', 'pWeight', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will Add or Remove Element from a Consolidation in a Hierarchy.\r\n\r\n# Note:\r\n# Valid dimension name (pDim), consolidated element name (pTgtConsol) and element name (pEle)\r\n# otherwise the process will abort. Mode can be either Add to add or Remove to remove the element\r\n# from a consolidation. \r\n\r\n# Caution: Target hierarchy cannot be `Leaves`.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName   = GetProcessName();\r\ncUserName       = TM1User();\r\ncTimeStamp      = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt      = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel  = 'ERROR';\r\ncMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pEle:%pEle%, pTgtConsol:%pTgtConsol%, pMode:%pMode%, pWeight:%pWeight%.';\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate dimension\r\nIf( Trim( pDim ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DimensionExists( pDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Dimension ' | pDim | ' does not exist on server.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Hierarchy\r\nIf( Trim( pHier ) @= '' );\r\n    sHier = Trim( pDim );\r\nElse;\r\n    sHier = Trim( pHier );\r\nEndIf;\r\nIf( sHier @= 'Leaves' );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid  Hierarchy: ' | pDim |':'|sHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( HierarchyExists( pDim, sHier ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'The Hierachy ' | sHier | ' does not exist in dimension ' | pDim;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Element\r\nIf( Trim( pEle ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No element specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( ElementIndex ( pDim, sHier, pEle ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Element: ' | pEle | ' does not exist in dimension: ' | pDim|':'| sHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate target consol\r\nIf( ElementIndex ( pDim, sHier, pTgtConsol ) = 0  );\r\n    nErrors = 1;\r\n    sMessage = 'Consolidated Element: ' | pTgtConsol | ' does not exist in dimension: ' | pDim|':'| sHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( ElementType( pDim, sHier, pTgtConsol ) @<> 'C' );\r\n    nErrors = 1;\r\n    sMessage = 'Target Consolidation: ' | pTgtConsol | ' has incorrect element type.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\nIf( ElementIsAncestor( pDim, sHier, pEle, pTgtConsol ) = 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Cannot add element: ' | pEle | ' to consolidation: ' | pTgtConsol | ' due to circular reference.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate action\r\nIf( pMode @<> 'Add' & pMode @<> 'Remove' );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid action: ' | pMode | '. Valid actions are Add or Remove';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n\r\n### Insert Element into consolidation ###\r\nIf( pMode @= 'Add' );\r\n    HierarchyElementComponentAdd( pDim, sHier, pTgtConsol, pEle, pWeight );\r\nEndIf;\r\n\r\n\r\n### Remove Element from consolidation ###\r\nIf( pMode @= 'Remove' );\r\n    # Check that element is actually a child of target consol\r\n    If( ElementIsComponent ( pDim, sHier, pEle, pTgtConsol ) = 1 );\r\n        HierarchyElementComponentDelete( pDim, sHier, pTgtConsol, pEle );\r\n    Else;\r\n        nErrors = 1;\r\n        sMessage = 'Element: ' | pEle | ' is not a child of consolidation: ' | pTgtConsol;\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    EndIf;\r\nEndIf;\r\n\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### If errors occurred terminate process with a major error status ###\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 major error and consequently aborted. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nEndIf;\r\n\r\n### Return Code\r\nsProcessAction      = Expand( 'Process:%cThisProcName% successfully %pMode%ed element %pEle% to/from %pTgtConsol% in the %pDim%:%pHier% dimension:hierarchy.' );\r\nsProcessReturnCode  = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\nnProcessReturnCode  = 1;\r\nIf( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( sProcessAction ) );   \r\nEndIf;\r\n\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension Name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy Name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pEle",
+      "Prompt": "REQUIRED: Element Name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtConsol",
+      "Prompt": "REQUIRED: Target Consolidation",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pMode",
+      "Prompt": "REQUIRED: Add or Remove Element from Hierarchy",
+      "Value": "Add",
+      "Type": "String"
+    },
+    {
+      "Name": "pWeight",
+      "Prompt": "OPTIONAL: Element Weight (for Add only)",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": []
+}

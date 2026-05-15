@@ -1,0 +1,901 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"89ddc12274f4c62a4450775954419db8db42e731\"",
+  "Name": "}bedrock.cube.data.export",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.cube.data.export', 'pLogoutput', pLogoutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pCube', '', 'pView', '', 'pFilter', '',\r\n    \t'pFilterParallel', '', 'pParallelThreads', 0,\r\n    \t'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',\r\n    \t'pSuppressZero', 1, 'pSuppressConsol', 1, 'pSuppressRules', 1, 'pSuppressConsolStrings', 1, 'pIncludeDescendants',0,\r\n    \t'pZeroSource', 0, 'pCubeLogging', 0, 'pTemp', 1,\r\n    \t'pFilePath', '', 'pFileName', '',\r\n    \t'pDelim', ',','pDecimalSeparator','.','pThousandSeparator',',',\r\n      'pQuote', '\"', 'pTitleRecord', 1, 'pSandbox', pSandbox, 'pSubN', pSubN, 'pCubeNameExport', pCubeNameExport\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n#################################################################################################\r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n#################################################################################################\r\n\r\n#Region @DOC\r\n# Description:\r\n# This TI is designed to export data in a given cube to a flat file for a given \"slice\" (any dimension/element combination).\r\n#\r\n# Use case: Intended for development/prototyping or in Production environment.\r\n# 1. Export data for import into another TM1 model to eliminate possibility of locking.\r\n# 2. Export data for import into ERP system.\r\n#\r\n# Note:\r\n# * Naturally, a valid cube name (pCube) is mandatory otherwise the process will abort.\r\n# * All other parameters are optional, however, the filter (pFilter) should be specified to limit the size of the file.\r\n# * The default output path is the same as the error file path.\r\n# * As this TI has a view as a data source it requires the implicit variables NValue, SValue and Value_is_String\r\n# * To edit this TI in Architect a tmp cube with minimum 24 dims is needed as the preview data source or set the data\r\n#   source to ASCII and manually edit the TI in notepad after saving to add back the required implicit view variables\r\n# * If using the pFilterParallel parameter the **single dimension** used as the \"parallelization slicer\" cannot appear in\r\n#   the pFilter parameter\r\n# * When using parallelization via the *RunProcess* function the elements listed in pFilterParallel will be split one_at_a_time\r\n#   and passed to a recursive call of the process being added to pFilter. Each element name will also be appended to the filename\r\n#\r\n# Warning:\r\n# As the *RunProcess* function currently has no mechanism to check for the state of the called process if more processes are\r\n# released than available CPU cores on the server then this could lead to TM1 consuming all available server resources and a\r\n# associated performance issue. Be careful that the number of slicer elements listed in pFilterParallel should not exceed the\r\n# number of available cores.\r\n#EndRegion @DOC\r\n\r\n##Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nStringGlobalVariable('sBedrockViewCreateParsedFilter');\r\nNumericGlobalVariable('nDataCount');\r\n\r\n### Constants ###\r\ncThisProcName     = GetProcessName();\r\ncUserName         = TM1User();\r\ncTimeStamp        = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt        = NumberToString( INT( RAND( ) * 1000 ));\r\ncMsgErrorLevel    = 'ERROR';\r\ncMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pFilter:%pFilter%, pFilterParallel:%pFilterParallel%, pParallelThreads:%pParallelThreads%, pDimDelim:%pDimDelim%, pEleStartDelim:%pEleStartDelim%, pEleDelim:%pEleDelim%, pSuppressZero:%pSuppressZero%, pSuppressConsol:%pSuppressConsol%, pSuppressRules:%pSuppressRules%, pZeroSource:%pZeroSource%, pCubeLogging:%pCubeLogging%, pTemp:%pTemp%, pFilePath:%pFilePath%, pFileName:%pFileName%, pDelim:%pDelim%, pQuote:%pQuote%, pTitleRecord:%pTitleRecord%, pSandbox:%pSandbox%, pSuppressConsolStrings:%pSuppressConsolStrings%  pIncludeDescendants %pIncludeDescendants%.';\r\ncDefaultView      = Expand( '%cThisProcName%_%cTimeStamp%_%cRandomInt%' );\r\ncLenASCIICode     = 3;\r\n\r\npFieldDelim       = TRIM(pDelim);\r\npDimDelim         = TRIM(pDimDelim);\r\npEleStartDelim    = TRIM(pEleStartDelim);\r\npEleDelim         = TRIM(pEleDelim);\r\npDecimalSeparator = TRIM(pDecimalSeparator);\r\npThousandSeparator= TRIM(pThousandSeparator);\r\nnDataCount        = 0;\r\nnErrors           = 0;\r\n\r\n## Capture current transaction logging state\r\nIf( CubeExists(pCube) = 1 );\r\n  sCubeLogging = CellGetS('}CubeProperties', pCube, 'LOGGING' );\r\nEndIf;\r\n\r\n## Default filter delimiters\r\nIf( pDimDelim     @= '' );\r\n    pDimDelim     = '&';\r\nEndIf;\r\nIf( pEleStartDelim@= '' );\r\n    pEleStartDelim= '¦';\r\nEndIf;\r\nIf( pEleDelim     @= '' );\r\n    pEleDelim     = '+';\r\nEndIf;\r\nIf( pDecimalSeparator @= '' );\r\n \tpDecimalSeparator = '.';\r\nEndIf;\r\nIf( pThousandSeparator @= '' );\r\n \tpThousandSeparator = ',';\r\nEndIf;\r\nsDelimDim = pDimDelim;\r\nsElementStartDelim = pEleStartDelim;\r\nsDelimelem = pEleDelim;\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );\r\nENDIF;\r\n\r\n### Validate Parameters ###\r\n\r\n# If no cube has been specified then terminate process\r\nIf( Trim( pCube ) @= '' );\r\n    sMessage = 'No cube specified.';\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( CubeExists( pCube ) = 0 );\r\n    sMessage = Expand( 'Cube: %pCube% does not exist.' );\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate the View parameter\r\nIf( TRIM(pView) @= '' );\r\n    cView = cDefaultView ;\r\nElse ;\r\n    cView = pView ;\r\nEndIf;\r\ncSubset = cView;\r\n\r\n## check operating system\r\nIf( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );\r\n  sOS = 'Linux';\r\n  sOSDelim = '/';\r\nElse;\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nEndIf;\r\n\r\n# Validate file path\r\nIf(Trim( pFilePath ) @= '' );\r\n    pFilePath = GetProcessErrorFileDirectory;\r\nEndIf;\r\nIf( SubSt( pFilePath, Long( pFilePath ), 1 ) @= sOSDelim );\r\n    pFilePath = SubSt( pFilePath, 1, Long( pFilePath ) -1 );\r\nEndIf;\r\nIf(  FileExists( pFilePath ) = 0 );\r\n    sMessage = Expand('Invalid export directory: %pFilePath%');\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\npFilePath = pFilePath | sOSDelim;\r\n\r\n# Validate file name\r\nIf( pFileName @= '' );\r\n    sBaseFileName = Expand('%pCube%_Export');\r\n    sExt = '.csv';\r\n    pFileName = sBaseFileName | '.csv';\r\nElse;\r\n    # determine file extension. If no file extension entered then use .csv as default\r\n    If( Scan( '.', pFileName ) = 0 );\r\n        sExt = '.csv';\r\n        sBaseFileName = pFileName;\r\n    Else;\r\n        sExt = SubSt( pFileName, Scan( '.', pFileName ), Long( pFileName ) );\r\n        sBaseFileName = SubSt( pFileName, 1, Scan( '.', pFileName ) - 1 );\r\n    EndIf;\r\n    pFileName = sBaseFileName | sExt;\r\nEndIf;\r\ncExportFile = pFilePath | pFileName;\r\n\r\n# Validate parallelization filter\r\nIf( Scan( pEleStartDelim, pFilterParallel ) > 0 );\r\n    sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );\r\n    If( Scan( Lower(sDimParallel) | pEleStartDelim, Lower(pFilter) ) > 0 % Scan( Lower(sDimParallel) | ':', Lower(pFilter) ) > 0 );\r\n        sMessage = 'Parallelization dimension %sDimParallel% cannot exist in filter.';\r\n        nErrors = nErrors + 1;\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    EndIf;\r\nEndIf;\r\n\r\n# Validate Max Threads\r\nIf( pParallelThreads > 0 );\r\n  nMaxThreads = pParallelThreads;\r\nElse;\r\n  nMaxThreads = 1;\r\nEndIf;\r\n\r\n# Validate file delimiter & quote character\r\nIf( pFieldDelim @= '' );\r\n    pFieldDelim = ',';\r\nElse;\r\n    # If length of pFieldDelim is exactly 3 chars and each of them is decimal digit, then the pFieldDelim is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pFieldDelim) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pFieldDelim, nChar ) >= CODE( '0', 1 ) & CODE( pFieldDelim, nChar ) <= CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n          Break;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pFieldDelim=CHAR(StringToNumber( pFieldDelim ));\r\n    Else;\r\n      pFieldDelim = SubSt( Trim( pFieldDelim ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\n\r\nIf( pQuote @= '' );\r\n    ## Use no quote character\r\nElse;\r\n    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pQuote) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n          Break;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pQuote=CHAR(StringToNumber( pQuote ));\r\n    Else;\r\n      pQuote = SubSt( Trim( pQuote ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\n\r\nIf ( LONG(pDecimalSeparator) = cLenASCIICode );\r\n  nValid = 0;\r\n  nChar = 1;\r\n  While ( nChar <= cLenASCIICode );\r\n    If( CODE( pDecimalSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pDecimalSeparator, nChar ) <= CODE( '9', 1 ) );\r\n      nValid = 1;\r\n    Else;\r\n      nValid = 0;\r\n      Break;\r\n    EndIf;\r\n    nChar = nChar + 1;\r\n  End;\r\n  If ( nValid<>0 );\r\n    pDecimalSeparator = CHAR(StringToNumber( pDecimalSeparator ));\r\n  Else;\r\n    pDecimalSeparator = SubSt( Trim( pDecimalSeparator ), 1, 1 );\r\n  EndIf;\r\nEndIf;\r\nsDecimalSeparator = pDecimalSeparator;\r\n\r\nIf ( LONG(pThousandSeparator) = cLenASCIICode );\r\n  nValid = 0;\r\n  nChar = 1;\r\n  While ( nChar <= cLenASCIICode );\r\n    If( CODE( pThousandSeparator, nChar ) >= CODE( '0', 1 ) & CODE( pThousandSeparator, nChar ) <= CODE( '9', 1 ) );\r\n      nValid = 1;\r\n    Else;\r\n      nValid = 0;\r\n      Break;\r\n    EndIf;\r\n    nChar = nChar + 1;\r\n  End;\r\n  If ( nValid<>0 );\r\n    pThousandSeparator = CHAR(StringToNumber( pThousandSeparator ));\r\n  Else;\r\n    pThousandSeparator = SubSt( Trim( pThousandSeparator ), 1, 1 );\r\n  EndIf;\r\nEndIf;\r\nsThousandSeparator = pThousandSeparator;\r\n\r\n# Validate Sandbox\r\nIf( TRIM( pSandbox ) @<> '' );\r\n    If( ServerSandboxExists( pSandbox ) = 0 );\r\n        SetUseActiveSandboxProperty( 0 );\r\n        nErrors = nErrors + 1;\r\n        sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    Else;\r\n        ServerActiveSandboxSet( pSandbox );\r\n        SetUseActiveSandboxProperty( 1 );\r\n    EndIf;\r\nElse;\r\n    SetUseActiveSandboxProperty( 0 );\r\nEndIf;\r\n\r\n# Validate Character Set\r\nIf(Trim( pCharacterSet ) @= '' );\r\n  pCharacterSet = 'TM1CS_UTF8';\r\nEndIf;\r\n\r\n# Jump to Epilog if any errors so far\r\nIF ( nErrors > 0 );\r\n    DataSourceType = 'NULL';\r\n    If( pStrictErrorHandling = 1 );\r\n        If( CubeExists(pCube) = 1 );\r\n          CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );\r\n        EndIf;\r\n        ProcessQuit;\r\n    Else;\r\n        ProcessBreak;\r\n    EndIf;\r\nENDIF;\r\n\r\n# Branch depending on whether to do recursive calls to self on independent threads or run all in this thread\r\nIf( Scan( pEleStartDelim, pFilterParallel ) > 0 );\r\n  sDimParallel = SubSt( pFilterParallel, 1, Scan( pEleStartDelim, pFilterParallel ) - 1 );\r\n  sElementList = SubSt( pFilterParallel, Scan( pEleStartDelim, pFilterParallel ) + 1, Long( pFilterParallel ) );\r\n  If( SubSt( sElementList, Long( sElementList ), 1 ) @<> pEleDelim );\r\n      sElementList = sElementList | pEleDelim;\r\n  EndIf;\r\n  ## Counting elements in element list\r\n  sElementListCount = sElementList;\r\n  nElements = 0;\r\n  While( Scan( pEleDelim, sElementListCount ) > 0 );\r\n    nElements = nElements + 1;\r\n    sElementListCount = SubSt( sElementListCount, Scan( pEleDelim, sElementListCount ) + 1, Long( sElementListCount ) );\r\n  End;\r\n  IF( Mod( nElements, nMaxThreads ) = 0 );\r\n    nElemsPerThread = INT( nElements \\ nMaxThreads );\r\n  ELSE;\r\n    nElemsPerThread = INT( nElements \\ nMaxThreads ) + 1;\r\n  ENDIF;\r\n  nThreadElCounter = 0;\r\n  While( Scan( pEleDelim, sElementList ) > 0 );\r\n      sSlicerEle = SubSt( sElementList, 1, Scan( pEleDelim, sElementList ) - 1 );\r\n      sElementList = SubSt( sElementList, Scan( pEleDelim, sElementList ) + 1, Long( sElementList ) );\r\n      # Do recursive process call with new RunProcess function\r\n      nThreadElCounter = nThreadElCounter + 1;\r\n      sDimDelim = If(pFilter @= '', '', pDimDelim );\r\n      IF( nThreadElCounter = 1 );\r\n        sFilter = Expand('%pFilter%%sDimDelim%%sDimParallel%%pEleStartDelim%%sSlicerEle%');\r\n        sFileName = Expand('%sBaseFileName%_%sDimParallel%_%sSlicerEle%');\r\n      ELSE;\r\n        sFilter = Expand('%sFilter%%pEleDelim%%sSlicerEle%');\r\n        sFileName = Expand('%sFileName%+%sSlicerEle%');\r\n      ENDIF;\r\n      IF( nThreadElCounter >= nElemsPerThread );\r\n        sFileName = Expand('%sFileName%%sExt%');\r\n        RunProcess( cThisProcName, 'pLogoutput', pLogoutput,\r\n        \t'pCube', pCube, 'pView', '',\r\n        \t'pFilter', sFilter, 'pFilterParallel', '',\r\n        \t'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,\r\n        \t'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,\r\n        \t'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,\r\n        \t'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,\r\n        \t'pDelim', pFieldDelim, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,\r\n          'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pCubeNameExport', pCubeNameExport\r\n        );\r\n    \t  nThreadElCounter = 0;\r\n    \t  sFilter = '';\r\n    \t  sFileName = '';\r\n    \t ENDIF;\r\n  End;\r\n  ## Process last elements - only when filter is not empty (there are still elements)\r\n  IF( sFilter @<> '' );\r\n    sFileName = Expand('%sFileName%%sExt%');\r\n    RunProcess( cThisProcName, 'pLogoutput', pLogoutput,\r\n    \t'pCube', pCube, 'pView', '',\r\n    \t'pFilter', sFilter, 'pFilterParallel', '',\r\n    \t'pDimDelim', pDimDelim, 'pEleStartDelim', pEleStartDelim, 'pEleDelim', pEleDelim,\r\n    \t'pSuppressZero', pSuppressZero, 'pSuppressConsol', pSuppressConsol, 'pSuppressRules', pSuppressRules,\r\n    \t'pZeroSource', pZeroSource, 'pCubeLogging', pCubeLogging,\r\n    \t'pTemp', pTemp, 'pFilePath', pFilePath, 'pFileName', sFileName,\r\n    \t'pDelim', pFieldDelim, 'pDecimalSeparator', pDecimalSeparator, 'pThousandSeparator', pThousandSeparator,\r\n      'pQuote', pQuote, 'pTitleRecord', pTitleRecord, 'pSandbox', pSandbox, 'pSuppressConsolStrings', pSuppressConsolStrings, 'pCubeNameExport', pCubeNameExport\r\n    );\r\n  ENDIF;\r\n  DataSourceType = 'NULL';\r\n  nParallelRun = 1;\r\nElse;\r\n  # No parallelization is being used. Proceed as normal and do everything internally\r\n\r\n  # Determine number of dims in source cube & create strings to expand on title and rows\r\n  nCount = 1;\r\n  nDimensionIndex = 0;\r\n\r\n  ## Skip cube name from export\r\n  IF (pCubeNameExport = 0);\r\n    sTitle = '';\r\n    sRow = '';\r\n\r\n    While( TabDim( pCube, nCount ) @<> '' );\r\n        sDimension = TabDim( pCube, nCount );\r\n\r\n        ## Determine title string for the source cube\r\n        sTitle = sTitle|'%pQuote%'|sDimension|'%pQuote%%pFieldDelim%';\r\n        # Determine row string for the source cube\r\n        sRow = sRow|'%pQuote%%V'| numbertostring(nCount) |'%%pQuote%%pFieldDelim%';\r\n\r\n        nCount = nCount + 1;\r\n    End;\r\n    nDimensionCount = nCount - 1;\r\n\r\n    # Finish off the strings\r\n    sTitle = sTitle|'%pQuote%Value%pQuote%';\r\n    sRow = sRow|'%pQuote%%sValue%%pQuote%';\r\n\r\n  ELSE;\r\n    sTitle = '%pQuote%Cube%pQuote%';\r\n    sRow = '%pQuote%%pCube%%pQuote%';\r\n\r\n    While( TabDim( pCube, nCount ) @<> '' );\r\n        sDimension = TabDim( pCube, nCount );\r\n\r\n        ## Determine title string for the source cube\r\n        sTitle = sTitle|'%pFieldDelim%%pQuote%'|sDimension|'%pQuote%';\r\n        # Determine row string for the source cube\r\n        sRow = sRow|'%pFieldDelim%%pQuote%%V'| numbertostring(nCount) |'%%pQuote%';\r\n\r\n        nCount = nCount + 1;\r\n    End;\r\n    nDimensionCount = nCount - 1;\r\n\r\n    # Finish off the strings\r\n    sTitle = sTitle|'%pFieldDelim%%pQuote%Value%pQuote%';\r\n    sRow = sRow|'%pFieldDelim%%pQuote%%sValue%%pQuote%';\r\n  ENDIF;\r\n\r\n  # Create Processing View for source version\r\n  nRet = ExecuteProcess('}bedrock.cube.view.create',\r\n          'pLogOutput', pLogOutput,\r\n          'pStrictErrorHandling', pStrictErrorHandling,\r\n          'pCube', pCube,\r\n          'pView', cView,\r\n          'pFilter', pFilter,\r\n          'pSuppressZero', pSuppressZero,\r\n          'pSuppressConsol', pSuppressConsol,\r\n          'pSuppressRules', pSuppressRules,\r\n          'pSuppressConsolStrings', pSuppressConsolStrings,\r\n          'pIncludeDescendants',pIncludeDescendants,\r\n          'pDimDelim', pDimDelim,\r\n          'pEleStartDelim', pEleStartDelim,\r\n          'pEleDelim', pEleDelim,\r\n          'pTemp', pTemp,\r\n          'pSubN', pSubN\r\n          );\r\n\r\n    # Validate Sandbox\r\n    If( TRIM( pSandbox ) @<> '' );\r\n      If( ServerSandboxExists( pSandbox ) = 0 );\r\n          SetUseActiveSandboxProperty( 0 );\r\n          nErrors = nErrors + 1;\r\n          sMessage = Expand('Sandbox %pSandbox% is invalid for the current user.');\r\n          LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n      Else;\r\n          ServerActiveSandboxSet( pSandbox );\r\n          SetUseActiveSandboxProperty( 1 );\r\n      EndIf;\r\n    Else;\r\n      SetUseActiveSandboxProperty( 0 );\r\n    EndIf;\r\n\r\n\r\n  IF( nRet <> ProcessExitNormal() );\r\n      sMessage = 'Error creating the view from the filter.';\r\n      nErrors = nErrors + 1;\r\n      LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n      If( pStrictErrorHandling = 1 );\r\n          If( CubeExists(pCube) = 1 );\r\n            CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );\r\n          EndIf;\r\n          ProcessQuit;\r\n      Else;\r\n          ProcessBreak;\r\n      EndIf;\r\n  ENDIF;\r\n\r\n  sParsedFilter = sBedrockViewCreateParsedFilter;\r\n  sFilterRow = '%pQuote%%pCube%%pQuote%%pFieldDelim%%pQuote%Filter%pQuote%%pFieldDelim%%pQuote%%sParsedFilter%%pQuote%%pFieldDelim%%pQuote%%pDimDelim%%pQuote%%pFieldDelim%%pQuote%%pEleStartDelim%%pQuote%%pFieldDelim%%pQuote%%pEleDelim%%pQuote%';\r\n\r\n  # Assign Datasource\r\n  DataSourceType          = 'VIEW';\r\n  DatasourceNameForServer = pCube;\r\n  DatasourceNameForClient = pCube;\r\n  DatasourceCubeView      = cView;\r\n  DatasourceAsciiDelimiter= pFieldDelim;\r\n  DatasourceAsciiQuoteCharacter = '';\r\n  nParallelRun = 0;\r\nEndIf;\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****",
+  "DataProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n#################################################################################################\r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n#################################################################################################\r\n\r\n# Set the output character set\r\nSetOutputCharacterSet( cExportFile, pCharacterSet );\r\n\r\n### Data Count ###\r\nnDataCount = nDataCount + 1;\r\n\r\n# Output the title string\r\nIF( nDataCount = 1 & pTitleRecord >= 1 );\r\n    TextOutput( cExportFile, Expand(sTitle) );\r\nEndif;\r\n\r\n### Export filter into the 1st record of the file, it will be used from import process to zero out the corresponding slice, if specified\r\nIF( nDataCount = 1 & pTitleRecord = 2 );\r\n    TextOutput( cExportFile, Expand(sFilterRow) );\r\nEndif;\r\n\r\n### Export data from source version to file ###\r\nIf( value_is_string = 0 );\r\n    sValue = NumberToStringEx( nValue, '#,0.#############', sDecimalSeparator, sThousandSeparator );\r\nEndIf;\r\n\r\n# Selects the correct TextOutput formula depending upon the number of dimensions in the cube\r\nIF(SCAN( CHAR( 10 ), sValue ) > 0 );\r\n    sValueCleaned = '';\r\n    nNoChar = 1;\r\n    nLimit = LONG( sValue );\r\n    WHILE( nNoChar <= nLimit ) ;\r\n        sChar = SUBST(  sValue, nNoChar, 1 );\r\n        IF( CODE( sChar, 1 ) <> 10 );\r\n            sValueCleaned = sValueCleaned | sChar ;\r\n        ELSE;\r\n            sValueCleaned = sValueCleaned | ' ';\r\n        ENDIF;\r\n        nNoChar = nNoChar + 1;\r\n    END;\r\n    sValue = sValueCleaned;\r\nENDIF;\r\n\r\n# Output data\r\nTextOutput( cExportFile, Expand(sRow) );\r\n\r\n### End Data ###",
+  "EpilogProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n#################################################################################################\r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n#################################################################################################\r\n\r\n### Delete source data ###\r\nIf( pZeroSource = 1 & nErrors = 0 & nParallelRun = 0 );\r\n    If ( pCubeLogging <= 1 );\r\n      CubeSetLogChanges( pCube, pCubeLogging);\r\n    EndIf;\r\n    ViewZeroOut( pCube, cView );\r\n    If ( pCubeLogging <= 1 );\r\n      CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );\r\n    EndIf;\r\nEndIf;\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 );\r\n        If( CubeExists(pCube) = 1 );\r\n          CubeSetLogChanges( pCube, IF(sCubeLogging@='YES',1,0) );\r\n        EndIf;\r\n        ProcessQuit;\r\n    EndIf;\r\nElse;\r\n    sDataCount = NUMBERTOSTRING (nDataCount);\r\n    sProcessAction = Expand( 'Process:%cThisProcName% exported %sDataCount% records from %pCube% based on filter %pFilter%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );\r\n    EndIf;\r\n\r\nEndIf ;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "TM1CubeView",
+    "dataSourceNameForClient": "}APQ Staging TempSource",
+    "dataSourceNameForServer": "}APQ Staging TempSource",
+    "view": "}TI_Dummy_View"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogoutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCube",
+      "Prompt": "REQUIRED: Cube name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pView",
+      "Prompt": "OPTIONAL: Temporary view name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pFilter",
+      "Prompt": "OPTIONAL: Filter: Year¦ 2006 + 2007 & Scenario¦ Actual + Budget & Organization¦ North America Operations (Blank=whole cube)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pFilterParallel",
+      "Prompt": "OPTIONAL: Parallelization Filter: Month:Q1+Q2+Q3+Q4 (Blank=run single threaded). Single dimension parallel slices. Will be added to filter single element at a time. Dimension must not be part of filter",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pParallelThreads",
+      "Prompt": "OPTIONAL: Maximum number of threads to run when parallel processing is enabled ( if <2 will execute one thread, but parallel filter is still applied )",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDimDelim",
+      "Prompt": "OPTIONAL: Delimiter between dimensions  (default value if blank = '&')",
+      "Value": "&",
+      "Type": "String"
+    },
+    {
+      "Name": "pEleStartDelim",
+      "Prompt": "OPTIONAL: Delimiter for start of element list  (default value if blank = '¦')",
+      "Value": "¦",
+      "Type": "String"
+    },
+    {
+      "Name": "pEleDelim",
+      "Prompt": "OPTIONAL: Delimiter between elements  (default value if blank = '+')",
+      "Value": "+",
+      "Type": "String"
+    },
+    {
+      "Name": "pSuppressZero",
+      "Prompt": "OPTIONAL: Suppress Zero Values (1=Suppress)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSuppressConsol",
+      "Prompt": "OPTIONAL: Suppress Consolidated Values? (1=Suppress)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSuppressRules",
+      "Prompt": "OPTIONAL: Suppress Rule Values? (1=Suppress)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSuppressConsolStrings",
+      "Prompt": "OPTIONAL: Suppress Strings on Consolidations (Skip = 1) (Default = 0)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pIncludeDescendants",
+      "Prompt": "",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pZeroSource",
+      "Prompt": "OPTIONAL: Zero Out view AFTER Copy? (Boolean 1=True)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCubeLogging",
+      "Prompt": "Required: Cube Logging (0 = No transaction logging, 1 = Logging of transactions, 2 = Ignore Cube Logging - No Action Taken)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "OPTIONAL: Retain temporary view and Subset ( 0 = retain View and Subsets 1 = use temp objects)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pFilePath",
+      "Prompt": "OPTIONAL: Export Directory (will default to error file path)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pFileName",
+      "Prompt": "OPTIONAL: Export Filename (If Left Blank Defaults to cube_export.csv)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: AsciiOutput delimiter character (Default = ',' exactly 3 digits = ASCII code)",
+      "Value": ",",
+      "Type": "String"
+    },
+    {
+      "Name": "pDecimalSeparator",
+      "Prompt": "OPTIONAL: Decimal separator for conversion of number to string and string to number (default = '.' exactly 3 digits = ASCII code)",
+      "Value": ".",
+      "Type": "String"
+    },
+    {
+      "Name": "pThousandSeparator",
+      "Prompt": "OPTIONAL: Thousand separator for conversion of number to string and string to number (default = ',' exactly 3 digits = ASCII code)",
+      "Value": ",",
+      "Type": "String"
+    },
+    {
+      "Name": "pQuote",
+      "Prompt": "OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)",
+      "Value": "\"",
+      "Type": "String"
+    },
+    {
+      "Name": "pTitleRecord",
+      "Prompt": "OPTIONAL: Include Title Record in Export File? (Boolean 0=false, 1=true, 2=title and filter line Default=1)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSandbox",
+      "Prompt": "OPTIONAL: To use sandbox not base data enter the sandbox name (invalid name will result in process error)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSubN",
+      "Prompt": "OPTIONAL: Create N level subset for all dims not mentioned in pFilter (default=0)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCharacterSet",
+      "Prompt": "OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pCubeNameExport",
+      "Prompt": "OPTIONAL: Skip cube name from export file, including header (Skip = 0) (Default = 1)",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "V1",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V2",
+      "Type": "String",
+      "Position": 2,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V3",
+      "Type": "String",
+      "Position": 3,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V4",
+      "Type": "String",
+      "Position": 4,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V5",
+      "Type": "String",
+      "Position": 5,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V6",
+      "Type": "String",
+      "Position": 6,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V7",
+      "Type": "String",
+      "Position": 7,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V8",
+      "Type": "String",
+      "Position": 8,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V9",
+      "Type": "String",
+      "Position": 9,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V10",
+      "Type": "String",
+      "Position": 10,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V11",
+      "Type": "String",
+      "Position": 11,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V12",
+      "Type": "String",
+      "Position": 12,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V13",
+      "Type": "String",
+      "Position": 13,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V14",
+      "Type": "String",
+      "Position": 14,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V15",
+      "Type": "String",
+      "Position": 15,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V16",
+      "Type": "String",
+      "Position": 16,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V17",
+      "Type": "String",
+      "Position": 17,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V18",
+      "Type": "String",
+      "Position": 18,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V19",
+      "Type": "String",
+      "Position": 19,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V20",
+      "Type": "String",
+      "Position": 20,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V21",
+      "Type": "String",
+      "Position": 21,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V22",
+      "Type": "String",
+      "Position": 22,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V23",
+      "Type": "String",
+      "Position": 23,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V24",
+      "Type": "String",
+      "Position": 24,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V25",
+      "Type": "String",
+      "Position": 25,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V26",
+      "Type": "String",
+      "Position": 26,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V27",
+      "Type": "String",
+      "Position": 27,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V28",
+      "Type": "String",
+      "Position": 28,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V29",
+      "Type": "String",
+      "Position": 29,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V30",
+      "Type": "String",
+      "Position": 30,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V31",
+      "Type": "String",
+      "Position": 31,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V32",
+      "Type": "String",
+      "Position": 32,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V33",
+      "Type": "String",
+      "Position": 33,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V34",
+      "Type": "String",
+      "Position": 34,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V35",
+      "Type": "String",
+      "Position": 35,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V36",
+      "Type": "String",
+      "Position": 36,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V37",
+      "Type": "String",
+      "Position": 37,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V38",
+      "Type": "String",
+      "Position": 38,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V39",
+      "Type": "String",
+      "Position": 39,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V40",
+      "Type": "String",
+      "Position": 40,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V41",
+      "Type": "String",
+      "Position": 41,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V42",
+      "Type": "String",
+      "Position": 42,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V43",
+      "Type": "String",
+      "Position": 43,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V44",
+      "Type": "String",
+      "Position": 44,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V45",
+      "Type": "String",
+      "Position": 45,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V46",
+      "Type": "String",
+      "Position": 46,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V47",
+      "Type": "String",
+      "Position": 47,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V48",
+      "Type": "String",
+      "Position": 48,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V49",
+      "Type": "String",
+      "Position": 49,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V50",
+      "Type": "String",
+      "Position": 50,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V51",
+      "Type": "String",
+      "Position": 51,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V52",
+      "Type": "String",
+      "Position": 52,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V53",
+      "Type": "String",
+      "Position": 53,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V54",
+      "Type": "String",
+      "Position": 54,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V55",
+      "Type": "String",
+      "Position": 55,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V56",
+      "Type": "String",
+      "Position": 56,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V57",
+      "Type": "String",
+      "Position": 57,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V58",
+      "Type": "String",
+      "Position": 58,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V59",
+      "Type": "String",
+      "Position": 59,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V60",
+      "Type": "String",
+      "Position": 60,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V61",
+      "Type": "String",
+      "Position": 61,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V62",
+      "Type": "String",
+      "Position": 62,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V63",
+      "Type": "String",
+      "Position": 63,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V64",
+      "Type": "String",
+      "Position": 64,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V65",
+      "Type": "String",
+      "Position": 65,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V66",
+      "Type": "String",
+      "Position": 66,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V67",
+      "Type": "String",
+      "Position": 67,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V68",
+      "Type": "String",
+      "Position": 68,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V69",
+      "Type": "String",
+      "Position": 69,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V70",
+      "Type": "String",
+      "Position": 70,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V71",
+      "Type": "String",
+      "Position": 71,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V72",
+      "Type": "String",
+      "Position": 72,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V73",
+      "Type": "String",
+      "Position": 73,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V74",
+      "Type": "String",
+      "Position": 74,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V75",
+      "Type": "String",
+      "Position": 75,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V76",
+      "Type": "String",
+      "Position": 76,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V77",
+      "Type": "String",
+      "Position": 77,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V78",
+      "Type": "String",
+      "Position": 78,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V79",
+      "Type": "String",
+      "Position": 79,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V80",
+      "Type": "String",
+      "Position": 80,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V81",
+      "Type": "String",
+      "Position": 81,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V82",
+      "Type": "String",
+      "Position": 82,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V83",
+      "Type": "String",
+      "Position": 83,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V84",
+      "Type": "String",
+      "Position": 84,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V85",
+      "Type": "String",
+      "Position": 85,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V86",
+      "Type": "String",
+      "Position": 86,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V87",
+      "Type": "String",
+      "Position": 87,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V88",
+      "Type": "String",
+      "Position": 88,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V89",
+      "Type": "String",
+      "Position": 89,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V90",
+      "Type": "String",
+      "Position": 90,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V91",
+      "Type": "String",
+      "Position": 91,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V92",
+      "Type": "String",
+      "Position": 92,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V93",
+      "Type": "String",
+      "Position": 93,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V94",
+      "Type": "String",
+      "Position": 94,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V95",
+      "Type": "String",
+      "Position": 95,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V96",
+      "Type": "String",
+      "Position": 96,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V97",
+      "Type": "String",
+      "Position": 97,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V98",
+      "Type": "String",
+      "Position": 98,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V99",
+      "Type": "String",
+      "Position": 99,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "V100",
+      "Type": "String",
+      "Position": 100,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "Value",
+      "Type": "String",
+      "Position": 101,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

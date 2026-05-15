@@ -1,0 +1,54 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"9785222b9ee5b7dbc7c9b5991978f407246313e9\"",
+  "Name": "}bedrock.server.executecommand",
+  "HasSecurityAccess": false,
+  "PrologProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will run the TI ExecuteCommand function and print the output to Server Logs.\r\n\r\n# Use case: Intended for production.\r\n# 1/ To run an ExecuteCommand function from any part of the model, including RushTI or third party system without direct access to TI Editor.\r\n# 2/ To remove the requirement of creating a one off process to use this function\r\n# 3/ To compress/uncompress files\r\n# 4/ To copy files and folders from the TM1 server\r\n# 5/ To delete files and folders from the TM1 server\r\n# 6/ To list and kill tasks running in the TM1 server\r\n# 7/ To export and import registry keys such as ODBC data sources\r\n\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName = GetProcessName();\r\ncUser = TM1User();\r\ncUserName = '';\r\nIf( DimIx('}Clients', cUser) > 0 );\r\n    cUserName = AttrS('}Clients', cUser, '}TM1_DefaultDisplayValue');\r\nEndIf;\r\ncUserName = IF( cUserName @<> '', cUserName, 'ADMIN' );\r\ncMsgErrorLevel = 'ERROR';\r\ncMsgErrorContent = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncCmdOutputDir = GetProcessErrorFileDirectory;\r\ncCmdOutputFile = cCmdOutputDir | GetProcessName() | '.txt';\r\n\r\n## LogOutput parameters\r\nIf( pLogOutput = 1 );\r\n  sLogInfo = Expand('Process \"%cThisProcName%\" run with parameters: pCommand: \"%pCommand%\", pWait: %pWait%, pPowerShell: %pPowerShell%'); \r\n  LogOutput ( 'INFO', sLogInfo );\r\n  nStart = Now();\r\nEndIf;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\nIf ( pCommand @= '' );\r\n  sMessage = 'parameter pCommand is blank';\r\n  LogOutput ( 'ERROR', sMessage );\r\n  ProcessQuit;\r\nEndIf;\r\n\r\n### ExecuteCommand ###\r\n\r\n# Check if the pCommand parameter is enclosed in quotes and remove it if it is\r\nIf( Subst(pCommand, 1, 1) @= '\"' );\r\n  sCommand = Delet(pCommand, 1, 1);\r\n  sCommand = Delet(sCommand, Long(sCommand), 1);\r\nElse;\r\n  sCommand = pCommand;\r\nEndIf;\r\n\r\nIf( pPowerShell = 1 );\r\n  #Prepare the full command for Powershell\r\n  sCommand = 'POWERSHELL.EXE -Command \"& {' | pCommand | '}\" 1> ' | cCmdOutputFile | ' 2>&1';\r\nElse;\r\n  #Prepare the full command for Windows CMD\r\n  sCommand = 'CMD.EXE /C \"' | sCommand | '\" 1> ' | cCmdOutputFile | ' 2>&1';\r\nEndIf;\r\n\r\n#Execute the command in the TM1 server\r\nExecuteCommand ( sCommand, pWait );\r\n\r\n#If pLogOutput is true then define the command output file as data source\r\nIf( pLogOutput = 1 );\r\n  DataSourceType = 'CHARACTERDELIMITED';\r\n  DatasourceNameForServer = cCmdOutputFile;\r\nEndIf;",
+  "MetadataProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****",
+  "DataProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n# Write the command output to Server Logs\r\nsLogInfo = Expand('Process \"%cThisProcName%\": %vCommandOutput%');\r\nLogOutput( 'INFO', sLogInfo);",
+  "EpilogProcedure": "#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n### LogOutput ###\r\n\r\nIf( pLogOutput = 1 );\r\n    sSec     = NumberToStringEx( 86400*(Now() - nStart),'#,##0.0', '.', ',' );\r\n    sLogInfo = Expand('Process \"%cThisProcName%\" completed in %sSec% seconds.'); \r\n    LogOutput( 'INFO', sLogInfo );\r\nEndIf;\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process \"%cThisProcName%\" completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process \"%cThisProcName%\" completed successfully.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### Optional: Clean the command output file\r\n#sCommand = 'CMD.EXE /C \"TYPE NUL > \"' | cCmdOutputFile | '\" \"';\r\n#ExecuteCommand( sCommand, 0 );\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "Optional: write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCommand",
+      "Prompt": "The full command line string to execute",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pWait",
+      "Prompt": "Wait for command to finish 0=false 1=true",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pPowerShell",
+      "Prompt": "Execute a PowerShell script 0=false 1=true",
+      "Value": 0,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vCommandOutput",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

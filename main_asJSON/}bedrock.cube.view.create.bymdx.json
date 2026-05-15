@@ -1,0 +1,52 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"0ee76f5f44407ae711c98eb669242dc6c02b047b\"",
+  "Name": "}bedrock.cube.view.create.bymdx",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.cube.view.create.bymdx', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pCube', '', 'pView', '',\r\n    \t'pMDXExpr', '',\r\n    \t'pTemp', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description: \r\n# This process will Create a dynamic view from an MDX expression that evaluates to a non-empty set in the specified dimension.\r\n\r\n# Use case: Intended for development/prototyping or production.\r\n# 1/ Create a view to zero out data.\r\n# 2/ Create a view to use as a source for exporting or copying.\r\n\r\n# Note:\r\n# Naturally, a valid cube name (pCube) is mandatory otherwise the process will abort.\r\n# If the MDX does not compile or produces an empty set the process will error.\r\n# pTemp: This parameter will control whether to make the view temporary (value 1) or if the\r\n#   view will be permanently retained (value 0).\r\n#EndRegion @DOC\r\n\r\n##Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\n\r\ncThisProcName     = GetProcessName();\r\ncUserName = TM1User();\r\ncTimeStamp = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSubset = cThisProcName | '_' | cTimeStamp | '_' | cRandomInt;\r\ncTempFile = GetProcessErrorFileDirectory | cTempSubset | '.csv';\r\nsMessage = \t'';\r\ncMsgErrorLevel    = 'ERROR';\r\ncMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo          = 'Process:%cThisProcName% run with parameters pCube:%pCube%, pView:%pView%, pMDXExpr:%pMDXExpr%, pTemp:%pTemp%.' ;  \r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\nsMDXExpr = TRIM( pMDXExpr );\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\n# Validate Cube\r\nIf( Trim( pCube ) @= '' );\r\n    sMessage = 'No cube specified.';\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( CubeExists( pCube ) = 0 );\r\n    sMessage = Expand('Cube %pCube% does not exist') ;\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate View\r\nIf( Trim( pView ) @= '' );\r\n    sMessage = 'No view specified';\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate MDX\r\nIf( Trim( sMDXExpr ) @= '' );\r\n    sMessage = 'No MDX expression specified';\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate MDX. Checking Cube name mentioned in MDX\r\nIf( SCAN ( pCube , sMDXExpr ) = 0 );\r\n    sMessage = 'No Cube Name mentioned in MDX. Not a valid MDX expression';\r\n    nErrors = nErrors + 1;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate pTemp\r\nIF( pTemp<> 0 & pTemp<> 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid value for pTemp' | NumberToString( pTemp ) | '. Valid values are 0 and 1';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### Create View ###\r\nIf( ViewExists( pCube , pView ) = 1 );\r\n    ViewDestroy( pCube , pView );\r\nEndIf;\r\n\r\nViewCreatebyMDX ( pCube , pView , sMDXExpr, pTemp ) ; \r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully created view %pView% in cube %pCube%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCube",
+      "Prompt": "REQUIRED: Cube Name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pView",
+      "Prompt": "REQUIRED: View Name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pMDXExpr",
+      "Prompt": "REQUIRED: Valid MDX Expression",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "OPTIONAL: Make View Temporary (1=Temporary)",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": []
+}

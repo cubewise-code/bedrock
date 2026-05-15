@@ -1,0 +1,76 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"0d5a72bbe67042a73b6eca0cf4b74c7fc1d0e087\"",
+  "Name": "}bedrock.server.util.string.validate",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.server.util.string.validate', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n\t    'pInputString', '', 'pUndesirableFileSystem', '/|\\>\"<:?*', 'pUndesirable1st', Char(39) | '+-[]@!{}%',\r\n\t    'pChanges', '\\,B Slash&/,F Slash&|, &-,Minus&+,Plus&>,greater than&<,less than',\r\n\t    'pReplaceIfNotFound', '_',\r\n\t    'pDelim', '&', 'pSeperator', ',', 'pMode', 3 \r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will validate a string pInputString based on rules in pChanges and change or \r\n# eliminate characters to create a global variable sOutputString that can be used in the source TI.\r\n\r\n# Note:\r\n# - pInputString: This is the input string that needs to be validated based on file system \r\n#   limitations or undesirable 1st characters.\r\n\r\n# - pUndesirableFileSystem: These are characters considered undesirable (even forbidden) in \r\n#   object/element names due to file system limitations of the operation system. \r\n\r\n# - pUndesirable1st: These are characters considered undesirable as 1st characters in object/element\r\n#   names due to TM1 limitations.\r\n\r\n# - pChanges: This string defines the rule of how to change undesirable characters. It can be made up\r\n#   of many definitions delimited by pDelim (e.g. `&` which is not considered undesirable\r\n#   anywhere). Each definition would contain a character considered undesirable and the desired \r\n#   character separatedby pSeperator (e.g. to change a `%` to Percentage and `\"` to inches, it would\r\n#   be `%,Percentage&\",inches` if pDelim = `&` and pSeperator = `,`).\r\n\r\n# - pReplaceIfNotFound: This is a catch all for characters listed in pUndesirableFileSystem or \r\n#   pUndesirable1st that don't have a rule in pChanges.\r\n\r\n# - pDelim: This is a character that is used to seperate definitions in pChanges.\r\n\r\n# - pSeperator: This is a character used to seperate the current and desired character within each\r\n#   definition in pChanges.\r\n\r\n# - pMode: This can be used to limit whether the TI looks at pUndesirableFileSystem or pUndesirable1st \r\n#   without having to delete the characters in those parameters.\r\n#EndRegion @DOC\r\n\r\n#Region # Variables & Constants\r\n# Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nStringGlobalVariable('sOutputString');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode = 0;\r\n\r\n# Constants \r\ncThisProcName   = GetProcessName();\r\ncUserName       = TM1User();\r\ncTimeStamp      = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt      = NumberToString( INT( RAND( ) * 1000 ));\r\ncSubset         = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel  = 'ERROR';\r\ncMsgErrorContent= '%cThisProcName% : %sMessage% : %cUserName%';\r\ncLogInfo        = 'Process:%cThisProcName% run with parameters pLogOutput=%pLogOutput%, pInputString=%pInputString%, pUndesirableFileSystem=%pUndesirableFileSystem%, pUndesirable1st=%pUndesirable1st%, pChanges=%pChanges%, pReplaceIfNotFound=%pReplaceIfNotFound%, pDelim=%pDelim%, pSeperator=%pSeperator%, pMode=%pMode%';\r\n\r\n# Variables\r\nnErrors         = 0;\r\n#EndRegion\r\n\r\n#Region # LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );\r\nENDIF;\r\n#EndRegion\r\n\r\n#Region # Validate parameters\r\n## Validate pInputString parameter\r\nIF( Trim( pInputString ) @= '' );\r\n    nErrors     =1;\r\n    sMessage    = Expand('No element name specified in pInputString.');\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nELSE;\r\n    sElementToUpdate        = Trim( pInputString ) ;\r\nENDIF;\r\n\r\n## Validate pMode parameter\r\nIF( pMode <>1 & pMode <>2 & pMode <>3 );\r\n    nErrors     =1;\r\n    sMessage    = Expand('pMode parameter must be 1, 2 or 3 not %pMode%.');\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nENDIF;\r\n\r\n## Validate pDelim parameter\r\nIF( Trim( pChanges ) @<> '' );\r\nIF( Trim( pDelim ) @= '' );\r\n    nErrors     = 1;\r\n    sMessage    = Expand('No delimiter specified in pDelim.');\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nELSE;\r\n    sDelim      = SUBST( Trim( pDelim ) , 1 , 1 );\r\nENDIF;\r\nENDIF;\r\n\r\n## Validate pSeperator parameter\r\nIF( Trim( pChanges ) @<> '' );\r\nIF( Trim( pSeperator ) @= '' );\r\n    nErrors     = 1;\r\n    sMessage    = Expand('No seperator specified in pSeperator.');\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nELSE;\r\n    sSeperator      = SUBST( Trim( pSeperator ) , 1 , 1 );\r\nENDIF;\r\nENDIF;\r\n\r\n## Validate pChanges parameter\r\n#pChanges        = Trim( pChanges );\r\nIF( pChanges @= '' );\r\n    \r\nELSEIF( SUBST( pChanges , LONG( pChanges ) , 1 )@<> sDelim );\r\n    pChanges    = pChanges | sDelim ;\r\nENDIF;\r\n\r\n#pChanges        = Trim( pChanges );\r\nIF( pReplaceIfNotFound @= '' );\r\n    sReplaceIfNotFound  = '';\r\nELSE;\r\n    sReplaceIfNotFound  = Trim( pReplaceIfNotFound );\r\nENDIF;\r\n\r\n##### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n#EndRegion \r\n\r\n#Region # Prepare for While loop to validate each character seperately\r\nsEle                        = TRIM( pInputString );\r\nnEle                        = LONG( sEle );\r\nsOutputString               = '';\r\nnCount                      = 1;\r\n# Loop through each character to see if valid\r\n# If no script inlcuded in pChanges then the invalid character will be replaced  with pReplaceIfNotFound\r\nWHILE( nCount <= nEle );\r\n    sChar                   = SUBST( sEle , nCount , 1 );\r\n    sChanges                = TRIM( pChanges );\r\n    nUndesirableFileSystem  = SCAN( sChar , pUndesirableFileSystem );\r\n    nUndesirable1st         = SCAN( sChar , pUndesirable1st );\r\n    ## Test if sChar contains undesirable \r\n    IF( nUndesirableFileSystem >0 & ( pMode=1 % pMode=3) );\r\n        ## Test if sChar in pChanges\r\n        nChange             = SCAN( sChar , sChanges );\r\n        IF( nChange >0 );\r\n            sChanges        = SUBST( sChanges , nChange , 999 );\r\n            nNewLong        = SCAN( sDelim , sChanges );       \r\n            sNew            = SUBST( sChanges , 3  , nNewLong-3 );\r\n            #sOutputString   = sOutputString | sNew ;\r\n        ELSE;\r\n            sNew            = sReplaceIfNotFound ;\r\n        ENDIF;   \r\n    ELSEIF( nUndesirable1st >0 & nCount=1 & ( pMode=2 % pMode=3) );\r\n        ## Test if sChar in pChanges\r\n        nChange             = SCAN( sChar , sChanges );\r\n        IF( nChange >0 );\r\n            sChanges        = SUBST( sChanges , nChange , 999 );\r\n            nNewLong        = SCAN( sDelim , sChanges );       \r\n            sNew            = SUBST( sChanges , 3  , nNewLong-3 );\r\n            #sOutputString   = sOutputString | sNew ;\r\n        ELSE;\r\n            sNew            = pReplaceIfNotFound ;\r\n        ENDIF;        \r\n    ELSE;\r\n        sNew                = sChar;\r\n    ENDIF;\r\n    sOutputString           = sOutputString | sNew ;\r\n    # Loop through the rest of the characters\r\n    nCount                  = nCount + 1 ;",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0.0~~##\r\n################################################################################################# \r\n\r\nIF( nCount <> 1000000 );\r\n    #AttrPutS( NumberToString( StringToNumber( sUpdatesNew ) )  , sDim2 , sUpdatesNew , 'Number');\r\nENDIF;\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% has validated the string the element \"%pInputString%\" and returned \"%sOutputString%\".' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pInputString",
+      "Prompt": "REQUIRED: Element name to validate and update if necessary",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pUndesirableFileSystem",
+      "Prompt": "OPTIONAL: Undesirable characters for file system (e.g. /|\\>\"<:?* )",
+      "Value": "/|\\>\"<:?*",
+      "Type": "String"
+    },
+    {
+      "Name": "pUndesirable1st",
+      "Prompt": "OPTIONAL: Undesirable 1st characters (e.g. '+-[]@!{}% )",
+      "Value": "'+-[]@!{}%",
+      "Type": "String"
+    },
+    {
+      "Name": "pChanges",
+      "Prompt": "OPTIONAL: String showing what to change. Replaces with pReplaceIfNotFound if blank.",
+      "Value": "\\,B Slash&/,F Slash&|, &-,Minus&+,Plus&>,greater than&<,less than",
+      "Type": "String"
+    },
+    {
+      "Name": "pReplaceIfNotFound",
+      "Prompt": "OPTIONAL: Replace ndesirable character with this if not specified in pChanges above (blank will delete)",
+      "Value": "_",
+      "Type": "String"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "REQUIRED: Delimiter between definitions",
+      "Value": "&",
+      "Type": "String"
+    },
+    {
+      "Name": "pSeperator",
+      "Prompt": "REQUIRED: Seperator between current & desired",
+      "Value": ",",
+      "Type": "String"
+    },
+    {
+      "Name": "pMode",
+      "Prompt": "REQUIRED: 1=Validate for File System only, 2=Validate for 1st only, 3=Validate Fully",
+      "Value": 3,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": []
+}

@@ -1,0 +1,70 @@
+{
+  "Name": "}bedrock.hier.sub.create.bymdx",
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.sub.create.bymdx', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '', 'pSub', '',\r\n    \t'pMDXExpr', '',\r\n    \t'pConvertToStatic', 1, 'pTemp', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will Create a dynamic subset from an MDX expression that evaluates to a non-empty set in the specified dimension.\r\n\r\n# Use case: Intended for Production & Development\r\n#1/ Create a dynamic subset for use in a view\r\n\r\n# Note:\r\n# Naturally, valid dimension name (pDim) are mandatory otherwise the process will abort.\r\n# If the MDX does not compile or produces an empty set, the process will error.\r\n# If convert to static (pConvertToStatic) is set to 1 then the MDX subset will be replaced by a static subset.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName   = GetProcessName();\r\ncTimeStamp      = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt      = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub        = cThisProcName | '_' | cTimeStamp | '_' | cRandomInt;\r\ncTempFile       = GetProcessErrorFileDirectory | cTempSub | '.csv';\r\ncUserName       = TM1User();\r\ncMsgErrorLevel  = 'ERROR';\r\ncMsgErrorContent= 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pMDXExpr:%pMDXExpr%, pConvertToStatic:%pConvertToStatic%, pTemp:%pTemp%, pAlias:%pAlias%.' ;\r\nsMDXExpr        = pMDXExpr;\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput  = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\n\r\nnErrors         = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate dimension\r\nIf( Trim( pDim )  @= '' );\r\n    nErrors     = 1;\r\n    sMessage    = 'No dimension specified';\r\n    DataSourceType= 'NULL';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\nIf( DimensionExists( pDim ) = 0 );\r\n    nErrors     = 1;\r\n    sMessage    = 'Invalid dimension: ' | pDim;\r\n    DataSourceType = 'NULL';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate hierarchy\r\nIf( Trim( pHier ) @= '' );\r\n    sHier = pDim;\r\nElse;\r\n    sHier = pHier;\r\nEndIf;\r\n\r\nIF(HierarchyExists(pDim, pHier ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid dimension Hierarchy: ' | pDim |':'|pHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate subset\r\nIf( Trim( pSub ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No subset specified';\r\n    DataSourceType = 'NULL';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate MDX\r\nIf( Trim( sMDXExpr ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No MDX expression specified.';\r\n    DataSourceType = 'NULL';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate pTemp\r\nIF( pTemp <> 0 & pTemp <> 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Wrong parameter pTemp value (only 0 or 1 accepted).';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Alias exists\r\nIf ( pAlias @<> '' & \r\n    DimIx ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) = 0\r\n);\r\n  nErrors = 1;\r\n  sMessage = 'Alias does not exist in dimension %pDim%.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;  \r\n\r\n# Validate alias attribute name is actually an alias\r\nIf ( pAlias @<> '' & \r\n    Dtype ( Expand ( '}ElementAttributes_%pDim%' ), pAlias ) @<> 'AA'  \r\n);\r\n  nErrors = 1;\r\n  sMessage = 'Attribute %pAlias% is not an alias in dimension %pDim%.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n\r\n### Create Subset ###\r\nIf( nErrors = 0 );\r\n  If( ElementCount( pDim, sHier ) = 0 & pConvertToStatic <> 0);\r\n    HierarchySubsetCreate( pDim, sHier, pSub );\r\n  Else;\r\n    If( HierarchySubsetExists( pDim,sHier, pSub ) = 1 );\r\n        HierarchySubsetMDXSet( pDim, sHier, pSub, sMDXExpr );\r\n    Else;\r\n        SubsetCreateByMDX( pSub, sMDXExpr, pDim|':'|sHier, pTemp );\r\n    EndIf;\r\n    If( pConvertToStatic = 1 );\r\n        HierarchySubsetElementInsert( pDim, sHier, pSub, ElementName( pDim, sHier, 1 ), 1 );\r\n        HierarchySubsetElementDelete( pDim, sHier, pSub, 1 );\r\n    EndIf;\r\n  EndIf;\r\n  \r\n  # Set Alias\r\n  If ( pAlias @<> '' );\r\n      If ( pDim @= sHier );\r\n          SubsetAliasSet( pDim, pSub, pAlias);\r\n      Else;\r\n          SubsetAliasSet( pDim | ':' | sHier, pSub, pAlias);\r\n      EndIf;\r\n  EndIf;\r\nEndIf;\r\n\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Destroy Temporary Subset ###\r\n\r\nIf( pConvertToStatic = 1 & pTemp = 0 );\r\n\r\n  If( HierarchySubsetExists( pDim , pHier, cTempSub) = 1 );\r\n    HierarchySubsetDestroy( pDim, pHier, cTempSub );\r\n  EndIf;\r\n\r\nEndIf;\r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully created subset %pSub% from dimension %pDim%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "HasSecurityAccess": true,
+  "UIData": "",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "Optional: write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "Required: Dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "Optional: Hierarchy name (default if blank = same named hierarchy)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSub",
+      "Prompt": "Required: Subset name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pMDXExpr",
+      "Prompt": "Required: Valid MDX Expression for Specified Dimension",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pConvertToStatic",
+      "Prompt": "Optional: Bolean: 1 = True (convert to static subset)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "Optional: Use temporary objects? (Boolean 1=True)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pAlias",
+      "Prompt": "Optional: Set Alias for Subset",
+      "Value": "",
+      "Type": "String"
+    }
+  ],
+  "Variables": [],
+  "VariablesUIData": []
+}

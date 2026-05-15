@@ -1,0 +1,87 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"0aeb62c0cca23032b3f56b940787fe04e268193e\"",
+  "Name": "}bedrock.dim.attr.importfromfile",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.dim.attr.importfromfile', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pSrcDir', '', 'pSrcFile', '',\r\n    \t'pTitleRows', 1, 'pDelim', ',', 'pQuote', '\"'\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will create Attributes of the dimension from a file.\r\n\r\n# Use case: Intended for development/prototyping. \r\n#1/ Add multiple dimension attributes of different types.\r\n\r\n# Note:\r\n# The file format is as per the dimension export file applied to an }ElementsAttributes dimension.\r\n# Naturally, a valid diension name (pDim) is mandatory otherwise the process will abort.\r\n# Also, valid path (pSrcDir) & file name (pSrcFile) are mandatory otherwise the process will abort.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName     = GetProcessName();\r\ncUserName         = TM1User();\r\ncMsgErrorLevel    = 'ERROR';\r\ncMsgErrorContent  = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo          = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pSrcDir:%pSrcDir%, pSrcFile:%pSrcFile%, pTitleRows:%pTitleRows%, pDelim:%pDelim%, pQuote:%pQuote%.'; \r\ncLenASCIICode = 3;\r\n\r\npDelimiter        = TRIM(pDelim);\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\nnMetaDataCount = 0;\r\n\r\n### Validate Parameters ###\r\n\r\nnErrors = 0;\r\n\r\n## check operating system\r\nIf( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );\r\n  sOS = 'Linux';\r\n  sOSDelim = '/';\r\nElse;\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nEndIf;\r\n\r\n# Validate source dir\r\nIf(Trim( pSrcDir ) @= '' );\r\n    pSrcDir = GetProcessErrorFileDirectory;\r\nEndIf;\r\nIf( SubSt( pSrcDir, Long( pSrcDir ), 1 ) @= sOSDelim );\r\n    pSrcDir = SubSt( pSrcDir, 1, Long( pSrcDir ) -1 );\r\nEndIf;\r\nIf( FileExists( pSrcDir ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid source directory specified: folder does not exist.';\r\n    DataSourceType = 'NULL';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\npSrcDir = pSrcDir | sOSDelim;\r\n\r\n# Validate source file\r\nsFile = pSrcDir | pSrcFile;\r\nIF ( Trim ( pSrcFile ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No source file specified.';\r\n    DataSourceType = 'NULL';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( FileExists( sFile ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid path or source file specified: It does not exist.';\r\n    DataSourceType = 'NULL';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate dimension\r\nIf( Trim( pDim ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DimensionExists( pDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Dimension: ' | pDim | ' does not exist on server.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate file delimiter & quote character\r\nIf( pDelimiter @= '' );\r\n    pDelimiter = ',';\r\nElse;\r\n    # If length of pDelimiter is exactly 3 chars and each of them is decimal digit, then the pDelimiter is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pDelimiter) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pDelimiter, nChar )>=CODE( '0', 1 ) & CODE( pDelimiter, nChar )<=CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pDelimiter=CHAR(StringToNumber( pDelimiter ));\r\n    Else;\r\n      pDelimiter = SubSt( Trim( pDelimiter ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\nIf( pQuote @= '' );\r\n    ## Use no quote character \r\nElse;\r\n    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pQuote) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pQuote=CHAR(StringToNumber( pQuote ));\r\n    Else;\r\n      pQuote = SubSt( Trim( pQuote ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### Assign Datasource ###\r\n\r\nDataSourceType              = 'CHARACTERDELIMITED';\r\nDatasourceNameForServer     = sFile;\r\nDatasourceNameForClient     = sFile;\r\nDatasourceASCIIHeaderRecords= pTitleRows;\r\nDatasourceASCIIDelimiter    = pDelimiter;\r\nDatasourceASCIIQuoteCharacter= pQuote;\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n## Metatdata Count\r\nnMetaDataCount = nMetaDataCount + 1;\r\n\r\n### Write data from source file to target dimension ###\r\nsAttrType = Upper(SubSt( vAttrType, 1, 1 ));\r\n\r\n### Validate Record ###\r\nIF(\r\n  sAttrType @= 'A' %\r\n  sAttrType @= 'N' %\r\n  sAttrType @= 'S' );\r\n  ## Continute\r\nELSE;\r\n  sMessage = 'Invalid attribute type.';\r\n     ITEMSKIP;\r\nENDIF;\r\n\r\nAttrInsert( pDim, '', vAttr, sAttrType );\r\n\r\n### End Metadata ###",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully created attributes in %pDim% from file %pSrcFile%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "ASCII",
+    "asciiDecimalSeparator": ".",
+    "asciiDelimiterChar": ",",
+    "asciiDelimiterType": "Character",
+    "asciiHeaderRecords": 1,
+    "asciiQuoteCharacter": "\"",
+    "asciiThousandSeparator": ",",
+    "dataSourceNameForClient": "D:\\TM1Models\\Bedrock.v4\\Data\\Attribute.csv",
+    "dataSourceNameForServer": "D:\\TM1Models\\Bedrock.v4\\Data\\Attribute.csv"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSrcDir",
+      "Prompt": "REQUIRED: Source Directory",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSrcFile",
+      "Prompt": "REQUIRED: Source File Name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTitleRows",
+      "Prompt": "OPTIONAL: Number of Title Rows to Skip (default = 1)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: File Delimiter Character (Default=comma, exactly 3 digits = ASCII code)",
+      "Value": ",",
+      "Type": "String"
+    },
+    {
+      "Name": "pQuote",
+      "Prompt": "OPTIONAL: Quote Character (Accepts empty quote, exactly 3 digits = ASCII code)",
+      "Value": "\"",
+      "Type": "String"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vAttr",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    },
+    {
+      "Name": "vAttrType",
+      "Type": "String",
+      "Position": 2,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

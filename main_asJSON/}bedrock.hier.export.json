@@ -1,0 +1,93 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"e15dd20ead2308a766b9140637b06d711ac5cde3\"",
+  "Name": "}bedrock.hier.export",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.export', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '',\r\n    \t'pTgtDir', '', 'pTgtFile', '',\r\n    \t'pTitleRecord', 1, 'pDelim', ',', 'pQuote', '\"',\r\n    \t'pLegacy', 0\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will Export all Dimension elements in a Hierarchy to a File. Export file maintains\r\n# all data that can be used to completely reconstruct the dimension. Custom record delimiter\r\n# (specified by a character or its ASCII code) can be used.\r\n# __Format of the file:__  \r\n# - 1st line: File metadata contains summary information about the dimension, hierarchy, number of\r\n#   elements and date/time when file was generated.\r\n# - 2nd line: Source dimension and hierarchy.\r\n# - 3rd line: Dimension sort order.\r\n# - 4th and 5th line: Reserved for future development.\r\n# - 6th line: Header for elements export.\r\n# - 7th line and forth: Elements export data.\r\n\r\n# Use case:\r\n# 1. Backup of dimension before changes in productive environment.\r\n# 2. Quick replication of a large dimension.\r\n\r\n# Note:\r\n# Valid dimension name (pDim), inclusion of header (pTitleRecord) and legacy export format (pLegacy)\r\n# are mandatory otherwise the process will abort.\r\n# If needed, custom delimiter might be used by specifying parameter pDelim value as either exactly one\r\n# character or as a 3-digit (decimal) ASCII code. For example to use TAB as a delimiter, use 009.\r\n\r\n# Caution: Process was redesigned in Bedrock4 but is able to process dimension extracts from prior\r\n# versions of Bedrock in legacy mode (pLegacy = 1).\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName   = GetProcessName();\r\ncUserName       = TM1User();\r\ncTimeStamp      = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt      = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel  = 'ERROR';\r\ncMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo        = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pTgtDir:%pTgtDir%, pTgtFile:%pTgtFile%, pTitleRecord:%pTitleRecord%, pDelim:%pDelim%, pQuote:%pQuote%, pLegacy:%pLegacy%.';\r\ncCubeS1         = '}DimensionProperties';\r\ncType           = 'Type-';\r\ncParent         = 'Parent-';\r\ncIndex          = 'Index-';\r\ncWeight         = 'Weight-';\r\ncAttrName       = 'Attr Name-';\r\ncAttrValue      = 'Attr Value-';\r\ncLenASCIICode = 3;\r\n\r\npDelim  = TRIM(pDelim);\r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Initialise ###\r\nnRecordCount = 0;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate dimension\r\nIf( Trim( pDim ) @= '' );\r\n  nErrors = 1;\r\n  sMessage = 'No dimension specified.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DimensionExists( pDim ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Dimension: ' | pDim | ' does not exist.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Hierarchy\r\nIf( Trim( pHier ) @= '' );\r\n  sHier = pDim;\r\nElse;\r\n  sHier = pHier;\r\nEndIf;\r\n\r\nIf( HierarchyExists( pDim, sHier ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'The Hierachy ' | sHier | ' does not exist.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## check operating system\r\nIf( SubSt( GetProcessErrorFileDirectory, 2, 1 ) @= ':' );\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nElseIf( Scan( '/', GetProcessErrorFileDirectory ) > 0 );\r\n  sOS = 'Linux';\r\n  sOSDelim = '/';\r\nElse;\r\n  sOS = 'Windows';\r\n  sOSDelim = '\\';\r\nEndIf;\r\n\r\n# Validate export path\r\nIf( Trim( pTgtDir ) @= '' );\r\n    pTgtDir     = GetProcessErrorFileDirectory;\r\n    sMessage    = 'Target folder defaulted to error file directory.';\r\n    LogOutput( 'INFO', Expand( cMsgErrorContent ) );\r\nEndIf;\r\nIf( SubSt( pTgtDir, Long( pTgtDir ), 1 ) @= sOSDelim );\r\n    pTgtDir = SubSt( pTgtDir, 1, Long( pTgtDir ) -1 );\r\nEndIf;\r\nIf( FileExists( pTgtDir ) = 0 );\r\n    nErrors     = 1;\r\n    sMessage    = 'Invalid export path specified. Folder does not exist.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\npTgtDir         = pTgtDir | sOSDelim;\r\n\r\n# Validate export filename\r\nIf( pTgtFile @= '' );\r\n    pTgtFile        = pDim | If( pLegacy = 1,'',' '|sHier ) | '_Export.csv';\r\nElseIf( Scan( '.', pTgtFile ) = 0 );\r\n    # No file extension specified\r\n    pTgtFile        = pTgtFile | '.csv';\r\nEndIf;\r\n\r\n# Validate file delimiter & quote character\r\nIf( pDelim @= '' );\r\n    pDelim = ',';\r\nElse;\r\n    # If length of pDelim is exactly 3 chars and each of them is decimal digit, then the pDelim is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pDelim) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pDelim, nChar )>=CODE( '0', 1 ) & CODE( pDelim, nChar )<=CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pDelim=CHAR(StringToNumber( pDelim ));\r\n    Else;\r\n      pDelim = SubSt( Trim( pDelim ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\nIf( pQuote @= '' );\r\n    ## Use no quote character \r\nElse;\r\n    # If length of pQuote is exactly 3 chars and each of them is decimal digit, then the pQuote is entered as ASCII code\r\n    nValid = 0;\r\n    If ( LONG(pQuote) = cLenASCIICode );\r\n      nChar = 1;\r\n      While ( nChar <= cLenASCIICode );\r\n        If( CODE( pQuote, nChar ) >= CODE( '0', 1 ) & CODE( pQuote, nChar ) <= CODE( '9', 1 ) );\r\n          nValid = 1;\r\n        Else;\r\n          nValid = 0;\r\n        EndIf;\r\n        nChar = nChar + 1;\r\n      End;\r\n    EndIf;\r\n    If ( nValid<>0 );\r\n      pQuote=CHAR(StringToNumber( pQuote ));\r\n    Else;\r\n      pQuote = SubSt( Trim( pQuote ), 1, 1 );\r\n    EndIf;\r\nEndIf;\r\n\r\n# Validate Character Set\r\nIf(Trim( pCharacterSet ) @= '' );\r\n  pCharacterSet = 'TM1CS_UTF8';\r\nEndIf;\r\n\r\n# Construct full export filename including path\r\nsFilename       = pTgtDir | pTgtFile;\r\nsLocAttFile     = 'Localized_' | pTgtFile;\r\nsAttrDimName    = '}ElementAttributes_' | pDim ;\r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### Assign Data Source ###\r\nDatasourceNameForServer     = pDim | IF(pHier@='','',':'|pHier) ;\r\nDatasourceNameForClient     = DatasourceNameForServer ;\r\nDataSourceType              = 'SUBSET';\r\nDatasourceDimensionSubset   = 'ALL';\r\nDatasourceAsciiDelimiter= pDelim;\r\nDatasourceAsciiQuoteCharacter = pQuote;\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n# Set the output character set\r\nSetOutputCharacterSet( sFileName, pCharacterSet );\r\n\r\n### Record Count\r\nnRecordCount = nRecordCount + 1;\r\n\r\n### Export Header Information\r\n## Line 1: File Metadata information\r\nIf( nRecordCount = 1 & pTitleRecord = 1 );\r\n    TextOutput( sFilename, 'Export from dimension Hierarchy: ' | pDim|':'|sHier | ', all elements in index order. Total elements=' |\r\n                 NumberToString( ElementCount( pDim, sHier ) ) | '. On ' | Date( Now, 1 ) | ' at ' | Time );\r\n\r\n## Line 2: Source Dimension\r\n    TextOutput( sFilename, pDim, sHier  );\r\n\r\n## Line 3: Sort Order Information\r\n    sSortElementType    = CELLGETS( cCubeS1, pDim, 'SORTELEMENTSTYPE' );\r\n    sSortComponentType  = CELLGETS( cCubeS1, pDim, 'SORTCOMPONENTSTYPE' );\r\n    sSortElementSense   = CELLGETS( cCubeS1, pDim, 'SORTELEMENTSSENSE' );\r\n    sSortComponentSense = CELLGETS( cCubeS1, pDim, 'SORTCOMPONENTSSENSE' );\r\n    If( pLegacy = 1 );\r\n        TextOutput( sFilename, sSortElementType , sSortComponentType , sSortElementSense , sSortComponentSense  );\r\n    Else;\r\n        TextOutput( sFilename, 'Sort parameters :', sSortElementType , sSortComponentType , sSortElementSense , sSortComponentSense  );\r\n    EndIf;\r\n    \r\n## Line 4 (and 5?): Header Information\r\n    If( pLegacy = 1 );\r\n            TextOutput( sFilename, 'Reserved' );\r\n    EndIf;\r\n    TextOutput( sFilename, 'Reserved' );\r\n    \r\n## Line 5 or 6: Header Information\r\n    TextOutput( sFilename, 'Line_Type', 'Element', 'Value_1', 'Value_2', 'Value_3' );\r\n\r\n### Attribute Information \r\n    If( DimensionExists( sAttrDimName ) = 1 );\r\n        nIndex = 1;\r\n        nLimit = DIMSIZ ( sAttrDimName );\r\n        WHILE( nIndex <= nLimit );\r\n            sElName   = DIMNM( sAttrDimName, nIndex );\r\n            sElType   = DTYPE( sAttrDimName, sElName);\r\n            TextOutput( sFilename, 'A', sElName, sElType );\r\n            nIndex = nIndex + 1;\r\n        END; \r\n    EndIf;\r\n#    TextOutput( sFilename, '' );\r\nEndIf;\r\n\r\n### Element Information\r\nnElIndex        = ElementIndex( pDim, sHier, vEle );\r\nsElType         = ElementTYPE(  pDim, sHier, vEle );\r\nTextOutput( sFilename,'E', vEle, If( pLegacy = 1,'', cType ) | sElType, If( pLegacy = 1,'', cIndex ) | NumberToString( nElIndex ) );\r\n\r\n### Element Parents\r\nnElPar          = ElementParentCount( pDim, sHier, vEle );\r\nIF( nElPar > 0 );\r\n    nIndex = 1;\r\n    nLimit = nElPar;\r\n    WHILE( nIndex <= nLimit );\r\n        sElPar  = ElementParent( pDim, sHier, vEle, nIndex );\r\n        sElType = ElementTYPE( pDim, sHier, sElPar );\r\n        nElWgt  = ElementWeight( pDim, sHier, sElPar, vEle );\r\n        TextOutput( sFilename, 'P', vEle, If( pLegacy = 1,'', cParent ) | sElPar, If( pLegacy = 1,'', cType ) | sElType, If( pLegacy = 1,'', cWeight ) | NumberToString( nElWgt ) );\r\n        nIndex = nIndex + 1;\r\n    END;\r\nENDIF;\r\n\r\n### Attribute Value \r\nIF( CubeExists(sAttrDimName) = 1 & DimensionExists(sAttrDimName) = 1 );\r\n    nIndex = 1;\r\n    nLimit = DIMSIZ( sAttrDimName );\r\n    WHILE( nIndex <= nLimit );\r\n        sElName   = DIMNM( sAttrDimName, nIndex );\r\n        sElType   = DTYPE( sAttrDimName, sElName);\r\n        IF( sElType @= 'AN' );\r\n            sAttrValue = NumberToString( ElementAttrN( pDim , sHier , vEle , sElName ) );\r\n        ELSE;\r\n            sAttrValue = ElementAttrS( pDim , sHier , vEle , sElName );\r\n        ENDIF;\r\n        IF( sAttrValue @<> '' & sAttrValue @<> '0' );\r\n            TextOutput( sFilename, 'V', vEle, If( pLegacy = 1,'', cAttrName ) | sElName, If( pLegacy = 1,'', cAttrValue ) | sAttrValue );\r\n        EndIf;\r\n        nIndex = nIndex + 1;\r\n    END;\r\nENDIF;\r\n\r\n### End Data ###",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n\r\n### If errors occurred terminate process with a major error status ###\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 major error and consequently aborted. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% aborted. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElseIf( CubeExists('}LocalizedElementAttributes_' | pDim) = 1 );\r\n    # if attributes have been localized then export the cube (NOTE: values stored against C elements of alternate hierarchies will not be included in the file)\r\n    ExecuteProcess('}bedrock.cube.data.export', 'pLogoutput', pLogoutput, 'pStrictErrorHandling', pStrictErrorHandling,\r\n        'pCube', '}LocalizedElementAttributes_' | pDim, 'pView', '', 'pFilter', '', 'pFilterParallel', '', 'pParallelThreads', 0,\r\n        'pDimDelim', '&', 'pEleStartDelim', '¦', 'pEleDelim', '+',\r\n        'pSuppressZero', 1, 'pSuppressConsol', 0, 'pSuppressRules', 0, 'pSuppressConsolStrings', 0,\r\n        'pZeroSource', 0, 'pCubeLogging', 2, 'pTemp', 1, \r\n        'pFilePath', pTgtDir, 'pFileName', sLocAttFile,\r\n        'pDelim', pDelim, 'pDecimalSeparator', DatasourceASCIIDecimalSeparator, 'pThousandSeparator', DatasourceASCIIThousandSeparator, 'pQuote', pQuote,\r\n        'pTitleRecord', 1, 'pSandbox', '', 'pSubN', 0, 'pCharacterSet', '', 'pCubeNameExport', 1\r\n    );\r\nEndIf;\r\n\r\n### Return Code\r\nsProcessAction      = Expand( 'Process:%cThisProcName% successfully exported the %pDim%:%pHier% dimension:hierarchy to %sFileName%.' );\r\nsProcessReturnCode  = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\nnProcessReturnCode  = 1;\r\nIf ( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( sProcessAction ) );   \r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "TM1DimensionSubset",
+    "dataSourceNameForClient": "}Cubes",
+    "dataSourceNameForServer": "}Cubes",
+    "subset": "All"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy (defaults to dimension name if blank)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtDir",
+      "Prompt": "OPTIONAL: Target Directory Path (defaults to Error File Directory)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtFile",
+      "Prompt": "OPTIONAL: Target File Name (defaults to Dimension Hierarchy_Export.csv if blank)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTitleRecord",
+      "Prompt": "REQUIRED: Boolean 1 = Yes - Include header row",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: AsciiOutput delimiter character (Default=comma, exactly 3 digits = ASCII code)",
+      "Value": ",",
+      "Type": "String"
+    },
+    {
+      "Name": "pQuote",
+      "Prompt": "OPTIONAL: AsciiOutput quote character (Accepts empty quote, exactly 3 digits = ASCII code)",
+      "Value": "\"",
+      "Type": "String"
+    },
+    {
+      "Name": "pLegacy",
+      "Prompt": "REQUIRED: Boolean 1 = Legacy format",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pCharacterSet",
+      "Prompt": "OPTIONAL: The output character set (defaults to TM1CS_UTF8 if blank)",
+      "Value": "",
+      "Type": "String"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vEle",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}

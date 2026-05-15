@@ -1,0 +1,117 @@
+{
+  "Name": "}bedrock.hier.sub.create",
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.sub.create', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '', 'pSub', '',\r\n    \t'pConsol', '*', 'pAttr', '', 'pAttrValue', '',\r\n    \t'pLevelFrom', 0, 'pLevelTo', 999,\r\n    \t'pExclusions', '', 'pDelim', '&',\r\n    \t'pAddToSubset', 0, 'pAlias', '',\r\n    \t'pTemp', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n\r\n### Start Prolog ###\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will create a static subset in a Hierarchy of target Dimension.\r\n\r\n# Note:\r\n# This process uses a number of parameters to determine what to include in the subset:\r\n# - pConsol: If specified, only elements that are descendants of the consol will be included in\r\n#   the subset. If blank, then this filter will be ignored.\r\n# - pAttr: If specified, only elements that have a value equivalent to pAttrValue will be included\r\n#   in the subset. If blank, this filter will be ignored.\r\n# - pLevelFrom: Only elements with a level greater than or equal to pLevelFrom will be included in\r\n#   the subset.\r\n# - pLevelTo: Only elements with a level less than or equal to pLevelFrom will be included in the\r\n#   subset.\r\n# - pExclusions: If pExclusions is specified then the elements (separated by a delimiter) will be\r\n#   excluded from the subset. Wildcards characters `*` and `?` are accepted.\r\n# - pAddToSubset : If the specified subset already exists then this parameter will control whether\r\n#   elements will be added to the existing subset (value 1) or a new subset will be created\r\n#   (value 0).\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName       = GetProcessName();\r\ncUserName           = TM1User();\r\ncTimeStamp          = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt          = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel      = 'ERROR';\r\ncMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pConsol:%pConsol%, pAttr:%pAttr%, pAttrValue:%pAttrValue%, pLevelFrom:%pLevelFrom%, pLevelTo:%pLevelTo%, pExclusions:%pExclusions%, pDelim:%pDelim%, pAddToSubset:%pAddToSubset%, pAlias:%pAlias%, pTemp:%pTemp%.'; \r\ncAttributeDim       = '}ElementAttributes_' | pDim;\r\n\r\n## LogOutput parameters\r\nIF ( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n## Validate dimension\r\nIF( Trim( pDim ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIF( DimensionExists( pDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid dimension: ' | pDim;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate Hierarchy\r\nIf( Trim( pHier ) @= '' );\r\n    sHier = pDim;\r\nElse;\r\n    sHier = pHier;\r\nEndIf;\r\nIF( sHier @= 'Leaves' );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid  Hierarchy: ' | pDim |':'|pHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIF(HierarchyExists(pDim, sHier ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid dimension Hierarchy: ' | pDim |':'|sHier;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate subset\r\nIF(Trim( pSub ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No subset specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate consolidation\r\npConsol = Trim( pConsol );\r\nIf( pConsol @<> '' & pConsol @<> '*' );\r\n    If( ElementIndex(pDim, sHier, pConsol) = 0 );\r\n        nErrors = 1;\r\n        sMessage = 'The ' | pConsol | ' consolidation does not exist in the '| pDim |' dimension:Hierarchy ' | pDim |':'| sHier;\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    Else;\r\n        pConsol = HierarchyElementPrincipalName(pDim, sHier, pConsol);\r\n    EndIf;\r\nEndIf;\r\n\r\n## Validate attribute\r\npAttr = Trim( pAttr );\r\nIF(pAttr @<> '' );\r\n\r\n    If( DimensionExists( cAttributeDim ) = 0 );\r\n        nErrors = 1;\r\n        sMessage = 'Dimension: ' | pDim | ' does not have any attributes.';\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    EndIf;\r\n    \r\n    IF(DIMIX( cAttributeDim, pAttr ) = 0 );\r\n        nErrors = 1;\r\n        sMessage = 'The ' | pAttr |' attribute does not exist in the ' | pDim | ' dimension.';\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    EndIf;\r\n    \r\n    sAttributeType = DType( cAttributeDim, pAttr );\r\n    If(sAttributeType @= 'AN' % sAttributeType @= 'N' );\r\n        If(pAttrValue @= '' );\r\n            nAttributeValue = 0;\r\n        Else;\r\n            nAttributeValue = StringToNumber( pAttrValue );\r\n        EndIf;\r\n    EndIf;\r\n    \r\nEndIf;\r\n\r\n## Validate element level parameters\r\nIf(pLevelFrom < 0 % pLevelTo < 0 % pLevelTo < pLevelFrom );\r\n    nErrors = 1;\r\n    sMessage = 'Element levels must be greater than or equal to zero and level to must be greater than or equal to level from';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate delimiter\r\nIF( pExclusions @<> '' & pDelim @= '' );\r\n    ## Set to default parameter.\r\n    pDelimiter = '&';\r\nEndIf;\r\n\r\n## Validate add to subset\r\nIF( pAddToSubset <> 0 & pAddToSubset <> 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid value for pAddToSubset: ' | NumberToString( pAddToSubset ) | '. Valid values are 0 and 1';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate Alias\r\nsDimAttr = '}ElementAttributes_' | pDim;\r\nIF( pAlias @<> '' );\r\n    \r\n    IF(DimensionExists( sDimAttr ) = 0 );\r\n        sMessage = 'No attributes exist for the dimension: ' | pDim;\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n        pAlias = '';\r\n    ElseIf(DIMIX( sDimAttr, pAlias ) = 0 );\r\n        sMessage = 'The alias: ' | pAlias | ' does not exist as an attribute in the dimension: ' | pDim;\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n        pAlias = '';\r\n    ElseIf(DTYPE( sDimAttr, pAlias ) @<> 'AA' );\r\n        sMessage = 'The alias: ' | pAlias | ' is not an Alias type of attribute in the dimension: ' | sDimAttr;\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n        pAlias = '';\r\n    EndIf;\r\n\r\nENDIF;\r\n\r\n## Validate pTemp\r\nIF( pTemp <> 0 & pTemp <> 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Wrong parameter pTemp value (only 0 or 1 accepted).';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Check for errors before preparing subset\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### Prepare subset ###\r\nIF( HierarchySubsetExists( pDim,sHier, pSub ) = 1 );\r\n    If( pAddtoSubset <> 1 );\r\n        HierarchySubsetDeleteAllElements( pDim, sHier, pSub );\r\n        nSubsetSize = 0;\r\n    Else;\r\n        nSubsetSize = HierarchySubsetGetSize(pDim, sHier, pSub );\r\n    EndIf;\r\nElse;\r\n    HierarchySubsetCreate( pDim, sHier, pSub, pTemp );\r\n    nSubsetSize = 0;\r\nEndIf;\r\n\r\n### Set Alias ###\r\nIF(pAlias @<> '' );\r\n      HierarchySubsetAliasSet( pDim, pHier, pSub, pAlias);\r\nENDIF;\r\n\r\n### Assign Datasource ###\r\n\r\nDatasourceNameForServer     = pDim|':'|sHier;\r\nDataSourceDimensionSubset   = 'All';\r\n\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n\r\n### Check for errors in prolog ###\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n\r\n### Add elements to subset ###\r\n\r\n## Check that element is a descendant of specified consolidation\r\nIf( pConsol @<> '' & pConsol @<> '*' );\r\n  If(ElementIsAncestor(pDim, pHier, pConsol, vEle) = 0 & vEle @<> pConsol );\r\n    ItemSkip;\r\n  EndIf;\r\nEndIf;\r\n\r\n## Check that element has a matching attribute value\r\nIf( pAttr @<> ''  );\r\n  If( sAttributeType @= 'AN' % sAttributeType @= 'N' );\r\n    If( ElementAttrN( pDim, pHier, vEle, pAttr ) <> nAttributeValue );\r\n      ItemSkip;\r\n    EndIf;\r\n  Else;\r\n    If( ElementAttrS( pDim, pHier, vEle, pAttr ) @<> pAttrValue );\r\n      ItemSkip;\r\n    EndIf;\r\n  EndIf;\r\nEndIf;\r\n\r\n## Check that element has an appropriate element level\r\nnElementLevel = ElementLevel( pDim, pHier, vEle );\r\nIf( nElementLevel < pLevelFrom % nElementLevel > pLevelTo );\r\n  ItemSkip;\r\nEndIf;\r\n\r\n## Add element to subset\r\nnSubsetSize = nSubsetSize + 1;\r\n\r\nHierarchySubsetElementInsert( pDim, pHier, pSub, vEle, nSubsetSize );\r\n\r\n### End Metadata ###",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n\r\n    ### Process Exclusions ###\r\n    IF( nErrors = 0 & Trim( pExclusions ) @<> '' );\r\n        ExecuteProcess( '}bedrock.hier.sub.exclude',\r\n            'pLogOutput', pLogOutput,\r\n            'pStrictErrorHandling', pStrictErrorHandling,\r\n            'pDim', pDim,\r\n            'pHier', pHier,\r\n            'pSub', pSub,\r\n            'pExclusions', pExclusions,\r\n            'pDelim', pDelim\r\n            );\r\n    EndIf;\r\n    \r\n    ### Get subset size ###\r\n    nSubSiz = SubsetGetSize( pDim|':'|sHier, pSub );\r\n    sSubSiz = NumberToString( nSubSiz );\r\n    If( nSubSiz = 0 );\r\n        nErrors = 1;\r\n        sMessage= 'Subset contains no elements.';\r\n        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    EndIf;\r\nEndIf;\r\n    \r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% created subset %pDim%:%pHier%:%pSub% with %sSubSiz% elements. ' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "HasSecurityAccess": true,
+  "UIData": "",
+  "DataSource": {
+    "Type": "TM1DimensionSubset",
+    "dataSourceNameForClient": "}Cubes",
+    "dataSourceNameForServer": "}Cubes",
+    "subset": "All"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy name (default if blank = same named hierarchy)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSub",
+      "Prompt": "REQUIRED: Subset name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pConsol",
+      "Prompt": "OPTIONAL: Elements within Consolidated Element (Blank or * Equals All)",
+      "Value": "*",
+      "Type": "String"
+    },
+    {
+      "Name": "pAttr",
+      "Prompt": "OPTIONAL: Attribute (Blank Equals All)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pAttrValue",
+      "Prompt": "OPTIONAL: Attribute Value",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pLevelFrom",
+      "Prompt": "OPTIONAL: From Element Level",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pLevelTo",
+      "Prompt": "OPTIONAL: To Element Level",
+      "Value": 999,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pExclusions",
+      "Prompt": "OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: Delimiter character",
+      "Value": "&",
+      "Type": "String"
+    },
+    {
+      "Name": "pAddToSubset",
+      "Prompt": "OPTIONAL: Add to Subset if it Already Exists (0=No 1=Yes)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pAlias",
+      "Prompt": "OPTIONAL: Set Alias for Subset",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "OPTIONAL: Use temporary objects? (Boolean 1=True)",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vEle",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ],
+  "VariablesUIData": []
+}

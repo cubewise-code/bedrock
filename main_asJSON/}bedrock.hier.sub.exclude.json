@@ -1,0 +1,64 @@
+{
+  "Name": "}bedrock.hier.sub.exclude",
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.sub.exclude', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pDim', '', 'pHier', '', 'pSub', '',\r\n    \t'pExclusions', '', 'pDelim', '&', 'pTemp', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will remove specified elements from a subset in a Hierarchy of target Dimension.\r\n# Wildcard characters `*`and `?` are accepted in list of elements to be excluded.\r\n\r\n# Note:\r\n# - If a leaf level element is specified, it will be removed on its own.\r\n# - If a consolidated element is specified it will be removed as well as its descendants.\r\n\r\n# Caution: Target hierarchy cannot be `Leaves`.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName       = GetProcessName();\r\ncUserName           = TM1User();\r\ncTimeStamp          = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt          = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub            = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel      = 'ERROR';\r\ncMsgErrorContent    = 'User:%cUserName% Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo            = 'Process:%cThisProcName% run with parameters pDim:%pDim%, pHier:%pHier%, pSub:%pSub%, pExclusions:%pExclusions%, pDelim:%pDelim%, pTemp:%pTemp%.'; \r\ncAttributeDim       = '}ElementAttributes_' | pDim;\r\n\r\n## LogOutput parameters\r\nIF ( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n\r\n### Validate Parameters ###\r\n\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pDim ) > 0 & pHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );\r\n    pDim        = SubSt( pDim, 1, Scan( ':', pDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate dimension\r\nIf( Trim( pDim ) @= '' );\r\n  nErrors = 1;\r\n  sMessage = 'No dimension specified';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\nIf( DimensionExists( pDim ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid dimension: ' | pDim;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate Hierarchy\r\n\r\nIF(pHier @= 'Leaves' );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid  Hierarchy: ' | pDim |':'|pHier;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\nIf( Trim( pHier ) @= '' );\r\n  sHier = pDim;\r\nElse;\r\n  sHier = pHier;\r\nEndIf;\r\n\r\nIf( HierarchyExists( pDim, sHier ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'The Hierachy ' | sHier | ' does not exists.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate subset\r\nIf( Trim( pSub ) @= '' );\r\n  nErrors = 1;\r\n  sMessage = 'No subset specified';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\nIf( HierarchySubsetExists( pDim,sHier, pSub ) = 0 );\r\n  nErrors = 1;\r\n  sMessage = 'Invalid subset: ' | pSub | ' in dimension:Hierarchy ' | pDim |':' | sHier;\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Elements\r\nIf( Trim( pExclusions ) @= '' );\r\n  nErrors = 1;\r\n  sMessage = 'No Elements specified';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate delimiter\r\nIf( pExclusions @<> '' & pDelim @= '' );\r\n  pDelim = '&';\r\nEndIf;\r\n\r\n## Validate pTemp\r\nIF( pTemp <> 0 & pTemp <> 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Wrong parameter pTemp value (only 0 or 1 accepted).';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n### Process Elements ###\r\nIf(nErrors = 0);\r\n  nDelimIndex = 1;\r\n  sExclusions = pExclusions;\r\n\r\n  While( nDelimIndex <> 0 & Long( sExclusions ) > 0 );\r\n\r\n    nDelimIndex = Scan( pDelim, sExclusions );\r\n    If( nDelimIndex <> 0 );\r\n      sExclusion = Trim( SubSt( sExclusions, 1, nDelimIndex - 1 ) );\r\n      sExclusions = Trim( SubSt( sExclusions, nDelimIndex + Long( pDelim ), Long( sExclusions ) ) );\r\n    Else;\r\n      sExclusion = Trim( sExclusions );\r\n    EndIf;\r\n    If(Scan('*',sExclusion) = 0 & Scan('?',sExclusion) = 0);\r\n      # Check that Element is present in the dimension\r\n      If( ElementIndex ( pDim, sHier, sExclusion ) <> 0 );\r\n        sExclusion = HierarchyElementPrincipalName( pDim, sHier, sExclusion );\r\n        # Work through subset and remove Element\r\n        nSubsetIndex = 1;\r\n        nSubsetSize = HierarchySubsetGetSize( pDim, sHier, pSub );\r\n        While( nSubsetIndex <= nSubsetSize );\r\n          sTemp = HierarchySubsetElementGetIndex (pDim, sHier, pSub, '', nSubsetIndex);\r\n          sElement = HierarchySubsetGetElementName( pDim, sHier, pSub, nSubsetIndex );\r\n          # If Element is found or a descendant of the Element is found the remove from subset\r\n          If( sElement @= sExclusion % ElementIsAncestor( pDim, sHier, sExclusion, sElement ) = 1 );\r\n            sTemp = HierarchySubsetElementGetIndex (pDim, sHier, pSub, '', nSubsetIndex);\r\n            HierarchySubsetElementDelete ( pDim, sHier, pSub, nSubsetIndex );\r\n            nSubsetSize = nSubsetSize - 1;\r\n          Else;\r\n            nSubsetIndex = nSubsetIndex + 1;\r\n          EndIf;\r\n        End;\r\n      \r\n      EndIf;\r\n    Else;\r\n      # Wildcard search string\r\n        sExclusion = '\"'|sExclusion|'\"';\r\n        stempSub = cThisProcName| cRandomInt;\r\n        sProc = '}bedrock.hier.sub.create.bymdx';\r\n        sMdx = '{TM1FILTERBYPATTERN( {TM1SUBSETALL([ ' |pDim|':'|sHier |' ])},'| sExclusion| ')}';\r\n        ExecuteProcess(sProc,\r\n                      'pStrictErrorHandling', pStrictErrorHandling,\r\n                    \t'pDim',pDim,\r\n                    \t'pHier',sHier,\r\n                    \t'pSub',stempSub,\r\n                    \t'pMDXExpr',sMdx,\r\n                    \t'pConvertToStatic',1,\r\n                    \t'pTemp', pTemp);\r\n        nSubsetindex = 1;\r\n        nSubsetSize = HierarchySubsetGetSize(pDim, sHier, stempSub);\r\n        While (nSubsetindex <= nSubsetSize);\r\n          sTemp = HierarchySubsetElementGetIndex (pDim, sHier, stempSub, '', nSubsetIndex);\r\n          sElement = HierarchySubsetGetElementName(pDim, sHier, stempSub, nSubsetindex);\r\n          HierarchySubsetElementDelete( pDim, sHier,stempSub,nSubsetindex );\r\n          nSubsetSize = nSubsetSize -1;\r\n          ## Delete Element from main subset\r\n          If(HierarchySubsetElementExists(pDim, sHier, pSub, sElement)>0);\r\n            nSearchIndex = 1;\r\n            nSearchSize = HierarchySubsetGetSize(pDim, sHier, pSub);\r\n            While( nSearchIndex <= nSearchSize  );\r\n              sSearchElement = HierarchySubsetGetElementName( pDim, sHier, pSub, nSearchIndex );\r\n               # If Element is found or a descendant of the Element is found the remove from subset\r\n                If( sElement @= sSearchElement % ElementIsAncestor( pDim, sHier, sElement, sSearchElement ) = 1 );\r\n                  sTemp = HierarchySubsetElementGetIndex (pDim, sHier, pSub, '', nSearchIndex);\r\n                  HierarchySubsetElementDelete ( pDim, sHier, pSub, nSearchIndex );\r\n                  nSearchSize = 0;\r\n                Else;\r\n                  nSearchIndex = nSearchIndex + 1;\r\n                EndIf;\r\n            End;\r\n          Endif;\r\n          ######\r\n        End;\r\n        HierarchySubsetDestroy(pDim, sHier,stempSub);\r\n    EndIf;\r\n\r\n  End;\r\n\r\nEndIf;\r\n\r\n\r\n### End Prolog ###",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully excluded elements from subset %pSub% from dimension %pDim%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "HasSecurityAccess": true,
+  "UIData": "",
+  "DataSource": {
+    "Type": "None"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pDim",
+      "Prompt": "REQUIRED: Dimension name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pHier",
+      "Prompt": "OPTIONAL: Hierarchy name (default if blank = same named hierarchy)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSub",
+      "Prompt": "REQUIRED: Subset name",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pExclusions",
+      "Prompt": "OPTIONAL: Elements to Exclude From Subset (Separated by Delimiter, Accepts Wild card)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pDelim",
+      "Prompt": "OPTIONAL: Delimiter character",
+      "Value": "&",
+      "Type": "String"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "OPTIONAL: Use temporary objects? (Boolean 1=True)",
+      "Value": 1,
+      "Type": "Numeric"
+    }
+  ],
+  "Variables": [],
+  "VariablesUIData": []
+}

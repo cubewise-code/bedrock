@@ -1,0 +1,87 @@
+{
+  "@odata.context": "$metadata#Processes/$entity",
+  "@odata.etag": "W/\"042a1f46591b82632c72ba5a7b94c8b3e3d97406\"",
+  "Name": "}bedrock.hier.sub.clone",
+  "HasSecurityAccess": true,
+  "PrologProcedure": "#Region CallThisProcess\r\n# A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.\r\nIf( 1 = 0 );\r\n    ExecuteProcess( '}bedrock.hier.sub.clone', 'pLogOutput', pLogOutput,\r\n      'pStrictErrorHandling', pStrictErrorHandling,\r\n    \t'pSrcDim', '', 'pSrcHier', '', 'pSrcSub', '',\r\n    \t'pTgtDim', '', 'pTgtHier', '', 'pTgtSub', '',\r\n    \t'pTemp', 1\r\n\t);\r\nEndIf;\r\n#EndRegion CallThisProcess\r\n\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n#Region @DOC\r\n# Description:\r\n# This process will copy a subset from a Hierarchy in source Dimension to a Hierarchy in target\r\n# Dimension.\r\n\r\n# Note:\r\n# Valid source dimension name (pSrcDim), source (pSrcSub) and target subset (pTgtSub) are \r\n# mandatory otherwise the process will abort.\r\n\r\n# Caution:\r\n# - Target hierarchy cannot be `Leaves`.\r\n# - If the target dimension Hierarchy exists then it will be overwritten.\r\n#EndRegion @DOC\r\n\r\n### Global Variables\r\nStringGlobalVariable('sProcessReturnCode');\r\nNumericGlobalVariable('nProcessReturnCode');\r\nnProcessReturnCode= 0;\r\n\r\n### Constants ###\r\ncThisProcName   = GetProcessName();\r\ncUserName       = TM1User();\r\ncTimeStamp      = TimSt( Now, '\\Y\\m\\d\\h\\i\\s' );\r\ncRandomInt      = NumberToString( INT( RAND( ) * 1000 ));\r\ncTempSub        = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;\r\ncMsgErrorLevel  = 'ERROR';\r\ncMsgErrorContent= 'Process:%cThisProcName% ErrorMsg:%sMessage%';\r\ncLogInfo        = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pSrcSub:%pSrcSub%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pTgtSub:%pTgtSub%, pTemp:%pTemp%, pAlias:%pAlias%.' ; \r\n\r\n## LogOutput parameters\r\nIF( pLogoutput = 1 );\r\n    LogOutput('INFO', Expand( cLogInfo ) );   \r\nENDIF;\r\n\r\n### Validate Parameters ###\r\nnErrors = 0;\r\n\r\nIf( Scan( ':', pSrcDim ) > 0 & pSrcHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pSrcHier       = SubSt( pSrcDim, Scan( ':', pSrcDim ) + 1, Long( pSrcDim ) );\r\n    pSrcDim        = SubSt( pSrcDim, 1, Scan( ':', pSrcDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate Source dimension\r\nIf( Trim( pSrcDim ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No source dimension specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( DimensionExists( pSrcDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Dimension ' | pSrcDim | ' does not exist.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Source Hierarchy\r\nIf( Trim( pSrcHier ) @= '' );\r\n    pSrcHier = Trim( pSrcDim );\r\nEndIf;\r\n\r\nIf( HierarchyExists( pSrcDim , pSrcHier ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'The Hierachy ' | pSrcHier | ' does not exist.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Source subset\r\nIf( Trim( pSrcsub ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No source subset specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nElseIf( HierarchySubsetExists( pSrcDim , pSrcHier, pSrcsub ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid source subset : ' | pSrcDim |':'| pSrcHier |':'| pSrcSub;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\nIf( Scan( ':', pTgtDim ) > 0 & pTgtHier @= '' );\r\n    # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy\r\n    pTgtHier       = SubSt( pTgtDim, Scan( ':', pTgtDim ) + 1, Long( pTgtDim ) );\r\n    pTgtDim        = SubSt( pTgtDim, 1, Scan( ':', pTgtDim ) - 1 );\r\nEndIf;\r\n\r\n# Validate target dimension\r\nIf( Trim( pTgtDim ) @= '' );\r\n    pTgtDim = Trim( pSrcDim );\r\nElseIf( DimensionExists( pTgtDim ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'Invalid target dimension: ' | pTgtDim;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n\r\n# Validate Target Hierarchy\r\nIf( Trim( pTgtHier ) @= '' );\r\n    pTgtHier = pTgtDim;\r\nElseIf( HierarchyExists( pTgtDim, pTgtHier ) = 0 );\r\n    nErrors = 1;\r\n    sMessage = 'The target Hierachy ' | pTgtHier | ' does not exist.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate subset\r\nIf( Trim( pTgtSub ) @= '' );\r\n    nErrors = 1;\r\n    sMessage = 'No target subset specified.';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n## Validate pTemp\r\nIF( pTemp <> 0 & pTemp <> 1 );\r\n    nErrors = 1;\r\n    sMessage = 'Wrong parameter pTemp value (only 0 or 1 accepted).';\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;\r\n\r\n# Validate Alias exists\r\nIf ( pAlias @<> '' & \r\n    DimIx ( Expand ( '}ElementAttributes_%pTgtDim%' ), pAlias ) = 0\r\n);\r\n  nErrors = 1;\r\n  sMessage = 'Alias does not exist in dimension %pTgtDim%.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;  \r\n\r\n# Validate alias attribute name is actually an alias\r\nIf ( pAlias @<> '' & \r\n    Dtype ( Expand ( '}ElementAttributes_%pTgtDim%' ), pAlias ) @<> 'AA'\r\n);\r\n  nErrors = 1;\r\n  sMessage = 'Attribute %pAlias% is not an alias in dimension %pTgtDim%.';\r\n  LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\nEndIf;  \r\n\r\n### Check for errors before continuing\r\nIf( nErrors <> 0 );\r\n  If( pStrictErrorHandling = 1 ); \r\n      ProcessQuit; \r\n  Else;\r\n      ProcessBreak;\r\n  EndIf;\r\nEndIf;\r\n\r\n### Create Target Subset ###\r\nIf( HierarchySubsetExists( pTgtDim, pTgtHier, pTgtsub ) = 1 );\r\n    HierarchySubsetDeleteAllElements( pTgtDim, pTgtHier, pTgtsub );\r\nElse;\r\n    HierarchySubsetCreate( pTgtDim, pTgtHier, pTgtsub, pTemp );\r\nEndIf;\r\n\r\n### Set Alias ###\r\nIf ( pAlias @<> '' );\r\n    If ( pTgtDim @= pTgtHier );\r\n        SubsetAliasSet( pTgtDim, pTgtsub, pAlias);\r\n    Else;\r\n        SubsetAliasSet( pTgtDim | ':' | pTgtHier, pTgtsub, pAlias);\r\n    EndIf;\r\nEndIf;\r\n\r\n# HierarchySubsetMDXGet not returning anything. Thought it might also return alias used in source subset\r\nsMDX = HierarchySubsetMDXGet(pSrcDim, pSrcHier, pSrcSub);\r\n\r\nnElementPosition = 0;\r\n\r\n### Set data source for process ###\r\nDatasourceType              = 'SUBSET';\r\nDatasourceNameForServer     = pSrcDim | ':' | pSrcHier;\r\nDatasourceDimensionSubset   = pSrcsub;",
+  "MetadataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n\r\nIF( pTgtDim @= pSrcDim & pTgtHier @= pSrcHier);\r\n    nElementPosition = nElementPosition + 1;\r\nElseIF( ElementIndex( pTgtDim, pTgtHier,vEle ) > 0 );\r\n    nElementPosition = nElementPosition + 1;\r\nElse;\r\n    ItemReject( Expand( 'Cannot insert into subset. Element  %vEle% does not exist in target dimension:Hierarchy %pTgtDim%:%pTgtHier%.' ) );\r\nEndIF;\r\n\r\nHierarchySubsetElementInsert( pTgtDim , pTgtHier, pTgtSub , vEle , nElementPosition );",
+  "DataProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****",
+  "EpilogProcedure": "\r\n#****Begin: Generated Statements***\r\n#****End: Generated Statements****\r\n\r\n################################################################################################# \r\n##~~Join the bedrock TM1 community on GitHub https://github.com/cubewise-code/bedrock Ver 4.0~~##\r\n################################################################################################# \r\n\r\n### Return code & final error message handling\r\nIf( nErrors > 0 );\r\n    sMessage = 'the process incurred at least 1 error. Please see above lines in this file for more details.';\r\n    nProcessReturnCode = 0;\r\n    LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% Process:%cThisProcName% completed with errors. Check tm1server.log for details.' );\r\n    If( pStrictErrorHandling = 1 ); \r\n        ProcessQuit; \r\n    EndIf;\r\nElse;\r\n    sProcessAction = Expand( 'Process:%cThisProcName% successfully cloned the %pTgtDim%:%pTgtHier%:%pTgtSub% subset from %pSrcDim%:%pSrcHier%:%pSrcSub%.' );\r\n    sProcessReturnCode = Expand( '%sProcessReturnCode% %sProcessAction%' );\r\n    nProcessReturnCode = 1;\r\n    If( pLogoutput = 1 );\r\n        LogOutput('INFO', Expand( sProcessAction ) );   \r\n    EndIf;\r\nEndIf;\r\n\r\n### End Epilog ###",
+  "DataSource": {
+    "Type": "TM1DimensionSubset",
+    "dataSourceNameForClient": "}Cubes",
+    "dataSourceNameForServer": "}Cubes",
+    "subset": "All"
+  },
+  "Parameters": [
+    {
+      "Name": "pLogOutput",
+      "Prompt": "OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pStrictErrorHandling",
+      "Prompt": "OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)",
+      "Value": 0,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pSrcDim",
+      "Prompt": "REQUIRED: Dimension where the subset exists",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSrcHier",
+      "Prompt": "OPTIONAL: Source Hierarchy (blank = same as source)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pSrcSub",
+      "Prompt": "REQUIRED: Source Subset",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtDim",
+      "Prompt": "OPTIONAL: Target dimension (blank = same as source)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtHier",
+      "Prompt": "OPTIONAL: Target Hierarchy (blank = same as Target Dimension)",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTgtSub",
+      "Prompt": "REQUIRED: Target Subset",
+      "Value": "",
+      "Type": "String"
+    },
+    {
+      "Name": "pTemp",
+      "Prompt": "OPTIONAL: Use temporary objects? (Boolean 1=True)",
+      "Value": 1,
+      "Type": "Numeric"
+    },
+    {
+      "Name": "pAlias",
+      "Prompt": "Optional: Set Alias for Subset",
+      "Value": "",
+      "Type": "String"
+    }
+  ],
+  "Variables": [
+    {
+      "Name": "vEle",
+      "Type": "String",
+      "Position": 1,
+      "StartByte": 0,
+      "EndByte": 0
+    }
+  ]
+}
