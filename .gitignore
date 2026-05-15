@@ -27,3 +27,6 @@
 *.log
 *.debug
 *.txt
+/.vs
+/.gitignore
+/.gitignore
