@@ -4,7 +4,7 @@
 586,"Bedrock Source Cube"
 585,"Bedrock Source Cube"
 564,
-565,"wUKf343=atv;H24yUQI4WHMa[NolYPMP`dQx5abtKX>>d_saxz>@jgsuF?7XBSOT[_ZYg<Fc9FcSu_4m4f0\Ql?jXGC?O5C]0L=MMAmifahCO:5NMAHfG24IeO=?Z^_PLas;vY1c6Wy8p0bUHDp0>lNaFaC94vq=]oAnVR3^4AOFa\3blUi8t\Kq\XiL@9W0KSw>HvfT"
+565,"u1M6aLc``84b:DVY=@k4zahK[FeQjbmgwT8HFw[NCZltWT=<qR;cxIA2IVjJ=jcel8ILG]x<ri<?hor=4ZO4te]FUJ^q6NtA]8j45[hFa>CjK>uSQtFtcPt>Zfh@S4caCEr4OqAN;bi?Am8m@lKi>=n@qzEu33c_ngG5RGk:NQNFAM_KvDG=<20H@b8OlcYQ1w`lNFkk"
 559,1
 928,0
 593,
@@ -291,9 +291,38 @@ V29
 0
 0
 0
-582,0
+582,29
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
+VarType=32ColType=827
 603,0
-572,1542
+572,1543
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -1126,6 +1155,7 @@ sTargetFilter = '';
 sWord = '';
 sLastDelim = '';
 nIndex = 1;
+nElementCount = 1;
 
 # Add a trailing element delimiter so that the last element is picked up
 If( nCharCount > 0 );
