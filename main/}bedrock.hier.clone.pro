@@ -4,7 +4,7 @@
 586,"}Cubes"
 585,"}Cubes"
 564,
-565,"wleeZe@zs7:tX9hx?u8=<0FaW__6<f1[8>oO_IW\i]GERwH5<CKC8MK:DxAhiO02`qR6];6X4ttLeDRQoRBwuVJqM3ci>`Hw`6q9e0r_mjF4dnqAvM0p`FzSI9dbQewiAIAJZ:9z]onUjR5yxbZv@p]FnptevOM8bUkkO_:U`O0w2PB^a5Co7ez`=R<qM4KckFPCuRxl"
+565,"x1Wi2=X?2Gz6r3ZWh3[r28Zba@pwD]Aw^_WDtYcQ7F8bIRkrOsgwsNN[IFhTei[:IZBrxBNQ:yD4wM7Lfw6TAVT64EBoTF_MA``H;6z\6Uhvfzjdu6lBe>VbLXZEWbsbvB0@4yrot2oaGz6vhKE_dKClT>LMiJVyd:dV_S^?O1bcMcbpNRR>w;_3DndoRD==nP@wj;Pc"
 559,1
 928,0
 593,
@@ -17,15 +17,15 @@
 801,
 566,0
 567,","
-588,"."
-589,","
+588,","
+589,"."
 568,""""
 570,
 571,All
 569,0
 592,0
 599,1000
-560,8
+560,10
 pLogOutput
 pStrictErrorHandling
 pSrcDim
@@ -34,7 +34,9 @@ pTgtDim
 pTgtHier
 pAttr
 pUnwind
-561,8
+pIfNthanC
+pSrcFilter
+561,10
 1
 1
 2
@@ -43,7 +45,9 @@ pUnwind
 2
 1
 1
-590,8
+1
+2
+590,10
 pLogOutput,0
 pStrictErrorHandling,0
 pSrcDim,""
@@ -52,15 +56,19 @@ pTgtDim,""
 pTgtHier,""
 pAttr,0
 pUnwind,0
-637,8
+pIfNthanC,0
+pSrcFilter,""
+637,10
 pLogOutput,"OPTIONAL: Write parameters and action summary to server message log (Boolean True = 1)"
 pStrictErrorHandling,"OPTIONAL: On encountering any error, exit with major error status by ProcessQuit after writing to the server message log (Boolean True = 1)"
 pSrcDim,"REQUIRED: Source Dimension"
 pSrcHier,"REQUIRED: Source Hierarchy"
 pTgtDim,"REQUIRED: Target Dimension (can be the same as source)"
 pTgtHier,"OPTIONAL: Target Hierarchy (will default to SrcHier_Clone if the dimensions are the same)"
-pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True)"
+pAttr,"OPTIONAL: Include Attributes? (Boolean 1=True; 2 = only existing)"
 pUnwind,"REQUIRED:  Unwind? (0 = Delete all Elements, 1 = Unwind Existing Elements, 2 = Do not change Existing Elements (Only relevant if target hierarchy exists) )"
+pIfNthanC,"OPTIONAL: if 1 than all N-elemens will be created as c-elements"
+pSrcFilter,"OPTIONAL: Source filter. Use Subset:<subsetName> or MDX:<mdxExpression>"
 577,1
 vEle
 578,1
@@ -74,7 +82,7 @@ vEle
 582,1
 VarType=32ColType=827
 603,0
-572,227
+572,292
 #Region CallThisProcess
 # A snippet of code provided as an example how to call this process should the developer be working on a system without access to an editor with auto-complete.
 If( 1 = 0 );
@@ -82,7 +90,7 @@ If( 1 = 0 );
       'pStrictErrorHandling', pStrictErrorHandling,
     	'pSrcDim', '', 'pSrcHier', '',
     	'pTgtDim', '', 'pTgtHier', '',
-    	'pAttr', 0, 'pUnwind', 0
+    	'pAttr', 0, 'pUnwind', 0, 'pIfNthanC', 0, 'pSrcFilter', ''
 	);
 EndIf;
 #EndRegion CallThisProcess
@@ -123,12 +131,16 @@ cRandomInt        = NumberToString( INT( RAND( ) * 1000 ));
 cTempSub          = cThisProcName |'_'| cTimeStamp |'_'| cRandomInt;
 cMsgErrorLevel    = 'ERROR';
 cMsgErrorContent  = '%cThisProcName% : %sMessage% : %cUserName%';
-cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pAttr:%pAttr%, pUnwind:%pUnwind%.';
+cLogInfo          = 'Process:%cThisProcName% run with parameters pSrcDim:%pSrcDim%, pSrcHier:%pSrcHier%, pTgtDim:%pTgtDim%, pTgtHier:%pTgtHier%, pAttr:%pAttr%, pUnwind:%pUnwind%, pIfNthanC:%pIfNthanC%, pSrcFilter:%pSrcFilter%.';
 cLangDim          = '}Cultures';
 nNumLang          = DimSiz( cLangDim );
 
 nProcessSameNamedHier = 0;
 sEpilogTgtHier = '';
+nTempSubsetCreated = 0;
+sTempSubset = '';
+sFilterPrefix = '';
+sFilterValue = '';
 
 ## LogOutput parameters
 IF ( pLogoutput = 1 );
@@ -227,6 +239,60 @@ If( nErrors <> 0 );
   EndIf;
 EndIf;
 
+### Resolve pSrcFilter ###
+If( Trim( pSrcFilter ) @<> '' );
+    If( SubSt( pSrcFilter, 1, 7 ) @= 'Subset:' );
+        sFilterPrefix = 'Subset';
+        sFilterValue  = Trim( SubSt( pSrcFilter, 8, Long( pSrcFilter ) ) );
+    ElseIf( SubSt( pSrcFilter, 1, 4 ) @= 'MDX:' );
+        sFilterPrefix = 'MDX';
+        sFilterValue  = Trim( SubSt( pSrcFilter, 5, Long( pSrcFilter ) ) );
+    Else;
+        nErrors = 1;
+        sMessage = 'Invalid pSrcFilter prefix. Use \"Subset:\" or \"MDX:\".';
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    EndIf;
+EndIf;
+
+If( sFilterPrefix @= 'Subset' );
+    If( SubsetExists( pSrcDim, sFilterValue ) = 0 );
+        nErrors = 1;
+        sMessage = 'Subset not found: ' | sFilterValue | ' on dimension ' | pSrcDim;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    Else;
+        sTempSubset = sFilterValue;
+    EndIf;
+ElseIf( sFilterPrefix @= 'MDX' );
+    sTempSubset = cTempSub;
+    nRet = ExecuteProcess( '}bedrock.hier.sub.create.bymdx',
+        'pLogOutput',           pLogOutput,
+        'pStrictErrorHandling', pStrictErrorHandling,
+        'pDim',                 pSrcDim,
+        'pHier',                pSrcHier,
+        'pSub',                 sTempSubset,
+        'pMDXExpr',             sFilterValue,
+        'pConvertToStatic',     1,
+        'pTemp',                1
+        );
+    If( nRet = 0 );
+        nTempSubsetCreated = 1;
+    Else;
+        nErrors = 1;
+        sMessage = 'Failed to create MDX subset. Check MDX expression: ' | sFilterValue;
+        LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
+    EndIf;
+Else;
+    sTempSubset = 'ALL';
+EndIf;
+
+If( nErrors <> 0 );
+    If( pStrictErrorHandling = 1 );
+        ProcessQuit;
+    Else;
+        ProcessBreak;
+    EndIf;
+EndIf;
+
 ### Create target dimension Hierarchy ###
 If( HierarchyExists( pTgtDim, pTgtHier) = 0 );
     HierarchyCreate( pTgtDim, pTgtHier );
@@ -261,13 +327,18 @@ sSortComponentsSense  = CELLGETS( '}DimensionProperties', sDimHier, 'SORTCOMPONE
 
 HierarchySortOrder(pTgtDim, pTgtHier, sSortComponentsType, sSortComponentsSense, sSortElementsType , sSortElementsSense);
 
-nSourceHierSize = DimSiz(pSrcDim|':'|pSrcHier);
+nSourceHierSize = SubsetGetSize( pSrcDim, sTempSubset );
 
 nIndex = 1;
 WHILE( nIndex <= nSourceHierSize );
-  sElName = ElementName(pSrcDim, pSrcHier, nIndex);
-  sElType = ElementType(pSrcDim, pSrcHier, sElName);
-  HierarchyElementInsert(pTgtDim, pTgtHier, '', sElName, sElType);
+  sElName = SubsetGetElementName( pSrcDim, sTempSubset, nIndex );
+  sElType = ElementType( pSrcDim, pSrcHier, sElName );
+  
+  if( sElType @<> 'S' & pIfNthanC = 1 );
+	HierarchyElementInsert( pTgtDim, pTgtHier, '', sElName, 'C' );
+  else;
+	HierarchyElementInsert( pTgtDim, pTgtHier, '', sElName, sElType );
+  endif;
   nIndex = nIndex + 1;
 END;
 
@@ -275,7 +346,7 @@ END;
 
 DatasourceNameForServer     = pSrcDim|':'|pSrcHier;
 DataSourceType              = 'SUBSET';
-DatasourceDimensionSubset   = 'ALL';
+DatasourceDimensionSubset   = sTempSubset;
 
 ### Replicate Attributes ###
 
@@ -299,10 +370,12 @@ If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
       Endif;
     nCount = nCount + 1;
   End;
+Elseif(pAttr > 1 & DimensionExists( sAttrDim ) = 1 );
+  nNumAttrs = DimSiz( sAttrTragetDim );
 EndIf;
 
 ### End Prolog ###
-573,35
+573,38
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -326,19 +399,22 @@ EndIf;
 
 sElType = ElementType(pSrcDim, pSrcHier, vEle);
 
+
 IF( sElType @= 'C' & ElementComponentCount( pSrcDim, pSrcHier, vEle  ) > 0 );
     nChildren = ElementComponentCount( pSrcDim, pSrcHier, vEle );
     nCount = 1;
     While( nCount <= nChildren );
         sChildElement = ElementComponent( pSrcDim, pSrcHier, vEle, nCount );
-        sChildWeight = ElementWeight( pSrcDim,pSrcHier, vEle, sChildElement );
-        HierarchyElementComponentAdd(pTgtDim, pTgtHier, vEle, sChildElement, sChildWeight);
+        sChildWeight  = ElementWeight( pSrcDim, pSrcHier, vEle, sChildElement );
+        If( HierarchyElementExists( pTgtDim, pTgtHier, sChildElement ) = 1 );
+            HierarchyElementComponentAdd( pTgtDim, pTgtHier, vEle, sChildElement, sChildWeight );
+        EndIf;
         nCount = nCount + 1;
     End;
 EndIf;
 
 ### End MetaData ###
-574,90
+574,97
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -361,75 +437,82 @@ EndIf;
 ### Replicate Attributes ###
 # Note: DTYPE on Attr dim returns "AS", "AN" or "AA" need to strip off leading "A"
 
-If( pAttr = 1 & DimensionExists( sAttrDim ) = 1 );
+
+If( pAttr >= 1 & DimensionExists( sAttrTragetDim ) = 1 );
 
     nAttr = 1;
     While( nAttr <= nNumAttrs );
-        sAttrName = DimNm( sAttrDim, nAttr );
-        sAttrType = SubSt( DTYPE( sAttrDim, sAttrName ), 2, 1 );
+        sAttrName = DimNm( sAttrTragetDim, nAttr );
+        sAttrType = SubSt( DTYPE( sAttrTragetDim, sAttrName ), 2, 1 );
         
-        If( sAttrType @= 'S' % sAttrType @= 'A' );
-            sAttrVal = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
-            
-            If( sAttrVal @<> '' );
-                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, pTgtHier:vEle, sAttrName ) = 1 );
-                    If( sAttrType @= 'A' );
-                        ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vEle, sAttrName, 1 );
-                    Else;
-                        ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vEle, sAttrName );
-                    EndIf;
-                EndIf;
-            EndIf;
-        Else;
-            nAttrVal = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
-            If( nAttrVal <> 0 );
-                If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, pTgtHier:vEle, sAttrName ) = 1 );
-                    ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vEle, sAttrName );
-                EndIf;
-            EndIf;  
-        EndIf;
-        # check for localized attributes
-        If( CubeExists( sAttrLoc ) = 1 );
-            nLang = 1;
-            While( nLang <= nNumLang );
-                sLang       = DimNm( cLangDim, nLang );
-                If( sAttrType @= 'A' % sAttrType @= 'S' );
-                    sAttrVal    = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
-                    sAttrValLoc = ElementAttrSL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
-                    If( sAttrValLoc @= sAttrVal ); sAttrValLoc = ''; EndIf;
-                Else;
-                    nAttrVal    = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
-                    nAttrValLoc = ElementAttrNL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
-                EndIf;
-                If( CubeExists( sAttrLocTarget ) = 0 );
-                    If( sAttrType @= 'A' );
-                        ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
-                    ElseIf( sAttrType @= 'N' );
-                        ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
-                    Else;
-                        ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
-                    EndIf;
-                ElseIf(CubeExists( sAttrLocTarget ) = 1 );
-                    If( CellIsUpdateable( sAttrLocTarget, pTgtHier:vEle, sLang, sAttrName ) = 1 );
-                        If( sAttrType @= 'A' );
-                            ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
-                        ElseIf( sAttrType @= 'N' );
-                            ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
-                        Else;
-                            ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
-                        EndIf;
-                    EndIf;
-                EndIf;
-                nLang   = nLang + 1;
-            End;
-        EndIf;
+		if(pAttr > 1 & (DIMIX(sAttrTragetDim, sAttrName) = 0 % DIMIX(sAttrDim, sAttrName) = 0));
+			#Do nothing, only existing attributes will be copied in this case
+		else;
+		
+			If( sAttrType @= 'S' % sAttrType @= 'A' );
+				sAttrVal = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
+				
+				If( sAttrVal @<> '' );
+					If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, pTgtHier:vEle, sAttrName ) = 1 );
+						If( sAttrType @= 'A' );
+							ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vEle, sAttrName, 1 );
+						Else;
+							ElementAttrPutS( sAttrVal, pTgtDim, pTgtHier, vEle, sAttrName );
+						EndIf;
+					EndIf;
+				EndIf;
+			Else;
+				nAttrVal = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
+				If( nAttrVal <> 0 );
+					If( CellIsUpdateable( '}ElementAttributes_' | pTgtDim, pTgtHier:vEle, sAttrName ) = 1 );
+						ElementAttrPutN( nAttrVal, pTgtDim, pTgtHier, vEle, sAttrName );
+					EndIf;
+				EndIf;  
+			EndIf;
+			# check for localized attributes
+			If( CubeExists( sAttrLoc ) = 1 );
+			
+				nLang = 1;
+				While( nLang <= nNumLang );
+					sLang       = DimNm( cLangDim, nLang );
+					If( sAttrType @= 'A' % sAttrType @= 'S' );
+						sAttrVal    = ElementAttrS( pSrcDim, pSrcHier, vEle, sAttrName );
+						sAttrValLoc = ElementAttrSL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
+						If( sAttrValLoc @= sAttrVal ); sAttrValLoc = ''; EndIf;
+					Else;
+						nAttrVal    = ElementAttrN( pSrcDim, pSrcHier, vEle, sAttrName );
+						nAttrValLoc = ElementAttrNL( pSrcDim, pSrcHier, vEle, sAttrName, sLang );
+					EndIf;
+					If( CubeExists( sAttrLocTarget ) = 0 );
+						If( sAttrType @= 'A' );
+							ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
+						ElseIf( sAttrType @= 'N' );
+							ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+						Else;
+							ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+						EndIf;
+					ElseIf(CubeExists( sAttrLocTarget ) = 1 );
+						If( CellIsUpdateable( sAttrLocTarget, pTgtHier:vEle, sLang, sAttrName ) = 1 );
+							If( sAttrType @= 'A' );
+								ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang, 1 );
+							ElseIf( sAttrType @= 'N' );
+								ElementAttrPutN( nAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+							Else;
+								ElementAttrPutS( sAttrValLoc, pTgtDim, pTgtHier, vEle, sAttrName, sLang );
+							EndIf;
+						EndIf;
+					EndIf;
+					nLang   = nLang + 1;
+				End;
+			EndIf;
+		endif;
         nAttr = nAttr + 1;
     End;
 
 EndIf;
 
 ### End Data ###
-575,54
+575,62
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
@@ -450,10 +533,16 @@ EndIf;
   CELLPUTS( sSortElementsSense, '}DimensionProperties', sTargetDimHier, 'SORTELEMENTSSENSE');
   CELLPUTS( sSortComponentsType, '}DimensionProperties',sTargetDimHier, 'SORTCOMPONENTSTYPE');
   CELLPUTS( sSortComponentsSense, '}DimensionProperties', sTargetDimHier, 'SORTCOMPONENTSSENSE');
+
+### Clean up temporary subset ###
+If( nTempSubsetCreated = 1 );
+    SubsetDestroy( pSrcDim, sTempSubset );
+    nTempSubsetCreated = 0;
+EndIf;
   
 ### If a new dimension has been created, call the process recursively to clone the alternate hierarchy, after the same named hierarchy has been processed
 If( nProcessSameNamedHier = 1 );
-  nRet = ExecuteProcess('}bedrock.hier.clone',
+  nRet = EXECUTEPROCESS(GetProcessName(),
     'pLogOutput', pLogOutput,
     'pStrictErrorHandling', pStrictErrorHandling,
     'pSrcDim', pSrcDim,
@@ -461,7 +550,9 @@ If( nProcessSameNamedHier = 1 );
     'pTgtDim', pTgtDim,
     'pTgtHier', sEpilogTgtHier,
     'pAttr', pAttr,
-    'pUnwind', pUnwind
+    'pUnwind', pUnwind,
+    'pIfNthanC', pIfNthanC,
+    'pSrcFilter', pSrcFilter
     );
 EndIf;
   
@@ -484,7 +575,7 @@ Else;
 EndIf;
 
 ### End Epilog ###
-576,
+576,CubeAction=1511DataAction=1503CubeLogChanges=0
 930,0
 638,1
 804,0
@@ -516,7 +607,7 @@ EndIf;
 917,0
 918,1
 919,0
-920,0
+920,50000
 921,""
 922,""
 923,0
