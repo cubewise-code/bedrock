@@ -141,6 +141,11 @@ ENDIF;
 ### Validate Parameters ###
 nErrors = 0;
 
+# If blank delimiter specified then convert to default
+If( pDelim @= '' );
+    pDelim = '&';
+EndIf;
+
 If( Scan( '*', pDim ) = 0 & Scan( '?', pDim ) = 0 & Scan( pDelim, pDim ) = 0 & Scan( ':', pDim ) > 0 & pHier @= '' );
     # A hierarchy has been passed as dimension. Handle the input error by splitting dim:hier into dimension & hierarchy
     pHier       = SubSt( pDim, Scan( ':', pDim ) + 1, Long( pDim ) );
@@ -191,11 +196,6 @@ ElseIf( Trim( pConsol ) @= '' );
     sMessage = 'No consolidated element specified.';
     LogOutput( cMsgErrorLevel, Expand( cMsgErrorContent ) );
 Endif;
-
-# If blank delimiter specified then convert to default
-If( pDelim @= '' );
-    pDelim = '&';
-EndIf;
 
 ### Check for errors before continuing
 If( nErrors <> 0 );
