@@ -52,7 +52,7 @@ pValidate_Username,"Return a validated string for the username ? (Y/N)"
 581,0
 582,0
 603,0
-572,193
+572,187
 
 #****Begin: Generated Statements***
 #****End: Generated Statements****
